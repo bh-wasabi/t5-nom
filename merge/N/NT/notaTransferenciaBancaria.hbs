@@ -1,0 +1,16 @@
+{{#define id="notaTransferenciaBancaria"}}
+  {{#section id="base"}}
+    {{#field id="cuentaBancariaOrigen"}}
+      {{#editor}}
+        {{param moneda="=@moneda"}}
+        {{param sinCuentaBancaria="=persona.id"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="cuentaBancariaDestino"}}
+      {{#editor}}
+        {{param moneda="=@moneda"}}
+        {{param sinCuentaBancaria="=persona.id"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

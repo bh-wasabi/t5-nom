@@ -1,0 +1,35 @@
+{{#define id="capacitacion"}}  
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{field id="esADistancia" type="expr" value="=@modalidadCurso==='aDistancia'"}}
+    {{#field id="seleccionarCurso"}}
+      {{#onChange}}
+        {{set codigo="=info.base.codigo"}}
+        {{set descripcion="=info.base.descripcion"}}
+        {{set datosCurso="=info.base.datosCurso"}}
+        {{set requiereAutorizacion="=info.base.datosCurso.base.requiereAutorizacion"}}
+        {{set _requiereAutorizacion="=info.base.datosCurso.base.requiereAutorizacion"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="articulo"}}
+      {{#onChange}}
+        {{set codigo="=base.codigo"}}
+        {{set descripcion="=base.descripcion"}}
+        {{set datosCurso="=base.datosCurso"}}
+        {{set lugarImparticion="=base.datosCurso.base.lugarImparticion"}}
+        {{set modalidadCurso="=base.datosCurso.base.modalidadCurso"}}
+        {{set _modalidadCurso="=base.datosCurso.base._modalidadCurso"}}
+        {{set numeroParticipantes="=base.datosCurso.base.numeroParticipantes"}}
+        {{set tipoPersonal="=base.datosCurso.base.tipoPersonal"}}
+        {{set _tipoPersonal="=base.datosCurso.base._tipoPersonal"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="plantillaEvaluacion"}}
+      {{#editor}}
+        {{param servicio="='capacitacion'"}}
+      {{/editor}}
+    {{/field}}
+    {{validator type="expr" validIf="=@esCurso?(@hasta>@desde):true" message="Fechas Incorrectas"}}
+    {{validator type="expr" validIf="=@esInscripcion?(@requiereAutorizacion!='si'||calc.hasValue(@jefeInmediato)):true" message="Requiere Autorización del Jefe Inmediato"}}
+  {{/section}}
+{{/define}}

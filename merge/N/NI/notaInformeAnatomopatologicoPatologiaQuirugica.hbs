@@ -1,0 +1,20 @@
+{{#define id="notaInformeAnatomopatologicoPatologiaQuirugica"}}
+  {{#section id="base"}}
+    {{#field id="metodoObtencion"}}
+      {{#editor}}
+        {{param tipoArticulo="='procedimiento'"}}
+        {{param servicio="='patologia'"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="elaboradoPor"}}
+      {{#editor}}
+        {{param servicio="='patologia'"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="anatomopatologoEncargado"}}
+      {{#editor}}
+        {{param servicio="='patologia'"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

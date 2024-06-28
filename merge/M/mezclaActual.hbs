@@ -1,0 +1,47 @@
+{{#define id="mezclaActual"}}  
+  {{#action id="verVMP" hide="true" type="sub-link"}}
+    {{link href="='/api/vidal/vmp/commonNameGroupId/html/'+_data.genericoVidal"}}
+  {{/action}}  
+  {{#action id="verATC" hide="true" type="sub-link"}}
+    {{link href="='/api/vidal/atc/commonNameGroupId/html/'+_data.genericoVidal"}}
+  {{/action}}
+  {{#action id="verCNIS" hide="true" type="sub-link"}}
+    {{link href="='/api/vidal/cnis/commonNameGroupId/html/'+_data.genericoVidal"}}
+  {{/action}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{#field id="articulo"}}
+      {{#editor}}
+        {{param tipoArticulo="='solucion'"}}
+        {{#onChange}}
+          {{join source="precios" as="precios" id="base.codigo"}}
+          {{set aux="inv"}}
+          {{set cuenta="=fn('cuentaFarmacia', _parentData)"}}
+          {{set central="=_parentData.central"}}
+          {{set codigo="=base.codigo"}}
+          {{set descripcion="=base.descripcion"}}
+          {{set verSustituto="=base._sustituto"}}
+          {{set presentacion="=base.presentacion"}}
+          {{set dosis="=base.presentacion"}}
+          {{set dosisUnidad="=base.unidadPresentacion"}} 
+          {{set listaPrecios="=_mainDoc.base.listaPrecios||calc.lookupConfigException('general', 'listaPrecios')||'price2'"}}
+          {{set precio="=calc.getRef(precios, _mainDoc.base.listaPrecios||calc.lookupConfigException('general', 'listaPrecios')||'price2')||0"}}
+          {{set precioPublico="=calc.getRef(precios, 'price6')||0"}}
+          {{set iva="=base.iva"}}
+          {{set _iva="=base._iva"}}
+          {{set genericoVidal="=base.genericoVidal"}}
+          {{set viaAdministracion="=calc.getRef(base, 'articuloDatosMedicamento.base.viaAdministracion')"}}
+          {{set fraccionar="=calc.getRef(base, 'articuloDatosMedicamento.base.fraccionar')||'no'"}}
+          {{set bioseguridadCantidad="=calc.getRef(base, 'articuloDatosMedicamento.base.bioseguridadCantidad')"}}
+          {{set bioseguridadUnidad="=calc.getRef(base, 'articuloDatosMedicamento.base.bioseguridadUnidad')"}}
+          {{set codigoInternacional="=base.codigoInternacional"}}
+          {{set tipoArticulo="=base.tipoArticulo"}}
+          {{set _tipoArticulo="=base._tipoArticulo"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+    {{validator type="expr" validIf="=calc.isTrue(calc.lookupInPreset('app.variableGlobal', 'campo=permitePrecioEnCeros').valor)||calc.number(precio)>0" message="Precio Incorrecto"}}
+    {{validator type="expr" validIf="=dosis>0" message="Dósis Incorrecta"}}
+    {{validator type="expr" validIf="=calc.isTrue(@dosisUnica)||periodicidad<=24" message="Periodicidad Incorrecta"}}
+  {{/section}}
+{{/define}}

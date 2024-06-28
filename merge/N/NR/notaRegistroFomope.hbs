@@ -1,0 +1,18 @@
+{{#define id="notaRegistroFomope"}}
+  {{action id="tool" type="report-docx" label="Word" title="=_name" color="teal" visibleMode="close" condition="=true"}}
+  {{#section id="base"}}
+    {{!-- {{#field id="banco"}}
+      {{#onChange}}
+        {{set numeroBanco="=base.numero"}}
+      {{/onChange}}
+    {{/field}} --}}
+  {{/section}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

@@ -1,0 +1,33 @@
+{{#define id="notaSolicitudAdquisicionEquipo"}}
+  {{param removeIfEmptySection="articulos"}}
+  {{param removeIfEmptyField="cantidad"}}
+  {{action id="afectar" error="=@articulos&&!calc.sumRef(articulos, 'cantidad')?'Faltan Indicar los Artículos a Solicitar':null"}}
+
+  {{#section id="articulos"}}
+    {{#field id="articulo"}}
+      {{#editor display="base.codigo" view="tipoActivo"}}
+        {{param servicio="adquisicionEquipo"}}
+      {{/editor}}
+      {{#onChange}}
+        {{set codigo="=base.codigo"}}
+        {{set tipoArticulo="=base.tipoArticulo"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+
+  {{#grid id="articulos" section="articulos" applyFilter="articulo,codigo" applyFilterOpen="true" applyFilterMultiple="true" keyField="cantidad" allowInsert="true" allowRemove="true"}}
+    {{column field="articulo" label="Artículo" width="600"}}
+    {{column field="codigo" label="Código" width="150" readOnly="true"}}
+    {{column field="disponible" width="80" readOnly="true"}}
+    {{column field="cantidad" label="Cantidad" width="100" type="numeric" format="#,"}}
+  {{/grid}}
+
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

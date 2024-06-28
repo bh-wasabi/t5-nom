@@ -1,0 +1,6 @@
+{{#define id="escalaEscid"}}
+  {{#section id="base"}}
+    {{field id="totalEscid" type="calc" value="=calc.sumArgs(@escalaEscidMusculaturaFacial,@escalaEscidTranquilidad,@escalaEscidTonoMuscular,@escalaEscidVentilacionMecanica,@escalaEscidConfortabilidad)"}}
+    {{field id="nivelEscid" type="expr" value="=fn('escalaEscid', totalEscid)"}}
+  {{/section}}
+{{/define}} 

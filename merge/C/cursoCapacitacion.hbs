@@ -1,0 +1,17 @@
+{{#define id="cursoCapacitacion"}}
+  {{action id="eliminar" hide="true"}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{field id="esOtroTipoCurso" type="expr" value="=@tipoCurso==='otro'"}}
+    {{field id="esOtraLineaEstrategicaCurso" type="expr" value="=@lineaEstrategicaCurso==='otra'"}}
+    {{field id="esOtraAreaCoordinaCurso" type="expr" value="=@areaCoordinaCurso==='otra'"}}
+  {{/section}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="400"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

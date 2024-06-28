@@ -1,0 +1,8 @@
+{{!-- Tarea 2438 --}}
+{{#define id="accidenteLesion"}}
+  {{#section id="base"}}
+    {{field id="siOtroEquipoSeguridad" type="expr" value="=equipoUtilizadoAccidenteAuto=='otro'"}}
+    {{validator type="expr" notValidIf="=@equipoUtilizadoAccidenteAuto=='sillaPortaInfante'&&@accidenteVehiculoMotor!='ocupante'" message="Equipo Utilizado Incorrecto"}}
+  {{/section}}
+{{/define}}
+{{!-- Tarea 2438 --}}

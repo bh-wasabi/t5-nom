@@ -1,0 +1,20 @@
+{{#define id="wizardConsultaExterna"}}
+  {{#section id="base"}}
+    {{#field id="tipoConsultaExterna"}}
+      {{#editor}}
+        {{param tipoArticulo="='procedimiento'"}}
+        {{param servicio="='consultaExterna'"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="servicioSolicitado"}}
+      {{onChange clearFields="procedimientoSolicitado"}}
+    {{/field}}
+    {{#field id="procedimientoSolicitado"}}
+      {{#editor}}
+        {{param tipoArticulo="='procedimiento'"}}
+        {{param servicio="=servicioSolicitado"}}
+      {{/editor}}
+    {{/field}}
+    {{!-- {{field id="esProcedimiento" type="expr" value="=@tipoConsultaExterna==='procedimiento'"}} --}}
+  {{/section}}
+{{/define}} 

@@ -1,0 +1,10 @@
+{{#define id="notaPolizaCierre"}}
+  {{param startOnOpen="n/a"}}
+  {{#section id="base"}}
+    {{field id="desde" defaultValue="=_params.desde"}}
+    {{field id="hasta" defaultValue="=_params.hasta"}}
+    {{field id="libro" defaultValue="=_params.libro"}}
+    {{field id="ejercicio" defaultValue="=_params.desde.substr(0,4)"}}
+    {{field id="importe" defaultValue="=calc.sum(aplicacion,'debe')-calc.sum(aplicacion,'haber')"}}
+  {{/section}}
+{{/define}}

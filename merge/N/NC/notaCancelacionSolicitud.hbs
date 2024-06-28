@@ -1,0 +1,34 @@
+{{#define id="notaCancelacionSolicitud"}}
+  {{param attribute1="=_created.service"}}
+  {{param attribute2="=_created.subType"}}
+  {{action id="cancelar" forceReadOnly="true"}}  
+[.#if esSIC.]
+  {{action id="afectar" forceReadOnly="true" error="=calc.isTrue(base.requiereAdjuntos)&&_.isEmpty(@adjuntos)?'Falta Incluir el Archivo Adjunto Correspondiente':null"}}  
+[.else.]  
+  {{action id="afectar" forceReadOnly="true"}}  
+[./if.]  
+  {{#section id="base"}}
+[.#if esSIC.]
+    {{#field id="motivoCancelacion"}}
+      {{#editor}}
+        {{param servicio="=solicitud.base.servicio"}}
+        {{param partOf="=solicitud.base.subTipoSolicitud"}}
+      {{/editor}}
+      {{#onChange}}
+        {{set requiereAdjuntos="=base.requiereAdjuntos"}}
+      {{/onChange}}
+    {{/field}}
+[./if.]
+     {{field id="esIdoneidad" type="expr" value="=calc.in(_created.board, ['farmaciaSolicitudesPendientes','farmaciaSolicitudesPendientesAltaPrioridad'])"}}
+     {{field id="esAsignacionActivoFijo" type="expr" value="=base.solicitud.base.tipoSolicitud=='asignacionActivoFijo'"}}
+     {{field id="esFarmacia" type="expr" value="=!esIdoneidad&&_created.service=='farmacia'"}}
+     {{field id="esAlmacen" type="expr" value="=_created.service=='almacen'"}}
+     {{field id="esCeye" type="expr" value="=_created.service=='ceye'"}}
+     {{field id="esRecursosHumanos" type="expr" value="=_created.service=='recursosHumanos'"}}
+     {{field id="esConsultaExterna" type="expr" value="=_created.service=='consultaExterna'"}}
+     {{field id="esNoFarmacia" type="expr" value="=!esFarmacia&&!esAlmacen&&!esCeye&&!esRecursosHumanos&&!esConsultaExterna&&!esAsignacionActivoFijo"}}
+     {{field id="esOtroMotivoCancelacion" type="expr" value="=motivoCancelacion=='otro'||_motivoCancelacion=='Otro'||esAlmacen||esCeye"}}
+     {{field id="esRecursoFaltante" type="expr" value="=motivoCancelacion==='falta-recurso'"}}
+     {{field id="esOtroRecursoFaltante" type="expr" value="=recursoFaltante==='otro'"}}
+  {{/section}}
+{{/define}}

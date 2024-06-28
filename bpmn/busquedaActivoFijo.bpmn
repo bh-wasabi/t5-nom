@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1boqz2s" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.0.0">
+  <bpmn:collaboration id="busquedaActivoFijo">
+    <bpmn:participant id="Participant_1lc29lc" name="Solicitud Búsqueda Activo Fijo" processRef="Process_1p2ilzl" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_1p2ilzl" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_0q2eutt">
+      <bpmn:lane id="Lane_06v46e5" name="Consecionaria">
+        <bpmn:flowNodeRef>pendiente</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>programado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_0vnkc4q</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>coordinandoReubicacion</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>coordinandoReposicion</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_17ijez7</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>reubicado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>repuesto</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>encontrado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enReubicacion</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enReposicion</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_029r4xf" name="Usuario">
+        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_1dahqgb</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:sequenceFlow id="Flow_0t798t9" sourceRef="StartEvent_1" targetRef="Activity_1dahqgb" />
+    <bpmn:sequenceFlow id="Flow_1x0h6km" sourceRef="Activity_1dahqgb" targetRef="pendiente" />
+    <bpmn:sequenceFlow id="Flow_0g36bh8" sourceRef="pendiente" targetRef="programado" />
+    <bpmn:sequenceFlow id="Flow_1b4ilsu" sourceRef="programado" targetRef="Gateway_0vnkc4q" />
+    <bpmn:sequenceFlow id="Flow_1wn7alw" name="En su lugar" sourceRef="Gateway_0vnkc4q" targetRef="encontrado" />
+    <bpmn:sequenceFlow id="Flow_02usre5" sourceRef="encontrado" targetRef="Event_17ijez7" />
+    <bpmn:sequenceFlow id="Flow_02m7kq7" sourceRef="reubicado" targetRef="Event_17ijez7" />
+    <bpmn:sequenceFlow id="Flow_0qkhj0j" sourceRef="enReposicion" targetRef="repuesto" />
+    <bpmn:sequenceFlow id="Flow_1sc0fuj" sourceRef="repuesto" targetRef="Event_17ijez7" />
+    <bpmn:sequenceFlow id="Flow_0ffzwtv" sourceRef="enReubicacion" targetRef="reubicado" />
+    <bpmn:sequenceFlow id="Flow_193el0l" name="Fuera de lugar" sourceRef="Gateway_0vnkc4q" targetRef="coordinandoReubicacion" />
+    <bpmn:sequenceFlow id="Flow_0ihrjsd" sourceRef="coordinandoReubicacion" targetRef="enReubicacion" />
+    <bpmn:sequenceFlow id="Flow_012ncmt" name="No se encontró" sourceRef="Gateway_0vnkc4q" targetRef="coordinandoReposicion" />
+    <bpmn:sequenceFlow id="Flow_1823vp8" sourceRef="coordinandoReposicion" targetRef="enReposicion" />
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0t798t9</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Activity_1dahqgb" name="Solicitud Búsqueda">
+      <bpmn:incoming>Flow_0t798t9</bpmn:incoming>
+      <bpmn:outgoing>Flow_1x0h6km</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="pendiente" name="Pendiente">
+      <bpmn:incoming>Flow_1x0h6km</bpmn:incoming>
+      <bpmn:outgoing>Flow_0g36bh8</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:userTask id="programado" name="Por Confirmar">
+      <bpmn:incoming>Flow_0g36bh8</bpmn:incoming>
+      <bpmn:outgoing>Flow_1b4ilsu</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_0vnkc4q" name="¿Se Encontró?">
+      <bpmn:incoming>Flow_1b4ilsu</bpmn:incoming>
+      <bpmn:outgoing>Flow_1wn7alw</bpmn:outgoing>
+      <bpmn:outgoing>Flow_193el0l</bpmn:outgoing>
+      <bpmn:outgoing>Flow_012ncmt</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="coordinandoReubicacion" name="Coordinando Reubicación">
+      <bpmn:incoming>Flow_193el0l</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ihrjsd</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="coordinandoReposicion" name="Coordinando Reposición">
+      <bpmn:incoming>Flow_012ncmt</bpmn:incoming>
+      <bpmn:outgoing>Flow_1823vp8</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:subProcess id="enReubicacion" name="En Reubicación">
+      <bpmn:incoming>Flow_0ihrjsd</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ffzwtv</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="enReposicion" name="En Reposición">
+      <bpmn:incoming>Flow_1823vp8</bpmn:incoming>
+      <bpmn:outgoing>Flow_0qkhj0j</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:endEvent id="Event_17ijez7">
+      <bpmn:incoming>Flow_02usre5</bpmn:incoming>
+      <bpmn:incoming>Flow_02m7kq7</bpmn:incoming>
+      <bpmn:incoming>Flow_1sc0fuj</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="reubicado" name="Activo Reubicado">
+      <bpmn:incoming>Flow_0ffzwtv</bpmn:incoming>
+      <bpmn:outgoing>Flow_02m7kq7</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics isSequential="true" />
+    </bpmn:task>
+    <bpmn:task id="repuesto" name="Activo Repuesto">
+      <bpmn:incoming>Flow_0qkhj0j</bpmn:incoming>
+      <bpmn:outgoing>Flow_1sc0fuj</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics isSequential="true" />
+    </bpmn:task>
+    <bpmn:task id="encontrado" name="Activo Encontrado">
+      <bpmn:incoming>Flow_1wn7alw</bpmn:incoming>
+      <bpmn:outgoing>Flow_02usre5</bpmn:outgoing>
+    </bpmn:task>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="busquedaActivoFijo">
+      <bpmndi:BPMNShape id="Participant_1lc29lc_di" bpmnElement="Participant_1lc29lc" isHorizontal="true">
+        <dc:Bounds x="160" y="79" width="1108" height="481" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_029r4xf_di" bpmnElement="Lane_029r4xf" isHorizontal="true">
+        <dc:Bounds x="190" y="79" width="1078" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_06v46e5_di" bpmnElement="Lane_06v46e5" isHorizontal="true">
+        <dc:Bounds x="190" y="199" width="1078" height="361" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1823vp8_di" bpmnElement="Flow_1823vp8">
+        <di:waypoint x="850" y="500" />
+        <di:waypoint x="910" y="500" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_012ncmt_di" bpmnElement="Flow_012ncmt">
+        <di:waypoint x="630" y="305" />
+        <di:waypoint x="630" y="500" />
+        <di:waypoint x="750" y="500" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="657" y="483" width="75" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ihrjsd_di" bpmnElement="Flow_0ihrjsd">
+        <di:waypoint x="850" y="390" />
+        <di:waypoint x="910" y="390" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_193el0l_di" bpmnElement="Flow_193el0l">
+        <di:waypoint x="630" y="305" />
+        <di:waypoint x="630" y="390" />
+        <di:waypoint x="750" y="390" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="659" y="373" width="72" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ffzwtv_di" bpmnElement="Flow_0ffzwtv">
+        <di:waypoint x="1010" y="390" />
+        <di:waypoint x="1060" y="390" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1sc0fuj_di" bpmnElement="Flow_1sc0fuj">
+        <di:waypoint x="1160" y="500" />
+        <di:waypoint x="1230" y="500" />
+        <di:waypoint x="1230" y="408" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0qkhj0j_di" bpmnElement="Flow_0qkhj0j">
+        <di:waypoint x="1010" y="500" />
+        <di:waypoint x="1060" y="500" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_02m7kq7_di" bpmnElement="Flow_02m7kq7">
+        <di:waypoint x="1160" y="390" />
+        <di:waypoint x="1212" y="390" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_02usre5_di" bpmnElement="Flow_02usre5">
+        <di:waypoint x="1160" y="280" />
+        <di:waypoint x="1230" y="280" />
+        <di:waypoint x="1230" y="372" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1wn7alw_di" bpmnElement="Flow_1wn7alw">
+        <di:waypoint x="655" y="280" />
+        <di:waypoint x="1060" y="280" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="672" y="262" width="56" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1b4ilsu_di" bpmnElement="Flow_1b4ilsu">
+        <di:waypoint x="560" y="280" />
+        <di:waypoint x="605" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0g36bh8_di" bpmnElement="Flow_0g36bh8">
+        <di:waypoint x="410" y="280" />
+        <di:waypoint x="460" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1x0h6km_di" bpmnElement="Flow_1x0h6km">
+        <di:waypoint x="360" y="180" />
+        <di:waypoint x="360" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0t798t9_di" bpmnElement="Flow_0t798t9">
+        <di:waypoint x="268" y="140" />
+        <di:waypoint x="310" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="232" y="122" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1dahqgb_di" bpmnElement="Activity_1dahqgb">
+        <dc:Bounds x="310" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_055400k_di" bpmnElement="pendiente">
+        <dc:Bounds x="310" y="240" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ygkw71_di" bpmnElement="programado">
+        <dc:Bounds x="460" y="240" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0vnkc4q_di" bpmnElement="Gateway_0vnkc4q" isMarkerVisible="true">
+        <dc:Bounds x="605" y="255" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="603" y="231" width="74" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0vt45tq_di" bpmnElement="coordinandoReubicacion">
+        <dc:Bounds x="750" y="350" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1b3e2w8_di" bpmnElement="coordinandoReposicion">
+        <dc:Bounds x="750" y="460" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_052ft0e_di" bpmnElement="enReubicacion">
+        <dc:Bounds x="910" y="350" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0084lm9_di" bpmnElement="enReposicion">
+        <dc:Bounds x="910" y="460" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_17ijez7_di" bpmnElement="Event_17ijez7">
+        <dc:Bounds x="1212" y="372" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0lt10qs_di" bpmnElement="reubicado">
+        <dc:Bounds x="1060" y="350" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0swd4wi_di" bpmnElement="repuesto">
+        <dc:Bounds x="1060" y="460" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0asd43f_di" bpmnElement="encontrado">
+        <dc:Bounds x="1060" y="240" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="enReubicacion" />
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="enReposicion" />
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

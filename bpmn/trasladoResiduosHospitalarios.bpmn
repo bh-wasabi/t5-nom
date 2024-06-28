@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0kj98rm" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.0.0">
+  <bpmn:collaboration id="trasladoResiduosHospitalarios">
+    <bpmn:participant id="Participant_12j5v6j" name="Solicitud Traslado Residuos Hospitalarios" processRef="Process_0hexubq" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_0hexubq" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_1dw1y7a">
+      <bpmn:lane id="Lane_1sa95g1" name="Usuario o PAPS">
+        <bpmn:flowNodeRef>Event_0nmybhs</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0efcrf6</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_1exdgmq" name="Concecionaria">
+        <bpmn:flowNodeRef>porTrasladar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>porRegistrar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enEsperaSidrep</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>porDisposicionFinal</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_13chq4q" name="Proveedor">
+        <bpmn:flowNodeRef>realizado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1hsr34z</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Event_0nmybhs">
+      <bpmn:outgoing>Flow_1ej2iac</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Activity_0efcrf6" name="Solicitud Traslado Residuos">
+      <bpmn:incoming>Flow_1ej2iac</bpmn:incoming>
+      <bpmn:outgoing>Flow_0wjc15z</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0wjc15z" sourceRef="Activity_0efcrf6" targetRef="porTrasladar" />
+    <bpmn:sequenceFlow id="Flow_1ej2iac" sourceRef="Event_0nmybhs" targetRef="Activity_0efcrf6" />
+    <bpmn:sequenceFlow id="Flow_12fquq4" sourceRef="realizado" targetRef="Event_1hsr34z" />
+    <bpmn:task id="porTrasladar" name="por Trasladar la Central">
+      <bpmn:incoming>Flow_0wjc15z</bpmn:incoming>
+      <bpmn:outgoing>Flow_1yk5zvo</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_1yk5zvo" sourceRef="porTrasladar" targetRef="porRegistrar" />
+    <bpmn:sequenceFlow id="Flow_1tuoo9b" sourceRef="porRegistrar" targetRef="porDisposicionFinal" />
+    <bpmn:task id="porRegistrar" name="por Registrar Contenidos">
+      <bpmn:incoming>Flow_1yk5zvo</bpmn:incoming>
+      <bpmn:outgoing>Flow_1tuoo9b</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="enEsperaSidrep" name="Espera Sidrep">
+      <bpmn:incoming>Flow_0e74x4l</bpmn:incoming>
+      <bpmn:outgoing>Flow_00mjwse</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0e74x4l" sourceRef="porDisposicionFinal" targetRef="enEsperaSidrep" />
+    <bpmn:task id="porDisposicionFinal" name="Pendiente Disposición Final">
+      <bpmn:incoming>Flow_1tuoo9b</bpmn:incoming>
+      <bpmn:outgoing>Flow_0e74x4l</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="realizado" name="Disposición Final">
+      <bpmn:incoming>Flow_00mjwse</bpmn:incoming>
+      <bpmn:outgoing>Flow_12fquq4</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_00mjwse" sourceRef="enEsperaSidrep" targetRef="realizado" />
+    <bpmn:endEvent id="Event_1hsr34z">
+      <bpmn:incoming>Flow_12fquq4</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="trasladoResiduosHospitalarios">
+      <bpmndi:BPMNShape id="Participant_12j5v6j_di" bpmnElement="Participant_12j5v6j" isHorizontal="true">
+        <dc:Bounds x="129" y="79" width="849" height="431" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_13chq4q_di" bpmnElement="Lane_13chq4q" isHorizontal="true">
+        <dc:Bounds x="159" y="380" width="819" height="130" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1exdgmq_di" bpmnElement="Lane_1exdgmq" isHorizontal="true">
+        <dc:Bounds x="159" y="229" width="819" height="151" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1sa95g1_di" bpmnElement="Lane_1sa95g1" isHorizontal="true">
+        <dc:Bounds x="159" y="79" width="819" height="150" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1tuoo9b_di" bpmnElement="Flow_1tuoo9b">
+        <di:waypoint x="550" y="309" />
+        <di:waypoint x="610" y="309" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1yk5zvo_di" bpmnElement="Flow_1yk5zvo">
+        <di:waypoint x="389" y="309" />
+        <di:waypoint x="450" y="309" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12fquq4_di" bpmnElement="Flow_12fquq4">
+        <di:waypoint x="870" y="450" />
+        <di:waypoint x="912" y="450" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ej2iac_di" bpmnElement="Flow_1ej2iac">
+        <di:waypoint x="237" y="144" />
+        <di:waypoint x="289" y="144" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wjc15z_di" bpmnElement="Flow_0wjc15z">
+        <di:waypoint x="339" y="184" />
+        <di:waypoint x="339" y="269" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0e74x4l_di" bpmnElement="Flow_0e74x4l">
+        <di:waypoint x="710" y="309" />
+        <di:waypoint x="770" y="309" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00mjwse_di" bpmnElement="Flow_00mjwse">
+        <di:waypoint x="820" y="349" />
+        <di:waypoint x="820" y="410" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_0nmybhs_di" bpmnElement="Event_0nmybhs">
+        <dc:Bounds x="201" y="126" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0efcrf6_di" bpmnElement="Activity_0efcrf6">
+        <dc:Bounds x="289" y="104" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1qah990_di" bpmnElement="porTrasladar">
+        <dc:Bounds x="289" y="269" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1kssyx4_di" bpmnElement="porRegistrar">
+        <dc:Bounds x="450" y="269" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0hv1i9o_di" bpmnElement="enEsperaSidrep">
+        <dc:Bounds x="770" y="269" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0xvusnm_di" bpmnElement="porDisposicionFinal">
+        <dc:Bounds x="610" y="269" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0uw9t8u_di" bpmnElement="realizado">
+        <dc:Bounds x="770" y="410" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1hsr34z_di" bpmnElement="Event_1hsr34z">
+        <dc:Bounds x="912" y="432" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,0 +1,20 @@
+{{#define id="servicioSalud"}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base.nombre"}}
+      {{include field="base._estatus"}}    
+      {{include field="base._categoria"}}
+      {{sort field="base.nombre" direction="asc"}}
+    {{/find}}
+  {{/view}}
+{{/define}}
+
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{base.nombre}}</br>
+      <span style="font-size:12px;">{{base._categoria}}</span>
+      <span style="font-size:12px;float:right;">{{base._estatus}}</span>
+    </div>    
+  {{/template}}
+{{/markup}}

@@ -1,0 +1,6 @@
+{{#define id="escalaUppNeonatal"}}
+  {{#section id="base"}}
+    {{field id="totalUpp" type="calc" value="=calc.sumArgs(@escalaUppNeonatalCondicion,@escalaUppNeonatalMental,@escalaUppNeonatalMovilidad,@escalaUppNeonatalActividad,@escalaUppNeonatalNutricion,@escalaUppNeonatalHumedad)"}}    
+    {{field id="nivelUppNeonatal" type="expr" value="=fn('nivelUppNeonatal', totalUpp)"}}
+  {{/section}}
+{{/define}} 

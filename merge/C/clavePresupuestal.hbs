@@ -1,0 +1,40 @@
+{{#define id="clavePresupuestal"}}
+	{{action id="eliminar" hide="true"}}
+  {{#view id="lista" name="Lista"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="base"}}
+      {{search field="_name"}}
+      {{search field="base.descripcion"}}
+      {{sort field="_name" direction="asc"}}
+      {{filter condition="=ejercicio" field="base.ejercicio" eq="=ejercicio"}}
+      {{filter condition="=tipoPresupuesto" field="base.tipoPresupuesto" eq="=tipoPresupuesto"}}
+    {{/find}}
+    {{editor display="_name"}}
+  {{/view}}
+  {{#view id="recursosFiscales"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="base"}}
+      {{search field="_name"}}
+      {{search field="base.descripcion"}}
+      {{sort field="_name" direction="asc"}}
+      {{filter field="base.fuenteFinanciamiento" eq="='1'"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="ingresosPropios"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="base"}}
+      {{search field="_name"}}
+      {{search field="base.descripcion"}}
+      {{sort field="_name" direction="asc"}}
+      {{filter field="base.fuenteFinanciamiento" eq="='4'"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="base"}}
+    {{#find}}
+      {{include field="base"}}
+    {{/find}}
+  {{/view}}
+{{/define}}	

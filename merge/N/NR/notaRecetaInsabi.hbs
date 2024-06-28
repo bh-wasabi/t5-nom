@@ -1,0 +1,10 @@
+{{#define id="notaRecetaInsabi"}}
+  {{#action id="resultadosTxDx" hide="true" type="sub-link"}}
+    {{#link href="'/nota/resultadosTxDx'" name="=persona.nombreCompleto" title="='Resultados Dx'"}}
+      {{param id="_id"}}
+    {{/link}}
+  {{/action}}
+  {{!-- {{#section id="base"}}
+    {{validator type="expr" validIf="=@recetaInsabi&&recetaInsabi.length<21" message="Límite INSABI Máximo 20 Diagnóstico por Receta"}}
+  {{/section}} --}}
+{{/define}}

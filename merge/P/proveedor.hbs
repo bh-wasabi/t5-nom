@@ -1,0 +1,80 @@
+{{#define id="proveedor"}}
+  {{action id="eliminar" hide="true"}}
+
+  {{!-- {{action id="afectarTodo" condition="=true" type="affect-all" label="Procesar Todo..." color="red" btnSolid="true" visibleMode="close" confirm="true" confirmMessage="¿Desea Procesar en Lote?" superUser="true"}} --}}
+
+  {{action id="ver" condition="=true" type="menu" menu="menuReportes" label="Reportes" color="grey" isBrowserAction="true"}}
+[.#if esSIC.]
+  {{action id="copiar" label="Copiar..." condition="=true" confirm="true" confirmMessage="¿Desea Copiar el Proveedor?" btnSolid="false" color="grey"}}
+[.else.]
+  {{#menu id="menuReportes" color="grey"}}
+    {{item action="reporteListaProveedores" text="Lista Proveedores"}}
+  {{/menu}}  
+  {{action id="reporteListaProveedores" hide="true" type="quickReport" source="proveedor" view="listaProveedores"}}
+[./if.]
+  {{#view id="listaProveedores"}}
+    {{#find}}
+      {{include field="base"}}
+      {{include field="_created"}}
+      {{sort field="_name" direction="asc"}}
+    {{/find}}
+  {{/view}}
+  
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base.estatus"}}
+      {{sort field="_name" direction="asc"}}
+      {{search field="_name"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="base"}}
+    {{#find}}
+      {{include field="base"}}
+      {{filter condition="=id" field="_id" eq="=id" isObjectId="true"}}
+    {{/find}}
+  {{/view}}
+  {{#section id="base"}}
+    {{field id="nombreCompleto" type="expr" label="Nombre" value="nombre"}}
+    {{field id="esPersonaMoral" type="expr" value="=@tipoPersona=='persona-moral'"}}
+    {{field id="esPersonaFisica" type="expr" value="=@tipoPersona=='persona-fisica'"}}
+    {{field id="esPersonaJuridica" type="expr" value="=@tipoPersona=='persona-juridica'"}}
+    {{#field id="cuentaContable"}}
+      {{#onChange}}
+        {{set cuenta="=base.cuenta"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}  
+  {{#transform id="copiar"}}
+    {{#update section="base"}}
+      {{set _proveedor="=_name"}}
+      {{set proveedor="=_id"}}
+      {{set _proveedor="=_name"}}
+      {{set ubicacion="=_params.ubicacion"}}
+      {{set direccion="=base.direccion"}}
+      {{set _direccion="=base._direccion"}}
+      {{set rfc="=calc.getRef(base, 'personaMoral.base.rfc')"}}
+      {{set formaContacto="=base.formaContacto"}}
+      {{set _formaContacto="=base._formaContacto"}}
+      {{set contratos="=base.numeroContrato"}}
+      {{set licitaciones="=base.numeroLicitacion"}}
+      {{set ordenesCompra="=base.numeroOrdenCompra"}}
+    {{/update}}
+  {{/transform}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="400"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}
+
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}</br>
+      <span style="font-size:12px;">{{base._estatus}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

@@ -1,0 +1,13 @@
+{{#define id="notaDatosCandidatoRH"}}
+  {{action id="tool" type="openFolder" condition="=true" items="=adjuntos" label="Adjuntos" color="grey" visibleMode="all"}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="false" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="300"}}
+    {{column field="referencia" width="300"}}
+    {{column field="grupo" width="200" items="=['Académicos','Personales','Laborales','Amonestaciones']"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}  
+{{/define}}

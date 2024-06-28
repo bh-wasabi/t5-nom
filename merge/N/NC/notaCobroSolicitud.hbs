@@ -1,0 +1,5 @@
+{{#define id="notaCobroSolicitud"}}
+  {{#section id="base"}}
+    {{field id="totalCobrado" type="calc" value="=calc.sum(@formaPago, 'base.importe')"}}
+  {{/section}}
+{{/define}}

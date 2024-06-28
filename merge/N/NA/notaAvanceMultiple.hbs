@@ -1,0 +1,19 @@
+{{#define id="notaAvanceMultiple"}}
+  {{param startOnOpen="aplicacion"}}
+  {{param attribute1="=base.momento"}}
+  {{action id="afectar" error="=(base.momento=='contratado'&&!base.proveedor)?'Proveedor Requierido':null"}}
+  {{#section id="base"}}
+    {{field id="tieneProveedor" type="expr" value="=momento=='contratado'"}}
+  {{/section}}
+  {{#grid id="aplicacion" section="aplicacion" disableEnter="true" applyFilter="solicitud" applyTo="continuar" applyContinue="true"}}
+    {{column field="fecha" type="date" format="DD/MMM/YYYY" width="110" readOnly="true"}}
+    {{column field="solicitud" type="text" width="200" readOnly="true"}}
+    {{column field="cantidad" label="Cantidad" width="65" readOnly="true"}}
+    {{column field="_name" width="700" readOnly="true"}}
+    {{!-- {{column field="_persona" width="180" readOnly="true"}}
+    {{column field="central" width="180" readOnly="true"}}
+    {{column field="cama" width="70" readOnly="true"}}
+    {{column field="cantidad" label="Cantidad" width="65" readOnly="true"}} --}}
+    {{column field="continuar" width="70"}}
+  {{/grid}}
+{{/define}}

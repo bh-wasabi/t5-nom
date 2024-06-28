@@ -1,0 +1,23 @@
+{{#define id="rhSubEspecialidad"}}
+  {{#view id="lista" name="Lista"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="base._especialidad"}}
+      {{search field="_name"}}
+      {{search field="base._especialidad"}}
+      {{sort field="base._especialidad" direction="asc"}}
+      {{sort field="base.orden" direction="asc"}}
+      {{sort field="_name" direction="asc"}}
+      {{filter condition="=especialidad" field="base.especialidad" eq="especialidad"}}
+    {{/find}}
+  {{/view}}
+{{/define}}
+
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}</br>
+      <span style="font-size:12px;">{{base._especialidad}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

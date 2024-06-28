@@ -1,0 +1,18 @@
+{{#define id="datosAfectacionesTiposBucal"}}
+  {{#section id="base"}}
+    {{field id="afectacionDental" type="expr" value="=afectacionesOrales=='afectacionDental'"}}
+    {{field id="lesionOral" type="expr" value="=afectacionesOrales=='lesionesOrales'"}}
+    {{field id="ubicacionDental" type="expr" value="=afectacionesOrales=='ubicacion'"}}
+    {{field id="dentalFracturado" type="expr" value="=organoOralLesionado=='organoDentalFracturado'"}}
+    {{field id="siColoracion" type="expr" value="=calc.in(@tipoLesion,['blanca','roja','blanca-rojo'])"}}
+    {{field id="izqDerUbica" type="expr" value="=ubicacion!='medio'"}}
+    {{field id="siIzquierda" type="expr" value="=siRelacion&&ubicacion=='izquierdo'"}}
+    {{field id="siDerecha" type="expr" value="=siRelacion&&ubicacion=='derecho'"}}
+    {{field id="tieneLabios" type="expr" value="=subsitioAnatomico=='enciaSuperior'"}}
+    {{field id="tieneLengua" type="expr" value="=subsitioAnatomico=='labios'"}}
+    {{field id="tienePaladarBlando" type="expr" value="=subsitioAnatomico=='mucosaBucal'"}}
+    {{field id="tienePaladarDuro" type="expr" value="=subsitioAnatomico=='paladarBlando'"}}
+    {{field id="tieneEnciaSuperior" type="expr" value="=subsitioAnatomico=='cuerpoMandibular'"}}
+    {{field id="tieneEnciaInferior" type="expr" value="=subsitioAnatomico=='lengua'"}}
+  {{/section}}
+{{/define}}

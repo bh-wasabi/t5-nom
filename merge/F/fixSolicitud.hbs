@@ -1,0 +1,11 @@
+{{#define id="fixSolicitud"}}
+  {{action id="afectar" confirm="=true" confirmTitle="Precaución"}}
+  {{#section id="base"}}
+    {{#field id="solicitud"}}
+      {{#editor}}
+        {{param id="=persona.id"}}
+        {{param todo="=true"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

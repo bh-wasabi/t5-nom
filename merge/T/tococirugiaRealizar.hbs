@@ -1,0 +1,14 @@
+{{#define id="tococirugiaRealizar"}}
+  {{#section id="base"}}
+    {{field id="diagnosticoQuirurgico" type="expr" value="=calc.cut(_seleccionarDiagnostico, ', desde:')"}}
+    {{#field id="cirujano"}}
+      {{#onChange}}
+        {{set seleccionarEspecialidad="=prestadorServicios.especialidad"}}
+        {{set especialidad="=prestadorServicios.especialidad[0]"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="especialidad"}}
+      {{editor sourceFromTagBox="seleccionarEspecialidad"}}
+    {{/field}}
+  {{/section}}
+{{/define}}

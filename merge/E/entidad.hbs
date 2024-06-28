@@ -1,0 +1,12 @@
+{{#define id="entidad"}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base.orden"}}
+      {{sort field="base.orden" direction="asc"}}
+      {{search field="_name"}}
+    {{/find}}
+  {{/view}}
+  {{#section id="base"}}
+    {{field id="nombreCompleto" type="expr" label="Nombre" value="nombre"}}
+  {{/section}}  
+{{/define}} 

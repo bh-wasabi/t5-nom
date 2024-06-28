@@ -1,0 +1,18 @@
+{{#define id="asignacionSubTipoActivoFijo"}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{field id="esVehiculo" type="expr" value="=@tipoActivoFijo=='vehiculo'"}}
+    {{#field id="tipoActivoFijo"}}
+      {{onChange clearFields="subTipoActivoFijo"}}
+    {{/field}}
+    {{#field id="subTipoActivoFijo"}}
+      {{#editor}}
+        {{param tipoActivoFijo="=tipoActivoFijo"}}
+      {{/editor}}
+      {{#onChange}}
+        {{set terminosCondiciones="=base.terminosCondiciones"}}
+      {{/onChange}}    
+    {{/field}}
+    {{validator type="expr" validIf="=desde<hasta" message="Fecha Incorrecta"}}
+  {{/section}}
+{{/define}}

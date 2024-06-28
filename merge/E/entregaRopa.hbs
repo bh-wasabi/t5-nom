@@ -1,0 +1,34 @@
+{{#define id="entregaRopa"}}
+  {{#action id="bim" hide="true" type="bim360" label="BIM" title="=calc.concat('BIM', _items[0].persona.planta)" bim="=_items[0].persona.bim" color="grey" visibleMode="close" fromSource="persona" fromView="datosUbicacion"}}
+    {{param ubicacion="=_data.ubicacionEntregaRopaLimpia"}}
+  {{/action}}
+  {{#action id="planta" hide="true" type="openPreview" label="Planta" title="Planta" color="grey" visibleMode="close" fromSource="persona" fromView="datosUbicacion"}}
+    {{param ubicacion="=_data.ubicacionEntregaRopaLimpia"}}
+    {{link title="=calc.concat('Planta', _items[0].persona.planta)" href="=fn('urlPlanta', _items[0].persona.planta)"}}
+  {{/action}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{#field id="ubicacionRecoleccionRopaLimpia"}}
+      {{#editor}}
+        {{param tipoUbicacion="central"}}
+        {{param subTipoUbicacion="ropaLimpia"}}
+     {{/editor}}
+    {{/field}}
+    {{#field id="ubicacionEntregaRopaLimpia"}}
+      {{#editor}}
+        {{param tipoExpediente="=@subTipoSolicitud=='ropaLimpia'?'ubicacion':'funcionario'"}}
+        {{param toalla="=@subTipoSolicitud=='toalla'"}}
+        {{param uniforme="=@subTipoSolicitud=='uniforme'"}}
+        {{param sinToalla="=@subTipoSolicitud=='toalla'"}}
+        {{param tipoUbicacion="=@subTipoSolicitud=='ropaLimpia'?'almacen,deposito':null"}}
+        {{param subTipoUbicacion="=@subTipoSolicitud=='ropaLimpia'?'ropaLimpia':null"}}
+     {{/editor}}
+     {{#onChange}}
+       {{set area="=persona.area"}}
+       {{set _area="=persona._area"}}
+       {{set criticidadZona="=persona.criticidadZona||'z4'"}}
+       {{set vencimiento="=fn('vencimientoZona', persona.criticidadZona||'z4')"}}
+     {{/onChange}}
+    {{/field}}
+  {{/section}}
+{{/define}}

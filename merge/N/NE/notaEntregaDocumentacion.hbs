@@ -1,0 +1,15 @@
+{{#define id="notaEntregaDocumentacion"}}
+  {{param attachName="=base._documentacionEntregada"}}
+  {{action id="afectar" error="=_.isEmpty(_doc.adjuntos)?'Falta Incluir el Archivo Adjunto Correspondiente':null"}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+[.#if esRH.]    
+    {{column field="grupo" width="200" items="=['Académicos','Personales','Laborales','Amonestaciones']"}}
+[./if.]    
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}} 

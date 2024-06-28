@@ -1,0 +1,18 @@
+{{#define id="diaFeriado"}}
+	{{#view id="lista" name="Lista"}}
+		{{#find}}
+			{{include field="base.fecha"}}
+			{{sort field="base.fecha" direction="desc"}}
+			{{search field="_name"}}
+			{{search field="base.fecha"}}
+		{{/find}}
+	{{/view}}
+{{/define}}
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}</br>
+      <span style="font-size:12px;">{{date base.fecha "DD/MMM/YYYY"}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

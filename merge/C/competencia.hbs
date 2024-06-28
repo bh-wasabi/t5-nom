@@ -1,0 +1,68 @@
+{{#define id="competencia"}}
+  {{#view id="lista" name="Lista"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="base"}}
+      {{!-- {{search field="base.descripcion"}} --}}
+      {{search field="_name"}}
+      {{search field="base._tipoCompetencia"}}
+      {{search field="base._subTipoCompetencia"}}
+      {{search field="base._direcciones"}}
+      {{search field="base._subDirecciones"}}
+      {{search field="base._servicios"}}
+      {{sort field="base.orden" direction="asc"}}
+      {{sort field="_name" direction="asc"}}
+      {{filter condition="=tipoCompetencia" field="base.tipoCompetencia" eq="=tipoCompetencia"}}
+      {{filter condition="=subTipoCompetencia" field="base.subTipoCompetencia" eq="=subTipoCompetencia"}}
+    {{/find}}
+  {{/view}}
+
+  {{#section id="base"}}
+    {{field id="esCompetenciaEspecifica" type="expr" value="=@tipoCompetencia==='competenciasEspecificas'"}}
+    {{#field id="direccion"}}
+      {{onChange clearFields="subDireccion,unidadDireccion,servicios"}}
+    {{/field}}
+    {{#field id="subDireccion"}}
+      {{#editor}}
+        {{onChange clearFields="unidadDireccion,servicios"}}
+        {{param direccion="=direccion"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="unidadDireccion"}}
+      {{#editor}}
+        {{onChange clearFields="servicios"}}
+        {{param direccion="=direccion"}}
+        {{param subDireccion="=subDireccion"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="servicios"}}
+      {{#editor}}
+        {{param direccion="=direccion"}}
+        {{param subDireccion="=subDireccion"}}
+        {{param unidadDireccion="=unidadDireccion"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="tipoCompetencia"}}
+      {{#editor}}
+        {{onChange clearFields="subTipoCompetencia"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="subTipoCompetencia"}}
+      {{#editor}}
+        {{param partOf="=tipoCompetencia"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}
+      <br><span style="font-size:12px;">{{base._tipoCompetencia}}</span>
+      <br><span style="font-size:12px;">{{base._subTipoCompetencia}}</span>
+      {{#if base.direcciones}}<br><span style="font-size:12px;">{{base._direcciones}}</span>{{/if}}
+      {{#if base.subDirecciones}}<br><span style="font-size:12px;">{{base._subDirecciones}}</span>{{/if}}
+      {{#if base.servicios}}<br><span style="font-size:12px;">{{base._servicios}}</span>{{/if}}
+    </div>
+  {{/template}}
+{{/markup}}

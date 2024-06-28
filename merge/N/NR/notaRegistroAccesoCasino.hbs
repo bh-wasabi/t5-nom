@@ -1,0 +1,40 @@
+{{#define id="notaRegistroAccesoCasino"}}
+  {{#view id="yaEntro"}}
+    {{#pipeline}}
+      {{filter condition="=fecha" field="base.fechaRegistro" eq="=fecha"}}
+      {{filter condition="=momento" field="base.momento" eq="=momento"}}
+      {{filter condition="=funcionario" field="base.funcionario" eq="=funcionario"}}
+      {{group field="_id" type="count" as="conteo"}}
+    {{/pipeline}}  
+  {{/view}}
+  {{#view id="resumen"}}
+    {{#pipeline}}
+      {{filter condition="=fecha" field="base.fechaRegistro" eq="=fecha"}}
+      {{filter condition="=momento" field="base.momento" eq="=momento"}}
+      {{filter condition="=tipoDia" field="base.tipoDia" eq="=tipoDia"}}
+      {{group field="_id" type="count" as="conteo"}}
+    {{/pipeline}}  
+  {{/view}}
+  {{#action id="afectar" fromSource="notaRegistroAccesoCasino" fromView="resumen" fromSource2="notaRegistroAccesoCasino" fromView2="yaEntro" error="=_items2[0].conteo?'El Funcionario Ya Entró':fn('excedeLimiteCasino', base.programaAnual, _items[0].conteo, base.momento, base.tipoDia)?'Excede al Límite Diario':null"  warning="=fn('excedeAlertaCasino', base.programaAnual, _items[0].conteo, base.momento, base.tipoDia)?'Aproximandose al Límite Diario':null"}}
+    {{param fecha="=base.fechaRegistro"}}
+    {{param momento="=base.momento"}}
+    {{param tipoDia="=base.tipoDia"}}
+    {{param funcionario="=base.funcionario"}}
+  {{/action}}
+  {{#section id="base"}}
+  	{{#field id="funcionario"}}
+  		{{#editor}}
+  			{{param desayuno="=@momento=='desayuno'"}}
+        {{param almuerzo="=@momento=='almuerzo'"}}
+        {{param cena="=@momento=='cena'"}}
+        {{param diaHabil="=@tipoDia=='diaHabil'"}}
+        {{param diaInhabil="=@tipoDia=='diaInhabil'"}}
+  		{{/editor}}
+      {{#onChange}}
+        {{set regimenFuncionario="=persona.regimenFuncionario"}}
+        {{set regimenEspecial="=(persona.regimenEspecial&&calc.inForce(persona.regimenEspecial.base.desde, persona.regimenEspecial.base.hasta, moment().format('YYYY-MM-DD')))?persona.regimenEspecial:{}"}}
+        {{set _regimenEspecial="=(persona.regimenEspecial&&calc.inForce(persona.regimenEspecial.base.desde, persona.regimenEspecial.base.hasta, moment().format('YYYY-MM-DD')))?persona._regimenEspecial:' '"}}
+      {{/onChange}}
+  	{{/field}}
+  {{/section}}
+{{/define}}

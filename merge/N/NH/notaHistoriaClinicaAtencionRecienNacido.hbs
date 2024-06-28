@@ -1,0 +1,9 @@
+{{#define id="notaHistoriaClinicaAtencionRecienNacido"}}
+  {{#section id="datosEmbarazo"}}
+    {{#field id="fechaUltimaMenstruacion"}}
+      {{#onChange}}
+        {{set fechaProbableParto="=fn('fechaProbableParto', fechaUltimaMenstruacion)"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+{{/define}}

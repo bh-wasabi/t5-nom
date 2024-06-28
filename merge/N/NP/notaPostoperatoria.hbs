@@ -1,0 +1,47 @@
+{{#define id="notaPostoperatoria"}}
+  {{#section id="base"}}
+    {{field id="esHospitalizacion" type="expr" value="=tipoEpisodio=='hospitalizacion'"}}
+  {{/section}}
+  {{#transform id="copiarCancelacion"}}
+    {{update section="persona" value="persona"}}
+    {{update section="contexto" value="contexto"}}
+    {{update section="base" value="base"}}
+  {{/transform}}
+  {{action id="tool4" condition="=calc.getRef(_params,'flujo.estatus')!='cancelado'" source="notaCancelacionPostoperatoria" label="Cancelar Postoperatoria" transform="copiarCancelacion" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" btnSolid="true" userRole="cancelacionPostoperatoria"}}
+  {{!-- {{#report id="preliminar" fontSize="8" header="preliminar-encabezado" showStandarFooter="true" pageMargins="30,130,30,40"}}
+    {{#stack}}
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{#record title="Postoperatoria" titleStyle="title" layout="lightHorizontalLines" fontSize="6" section="base" headerStyle="field" margin="-10,0,0,10" widths="100,440"}}
+        {{row expr="=calc.format('date', _updated.date||_created.date, 'DD/MMM/YYYY h:mma')" label="Fecha Emisión"}}
+        {{row expr="=_created._service" label="Servicio"}}
+        {{row field="responsableAcademico" condition="esEstudiante" align="left"}}
+        {{row expr="=calc.arrayToLines(calc.pluckExpr(datosCirugia.base.cirugiaRealizar.base.procedimientoCirugia, 'calc.concatValueKey(base._cirugiaCie9, base.cirugiaCie9)'))" label="Cirugía Programada (CIE9)"}}
+        {{row field="seleccionarDiagnosticoPreoperatorio" align="left"}}
+        {{row field="diagnosticoPostoperatorio" align="left"}}
+        {{row field="procedimientoCirugia" align="left"}}
+        {{row field="datosCirugiaRealizada" align="left"}}
+        {{row field="caracteristicasCirugia" align="left"}}
+      {{/record}}
+    {{/stack}}
+    {{#stack}}
+      {{#record title="Firmas" titleStyle="title" layout="lightHorizontalLines" fontSize="8" section="_stamp" headerStyle="field" margin="-10,0,0,10" widths="100,440"}}
+        {{row expr="=_created._user" label="Elabora"}}
+        {{row expr="=_created._turn" label="Turno Elabora"}}
+        {{row expr="=_created._identification" label="Especialidad Elabora"}}
+        {{row expr="=''" label="Firma Elabora"}}
+        {{row condition="=!base.esEstudiante" expr="=_created._responsable" label="Responsable"}}
+        {{row condition="=!base.esEstudiante" expr="=_created._responsableId" label="Especialidad Responsable"}}
+        {{row condition="=!base.esEstudiante" expr="=''" label="Firma Responsable"}}
+        {{row condition="=base.esEstudiante" expr="=base._responsableAcademico" label="Médico Responsable"}}
+        {{row condition="=base.esEstudiante" expr="=base._identificacionResponsableAcademico" label="Especialidad Médico Responsable"}}
+        {{row condition="=base.esEstudiante" expr="=''" label="Firma Médico Responsable"}}
+        {{row condition="=calc.in(_created.service, ['inventarios','farmacia','almacen','ceye'])" expr="=''" label="Transporte / Recibe"}}
+        {{row field="text" label="Cadena Original"}}
+        {{row field="signature" label="Sello Digital"}}
+      {{/record}}
+    {{/stack}}
+  {{/report}}   --}}
+{{/define}}

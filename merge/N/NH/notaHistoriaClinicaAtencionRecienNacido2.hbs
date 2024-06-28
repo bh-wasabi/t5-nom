@@ -1,0 +1,14 @@
+{{#define id="notaHistoriaClinicaAtencionRecienNacido2"}}
+  {{action id="afectar" confirm="=persona.edadActual<=9||(persona.edadActual>=55||persona.edadActual<=59)" confirmMessage="<strong>¿La Edad de la Madre es correcta?</strong>" confirmTitle="Precaución"}}
+  {{#section id="base"}}
+    {{field id="otraAnomaliasCongenitasEnfermedadesLesionesNacimiento" type="expr" value="=anomaliasCongenitasEnfermedadesLesionesNacimiento=='otraAnomalia'"}}
+  {{/section}}
+  {{#section id="datosEmbarazo"}}
+    {{validator type="expr" validIf="=(@semanasGestacion>12&&@semanasGestacion<46)" message="Semanas de Gestacion debe ser entre 13 y 45."}}
+  {{/section}}
+  {{#section id="datosNacimiento"}}
+    {{field id="otroCertificaElParto" type="expr" value="=certificaElParto=='otro'"}}
+    {{field id="distocicoProcedimientoUtilizadoNacimiento" type="expr" value="=procedimientoUtilizadoNacimiento=='distocico'"}}
+    {{field id="otroProcedimientoUtilizadoNacimiento" type="expr" value="=procedimientoUtilizadoNacimiento=='otro'"}}
+  {{/section}}
+{{/define}}

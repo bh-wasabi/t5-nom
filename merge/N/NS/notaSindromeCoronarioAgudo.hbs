@@ -1,0 +1,18 @@
+{{#define id="notaSindromeCoronarioAgudo"}}
+  {{action id="verSyntaxScore" hide="=true" condition="=true" type="message" label="Severidad (Syntax)" width="300" height="300" 
+message='
+<a class="link" href="https://www.syntaxscore.org/calculator/syntaxscore/frameset.htm" target="_blank">SYNTAX Score Calculator</a>
+' }} 
+  {{#section id="clinicaAtencion"}}
+    {{field id="carDolorTipicas" type="expr" value="=caracteristicasDolor=='tipicas'"}}
+    {{field id="carDolorAtipicas" type="expr" value="=caracteristicasDolor=='atipicas'"}}
+  {{/section}}
+
+  {{#section id="angioplastiaCoronaria"}}
+    {{field id="siProtesisEndo" type="expr" value="=protesisEndovascular=='conMedicacion'"}}
+  {{/section}}
+
+  {{#section id="viabilidadPerfusion"}}
+    {{field id="siPositivoGamma" type="expr" value="=resultadoGammagramaCardiacoInicio=='positivo'"}}
+  {{/section}}
+{{/define}}

@@ -1,0 +1,14 @@
+{{#define id="notaCancerBucal2"}}
+  {{#section id="base"}}
+    {{field id="esReferenciado" type="expr" value="=referenciado=='si'"}}
+  {{/section}}
+  {{!-- Cambios 07/12 RACC --}}
+  {{#section id="antecedentesPersonales"}}
+    {{field id="sitioDeMetastasis" type="expr" value="=metastasis=='m1CB'"}}
+  {{/section}}
+  {{!-- /Fin Cambios --}}
+  {{#section id="tratamiento"}}
+    {{field id="drmc" type="expr" value="=tipoCirugia=='diseccionRadicalModificadaCuello'"}}
+    {{field id="mdi" type="expr" value="=tipoCirugia=='maxilectomiaInfraestructura'"}}
+  {{/section}}
+{{/define}}

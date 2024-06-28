@@ -1,0 +1,33 @@
+{{#define id="notaMinutaSesionComite"}}  
+  {{param removeIfEmptySection="participantes"}}
+  {{param removeIfEmptyField="usuario"}}
+	{{#view id="misMinutas"}}
+		{{#find}}
+			{{include field="_name"}}
+			{{include field="_created"}}
+			{{include field="persona.nombreCompleto"}}
+			{{search field="_name"}}
+			{{search field="persona.nombreCompleto"}}
+			{{search field="_created.date" type="date"}}
+			{{sort field="_created.date" direction="desc"}}
+			{{filter field="participantes.usuario" eq="=usuario"}}
+		{{/find}}
+	{{/view}}
+  {{#grid id="participantes" section="participantes" allowRemove="true" allowInsert="true" allowSort="true" sortBy="orden"}}
+    {{column field="usuario" width="500"}}
+    {{column field="cargo" width="200"}}
+    {{column field="estatus" width="100"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}  
+  {{#browser id="misMinutas" view="misMinutas" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green" showActions="preliminar"}}
+    {{list itemTemplate="verMinuta" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}  
+{{/define}}
+
+{{#markup}}
+	{{#template id="verMinuta"}}
+		<div>{{persona.nombreCompleto}}</div>
+		<span style="font-size:12px;">{{_name}}</span>
+		<span style="font-size:12px;float:right;">{{date _created.date "DD/MMM/YYYY h:mma"}}</span>
+	{{/template}}
+{{/markup}}

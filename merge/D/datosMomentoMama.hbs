@@ -1,0 +1,6 @@
+{{#define id="datosMomentoMama"}}
+{{#section id="base"}}
+    {{field id="tieneMomento" type="expr" value="=calc.in(tipoQt, ['adyuvante', 'coadyuvante', 'neoadyuvante'])"}}
+    {{field id="tienePaleativo" type="expr" value="=tipoQt=='paliativo'"}}
+  {{/section}}
+{{/define}}

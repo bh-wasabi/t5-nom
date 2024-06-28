@@ -1,0 +1,20 @@
+{{#define id="notaCajaApertura"}}
+  {{param startOnOpen="efectivo"}}
+  {{param addClass="w70"}}
+  {{#section id="base"}}
+    {{field id="importeTotal" type="calc" value="=(@totalEfectivo||0)"}}
+  {{/section}}
+  
+  {{#section id="efectivo"}}
+    {{field id="importe" type="calc" value="=cantidad*Number(denominacion)"}}
+    {{#onChange forceRecalc="true"}}
+      {{#update section="base"}}
+        {{set totalEfectivo="=calc.sum(efectivo, 'importe')"}}
+      {{/update}}
+    {{/onChange}}
+  {{/section}}
+  {{#grid id="efectivo" section="efectivo" disableEnter="true"}}
+    {{column field="denominacion" width="300" readOnly="true"}}
+    {{column field="cantidad" width="100"}}
+  {{/grid}}
+{{/define}}

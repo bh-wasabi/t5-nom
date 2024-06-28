@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.0.0" camunda:diagramRelationId="ba091e84-26c8-451a-92a3-a41b3c1415e4">
+  <bpmn:collaboration id="reparacionElementoTecnologico">
+    <bpmn:participant id="Participant_17jycj8" name="Solicitud Reparación Elemento Tecnólogico (SIIT)" processRef="Process_66fdee97-5cc5-4f01-b3f5-be0ee50b5eae" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_66fdee97-5cc5-4f01-b3f5-be0ee50b5eae" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_02n25d3">
+      <bpmn:lane id="Lane_0bfkaxv" name="Concesionaria">
+        <bpmn:flowNodeRef>pendiente</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_0hwebwn</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>programado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_0ac52hw</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_0k4w0uf</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>instalado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>coordinandoReposicionGarantia</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>coordinandoReparacion</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>noAplica</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enInstalacionProvisional</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enInstalacion</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:task id="pendiente" name="Revisión Programada de la Solicitud">
+      <bpmn:incoming>Flow_1n37v23</bpmn:incoming>
+      <bpmn:outgoing>Flow_0e1k97a</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:startEvent id="Event_0hwebwn">
+      <bpmn:outgoing>Flow_1n37v23</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0lyiurc" sourceRef="coordinandoReposicionGarantia" targetRef="instalado" />
+    <bpmn:sequenceFlow id="Flow_16n29mw" sourceRef="instalado" targetRef="Event_0k4w0uf" />
+    <bpmn:sequenceFlow id="Flow_1ee3j4q" sourceRef="enInstalacion" targetRef="instalado" />
+    <bpmn:sequenceFlow id="Flow_0e1k97a" sourceRef="pendiente" targetRef="programado" />
+    <bpmn:sequenceFlow id="Flow_0j9xgg0" sourceRef="programado" targetRef="Gateway_0ac52hw" />
+    <bpmn:sequenceFlow id="Flow_0bonx1s" sourceRef="enInstalacionProvisional" targetRef="enInstalacion" />
+    <bpmn:sequenceFlow id="Flow_0rliblg" name="Instalar Equipo Provisional" sourceRef="Gateway_0ac52hw" targetRef="enInstalacionProvisional" />
+    <bpmn:sequenceFlow id="Flow_18xzc7e" sourceRef="coordinandoReparacion" targetRef="instalado" />
+    <bpmn:sequenceFlow id="Flow_1go2exq" name="Requiere Reparación" sourceRef="Gateway_0ac52hw" targetRef="coordinandoReparacion" />
+    <bpmn:sequenceFlow id="Flow_05z1jhb" name="Se debe reponer por Garantía" sourceRef="Gateway_0ac52hw" targetRef="coordinandoReposicionGarantia" />
+    <bpmn:sequenceFlow id="Flow_1doyg72" name="No Aplica Reparación" sourceRef="Gateway_0ac52hw" targetRef="noAplica" />
+    <bpmn:sequenceFlow id="Flow_1n37v23" sourceRef="Event_0hwebwn" targetRef="pendiente" />
+    <bpmn:userTask id="programado" name="Por Confirmar">
+      <bpmn:incoming>Flow_0e1k97a</bpmn:incoming>
+      <bpmn:outgoing>Flow_0j9xgg0</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_0ac52hw">
+      <bpmn:incoming>Flow_0j9xgg0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1doyg72</bpmn:outgoing>
+      <bpmn:outgoing>Flow_05z1jhb</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1go2exq</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0rliblg</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="Event_0k4w0uf">
+      <bpmn:incoming>Flow_16n29mw</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:subProcess id="enInstalacionProvisional" name="En Instalación Provisional">
+      <bpmn:incoming>Flow_0rliblg</bpmn:incoming>
+      <bpmn:outgoing>Flow_0bonx1s</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="enInstalacion" name="Cambio a Equipo Definitivo">
+      <bpmn:incoming>Flow_0bonx1s</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ee3j4q</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:task id="instalado" name="Equipo Instalado y Reparado">
+      <bpmn:incoming>Flow_1ee3j4q</bpmn:incoming>
+      <bpmn:incoming>Flow_18xzc7e</bpmn:incoming>
+      <bpmn:incoming>Flow_0lyiurc</bpmn:incoming>
+      <bpmn:outgoing>Flow_16n29mw</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="coordinandoReposicionGarantia" name="Coordinando Reposición por Garantía">
+      <bpmn:incoming>Flow_05z1jhb</bpmn:incoming>
+      <bpmn:outgoing>Flow_0lyiurc</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="coordinandoReparacion" name="Coordinando Reparación">
+      <bpmn:incoming>Flow_1go2exq</bpmn:incoming>
+      <bpmn:outgoing>Flow_18xzc7e</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="noAplica" name="Reparación Descartada">
+      <bpmn:incoming>Flow_1doyg72</bpmn:incoming>
+    </bpmn:task>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="reparacionElementoTecnologico">
+      <bpmndi:BPMNShape id="Participant_17jycj8_di" bpmnElement="Participant_17jycj8" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="1188" height="480" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0bfkaxv_di" bpmnElement="Lane_0bfkaxv" isHorizontal="true">
+        <dc:Bounds x="190" y="80" width="1158" height="480" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1n37v23_di" bpmnElement="Flow_1n37v23">
+        <di:waypoint x="296" y="160" />
+        <di:waypoint x="368" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1doyg72_di" bpmnElement="Flow_1doyg72">
+        <di:waypoint x="548" y="305" />
+        <di:waypoint x="548" y="500" />
+        <di:waypoint x="740" y="500" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="618" y="471" width="57" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05z1jhb_di" bpmnElement="Flow_05z1jhb">
+        <di:waypoint x="548" y="255" />
+        <di:waypoint x="548" y="170" />
+        <di:waypoint x="740" y="170" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="605" y="138" width="83" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1go2exq_di" bpmnElement="Flow_1go2exq">
+        <di:waypoint x="548" y="305" />
+        <di:waypoint x="548" y="390" />
+        <di:waypoint x="740" y="390" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="618" y="357" width="57" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_18xzc7e_di" bpmnElement="Flow_18xzc7e">
+        <di:waypoint x="840" y="390" />
+        <di:waypoint x="1160" y="390" />
+        <di:waypoint x="1160" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rliblg_di" bpmnElement="Flow_0rliblg">
+        <di:waypoint x="573" y="280" />
+        <di:waypoint x="740" y="280" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="612" y="251" width="74" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0bonx1s_di" bpmnElement="Flow_0bonx1s">
+        <di:waypoint x="840" y="280" />
+        <di:waypoint x="930" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0j9xgg0_di" bpmnElement="Flow_0j9xgg0">
+        <di:waypoint x="468" y="280" />
+        <di:waypoint x="523" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0e1k97a_di" bpmnElement="Flow_0e1k97a">
+        <di:waypoint x="418" y="200" />
+        <di:waypoint x="418" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ee3j4q_di" bpmnElement="Flow_1ee3j4q">
+        <di:waypoint x="1030" y="280" />
+        <di:waypoint x="1110" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16n29mw_di" bpmnElement="Flow_16n29mw">
+        <di:waypoint x="1210" y="280" />
+        <di:waypoint x="1280" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0lyiurc_di" bpmnElement="Flow_0lyiurc">
+        <di:waypoint x="840" y="170" />
+        <di:waypoint x="1160" y="170" />
+        <di:waypoint x="1160" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_1giooow_di" bpmnElement="pendiente">
+        <dc:Bounds x="368" y="120" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0hwebwn_di" bpmnElement="Event_0hwebwn">
+        <dc:Bounds x="260" y="142" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0oq2akv_di" bpmnElement="programado">
+        <dc:Bounds x="368" y="240" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0ac52hw_di" bpmnElement="Gateway_0ac52hw" isMarkerVisible="true">
+        <dc:Bounds x="523" y="255" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="543" y="526" width="73" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0k4w0uf_di" bpmnElement="Event_0k4w0uf">
+        <dc:Bounds x="1280" y="262" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1e4qgv8_di" bpmnElement="instalado">
+        <dc:Bounds x="1110" y="240" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_18s5wsd_di" bpmnElement="coordinandoReposicionGarantia">
+        <dc:Bounds x="740" y="130" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_14j9pat_di" bpmnElement="coordinandoReparacion">
+        <dc:Bounds x="740" y="350" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_16lfqe6_di" bpmnElement="noAplica">
+        <dc:Bounds x="740" y="460" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1s6w13g_di" bpmnElement="enInstalacionProvisional">
+        <dc:Bounds x="740" y="240" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1qrhynx_di" bpmnElement="enInstalacion">
+        <dc:Bounds x="930" y="240" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="enInstalacionProvisional" />
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="enInstalacion" />
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

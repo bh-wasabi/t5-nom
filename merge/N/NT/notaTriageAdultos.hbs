@@ -1,0 +1,39 @@
+{{#define id="notaTriageAdultos"}}
+  {{param attribute1="=base.destinoEnUrgencias"}}
+  {{#section id="base"}}
+    {{field id="resultado" type="expr" value="=fn('resultadoTriage', calc.toArray(calc.getRef(@escalaGlasgow, 'base.resultado'), calc.getRef(@signosVitalesTriageAdultos, 'base.resultado'), calc.getRef(@escalaHuntHess, 'base.resultado'), calc.getRef(@signosSintomasUrgencias, 'base.resultado')))"}}
+    {{field id="esAmarillo" type="expr" value="=(resultado==='amarillo')"}}
+    {{!-- {{field id="tieneCama" type="expr" value="=calc.in(@destinoEnUrgencias, ['choque','observacion','urgenciasCortaEstancia'])"}} --}}
+    {{#field id="destinoEnUrgencias"}}
+      {{onChange clearFields="cama"}}
+    {{/field}}
+    {{#field id="cama"}}
+      {{#editor alwaysLoad="true"}}
+        {{param central="=fn('centralUrgencias', 'adulto', @destinoEnUrgencias)"}}
+        {{param estatus="='limpia'"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}    
+  {{#view id="cubo"}}
+    {{#find limit="-1"}}
+      {{include field="_created.date"}}
+      {{include field="persona.nombreCompleto"}}
+      {{include field="persona._genero"}}
+      {{include field="base._resultado"}}
+      {{include field="base._destinoEnUrgencias"}}
+      {{filter field="_created.date" gte="=calc.fromYearMonth(ejercicio,periodo)" required="true"}}
+      {{filter field="_created.date" lte="=calc.toYearMonth(ejercicio,periodo)" required="true"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+    {{/find}}
+  {{/view}}
+  {{#cube id="cubo" name="Triage Adultos" view="cubo" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{!-- {{column field="_created.date" type="date" label="Año" groupInterval="year"}}
+    {{column field="_created.date" type="date" label="Mes" groupInterval="month"}} --}}
+    {{column field="_created.date" type="date" label="Día" groupInterval="day"}}
+    {{column field="base._resultado" width="200" label="Resultado"}}
+    {{column field="base._destinoEnUrgencias" width="200" label="Destino en Urgencias"}}
+    {{row field="persona._genero" width="100" label="Genero"}}
+    {{row field="persona.nombreCompleto" width="250" label="Persona"}}
+    {{count field="_id" label="Cantidad" format="#"}}
+  {{/cube}}    
+{{/define}}

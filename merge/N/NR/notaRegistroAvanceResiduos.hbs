@@ -1,0 +1,30 @@
+{{#define id="notaRegistroAvanceResiduos"}}
+  {{action id="afectar" error="=!base.pesoTotal?'Falta Indicar los Contenidos':null"}}
+  {{#section id="contenidos"}}
+    {{#field id="subTipoResiduo"}}
+      {{#editor}}
+        {{param partOf="=base.solicitud.base.subTipoSolicitud"}}
+      {{/editor}}
+    {{/field}}
+    {{#onChange}}
+      {{#update section="base"}}
+        {{set pesoTotal="=calc.sum(contenidos, 'peso')"}}
+      {{/update}}
+    {{/onChange}}
+  {{/section}}
+  {{#grid id="contenidos" section="contenidos" keyField="subTipoResiduo" allowRemove="true" allowInsert="true"}}
+    {{column field="subTipoResiduo" width="200"}}
+    {{column field="peso" width="100"}}
+    {{column field="generador" width="300"}}
+    {{column field="comentarios" width="300"}}
+  {{/grid}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="referencia" width="300" items="=base.referencias"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

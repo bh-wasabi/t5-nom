@@ -1,0 +1,13 @@
+{{#define id="datosPersonales"}}
+  {{#action id="sugerirCurp" hide="true" type="update"}}
+    {{#update section="base"}}
+      {{set clave="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, base.genero, base.entidadNacimiento, base.fechaNacimiento)"}}
+    {{/update}}
+  {{/action}}
+  {{#section id="base"}}
+    {{field id="nombreCompleto" type="expr" label="Nombre" value="=calc.concat(@nombres, @apellidoPaterno, @apellidoMaterno)"}}
+    {{field id="esMujer" type="expr" value="=base.genero==='mujer'"}}    
+    {{field id="esMenor3Meses" type="expr" value="=moment().diff(moment(fechaNacimiento), 'months')<=3"}}
+    {{field id="esMenor3Dias" type="expr" value="=moment().diff(moment(fechaNacimiento), 'days')<=3"}} 
+  {{/section}}
+{{/define}}

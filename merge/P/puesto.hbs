@@ -1,0 +1,151 @@
+{{#define id="puesto"}}
+  {{action id="eliminar" hide="true"}}
+  {{!-- {{action id="tool" type="report-docx" label="Word" title="=_name" color="primary" icon="arrow-down-a" btnSolid="true" visibleMode="close" condition="=true"}} --}}
+  {{action id="tool" type="report-xlsx" label="Excel" title="=_name" color="green" visibleMode="close" condition="=true" icon="arrow-down-a" btnSolid="true" segmentItems="competencias" segmentFields="tipoCompetencia,subTipoCompetencia"}}
+  {{#view id="vacantesPublicas"}}
+    {{#find limit="-1"}}
+      {{include field="base"}}
+      {{include field="base._formacionAcademicaPuesto"}}
+      {{include field="base._experienciaLaboralPuesto"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="datosRH"}}
+    {{#find}}
+      {{include field="base"}}
+      {{filter condition="=puestoId" field="_id" eq="=puestoId" isObjectId="true"}}
+      {{filter condition="=puesto" field="base.codigo" eq="=puesto"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="base.codigo"}}
+      {{include field="base.numero"}}
+      {{include field="base._funcionPuesto"}}
+      {{include field="base.descripcionPuesto"}}
+      {{include field="base.condicionEspecificaPuesto"}}
+      {{include field="base.adscripcion"}}
+      {{include field="base._adscripcion"}}
+      {{sort field="_name" direction="asc"}}
+      {{search field="_name"}}
+      {{search field="base.codigo"}}
+      {{filter condition="=puestoId" field="_id" eq="=puestoId" isObjectId="true"}}
+      {{filter condition="=puesto" field="base.codigo" eq="=puesto"}}
+      {{filter condition="=codigo" field="base.codigo" eq="=codigo"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="conVacantes" removeIfNotValue="vacantes" removeIfNotValueCondition="=vacante"}}
+    {{#find limit="-1"}}
+      {{include field="_name"}}
+      {{include field="base.codigo"}}
+      {{sort field="_name" direction="asc"}}
+      {{search field="_name"}}
+      {{search field="base.codigo"}}
+    {{/find}}
+    {{calc field="puesto" value="=base.codigo"}}
+    {{join2 source="plaza" view="conVacantes" id="puesto" key="puesto.codigo" fields="puesto.codigo" filter="base.estatus=vacante,base.tipoContratacion=bolsaTalentos" limit="1" as="vacantes"}}
+  {{/view}}
+  {{#view id="conVacantesEscalafon" removeIfNotValue="vacantes" removeIfNotValueCondition="=vacante"}}
+    {{#find limit="-1"}}
+      {{include field="_name"}}
+      {{include field="base.codigo"}}
+      {{sort field="_name" direction="asc"}}
+      {{search field="_name"}}
+      {{search field="base.codigo"}}
+    {{/find}}
+    {{calc field="puesto" value="=base.codigo"}}
+    {{join2 source="plaza" view="conVacantes" id="puesto" key="puesto.codigo" fields="puesto.codigo" filter="base.estatus=vacante,base.tipoContratacion=escalafon&promocion" limit="1" as="vacantes"}}
+  {{/view}}
+  {{#view id="todo"}}
+    {{#find}}
+      {{filter condition="=puesto" field="_id" eq="=puesto" isObjectId="true"}}
+    {{/find}}
+  {{/view}}
+  {{#browser id="ver" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}  
+  {{#section id="competencias"}}
+    {{#field id="direccion"}}
+      {{#editor}}
+        {{onChange clearFields="subDireccion,unidadDireccion,servicio"}}
+      {{/editor}}      
+    {{/field}}
+    {{#field id="subDireccion"}}
+      {{#editor}}
+        {{onChange clearFields="unidadDireccion,servicio"}}
+        {{param direccion="=direccion"}}
+      {{/editor}}      
+    {{/field}}
+    {{#field id="unidadDireccion"}}
+      {{#editor}}
+        {{onChange clearFields="servicio"}}
+        {{param direccion="=direccion"}}
+        {{param subDireccion="=subDireccion"}}
+      {{/editor}}      
+    {{/field}}
+    {{#field id="servicio"}}
+      {{#editor}}
+        {{param direccion="=direccion"}}
+        {{param subDireccion="=subDireccion"}}
+        {{param unidadDireccion="=unidadDireccion"}}
+      {{/editor}}      
+    {{/field}}
+    {{#field id="tipoCompetencia"}}
+      {{#editor}}
+        {{onChange clearFields="subTipoCompetencia,competencia"}}
+      {{/editor}}      
+    {{/field}}
+    {{#field id="subTipoCompetencia"}}
+      {{#editor}}
+        {{onChange clearFields="competencia"}}
+        {{param partOf="=tipoCompetencia"}}
+      {{/editor}}      
+    {{/field}}
+    {{#field id="competencia"}}
+      {{#editor}}
+        {{param tipoCompetencia="=tipoCompetencia"}}
+        {{param subTipoCompetencia="=subTipoCompetencia"}}
+        {{#onChange getSourceDoc="true" getSourceDocAs="_competencia"}}
+          {{set descripcionCompetencia="=_competencia.base.descripcion"}}
+          {{set descripcionNivel="=_competencia.base.descripcionNivel"}}
+          {{set _descripcionNivel="=_competencia.base._descripcionNivel"}}
+          {{set nivel="=_competencia.base.nivel"}}
+          {{set _nivel="=_competencia.base._nivel"}}
+          {{!-- {{set plantillaEvaluacion="=_competencia.base.plantillaEvaluacion"}}
+          {{set _plantillaEvaluacion="=_competencia.base._plantillaEvaluacion"}} --}}
+        {{/onChange}}
+      {{/editor}}      
+    {{/field}}
+    {{#field id="momentoEvaluacion"}}
+      {{onChange clearFields="plantillaEvaluacion"}}
+    {{/field}}
+    {{#field id="plantillaEvaluacion"}}
+      {{#editor}}
+        {{param momentoEvaluacion="=momentoEvaluacion"}}
+      {{/editor}}      
+    {{/field}}
+  {{/section}}
+  {{#grid id="competencias" section="competencias" disableEnter="false" allowRemove="true" allowInsert="true"}}  {{!-- allowSort="true" sortBy="orden" --}}
+    {{column field="direccion" width="150"}} 
+    {{column field="subDireccion" width="150"}} 
+    {{column field="unidadDireccion" width="150"}} 
+    {{column field="servicio" width="150"}} 
+    {{column field="tipoCompetencia" width="200"}}
+    {{column field="subTipoCompetencia" width="200"}} 
+    {{column field="competencia" width="250"}}
+    {{column field="descripcionCompetencia" width="250" readOnly="true"}}
+    {{column field="descripcionNivel" width="130"}}
+    {{column field="nivel" width="110"}}
+    {{column field="momentoEvaluacion" width="150"}}
+    {{column field="plantillaEvaluacion" width="150"}}
+  {{/grid}}  
+{{/define}}
+
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      <span style="white-space:pre-wrap">{{_name}}</span></br>
+      <span style="font-size:12px;">{{base.codigo}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

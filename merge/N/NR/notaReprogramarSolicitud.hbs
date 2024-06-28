@@ -1,0 +1,9 @@
+{{#define id="notaReprogramarSolicitud"}}
+  {{#section id="base"}}
+  	{{field id="requiereAnestesiologo" type="expr" value="=base.solicitud.base.requiereAnestesiologo"}}
+    {{field id="esConsultaExterna" type="expr" value="=_created.service=='consultaExterna'"}}
+    {{field id="esGeneral" type="expr" value="=!esConsultaExterna"}}
+  	{{field id="esOtro" type="expr" value="=motivoReprogramacion=='otro'"}}
+  	{{validator type="expr" validIf="=calc.getRef(cita, 'base.fechaHoraCita')?true:false" message="Cita Incorecta"}}
+  {{/section}}
+{{/define}}

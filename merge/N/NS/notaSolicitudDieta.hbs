@@ -1,0 +1,21 @@
+{{#define id="notaSolicitudDieta"}}
+  {{#section id="base"}}
+    {{field id="esHospitalizacion" type="expr" value="=tipoEpisodio=='hospitalizacion'"}}
+    {{#field id="central"}}
+      {{onChange clearFields="cama"}}
+[.#if esMulti.]    
+      {{#editor}}
+        {{param servicio="=servicio"}}
+      {{/editor}}
+[./if.]      
+    {{/field}}
+    {{#field id="cama"}}
+      {{#editor alwaysLoad="true"}}
+        {{param central="=central"}}
+      {{/editor}}
+      {{#onChange}}
+        {{set estatusCama="=base.estatus"}}
+      {{/onChange}}      
+    {{/field}}
+  {{/section}}
+{{/define}}

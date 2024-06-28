@@ -1,0 +1,24 @@
+{{#define id="notaAsignacionAccesoLote"}}
+  {{param startOnOpen="aplicacion"}}
+  {{#section id="aplicacion"}}
+    {{#field id="procedimientoMantenimiento"}}
+      {{#editor}}
+        {{param servicio="=base.servicio"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+  {{#grid id="aplicacion" disableEnter="true" applyFilter="_name" applyFilterOpen="true" applyFilterMultiple="true" section="aplicacion"}}
+    {{column field="subTipoSolicitud" hiddenColumn="true"}}
+    {{column field="parentLink" hiddenColumn="true"}}
+    {{column field="fecha" type="date" format="DD/MMM/YYYY h:mma" width="155" readOnly="true"}}
+    {{column field="_name" type="text" width="500" readOnly="true" link="=parentLink"}}
+    {{column field="continuar" width="70"}}
+    {{column field="usuario" width="200"}}
+    {{column field="empleado" width="200"}}
+    {{!-- {{column field="procedimientoMantenimiento" width="300"}} --}}
+  {{/grid}}
+  {{#grid id="usuarios" section="usuarios" disableEnter="true" allowInsert="true" allowRemove="true"}}
+    {{column field="usuario" width="400"}}
+    {{column field="estatus" width="120" defaultValue="Nuevo"}}
+  {{/grid}}
+{{/define}}

@@ -1,0 +1,80 @@
+{{#define id="notaPorSolicitarDevolucionManual"}}
+  {{param attribute1="=_created.service"}}
+  {{param removeIfEmptySection="articulos"}}
+  {{param removeIfEmptyField="cantidad"}}
+
+  {{#transform id="copiarNota"}}
+    {{update section="base" value="=base"}}
+    {{#update section="base"}}
+      {{set solicitante="_created.user"}}
+      {{set _solicitante="_created._user"}}
+    {{/update}}
+    {{update section="articulos" value="=articulos"}}
+  {{/transform}}
+
+  {{action id="notaPorAutorizarTraspasoDevolucionManual" label="Autorizar" transform="copiarNota" source="notaPorAutorizarDevolucion" hide="true" type="add-subdoc" visibleMode="close" btnSolid="true" color="deep-orange" onlyPost="true"}}
+
+  {{#section id="base"}}
+    {{#field id="ubicacionOrigen"}}
+[.#if esMulti.]    
+      {{#editor}}
+        {{param subTipoUbicacion="=_created.subType=='traspasoCeye'?'ceyeSucio':null"}}
+      {{/editor}}
+[.else.]      
+      {{#onChange}}
+        {{set central="=persona.central"}}
+        {{set _central="=persona._central"}}
+      {{/onChange}}      
+[./if.]
+    {{/field}}
+    {{#field id="almacenDestino"}}
+[.#if esMulti.]    
+      {{#editor}}
+        {{param subTipoAlmacen="=_created.subType=='traspasoCeye'?'ceyeSucio':null"}}
+      {{/editor}}
+[./if.]
+    {{/field}}
+[.#if esHRAEI.]
+    {{validator type="expr" condition="=_created.subType=='traspasoCeye'" validIf="=@_ubicacionOrigen=='CEYE Materiales e Insumos'" message="La Ubicación Origen debe ser:<br>CEYE Materiales e Insumos"}}
+    {{validator type="expr" condition="=_created.subType=='traspasoCeye'" validIf="=@almacenDestino=='ceyeSucio'" message="El Almacén Destino debe ser:<br>CEYE Sucio"}}
+[./if.]
+  {{/section}}
+
+  {{#section id="articulos"}}
+    {{#field id="articulo"}}
+      {{editor display="base.codigo" view="bienes"}}
+      {{#onChange}}
+        {{#join source="mov" view="disponible" as="existencia"}}
+          {{param aux="inv"}}
+          {{param cuenta="=_doc.base.ubicacionOrigen"}}
+          {{param codigo="=base.codigo"}}
+        {{/join}}
+        {{set codigo="=base.codigo"}}
+        {{set descripcion="=base.descripcion"}}
+        {{set tipoArticulo="=base.tipoArticulo"}}
+        {{set unidad="=base.unidadExistencia"}}
+        {{set _unidad="=base._unidadExistencia"}}
+        {{set factor="=1"}}
+        {{set disponible="=existencia.cantidad||0"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="loteEspecifico"}}
+      {{#editor type="select" source="mov" view="loteEspecifico" alwaysLoad="true" sendSearchValue="true" value="lote" display="loteVencimiento"}}
+        {{param cuenta="=base.ubicacionOrigen"}}
+        {{param codigo="=codigo"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+  
+  {{#grid id="articulos" section="articulos" keyField="cantidad" allowInsert="true" allowRemove="true"}}
+    {{column field="articulo" label="Código" width="150" validateDuplicate="true"}}
+    {{column field="cantidad" label="Cantidad" width="100" type="numeric" format="#," validateExcess="disponible"}}
+    {{column field="codigo" label="Código" width="150" readOnly="true"}}
+    {{column field="descripcion" label="Descripción" width="300" readOnly="true"}}
+    {{column field="tipoArticulo" label="Tipo Artículo" width="150" readOnly="true"}}
+    {{column field="_unidad" label="Unidad" width="200" readOnly="true"}}
+    {{column field="factor" label="Factor" width="70" type="numeric" format="#,.##" readOnly="true"}}
+    {{column field="loteEspecifico" label="Lote Especifico" width="150" validateDuplicate="true" required="=_created.subType!='traspasoCeye'"}}
+    {{column field="disponible" label="Disponible" readOnly="true" width="80" type="numeric" format="#,"}}
+  {{/grid}}
+{{/define}}

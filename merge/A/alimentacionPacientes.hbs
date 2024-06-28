@@ -1,0 +1,72 @@
+{{#define id="alimentacionPacientes"}}  
+  {{#action id="verPaciente" type="sub-link" label="Paciente" title="Paciente" color="grey" visibleMode="close"}}
+    {{#link href="/persona/verPersona" name="=_data._paciente" title="=_data._paciente"}}
+      {{param id="=_data.paciente"}}
+    {{/link}}
+  {{/action}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{field id="esAlimentacion" type="expr" value="=@subTipoSolicitud==='alimentacion'"}}
+    {{field id="esHidratacion" type="expr" value="=@subTipoSolicitud==='hidratacion'"}}
+    {{field id="esRetiroBandeja" type="expr" value="=@subTipoSolicitud==='retiroBandeja'"}}
+    {{field id="tieneMenu" type="expr" value="=!esRetiroBandeja"}}
+    {{field id="tieneMomentoDieta" type="expr" value="=esAlimentacion"}}
+    {{field id="formaEntrega" type="expr" value="=calc.isTrue(@preparacion)?(_.isEmpty(alertaAlimentaria)?'requierePreparacion':'requierePreparacionAlerta'):'entregaDirecta'"}}
+    {{field id="formaDevolucion" type="expr" value="=calc.isTrue(@desechable)?'desechable':'retiroBandeja'"}}
+
+    {{#field id="paciente"}}
+      {{#onChange clearFields="articulo"}}
+        {{set clave="=persona.clave"}}
+        {{set tipoPaciente="=persona.tipoPaciente"}}
+        {{set _tipoPaciente="=persona._tipoPaciente"}}
+        {{set alertaAlimentaria="=!_doc.base.esAcompanante&&persona.alertaAlimentaria"}}
+        {{set _alertaAlimentaria="=!_doc.base.esAcompanante&&persona._alertaAlimentaria"}}
+        {{set regimenAlimenticio="=!_doc.base.esAcompanante&&persona.regimenAlimenticio"}}
+        {{set ubicacion="=persona.ubicacion"}}
+        {{set cama="=persona.cama"}}
+      {{/onChange}}      
+    {{/field}}
+    {{#field id="cama"}}
+      {{#editor}}
+        {{param tipoUbicacion="='cama'"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="momentoDieta"}}
+      {{onChange clearFields="articulo,hidratacion"}}
+    {{/field}}
+    {{#field id="menuDia"}}
+      {{#editor}}
+        {{param articulo="=articuloMenuDia"}}
+        {{param estatus="activo"}}
+        {{#onChange}}
+          {{update section="menusValidos" value="=calc.pluck(calc.where(_remoteScope.menuDia,{tipoPaciente:_data.tipoPaciente}), _data.momentoDieta)"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="regimenAlimenticio"}}
+      {{onChange clearFields="articulo,hidratacion"}}
+    {{/field}}
+    {{#field id="articulo"}}
+      {{#editor}}
+        {{param tipoMenu="=@subTipoSolicitud"}}
+        {{param momentoDieta="=@momentoDieta"}}
+        {{param regimenAlimenticio="=@regimenAlimenticio"}}
+        {{param menus="=calc.ifEmpty(menusValidos, 'n/a')"}}
+        {{#onChange}}
+          {{set codigo="=base.codigo"}}
+          {{set descripcion="=base.descripcion"}}
+          {{set preparacion="=base.preparacion"}}
+          {{set desechable="=base.desechable"}}
+          {{set calorias="=base.calorias"}}
+          {{set descripcionLarga="=base.descripcionLarga"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="hidratacion"}}
+      {{#editor}}
+        {{param momentoDieta="=@momentoDieta"}}
+        {{param regimenAlimenticio="=@regimenAlimenticio"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

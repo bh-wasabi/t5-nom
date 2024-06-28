@@ -1,0 +1,26 @@
+{{#define id="notaLlegaPacienteAtencion"}}
+  {{#section id="base"}}
+  [.#if esMulti.]
+    {{#field id="central"}}
+      {{onChange clearFields="cama"}}
+      {{#editor}}
+        {{param servicio="=_created.service"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="cama"}}
+      {{#editor alwaysLoad="true"}}
+        {{param estatus="='limpia'"}}
+        {{param central="=central"}}
+      {{/editor}}
+    {{/field}}
+  [.else.]
+    {{field id="tieneCama" type="expr" value="=!calc.in(_created.service, ['interconsulta','cirugia','endourologia','hemodinamia','braquiterapia'])"}}
+    {{#field id="cama"}}
+      {{#editor}}
+        {{param central="=_created.service+(_created.service=='tococirugia'?'Labor':'')"}}
+        {{param estatus="='limpia'"}}
+      {{/editor}}
+    {{/field}}
+[./if.]
+  {{/section}}  
+{{/define}}

@@ -1,0 +1,53 @@
+{{#define id="adjunto"}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="nota"}}
+      {{include field="adjunto.fecha"}}
+      {{!-- {{sort field="_id" direction="desc"}} --}}
+      {{search field="_name"}}
+      {{search field="nota.name"}}
+      {{!-- {{filter field="adjunto.fecha" gt="=moment().add(-dias,'d').format('YYYY-MM-DD')"}} --}}
+    {{/find}}
+  {{/view}}
+  
+  {{#browser id="lista" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green" docId="=nota.id" docType="=nota.type"}}
+    {{list itemTemplate="verAdjunto" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+
+{{!--   {{#browser id="1" view="porDias" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green" docId="=nota.id" docType="=nota.type"}}
+    {{list itemTemplate="verAdjunto" allowSearch="true" allowRefresh="true"}}
+    {{param dias="1"}}
+  {{/browser}}
+  {{#browser id="7" view="porDias" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green" docId="=nota.id" docType="=nota.type"}}
+    {{list itemTemplate="verAdjunto" allowSearch="true" allowRefresh="true"}}
+    {{param dias="7"}}
+  {{/browser}}
+  {{#browser id="15" view="porDias" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green" docId="=nota.id" docType="=nota.type"}}
+    {{list itemTemplate="verAdjunto" allowSearch="true" allowRefresh="true"}}
+    {{param dias="15"}}
+  {{/browser}}
+  {{#browser id="30" view="porDias" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green" docId="=nota.id" docType="=nota.type"}}
+    {{list itemTemplate="verAdjunto" allowSearch="true" allowRefresh="true"}}
+    {{param dias="30"}}
+  {{/browser}}
+  {{#browser id="60" view="porDias" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green" docId="=nota.id" docType="=nota.type"}}
+    {{list itemTemplate="verAdjunto" allowSearch="true" allowRefresh="true"}}
+    {{param dias="60"}}
+  {{/browser}} --}}
+{{/define}}
+
+{{#markup}}  
+  {{#template id="verAdjunto"}}
+    <div class="list-material">
+      <li class="has-action-left">
+        <div class="list-action-left"><i class="icon ion-{{flujo.icono}} text-{{flujo.color}}"></i></div>
+        <div class="list-content">
+          <span class="title">{{_name}}</span>
+          <span style="font-size:12px;">{{nota.name}}</span>
+          <span style="font-size:12px;float:right">{{date adjunto.fecha "DD/MMM/YYYY hh:mma"}}</span>
+        </div>          
+      </li>
+    </div>
+  {{/template}}  
+{{/markup}}

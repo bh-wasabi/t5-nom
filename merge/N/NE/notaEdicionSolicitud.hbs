@@ -1,0 +1,5 @@
+{{#define id="notaEdicionSolicitud"}}
+  {{#section id="base"}}
+    {{validator type="expr" validIf="=@cantidad&&@cantidad<=@cantidadActual" message="Cantidad Incorrecta"}}
+  {{/section}}
+{{/define}}

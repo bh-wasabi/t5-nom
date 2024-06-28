@@ -1,0 +1,31 @@
+{{#define id="tipoIncumplimiento"}}
+	{{#view id="lista" name="Lista"}}
+		{{#find}}
+			{{include field="base.servicio"}}
+			{{include field="base.codigo"}}
+			{{sort field="base._servicio"}}
+			{{sort field="base.codigo"}}
+			{{filter condition="=servicio" field="base.servicio" eq="=servicio"}}
+			{{search field="_name"}}
+			{{search field="base._servicio"}}
+			{{!-- {{search field="base.codigo"}} --}}
+		{{/find}}
+	{{/view}}
+	{{#section id="base"}}
+    {{field id="nombre" type="expr" value="=calc.concatValueKey(descripcion,codigo)"}}
+    {{#field id="servicio"}}
+    	{{#editor}}
+    		{{param partOf="sla"}}
+    	{{/editor}}
+    {{/field}}
+	{{/section}}
+{{/define}}
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      <span class="pre-line">{{_name}}</span></br>
+      {{!-- <span style="font-size:12px;">{{base.codigo}}</span> --}}
+      <span style="font-size:12px;">{{base._servicio}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

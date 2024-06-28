@@ -1,0 +1,23 @@
+{{#define id="notaCuestionario"}}  
+  {{param removeIfEmptySection="preguntas"}}
+  {{param removeIfEmptyField="pregunta"}}
+  {{#transform id="copiarCuestionario"}}
+    {{update section="persona" value="persona"}}
+    {{update section="contexto" value="contexto"}}
+    {{update section="base" value="base"}}
+    {{update section="preguntas" value="preguntas"}}
+  {{/transform}}
+  {{action id="notaEvaluacionCuestionario" source="notaEvaluacionCuestionario" label="Evaluar Cuestionario" transform="copiarCuestionario" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+
+  {{#section id="base"}}
+    {{#field id="tipoCuestionario"}}
+      {{#onChange}}
+      	{{update section="preguntas" value="=calc.mapArray(_remoteScope.base._extra.pregunta, {id:'_id',pregunta:'_name'})"}}
+      {{/onChange}}
+    {{/field}}
+   {{/section}}
+  {{#grid id="preguntas" section="preguntas" disableEnter="true"}}
+    {{column field="pregunta" width="500" readOnly="true"}}
+    {{column field="respuesta" width="500"}}
+  {{/grid}}
+{{/define}}

@@ -1,0 +1,38 @@
+{{#define id="notaPorAutorizarDevolucion"}}
+  {{param attribute1="=_created.service"}}
+  {{param removeIfEmptySection="articulos"}}
+  {{param removeIfEmptyField="cantidad"}}
+
+  {{!-- Tiene que estar en la vista "lista" --}}
+  {{#section id="base"}}
+    {{validator type="expr" validIf="=@ubicacionOrigen!=@ubicacionDestino" message="Ubicación Incorrecta"}}
+  {{/section}}
+
+  {{#section id="articulos"}}
+    {{#field id="articulo"}}
+      {{editor display="base.codigo" view="bienes"}}
+      {{#onChange}}
+        {{set codigo="=base.codigo"}}
+        {{set descripcion="=base.descripcion"}}
+        {{set tipoArticulo="=base.tipoArticulo"}}
+        {{set unidad="=base.unidadTraspaso"}}
+        {{set factor="=base.factorTraspaso"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="loteEspecifico"}}
+      {{#editor type="select" source="mov" view="loteEspecifico" alwaysLoad="true" sendSearchValue="true" value="lote" display="loteVencimiento"}}
+        {{param codigo="=codigo"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+
+  {{#grid id="articulos" section="articulos" keyField="cantidad"}}
+    {{column field="articulo" label="Código" width="150" validateDuplicate="true" readOnly="true"}}
+    {{column field="cantidad" label="Cantidad" width="100" type="numeric" format="#," readOnly="true"}}
+    {{column field="codigo" label="Código" width="150" readOnly="true"}}
+    {{column field="descripcion" label="Descripción" width="300" readOnly="true"}}
+    {{column field="_unidad" label="Unidad" width="200" readOnly="true"}}
+    {{column field="factor" label="Factor" width="50" type="numeric" format="#,.##" readOnly="true"}}
+    {{column field="loteEspecifico" label="Lote Especifico" width="150" validateDuplicate="true" readOnly="true"}}
+  {{/grid}}
+{{/define}}

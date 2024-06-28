@@ -1,0 +1,43 @@
+{{#define id="notaIngreso"}}
+  {{#section id="base"}}
+    {{field id="esVoluntadPropia" type="expr" value="=motivoEgreso=='voluntadPropia'"}}
+  {{/section}}
+  {{#view id="cubo"}}
+    {{#find limit="-1"}}
+      {{include field="_created.user"}}
+      {{include field="_created.date"}}
+      {{include field="base._procedenciaIngreso"}}      
+      {{include field="persona.nombreCompleto"}}
+      {{include field="persona._genero"}}
+      {{include field="contexto._central"}}
+      {{include field="contexto._cama"}}
+      {{filter field="_created.date" gte="=calc.fromYearMonth(ejercicio,periodo)" required="true"}}
+      {{filter field="_created.date" lte="=calc.toYearMonth(ejercicio,periodo)" required="true"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+    {{/find}}
+  {{/view}}
+  {{#cube id="cubo" name="Ingreso" view="cubo" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{!-- {{column field="_created.date" type="date" label="Año" groupInterval="year"}} --}}
+    {{!-- {{column field="_created.date" type="date" label="Mes" groupInterval="month"}} --}}
+    {{column field="_created.date" type="date" label="Día" groupInterval="day"}}
+    {{row field="base._procedenciaIngreso" width="200" label="Procedencia del Ingreso"}}
+    {{row field="persona._genero" width="100" width="100" label="Genero"}}
+    {{row field="contexto._central" type="text" width="200" label="Central"}}
+    {{row field="contexto._cama" type="text" width="50" label="Cama"}}
+    {{row field="persona.nombreCompleto" width="250" label="Persona"}}
+    {{count field="_id" label="Cantidad" format="#"}}
+  {{/cube}}
+
+  {{#view id="ingresosEgresosPaciente"}}
+    {{#find limit="-1"}}
+      {{include field="_created"}}
+      {{include field="base"}}
+      {{include field="persona"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{filter condition="=persona" field="persona.id" eq="=persona"}}
+    {{/find}}
+    {{union source="notaSolicitudIngresoHospitalario" view="solicitudesIngresoPaciente"}}
+    {{union source="notaEgreso" view="egresosPaciente"}}
+  {{/view}}
+
+{{/define}}

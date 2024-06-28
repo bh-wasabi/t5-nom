@@ -1,0 +1,58 @@
+{{#define id="seguridad"}}  
+  {{action id="bim" type="bim360" label="BIM" title="_params._name||'BIM'" color="grey" visibleMode="close"}}
+  {{#action id="planta" type="openPreview" label="Planta" title="_params._name||'Planta'" color="grey" visibleMode="close"}}
+    {{link title="_params._name||'Planta'" href="https://his-sic.s3.amazonaws.com/sic/planos/ARQ-HDS_Test.pdf"}}
+  {{/action}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{#field id="ubicacion"}}
+      {{#editor}}
+        {{#onChange}}
+          {{!-- {{set area="=persona.area"}} --}}
+          {{set criticidadZona="=persona.criticidadZona"}}
+          {{set vencimiento="=fn('vencimientoZona', persona.criticidadZona)"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="personal"}}
+      {{#onChange clearFields="articulo"}}
+        {{set clave="=persona.clave"}}
+        {{set asignacionLlaves="=persona.asignacionLlaves"}}
+        {{set asignacionTarjetasAcceso="=persona.asignacionTarjetasAcceso"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="llaveTarjetaAcceso"}}
+      {{#editor alwaysLoad="true"}}
+        {{param tipoArticulo="=fn('asignacionFuncionario', @asignacionLlaves, @asignacionTarjetasAcceso)"}}
+        {{param personal="=subTipoSolicitud!='asignacion'?personal:null"}}
+        {{param estatus="=subTipoSolicitud=='asignacion'?'inactivo':'activo'"}}
+        {{#onChange}}
+          {{set articulo="=calc.string(_id)"}}
+          {{set _articulo="=_name"}}
+          {{set codigo="=base.codigo"}}
+          {{set descripcion="=base.descripcion"}}
+          {{set _ubicaciones="=base._ubicaciones"}}
+          {{set _activosFijos="=base._activosFijos"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="ronda"}}
+      {{#editor}}
+        {{#onChange}}
+          {{set articulo="=calc.string(_id)"}}
+          {{set _articulo="=_name"}}
+          {{set codigo="=base.codigo"}}
+          {{set descripcion="=base.descripcion"}}
+          {{set _ubicaciones="=base._ubicaciones"}}
+          {{set _activosFijos="=base._activosFijos"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="motivo"}}
+      {{#editor}}
+        {{param servicio="='seguridad'"}}
+        {{param partOf="=subTipoSolicitud"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

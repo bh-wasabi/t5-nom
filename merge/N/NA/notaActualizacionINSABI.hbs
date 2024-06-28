@@ -1,0 +1,30 @@
+{{#define id="notaActualizacionINSABI"}}
+  {{!-- {{param startOnOpen="aplicacion"}} --}}
+  {{#section id="base"}}
+    {{#field id="grupo"}}
+      {{onChange clearFields="invervencion"}}
+      {{#editor}}
+        {{param partOf="=_created.subType"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="invervencion"}}
+      {{#editor}}
+        {{param programa="=_created.subType"}}
+        {{param grupo="=grupo"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+  {{#section id="aplicacion"}}
+    {{#onChange}}
+      {{#update section="base"}}
+      {{set importeTotal="=calc.sumExpr(aplicacion, '=calc.isTrue(continuar)?importe:0')"}}
+      {{/update}}
+    {{/onChange}}
+  {{/section}}  
+  {{#grid id="aplicacion" section="aplicacion" applyBaseColumn="saldo" disableEnter="true"}}
+    {{column field="fecha" type="date" format="DD/MMM/YYYY" width="100" readOnly="true"}}
+    {{column field="vencimiento" type="date" format="DD/MMM/YYYY" width="100" readOnly="true"}}
+    {{column field="_name" width="800" readOnly="true"}}
+    {{column field="continuar"}}
+  {{/grid}}
+{{/define}}

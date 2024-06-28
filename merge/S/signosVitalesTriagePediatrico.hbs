@@ -1,0 +1,5 @@
+{{#define id="signosVitalesTriagePediatrico"}}
+  {{#section id="base"}}
+    {{field id="resultado" type="expr" value="=fn('resultadoTriage', calc.toArray(@__temperaturaCorporal, @__tensionSistolica, @__tensionDiastolica, @__frecuenciaCardiaca, @__frecuenciaRespiratoria, @__saturacionOxigeno, @__glicemiaCapilar))"}}
+  {{/section}}
+{{/define}} 

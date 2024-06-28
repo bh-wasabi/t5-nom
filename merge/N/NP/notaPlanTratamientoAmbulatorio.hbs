@@ -1,0 +1,13 @@
+{{#define id="notaPlanTratamientoAmbulatorio"}}
+  {{#section id="base"}}
+    {{field id="esHospitalizacion" type="expr" value="=tipoEpisodio=='hospitalizacion'"}}
+    {{#field id="central"}}
+      {{onChange clearFields="cama"}}
+    {{/field}}
+    {{#field id="cama"}}
+      {{#editor alwaysLoad="true"}}
+        {{param central="=central"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

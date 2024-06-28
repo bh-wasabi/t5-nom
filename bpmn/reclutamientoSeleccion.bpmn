@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0lxe1lr" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.0.0">
+  <bpmn:collaboration id="reclutamientoSeleccion">
+    <bpmn:participant id="Participant_1uh7rn1" name="Recursos Humanos" processRef="Process_1euuas6" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_1euuas6" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_0i04kx5">
+      <bpmn:lane id="Lane_06335fp" name="Registro">
+        <bpmn:flowNodeRef>solicitud</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>StartEvent_0zu4fhm</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>programado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enBolsaTalentosRH</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_18jn9kk</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1w9sz19</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>rechazado</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_1jku973" name="Reclutamiento y Selección">
+        <bpmn:flowNodeRef>Gateway_0evzx9w</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enDescartadoRH</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_0vkexlg</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_17pff5j</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>candidatoPotencial</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enDocumentacionRH</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enAnalisisRH</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enEvaluacionTeoricaRH</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enEvaluacionPracticaRH</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enEntrevistaRH</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enPruebasPsicometricasRH</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:sequenceFlow id="Flow_0b3vju4" sourceRef="StartEvent_0zu4fhm" targetRef="solicitud" />
+    <bpmn:sequenceFlow id="Flow_1dro69a" sourceRef="enAnalisisRH" targetRef="enDocumentacionRH" />
+    <bpmn:sequenceFlow id="Flow_1c7zkmg" sourceRef="Gateway_0vkexlg" targetRef="rechazado" />
+    <bpmn:sequenceFlow id="Flow_1ye44dg" sourceRef="rechazado" targetRef="Event_1w9sz19" />
+    <bpmn:sequenceFlow id="Flow_0c3jd1v" sourceRef="enEntrevistaRH" targetRef="enPruebasPsicometricasRH" />
+    <bpmn:sequenceFlow id="Flow_1wcccea" sourceRef="enDocumentacionRH" targetRef="Gateway_0vkexlg" />
+    <bpmn:sequenceFlow id="Flow_0s9eovb" sourceRef="enPruebasPsicometricasRH" targetRef="Gateway_0vkexlg" />
+    <bpmn:sequenceFlow id="Flow_0r2j593" sourceRef="enBolsaTalentosRH" targetRef="enAnalisisRH" />
+    <bpmn:sequenceFlow id="Flow_0c8dlef" sourceRef="enAnalisisRH" targetRef="Gateway_0vkexlg" />
+    <bpmn:sequenceFlow id="Flow_1g2ulcp" sourceRef="enPruebasPsicometricasRH" targetRef="candidatoPotencial" />
+    <bpmn:sequenceFlow id="Flow_0f6dkl8" sourceRef="candidatoPotencial" targetRef="Event_17pff5j" />
+    <bpmn:sequenceFlow id="Flow_0lqozhs" sourceRef="Gateway_0evzx9w" targetRef="enBolsaTalentosRH" />
+    <bpmn:sequenceFlow id="Flow_14itu7m" sourceRef="enAnalisisRH" targetRef="Gateway_0evzx9w" />
+    <bpmn:sequenceFlow id="Flow_039qr9a" sourceRef="enDocumentacionRH" targetRef="Gateway_0evzx9w" />
+    <bpmn:sequenceFlow id="Flow_0au12ff" sourceRef="enEntrevistaRH" targetRef="Gateway_0evzx9w" />
+    <bpmn:sequenceFlow id="Flow_08evd4t" sourceRef="enPruebasPsicometricasRH" targetRef="Gateway_0evzx9w" />
+    <bpmn:task id="solicitud" name="Solicitud Empleo">
+      <bpmn:incoming>Flow_0b3vju4</bpmn:incoming>
+      <bpmn:outgoing>Flow_0e853e3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_12eae52" sourceRef="enEvaluacionTeoricaRH" targetRef="Gateway_0evzx9w" />
+    <bpmn:sequenceFlow id="Flow_0p1j6fb" sourceRef="enEvaluacionTeoricaRH" targetRef="Gateway_0vkexlg" />
+    <bpmn:sequenceFlow id="Flow_0hibv44" sourceRef="enDocumentacionRH" targetRef="enEvaluacionTeoricaRH" />
+    <bpmn:sequenceFlow id="Flow_047cn3c" sourceRef="enEvaluacionPracticaRH" targetRef="enEntrevistaRH" />
+    <bpmn:sequenceFlow id="Flow_0ev4jd7" sourceRef="enEvaluacionTeoricaRH" targetRef="enEvaluacionPracticaRH" />
+    <bpmn:sequenceFlow id="Flow_0t8ck9w" sourceRef="enEvaluacionPracticaRH" targetRef="Gateway_0evzx9w" />
+    <bpmn:sequenceFlow id="Flow_1u3succ" sourceRef="enEvaluacionPracticaRH" targetRef="Gateway_0vkexlg" />
+    <bpmn:startEvent id="StartEvent_0zu4fhm">
+      <bpmn:outgoing>Flow_0b3vju4</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_105cxrm" sourceRef="Event_18jn9kk" targetRef="enBolsaTalentosRH" />
+    <bpmn:sequenceFlow id="Flow_10zbx1j" sourceRef="programado" targetRef="Event_18jn9kk" />
+    <bpmn:sequenceFlow id="Flow_0e853e3" sourceRef="solicitud" targetRef="programado" />
+    <bpmn:task id="programado" name="Solicitudes Programadas">
+      <bpmn:incoming>Flow_0e853e3</bpmn:incoming>
+      <bpmn:outgoing>Flow_10zbx1j</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="enBolsaTalentosRH" name="En Bolsa de Talentos">
+      <bpmn:incoming>Flow_0lqozhs</bpmn:incoming>
+      <bpmn:incoming>Flow_105cxrm</bpmn:incoming>
+      <bpmn:outgoing>Flow_0r2j593</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:inclusiveGateway id="Gateway_0evzx9w">
+      <bpmn:incoming>Flow_14itu7m</bpmn:incoming>
+      <bpmn:incoming>Flow_039qr9a</bpmn:incoming>
+      <bpmn:incoming>Flow_0au12ff</bpmn:incoming>
+      <bpmn:incoming>Flow_08evd4t</bpmn:incoming>
+      <bpmn:incoming>Flow_12eae52</bpmn:incoming>
+      <bpmn:incoming>Flow_0t8ck9w</bpmn:incoming>
+      <bpmn:outgoing>Flow_0lqozhs</bpmn:outgoing>
+    </bpmn:inclusiveGateway>
+    <bpmn:intermediateCatchEvent id="Event_18jn9kk" name="Documentación Enviada">
+      <bpmn:incoming>Flow_10zbx1j</bpmn:incoming>
+      <bpmn:outgoing>Flow_105cxrm</bpmn:outgoing>
+      <bpmn:signalEventDefinition id="SignalEventDefinition_0fqewyr" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:subProcess id="enDocumentacionRH" name="En Documentación">
+      <bpmn:incoming>Flow_1dro69a</bpmn:incoming>
+      <bpmn:outgoing>Flow_1wcccea</bpmn:outgoing>
+      <bpmn:outgoing>Flow_039qr9a</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0hibv44</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="enAnalisisRH" name="En Análisis Curriculum Vitae">
+      <bpmn:incoming>Flow_0r2j593</bpmn:incoming>
+      <bpmn:outgoing>Flow_1dro69a</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0c8dlef</bpmn:outgoing>
+      <bpmn:outgoing>Flow_14itu7m</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="enEvaluacionTeoricaRH" name="En Evaluaciones Teóricas">
+      <bpmn:incoming>Flow_0hibv44</bpmn:incoming>
+      <bpmn:outgoing>Flow_12eae52</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0p1j6fb</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0ev4jd7</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="enEvaluacionPracticaRH" name="En Evaluaciones Prácticas">
+      <bpmn:incoming>Flow_0ev4jd7</bpmn:incoming>
+      <bpmn:outgoing>Flow_047cn3c</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0t8ck9w</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1u3succ</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="enEntrevistaRH" name="En Entrevista con Jefe Inmediato">
+      <bpmn:incoming>Flow_047cn3c</bpmn:incoming>
+      <bpmn:outgoing>Flow_0c3jd1v</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0au12ff</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1hnocqh</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="enPruebasPsicometricasRH" name="En Pruebas Psicométricas">
+      <bpmn:incoming>Flow_0c3jd1v</bpmn:incoming>
+      <bpmn:outgoing>Flow_0s9eovb</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1g2ulcp</bpmn:outgoing>
+      <bpmn:outgoing>Flow_08evd4t</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:sequenceFlow id="Flow_1hnocqh" sourceRef="enEntrevistaRH" targetRef="enDescartadoRH" />
+    <bpmn:sequenceFlow id="Flow_0vd6mah" sourceRef="enDescartadoRH" targetRef="Gateway_0vkexlg" />
+    <bpmn:task id="enDescartadoRH" name="Descartado por el Jefe Inmediato">
+      <bpmn:incoming>Flow_1hnocqh</bpmn:incoming>
+      <bpmn:outgoing>Flow_0vd6mah</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="Event_1w9sz19">
+      <bpmn:incoming>Flow_1ye44dg</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="rechazado" name="Candidato Eliminado">
+      <bpmn:incoming>Flow_1c7zkmg</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ye44dg</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:inclusiveGateway id="Gateway_0vkexlg">
+      <bpmn:incoming>Flow_1wcccea</bpmn:incoming>
+      <bpmn:incoming>Flow_0c8dlef</bpmn:incoming>
+      <bpmn:incoming>Flow_0p1j6fb</bpmn:incoming>
+      <bpmn:incoming>Flow_1u3succ</bpmn:incoming>
+      <bpmn:incoming>Flow_0vd6mah</bpmn:incoming>
+      <bpmn:incoming>Flow_0s9eovb</bpmn:incoming>
+      <bpmn:outgoing>Flow_1c7zkmg</bpmn:outgoing>
+    </bpmn:inclusiveGateway>
+    <bpmn:endEvent id="Event_17pff5j">
+      <bpmn:incoming>Flow_0f6dkl8</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="candidatoPotencial" name="Candidato Potencial">
+      <bpmn:incoming>Flow_1g2ulcp</bpmn:incoming>
+      <bpmn:outgoing>Flow_0f6dkl8</bpmn:outgoing>
+    </bpmn:task>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="reclutamientoSeleccion">
+      <bpmndi:BPMNShape id="Participant_1uh7rn1_di" bpmnElement="Participant_1uh7rn1" isHorizontal="true">
+        <dc:Bounds x="156" y="80" width="954" height="1000" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1jku973_di" bpmnElement="Lane_1jku973" isHorizontal="true">
+        <dc:Bounds x="186" y="305" width="924" height="775" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_06335fp_di" bpmnElement="Lane_06335fp" isHorizontal="true">
+        <dc:Bounds x="186" y="80" width="924" height="225" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0e853e3_di" bpmnElement="Flow_0e853e3">
+        <di:waypoint x="330" y="145" />
+        <di:waypoint x="390" y="145" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10zbx1j_di" bpmnElement="Flow_10zbx1j">
+        <di:waypoint x="490" y="145" />
+        <di:waypoint x="552" y="145" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_105cxrm_di" bpmnElement="Flow_105cxrm">
+        <di:waypoint x="570" y="163" />
+        <di:waypoint x="570" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1u3succ_di" bpmnElement="Flow_1u3succ">
+        <di:waypoint x="770" y="720" />
+        <di:waypoint x="930" y="720" />
+        <di:waypoint x="930" y="415" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0t8ck9w_di" bpmnElement="Flow_0t8ck9w">
+        <di:waypoint x="670" y="720" />
+        <di:waypoint x="570" y="720" />
+        <di:waypoint x="570" y="415" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ev4jd7_di" bpmnElement="Flow_0ev4jd7">
+        <di:waypoint x="720" y="650" />
+        <di:waypoint x="720" y="680" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_047cn3c_di" bpmnElement="Flow_047cn3c">
+        <di:waypoint x="720" y="760" />
+        <di:waypoint x="720" y="790" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0hibv44_di" bpmnElement="Flow_0hibv44">
+        <di:waypoint x="720" y="540" />
+        <di:waypoint x="720" y="570" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0p1j6fb_di" bpmnElement="Flow_0p1j6fb">
+        <di:waypoint x="770" y="610" />
+        <di:waypoint x="930" y="610" />
+        <di:waypoint x="930" y="415" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12eae52_di" bpmnElement="Flow_12eae52">
+        <di:waypoint x="670" y="610" />
+        <di:waypoint x="570" y="610" />
+        <di:waypoint x="570" y="415" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_08evd4t_di" bpmnElement="Flow_08evd4t">
+        <di:waypoint x="670" y="940" />
+        <di:waypoint x="570" y="940" />
+        <di:waypoint x="570" y="415" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0au12ff_di" bpmnElement="Flow_0au12ff">
+        <di:waypoint x="670" y="830" />
+        <di:waypoint x="570" y="830" />
+        <di:waypoint x="570" y="415" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_039qr9a_di" bpmnElement="Flow_039qr9a">
+        <di:waypoint x="670" y="500" />
+        <di:waypoint x="570" y="500" />
+        <di:waypoint x="570" y="415" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_14itu7m_di" bpmnElement="Flow_14itu7m">
+        <di:waypoint x="670" y="390" />
+        <di:waypoint x="595" y="390" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0lqozhs_di" bpmnElement="Flow_0lqozhs">
+        <di:waypoint x="570" y="365" />
+        <di:waypoint x="570" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0f6dkl8_di" bpmnElement="Flow_0f6dkl8">
+        <di:waypoint x="980" y="1020" />
+        <di:waypoint x="1042" y="1020" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1g2ulcp_di" bpmnElement="Flow_1g2ulcp">
+        <di:waypoint x="720" y="980" />
+        <di:waypoint x="720" y="1020" />
+        <di:waypoint x="880" y="1020" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0c8dlef_di" bpmnElement="Flow_0c8dlef">
+        <di:waypoint x="770" y="390" />
+        <di:waypoint x="905" y="390" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0r2j593_di" bpmnElement="Flow_0r2j593">
+        <di:waypoint x="620" y="240" />
+        <di:waypoint x="720" y="240" />
+        <di:waypoint x="720" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0s9eovb_di" bpmnElement="Flow_0s9eovb">
+        <di:waypoint x="770" y="940" />
+        <di:waypoint x="930" y="940" />
+        <di:waypoint x="930" y="415" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1wcccea_di" bpmnElement="Flow_1wcccea">
+        <di:waypoint x="770" y="500" />
+        <di:waypoint x="930" y="500" />
+        <di:waypoint x="930" y="415" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0c3jd1v_di" bpmnElement="Flow_0c3jd1v">
+        <di:waypoint x="720" y="870" />
+        <di:waypoint x="720" y="900" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ye44dg_di" bpmnElement="Flow_1ye44dg">
+        <di:waypoint x="980" y="145" />
+        <di:waypoint x="1042" y="145" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1c7zkmg_di" bpmnElement="Flow_1c7zkmg">
+        <di:waypoint x="930" y="365" />
+        <di:waypoint x="930" y="185" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1dro69a_di" bpmnElement="Flow_1dro69a">
+        <di:waypoint x="720" y="430" />
+        <di:waypoint x="720" y="460" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0b3vju4_di" bpmnElement="Flow_0b3vju4">
+        <di:waypoint x="280" y="242" />
+        <di:waypoint x="280" y="185" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1hnocqh_di" bpmnElement="Flow_1hnocqh">
+        <di:waypoint x="770" y="830" />
+        <di:waypoint x="800" y="830" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0vd6mah_di" bpmnElement="Flow_0vd6mah">
+        <di:waypoint x="900" y="830" />
+        <di:waypoint x="930" y="830" />
+        <di:waypoint x="930" y="415" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_1bs9aey_di" bpmnElement="solicitud">
+        <dc:Bounds x="230" y="105" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_0zu4fhm">
+        <dc:Bounds x="262" y="242" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0l5c948_di" bpmnElement="programado">
+        <dc:Bounds x="390" y="105" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1qvkch7_di" bpmnElement="enBolsaTalentosRH">
+        <dc:Bounds x="520" y="200" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1rrg9ll_di" bpmnElement="Gateway_0evzx9w">
+        <dc:Bounds x="545" y="365" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_053xjeb_di" bpmnElement="Event_18jn9kk">
+        <dc:Bounds x="552" y="127" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="532" y="97" width="77" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1h8ucz5_di" bpmnElement="enDescartadoRH">
+        <dc:Bounds x="800" y="790" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1w9sz19_di" bpmnElement="Event_1w9sz19">
+        <dc:Bounds x="1042" y="127" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0n42kfg_di" bpmnElement="rechazado">
+        <dc:Bounds x="880" y="105" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1ck379w_di" bpmnElement="Gateway_0vkexlg">
+        <dc:Bounds x="905" y="365" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_17pff5j_di" bpmnElement="Event_17pff5j">
+        <dc:Bounds x="1042" y="1002" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_16u8vyt_di" bpmnElement="candidatoPotencial">
+        <dc:Bounds x="880" y="980" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0qolg7l_di" bpmnElement="enDocumentacionRH">
+        <dc:Bounds x="670" y="460" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1oobx1n_di" bpmnElement="enAnalisisRH">
+        <dc:Bounds x="670" y="350" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0au01kf_di" bpmnElement="enEvaluacionTeoricaRH">
+        <dc:Bounds x="670" y="570" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1qin2x1_di" bpmnElement="enEvaluacionPracticaRH">
+        <dc:Bounds x="670" y="680" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0qeg2w7_di" bpmnElement="enEntrevistaRH">
+        <dc:Bounds x="670" y="790" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0aro6yr_di" bpmnElement="enPruebasPsicometricasRH">
+        <dc:Bounds x="670" y="900" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="enDocumentacionRH" />
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="enAnalisisRH" />
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="enEvaluacionTeoricaRH" />
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="enEvaluacionPracticaRH" />
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="enEntrevistaRH" />
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="enPruebasPsicometricasRH" />
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

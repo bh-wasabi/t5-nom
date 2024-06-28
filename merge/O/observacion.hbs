@@ -1,0 +1,73 @@
+{{#define id="observacion"}}
+  {{#view id="cubo"}}
+    {{#find limit="-1"}}
+      {{include field="_created.user"}}
+      {{include field="_date"}}
+      {{include field="persona.nombreCompleto"}}
+      {{include field="persona._genero"}}
+      {{include field="persona._tipoSanguineo"}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base._tipo"}}
+      {{include field="base._categoria"}}
+      {{include field="base._estatus"}}
+    {{/find}}
+  {{/view}}
+
+  {{#cube id="cubo" name="Observaciones" view="cubo" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{column field="persona._genero" width="80" label="Genero"}}
+    {{column field="base._estatus" label="Estatus"}}
+    {{!-- {{column field="_date" type="date" label="Año" groupInterval="year"}}
+    {{column field="_date" type="date" label="Mes" groupInterval="month"}}
+    {{column field="_date" type="date" label="Día" groupInterval="day"}} --}}
+    {{row field="base._tipo" width="250" label="Tipo"}}
+    {{row field="base.codigo" width="100" label="Código"}}
+    {{row field="base.descripcion" width="250" label="Descripción"}}
+    {{row field="base._categoria" width="250" label="Categoría"}}
+    {{!-- {{row field="persona._tipoSanguineo" width="20" label="Tipo Sanguineo"}}
+    {{row field="persona.nombreCompleto" width="200" label="Paciente"}} --}}
+    {{count field="_id" label="Cantidad" format="#"}}
+  {{/cube}}
+
+  {{#view id="signosVitales"}}
+    {{define type="param" id="track"}}
+    {{define type="param" id="actual"}}
+    {{#find}}
+      {{include field="_date"}}
+      {{include field="metricas"}}
+      {{sort field="_date"}}
+      {{filter field="='contexto.'+track" eq="=actual"}}
+      {{filter field="base.tipo" eq="signosVitales"}}
+    {{/find}}
+    {{unwind field="metricas"}}
+    {{calc field="fechaHora" value="=moment(_date).format('YYYY-MM-DD HH:mm')"}}
+  {{/view}}
+
+  {{#cube id="signosVitales" name="Signos Vitales" grandTotalLabel="Promedio" view="signosVitales" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnTotals="false" showColumnGrandTotals="false"}}
+    {{column field="campo" label="Métrica" expanded="true" width="80" fixedOrder="FC (l/min),FR (r/min),TS (mmHg),TD (mmHg),PAM,Temp (°C),SO₂ (%),Glucosa"}}
+    {{row field="fechaHora" type="text" label="Fecha/Hora" width="115" expanded="true"}}
+    {{avg field="valor" label="Valor" format="#,"}}
+  {{/cube}}
+
+  {{#view id="controlLiquidos"}}
+    {{define type="param" id="track"}}
+    {{define type="param" id="actual"}}
+    {{#find}}
+      {{include field="_date"}}
+      {{include field="metricas"}}
+      {{sort field="_date"}}
+      {{filter field="='contexto.'+track" eq="=actual"}}
+      {{filter field="base.tipo" eq="controlLiquidos"}}
+    {{/find}}
+    {{unwind field="metricas"}}
+    {{calc field="fechaHora" value="=moment(_date).format('YYYY-MM-DD HH:mm')"}}
+  {{/view}}
+
+  {{#cube id="controlLiquidos" name="Balance Líquidos" grandTotalLabel="Balance" view="controlLiquidos" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true"}}
+    {{column field="tipo" label="Tipo" expanded="true" fixedOrder="Ingreso,Egreso"}}
+    {{column field="campo" label="Métrica" expanded="true"}}
+    {{row field="fechaHora" type="text" label="Fecha/Hora" width="115" expanded="true"}}
+    {{sum field="valor" label="Valor" format="#,"}}
+  {{/cube}}
+
+{{/define}}

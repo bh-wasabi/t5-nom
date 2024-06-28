@@ -1,0 +1,13 @@
+{{#define id="notaOficio"}}
+  {{action id="ver" condition="=true" label="Imprimir Oficio" type="report-markdown" fileName="=calc.concat(base._tipoOficio, _created.folio)||'Oficio'" value="=base.texto" templateSource="plantillaOficio" templateId="=base.plantilla" visibleMode="always" btnSolid="true" color="brown"}}
+  {{#section id="base"}}
+    {{#field id="plantilla"}}
+      {{editor view="lista"}}
+      {{#onChange}}
+        {{set tipoOficio="=base.tipoOficio"}}
+        {{set texto="=calc.hbsMarkdown(base.texto, _doc)"}}
+      {{/onChange}}
+    {{/field}}    
+    {{field id="nombre" label="Nombre" hide="true" type="expr" value="=fn('folioName', @base._tipoOficio, @_created)"}}
+  {{/section}}
+{{/define}}

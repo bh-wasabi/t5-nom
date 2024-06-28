@@ -1,0 +1,11 @@
+{{#define id="kpi"}}
+  {{#view id="lista"}}
+    {{#find limit="-1"}}
+      {{include field="servicio"}}
+      {{include field="establecimiento"}}
+      {{include field="valor"}}
+      {{filter condition="=establecimiento" field="establecimiento" eq="=establecimiento"}}
+    {{/find}}
+    {{calc field="valor" value="=calc.round(valor,0)"}}
+  {{/view}}
+{{/define}}

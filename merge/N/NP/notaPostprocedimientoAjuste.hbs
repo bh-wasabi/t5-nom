@@ -1,0 +1,31 @@
+{{#define id="notaPostprocedimientoAjuste"}}
+  {{#section id="base"}}
+    {{#field id="nota"}}
+      {{#editor}}
+        {{param persona="=persona.id"}}
+      {{/editor}}
+      {{#onChange refresh="true"}}
+        {{set seleccionarDiagnostico="base.seleccionarDiagnostico"}}
+        {{set diagnostico="base.diagnostico"}}
+        {{set signosVitales="base.signosVitales"}}
+        {{set somatometria="base.somatometria"}}
+        {{set notaTecnica="base.notaTecnica"}}
+        {{set descripcionProcedimiento="base.descripcionProcedimiento"}}
+        {{set procedimientoProgramado="base.procedimientoProgramado"}}
+        {{set procedimientoRealizado="base.procedimientoRealizado"}}
+        {{set complicacionesProcedimiento="base.complicacionesProcedimiento"}}
+        {{set interpretacionProcedimiento="base.interpretacionProcedimiento"}}
+        {{set pronostico="base.pronostico"}}
+        {{set participante="base.participante"}}
+        {{set finalizadoConExito="base.finalizadoConExito"}}
+        {{set repetir="base.repetir"}}
+        {{set cobraRepeticion="base.cobraRepeticion"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="procedimientoProgramado"}}
+      {{#editor}}
+        {{param id="=persona.id"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

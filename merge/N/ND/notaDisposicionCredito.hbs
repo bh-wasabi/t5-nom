@@ -1,0 +1,20 @@
+{{#define id="notaDisposicionCredito"}}
+  {{#section id="base"}}
+    {{#onChange}}
+      {{update section="generarNota" value="=[{
+        persona: persona.id, 
+        _persona: persona.nombreCompleto, 
+        servicio: 'clientes',
+        _servicio: 'Clientes',
+        tipoNota: 'notaSolicitudOrdenPago', 
+        _tipoNota: 'Solicitud Orden Pago', 
+        tipoSolicitud: 'ordenPago', 
+        _tipoSolicitud: 'Orden Pago', 
+        concepto: 'Disposición Crédito',
+        referencia: disposicionCredito.base.concepto+' '+disposicionCredito.base.referencia,
+        importe: disposicionCredito.base.costo, 
+        importeTotal: disposicionCredito.base.costo
+      }]"}}
+    {{/onChange}}
+  {{/section}}
+{{/define}}

@@ -1,0 +1,29 @@
+{{#define id="_boardActions" superUser="true"}}
+  {{!-- {{action id="eliminar" hide="true"}} --}}
+  {{#view id="lista" name="Lista"}}
+    {{#find}}
+      {{include field="base"}}
+      {{search field="_name"}}
+      {{search field="base._userRole"}}
+      {{search field="base._addActions"}}
+      {{search field="base._removeActions"}}
+      {{sort field="_name" direction="asc"}}
+    {{/find}}
+  {{/view}}
+  {{#section id="base"}}
+    {{field id="nombre" type="expr" value="=base._board"}}
+  {{/section}}
+{{/define}} 
+{{#markup}}
+  {{#template id="lista"}}
+    <div class="list-material">
+      <li class="has-action-left">
+        <div class="list-content">
+          <span class="title">{{_name}}</span>
+          <span style="font-size:12px;">{{base._userRole}}</span>
+          <span style="font-size:12px;float:right;"><strong>{{base._status}}</strong></span>
+        </div>
+      </li>
+    </div>
+  {{/template}}
+{{/markup}}

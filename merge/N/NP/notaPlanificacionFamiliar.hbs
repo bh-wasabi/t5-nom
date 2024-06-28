@@ -1,0 +1,21 @@
+{{#define id="notaPlanificacionFamiliar"}}
+  {{#section id="metodos"}}
+    {{field id="esWoman" type="expr" value="=persona.esMujer"}}
+    {{field id="esMujer" type="expr" value="=base.esMujer"}}
+  {{/section}}  
+  {{#section id="condicion"}}
+    {{field id="esMujer" type="expr" value="=base.esMujer"}}
+    {{field id="esHombre" type="expr" value="=!esMujer"}}
+  {{/section}}
+
+  {{!--RACC VISTA  --}}
+   {{#view id="ultima"}}
+    {{#find limit="1"}}
+      {{include field="_name"}}
+      {{sort field="_id" direction="asc"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{filter condition="=persona" field="persona.id" eq="=persona"}}
+      {{!-- {{filter condition="=desde" field="_create.date" gt="=desde"}} --}}
+    {{/find}}
+  {{/view}}
+{{/define}}

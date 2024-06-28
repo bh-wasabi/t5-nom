@@ -1,0 +1,7 @@
+{{#define id="datosRadiacion"}}
+  {{#section id="base"}}
+    {{field id="especificaEquipos" type="expr" value="=calc.in(@tipoFuenteRadiacion,['equiposHibridos'])"}}
+    {{field id="especificaOtros" type="expr" value="=calc.in(@tipoFuenteRadiacion,['otras'])"}}
+    {{!-- {{validator type="expr" validIf="=1==0" message="Error" log="=calc.isEmpty(@aspectosBioseguridad)"}} --}}
+  {{/section}} 
+{{/define}}

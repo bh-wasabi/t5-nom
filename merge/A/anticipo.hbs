@@ -1,0 +1,15 @@
+{{#define id="anticipo"}}
+  {{#section id="base"}}
+    {{field id="totalFormasPago" type="calc" value="=calc.sumRef(formaPago, 'base.importe')"}}
+    {{field id="importeEfectivo" type="calc" value="=calc.sumRef(formaPago, 'base.importeEfectivo')"}}
+    {{field id="cambio" type="calc" value="=(totalFormasPago>importeTotal)?(totalFormasPago-importeTotal):0"}}
+    {{field id="totalEfectivo" type="calc" value="=importeEfectivo-cambio"}}
+    {{field id="totalTarjetas" type="calc" value="=calc.sumRef(formaPago, 'base.importeTarjeta')"}}
+    {{field id="totalCheques" type="calc" value="=calc.sumRef(formaPago, 'base.importeCheque')"}}
+    {{field id="totalTransferencias" type="calc" value="=calc.sumRef(formaPago, 'base.importeTransferencia')"}}
+    {{field id="totalDepositos" type="calc" value="=calc.sumRef(formaPago, 'base.importeDeposito')"}}
+    {{field id="totalPagares" type="calc" value="=calc.sumRef(formaPago, 'base.importePagare')"}}
+    {{field id="totalCobrado" type="calc" value="=importeEfectivo-cambio+totalCheques+totalTarjetas+totalTransferencias+totalDepositos+totalPagares"}}
+    {{field id="importe" type="calc" value="=calc.sumRef(formaPago, 'base.importe')"}}
+  {{/section}}
+{{/define}}

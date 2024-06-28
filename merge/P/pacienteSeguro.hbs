@@ -1,0 +1,9 @@
+{{#define id="pacienteSeguro"}}
+  {{#section id="base"}}
+  	{{field id="tieneDependencia" type="expr" value="=tipoDerechohabiencia=='01'"}}
+  	{{field id="tieneSocioNegocios" type="expr" value="=tipoDerechohabiencia=='10'"}}
+    {{field id="esDerechohabiencia_01020304" type="expr" value="=calc.in(tipoDerechohabiencia, ['01','02','03','04','10'])"}}
+    {{field id="esDerechohabiencia_05" type="expr" value="=calc.in(tipoDerechohabiencia, ['05'])"}}
+    {{field id="esDerechohabiencia_0607" type="expr" value="=calc.in(tipoDerechohabiencia, ['06','07'])"}}
+  {{/section}}
+{{/define}}

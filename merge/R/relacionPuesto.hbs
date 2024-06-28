@@ -1,0 +1,6 @@
+{{#define id="relacionPuesto"}}  
+  {{#section id="base"}}
+    {{field id="tieneRelacionesInternas" type="expr" value="=calc.in(@tipoRelacionPuesto, ['internas','ambas'])"}}
+    {{field id="tieneRelacionesExternas" type="expr" value="=calc.in(@tipoRelacionPuesto, ['externas','ambas'])"}}
+  {{/section}}
+{{/define}}

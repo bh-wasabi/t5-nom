@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:tns="http://xml.semture.de/bpmn20" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="P_p5" name="" targetNamespace="http://xml.semture.de/bpmn20" exporter="Camunda Modeler" exporterVersion="4.6.0" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://bpmn.sourceforge.net/schemas/BPMN20.xsd">
+  <collaboration id="COLLABORATION-P_p5">
+    <extensionElements>
+      <camunda:properties>
+        <camunda:property />
+      </camunda:properties>
+    </extensionElements>
+    <participant id="PO_p92" name="Solicitud No Programada de Reparación de Terceros" processRef="PROCESS-PO_p92" />
+  </collaboration>
+  <process id="PROCESS-PO_p92" processType="None" isClosed="false" isExecutable="true">
+    <laneSet id="LANESET-PO_p92">
+      <lane id="PO_p91" name="Hospital">
+        <flowNodeRef>Event_1w723yx</flowNodeRef>
+        <flowNodeRef>programado</flowNodeRef>
+      </lane>
+      <lane id="Lane_15l9nrs" name="Tercero">
+        <flowNodeRef>Event_1epvuaf</flowNodeRef>
+        <flowNodeRef>cerradoTercero</flowNodeRef>
+        <flowNodeRef>pendienteTercero</flowNodeRef>
+      </lane>
+    </laneSet>
+    <endEvent id="Event_1epvuaf">
+      <incoming>Flow_0kb9cb5</incoming>
+    </endEvent>
+    <task id="cerradoTercero" name="Reparación Realizada">
+      <incoming>Flow_0zfkpmu</incoming>
+      <outgoing>Flow_0kb9cb5</outgoing>
+    </task>
+    <startEvent id="Event_1w723yx">
+      <outgoing>Flow_0qqq28g</outgoing>
+    </startEvent>
+    <sequenceFlow id="Flow_0qqq28g" sourceRef="Event_1w723yx" targetRef="programado" />
+    <sequenceFlow id="Flow_1e0s1n1" sourceRef="programado" targetRef="pendienteTercero" />
+    <sequenceFlow id="Flow_0zfkpmu" sourceRef="pendienteTercero" targetRef="cerradoTercero" />
+    <sequenceFlow id="Flow_0kb9cb5" sourceRef="cerradoTercero" targetRef="Event_1epvuaf" />
+    <task id="programado" name="Solicitud Reparación">
+      <incoming>Flow_0qqq28g</incoming>
+      <outgoing>Flow_1e0s1n1</outgoing>
+    </task>
+    <subProcess id="pendienteTercero" name="En Reparación">
+      <incoming>Flow_1e0s1n1</incoming>
+      <outgoing>Flow_0zfkpmu</outgoing>
+    </subProcess>
+  </process>
+  <bpmndi:BPMNDiagram id="CollaborationP_p5" name="Colaboración">
+    <bpmndi:BPMNPlane id="PLANE-P_p5" bpmnElement="COLLABORATION-P_p5">
+      <bpmndi:BPMNShape id="PoolPO_p92" bpmnElement="PO_p92" isHorizontal="true" isExpanded="true">
+        <dc:Bounds x="161" y="82" width="687" height="418" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_15l9nrs_di" bpmnElement="Lane_15l9nrs" isHorizontal="true">
+        <dc:Bounds x="192" y="83" width="655" height="197" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SwimlanePO_p91" bpmnElement="PO_p91" isHorizontal="true" isExpanded="true">
+        <dc:Bounds x="192" y="280" width="655" height="220" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0kb9cb5_di" bpmnElement="Flow_0kb9cb5">
+        <di:waypoint x="688" y="180" />
+        <di:waypoint x="750" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0zfkpmu_di" bpmnElement="Flow_0zfkpmu">
+        <di:waypoint x="490" y="180" />
+        <di:waypoint x="588" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1e0s1n1_di" bpmnElement="Flow_1e0s1n1">
+        <di:waypoint x="440" y="380" />
+        <di:waypoint x="440" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0qqq28g_di" bpmnElement="Flow_0qqq28g">
+        <di:waypoint x="288" y="420" />
+        <di:waypoint x="390" y="420" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1epvuaf_di" bpmnElement="Event_1epvuaf">
+        <dc:Bounds x="750" y="162" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_12jt0ml_di" bpmnElement="cerradoTercero">
+        <dc:Bounds x="588" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1w723yx_di" bpmnElement="Event_1w723yx">
+        <dc:Bounds x="252" y="402" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1bfsahw_di" bpmnElement="programado">
+        <dc:Bounds x="390" y="380" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_05und25_di" bpmnElement="pendienteTercero">
+        <dc:Bounds x="390" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

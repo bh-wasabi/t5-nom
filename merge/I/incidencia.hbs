@@ -1,0 +1,35 @@
+{{#define id="incidencia"}}  
+  {{#action id="bim" hide="true" type="bim360" label="BIM" title="=calc.concat('BIM', _items[0].persona.planta)" bim="=_items[0].persona.bim" color="grey" visibleMode="close" fromSource="persona" fromView="datosUbicacion"}}
+    {{param ubicacion="=_data.ubicacion"}}
+  {{/action}}
+  {{#action id="planta" hide="true" type="openPreview" label="Planta" title="Planta" color="grey" visibleMode="close" fromSource="persona" fromView="datosUbicacion"}}
+    {{param ubicacion="=_data.ubicacion"}}
+    {{link title="=calc.concat('Planta', _items[0].persona.planta)" href="=fn('urlPlanta', _items[0].persona.planta)"}}
+  {{/action}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{!-- {{field id="esUbicacion" type="expr" value="=@ocurrioEn==='ubicacion'"}}
+    {{field id="esEstablecimiento" type="expr" value="=@ocurrioEn==='establecimiento'"}} --}}
+    {{field id="tieneUbicacion" type="expr" value="=calc.hasValue(criticidadZona)"}}
+    {{#field id="ubicacion"}}
+      {{#onChange}}
+        {{set area="=persona.area"}}
+        {{set criticidadZona="=persona.criticidadZona"}}        
+      {{/onChange}}
+    {{/field}}
+    {{#field id="tipoIncumplimiento"}}
+      {{#editor}}
+        {{param servicio="=servicio"}}
+        {{#onChange}}
+          {{set codigo="=base.codigo"}}
+          {{set tipoTiempoCorreccion="=base.tipoTiempoCorreccion"}}
+          {{set _tipoTiempoCorreccion="=base._tipoTiempoCorreccion"}}
+          {{set puntos="=fn('puntosIncumplimiento', _data.criticidadZona, _remoteScope.base)"}}
+          {{set vencimiento="=moment().add(fn('tiempoIncumplimiento', _data.criticidadZona, _remoteScope.base), 'minute').format()"}}
+          {{set alerta="=moment().add(fn('tiempoIncumplimiento', _data.criticidadZona, _remoteScope.base), 'minute').format()"}}
+          {{set vigente="si"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

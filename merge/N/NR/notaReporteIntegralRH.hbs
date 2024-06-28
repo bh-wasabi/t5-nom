@@ -1,0 +1,19 @@
+{{#define id="notaReporteIntegralRH"}}
+  {{action id="tool" type="report-docx" label="Word" title="=_name" color="primary" icon="arrow-down-a" btnSolid="true" visibleMode="close" condition="=true" segmentItems="competencias" segmentFields="tipoCompetencia,subTipoCompetencia"}}
+  {{!-- {{action id="tool" type="report-xlsx" label="Excel" title="=_name" color="green" visibleMode="close" condition="=true" icon="arrow-down-a" btnSolid="true"}} --}}
+  {{#action id="verEvaluaciones" hide="true" type="sub-link"}}
+    {{#link href="='/nota/lista'" name="=calc.concat('Evaluaciones', persona.nombreCompleto)" title="='Evaluaciones'"}}
+      {{param id="=persona.id"}}
+      {{param tipo="='notaEvaluacion'"}}
+    {{/link}}
+  {{/action}}
+  {{#grid id="competencias" section="competencias" disableEnter="true"}}
+    {{column field="tipoCompetencia" width="200" readOnly="true"}}
+    {{column field="subTipoCompetencia" width="300" readOnly="true"}} 
+    {{column field="competencia" width="400" readOnly="true"}} 
+    {{column field="nivel" width="110" readOnly="true"}} 
+    {{column field="nivelObtenido" width="120" required="true"}}
+    {{column field="descripcionNivel" width="120"}}
+    {{column field="resultado" width="120"}}
+  {{/grid}}  
+{{/define}}

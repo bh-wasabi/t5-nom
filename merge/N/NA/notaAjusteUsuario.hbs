@@ -1,0 +1,19 @@
+{{#define id="notaAjusteUsuario"}}
+  {{#section id="base"}}
+    {{#field id="usuario"}}
+      {{#onChange}}
+        {{set rolAcademico="=base.rolAcademico"}}
+        {{set _rolAcademico="=base._rolAcademico"}}
+      {{/onChange}}
+    {{/field}}
+    {{field id="esEstudiante" type="expr" hide="true" value="=rolAcademico=='estudiante'"}}
+    {{#field id="responsableAcademico"}}
+      {{#onChange}}
+        {{#update section="base"}}
+          {{set identificacionResponsableAcademico="=persona.prestadorServicios.datosEspecialidad"}}
+          {{set _identificacionResponsableAcademico="=persona.prestadorServicios._datosEspecialidad"}}
+        {{/update}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+{{/define}}

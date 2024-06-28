@@ -1,0 +1,173 @@
+{{#define id="notaRegistroSupervision"}}
+  {{!-- {{action id="afectar" error="=base.tieneImporte&&!calc.in(_created.subType,['SC'])?calc.concat('Registro Incorrecto.<br>No Corresponde para:',_created.subType):null" errorType="warning"}} --}}
+  {{param service="=base.servicio"}}
+  {{param serviceName="=base._servicio"}}
+
+  {{#view id="bitacora" name="Bitácora"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="_created.date"}}
+      {{include field="_created._service"}}
+      {{include field="_created._establishment"}}
+      {{include field="base._tipoSupervision"}}
+      {{include field="persona"}}
+      {{search field="_name"}}
+      {{search field="_created._service"}}
+      {{search field="_created._establishment"}}
+      {{search field="base._tipoSupervision"}}
+      {{sort field="_id" direction="desc"}}
+      {{filter field="base.estatus" eq="afectado"}}
+      {{filter condition="=persona" field="persona.id" eq="=persona"}}
+    {{/find}}
+  {{/view}}
+  {{#browser id="bitacora" view="bitacora" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="grey"}}
+    {{list itemTemplate="bitacora" allowSearch="true" allowRefresh="true" allowEdit="false" allowInsert="false"}}
+  {{/browser}}
+
+  {{#view id="reporte"}}
+    {{#find limit="-1"}}
+      {{include field="_created"}}
+      {{include field="base"}}
+      {{sort field="_id" direction="asc"}}
+      {{filter field="base.tipoSupervision" eq="=tipoSupervision"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{filter condition="=desde" field="_created.date" gt="=moment(desde).format('YYYY-MM-DD')"}}
+      {{filter condition="=hasta" field="_created.date" lt="=moment(hasta).format('YYYY-MM-DD')"}}
+    {{/find}}
+  {{/view}}
+  {{action id="ver" condition="=true" type="menu" menu="menuReportes" label="Reportes" color="grey" isBrowserAction="true"}}
+  {{#menu id="menuReportes" color="grey"}}
+    {{item action="reporteSupervisionTemperaturaAlimentosEntregaPaciente" text="Reporte Temperatura Alimentos Entrega al Paciente" userRole="reporteSupervisionTemperaturaAlimentosEntregaPaciente"}}
+    {{item action="reporteSupervisionVentaDiaria" text="Reporte Venta Diaria" userRole="reporteSupervisionVentaDiaria"}}
+  {{/menu}}  
+  {{action id="reporteSupervisionTemperaturaAlimentosEntregaPaciente" hide="true" type="quickReport" view="reporte"}}
+  {{action id="reporteSupervisionVentaDiaria" hide="true" type="quickReport" view="reporte"}}
+
+  {{action id="afectar" error="=base.requiereAdjuntos&&_.isEmpty(adjuntos)?'Falta Incluir el Archivo Adjunto Correspondiente':(base.tieneImporte&&!calc.in(_created.subType,['SC'])?calc.concat('Registro Incorrecto.<br>No Corresponde para:',_created.subType):null)"}}
+  {{#section id="base"}}
+  	{{#field id="servicio"}}
+  		{{onChange clearFields="tipoSupervision,motivo"}}
+  	{{/field}}
+  	{{#field id="tipoSupervision"}}
+      {{onChange clearFields="motivo"}}
+  		{{#editor}}
+  			{{param partOf="=@servicio"}}
+  		{{/editor}}
+  	{{/field}}
+    {{#field id="motivo"}}
+      {{#editor}}
+        {{param servicio="=@servicio"}}
+        {{param tipoRegistro="=@tipoSupervision"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="activoFijo"}}
+      {{#editor}}
+        {{param servicio="=@servicio"}}
+      {{/editor}}
+      {{#onChange}}
+        {{set codigo="=base.codigo"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="ubicacion"}}
+      {{#editor}}
+        {{param servicio="=@servicio"}}
+      {{/editor}}
+    {{/field}}
+    {{field id="tieneSubTipo" type="expr" value="=calc.in(tipoSupervision, ['consumo','disponible'])"}}
+    {{field id="tieneValor" type="expr" value="=calc.in(tipoSupervision, ['consumo','disponible'])"}}
+    {{field id="tieneActivoFijo" type="expr" value="=calc.in(tipoSupervision, ['capacitacionEquipo','inspeccion','seguro','garantia','limpiezaDesincrustracionTermosCafeteras'])"}}
+    {{field id="requiereAdjuntos" type="expr" value="=calc.in(tipoSupervision, ['actividad', 'incidencia', 'supervision', 'informeCumplimiento', 'informeAcreditacion', 'controlCalidad','distribucionPersonal','capacitacionEquipo','inspeccion','encuesta','usoEstacionamientoVisitas','usoEstacionamientoBicicletas','reposicionProductos','aperturaLockers','listaPrecios','flujoClientes','seguro','garantia','solicitudAlimentos','recepcionAlimentos'])"}}
+    {{field id="tieneGramaje" type="expr" value="=calc.in(tipoSupervision, ['gramajeAlimentos'])"}}
+  	{{field id="tieneTemperatura" type="expr" value="=calc.in(tipoSupervision, ['temperaturaAlimentos','temperaturaAlimentosCintaDistribucion','temperaturaAlimentosEntregaPaciente'])"}}
+    {{field id="tieneTemperaturaCamaras" type="expr" value="=calc.in(tipoSupervision, ['temperaturaCamaras'])"}}
+    {{field id="tieneListaPrecios" type="expr" value="=calc.in(tipoSupervision, ['listaPrecios'])"}}
+    {{field id="tieneCantidad" type="expr" value="=calc.in(tipoSupervision, ['racionesPublicoGeneral'])"}}
+    {{field id="tieneProveedor" type="expr" value="=calc.in(tipoSupervision, ['solicitudAlimentos','recepcionAlimentos'])"}}
+    {{field id="tieneImporte" type="expr" value="=calc.in(tipoSupervision, ['ventaDiaria','recepcionAlimentos'])"}}
+    {{field id="tieneDatosEncuesta" type="expr" value="=calc.in(tipoSupervision, ['encuesta'])"}}
+    {{field id="tieneDatosInfeccionGastrointestinal" type="expr" value="=calc.in(tipoSupervision, ['infeccionesGastrointestinales'])"}}
+    {{field id="tieneDatosRegistroCamaraRefrigeracion" type="expr" value="=calc.in(tipoSupervision, ['temperaturaGramajeCamarasRefrigeradores'])"}}
+    {{field id="tieneTiempoUso" type="expr" value="=calc.in(tipoSupervision, ['usoEstacionamientoVisitas'])"}}
+    {{field id="esInformeAcreditacion" type="expr" value="=calc.in(tipoSupervision, ['informeAcreditacion'])"}}
+    {{field id="esAccidente" type="expr" value="=calc.in(tipoSupervision, ['accidente'])"}}
+    {{field id="esOtroAccidente" type="expr" value="=calc.in(tipoSupervision, ['accidente'])&&tipoAccidente=='otro'"}}
+    {{field id="esDistribucionPersonal" type="expr" value="=calc.in(tipoSupervision, ['distribucionPersonal'])"}}
+    {{field id="tieneUbicacion" type="expr" value="=calc.in(tipoSupervision, ['accidente'])"}}
+    {{field id="tieneFechaEvento" type="expr" value="=calc.in(tipoSupervision, ['accidente'])"}}
+    {{field id="tieneNotificacion" type="expr" value="=servicio=='moi'&&tipoSupervision=='actividad'&&_motivo=='Trasalado de Cilindros'"}}
+  {{/section}}
+  {{#section id="temperaturaCamaras"}}
+    {{#field id="articulo"}}
+      {{#editor}}
+        {{param tipoActivoFijo="otroActivoFijo"}}
+        {{param servicio="=base.servicio"}}
+      {{/editor}}
+      {{#onChange}}
+        {{set codigo="=base.codigo"}}
+        {{set descripcion="=base.descripcion"}}
+        {{set tipoArticulo="=base.tipoArticulo"}}        
+      {{/onChange}}
+    {{/field}}
+  {{/section}}  
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+  {{#grid id="gramajeAlimentos" section="gramajeAlimentos" keyField="preparacion" allowRemove="true" allowInsert="true"}}
+    {{column field="momentoDieta" width="150" required="true"}}
+    {{column field="preparacion" width="250" required="true"}}
+    {{column field="pesoIdeal" width="150"}}
+    {{column field="pesoReal" width="150"}}
+    {{column field="cumple" width="150" required="true"}}
+    {{column field="responsable" width="200"}}
+  {{/grid}}
+  {{#grid id="temperaturaAlimentos" section="temperaturaAlimentos" keyField="preparacion" allowRemove="true" allowInsert="true"}}
+    {{column field="momentoDieta" width="150" required="true"}}
+    {{column field="preparacion" width="250" required="true"}}
+    {{column field="plato" width="150"}}
+    {{column field="puntoMedicionTemperatura" width="150"}}
+    {{column field="fechaHora" width="150" }}
+    {{column field="temperaturaMedia" width="100"}}
+    {{column field="rangoEsperado" width="120"}}
+    {{column field="accionCorrectiva" width="250"}}
+    {{column field="responsable" width="200"}}
+  {{/grid}}
+  {{#grid id="listaPrecios" section="listaPrecios" keyField="nombreProducto" allowRemove="true" allowInsert="true"}}
+    {{column field="nombreProducto" width="300" required="true"}}
+    {{column field="proveedor" width="250"}}
+    {{column field="precio" width="120" required="true"}}
+    {{column field="informacionNutricional" width="400"}}
+  {{/grid}}
+  {{#grid id="temperaturaCamaras" section="temperaturaCamaras" keyField="articulo" allowRemove="true" allowInsert="true"}}
+    {{column field="fecha" width="150" required="true" validateDate="true"}}
+    {{column field="hora" width="120" required="true" validateTime="true"}}
+    {{column field="articulo" width="250"}}
+    {{column field="codigo" width="150" readOnly="true"}}
+    {{column field="temperatura" width="120" required="true"}}
+    {{column field="responsable" width="200"}}
+  {{/grid}}
+{{/define}}
+{{#markup}}
+  {{#template id="bitacora"}}
+    <div>
+      {{_name}}
+      <span style="font-size:12px;float:right;">{{date _created.date "DD/MMM/YYYY h:mm a"}}</span>
+      {{#if persona}}
+        <br><span style="font-size:12px;">{{persona.nombreCompleto}}</span>
+        [.#if esSIC.]
+        <span style="font-size:12px;float:right;">{{_created.establishment}}</span>
+        [./if.]
+        {{#if persona.esPaciente}}
+        <br><span style="font-size:12px;">{{persona._genero}}{{#if persona.tipoSanguineo}}, {{persona._tipoSanguineo}}{{/if}}</span>
+        {{else}}
+        <br><span style="font-size:12px;">{{_created._service}}</span>
+        <br><span style="font-size:12px;">{{base._tipoSupervision}}</span>
+        {{/if}}
+      {{/if}}
+    </div>
+  {{/template}}
+{{/markup}}

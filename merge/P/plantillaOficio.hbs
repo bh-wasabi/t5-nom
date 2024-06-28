@@ -1,0 +1,23 @@
+{{#define id="plantillaOficio"}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="base.tipoOficio"}}
+      {{include field="base.usoOficio"}}
+      {{sort field="_name"}}
+      {{filter condition="=usoOficio" field="base.usoOficio" eq="=usoOficio"}}
+      {{search field="_name"}}
+      {{search field="base.tipoOficio"}}
+      {{search field="base.usoOficio"}}
+    {{/find}}
+  {{/view}}
+{{/define}}
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}</br>
+      <span style="font-size:12px;">{{base._usoOficio}}</span>
+      <span style="font-size:12px;float:right;">{{base._tipoOficio}}</span>
+    </div>    
+  {{/template}}
+{{/markup}}

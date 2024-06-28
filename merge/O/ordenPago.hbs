@@ -1,0 +1,7 @@
+{{#define id="ordenPago"}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{field id="importeIva" type="expr" value="=calc.tax(base.importe, base.iva, 2)"}}
+    {{field id="importeTotal" type="expr" value="=calc.addTax(base.importe, base.iva, 2)"}}
+  {{/section}}
+{{/define}}

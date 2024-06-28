@@ -1,0 +1,20 @@
+{{#define id="rhLineaEstrategica"}}
+  {{#view id="lista" name="Lista"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="base._ejeEstrategico"}}
+      {{search field="_name"}}
+      {{search field="base._ejeEstrategico"}}
+      {{sort field="base._ejeEstrategico" direction="asc"}}
+      {{sort field="base.orden" direction="asc"}}
+      {{sort field="_name" direction="asc"}}
+      {{filter condition="=ejeEstrategico" field="base.ejeEstrategico" eq="=ejeEstrategico"}}
+    {{/find}}
+  {{/view}}
+{{/define}}
+{{#markup}}
+  {{#template id="lista"}}
+    <div style="white-space:pre-wrap;font-style:italic;">{{_name}}</div>
+    <span style="font-size:12px;float:right;">{{base._ejeEstrategico}}</span>
+  {{/template}}
+{{/markup}}

@@ -1,0 +1,28 @@
+{{#define id="cuentaBancaria"}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base.nombre"}}
+      {{include field="base.estatus"}}
+      {{include field="base.numero"}}
+      {{include field="base.moneda"}}
+      {{sort field="base.nombre" direction="asc"}}
+      {{search field="base.nombre"}}
+    {{/find}}
+  {{/view}}
+  {{#section id="base"}}
+    {{#field id="cuentaContable"}}
+      {{#onChange}}
+        {{set cuenta="=base.cuenta"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}  
+{{/define}} 
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{base.nombre}}
+      <span style="font-size:12px;float:right;">{{base._moneda}}</span>
+      </br><span style="font-size:12px;">{{base.numero}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

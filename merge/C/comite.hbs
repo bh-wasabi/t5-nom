@@ -1,0 +1,29 @@
+{{#define id="comite"}}
+  {{param removeIfEmptySection="integrantes"}}
+  {{param removeIfEmptyField="usuario"}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base"}}
+      {{sort field="_name" direction="asc"}}
+      {{search field="_name"}}
+    {{/find}}
+  {{/view}}
+  {{#section id="base"}}
+    {{field id="nombreCompleto" type="expr" label="Nombre" value="nombre"}}
+  {{/section}}
+  {{#grid id="integrantes" section="integrantes" allowRemove="true" allowInsert="true" allowSort="true" sortBy="orden"}}
+    {{column field="usuario" width="500"}}
+    {{column field="cargo" width="200"}}
+    {{column field="estatus" width="100"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}
+
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}</br>
+      <span style="font-size:12px;">{{base.lugarReunion}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

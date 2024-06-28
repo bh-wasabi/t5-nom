@@ -1,0 +1,65 @@
+{{#define id="vinculoInterno"}}  
+  {{#view id="activos"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="_updated"}}
+      {{include field="base"}}
+      {{include field="persona"}}
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{sort field="_name" direction="desc"}}
+      {{filter field="_updated.moment" eq="='activo'"}}
+      {{filter condition="=persona" field="persona.id" eq="=persona"}}
+      {{filter condition="=solicitud" field="base.vinculoInterno.base.seleccionarSolicitud" eq="=solicitud"}}
+      {{filter condition="=tipoExpediente" field="persona.tipoExpediente" eq="=tipoExpediente"}}
+    {{/find}}
+    {{calc field="color" type="expr" value="=fn('solicitudColor', _updated.moment)"}}
+    {{calc field="icono" type="expr" value="=fn('solicitudIcono', _updated.moment)"}}
+    {{editor display="_name"}}
+  {{/view}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{field id="esPaciente" type="expr" value="=tipoExpediente==='paciente'"}}
+    {{field id="esProtocoloInvestigacion" type="expr" value="=esPaciente&&tipoSolicitud==='protocoloInvestigacion'"}}    
+    {{#field id="tipoVinculo"}}
+      {{onChange clearFields="tipoSolicitud,seleccionarSolicitud"}}
+    {{/field}}
+    {{#field id="tipoSolicitud"}}
+      {{#onChange clearFields="seleccionarSolicitud"}}
+        {{set tipoExpediente="=_mainDoc.base.tipoExpediente"}}
+        {{set _tipoExpediente="=_mainDoc.base._tipoExpediente"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="seleccionarSolicitud"}}
+      {{#editor alwaysLoad="true"}}
+        {{param tipoSolicitud="=tipoSolicitud"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+  {{#browser id="pacientes" view="activos" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green" docId="=persona.id" docType="='persona'" showActions="preliminar"}}
+    {{param tipoExpediente="='paciente'"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}      
+  {{#browser id="investigadores" view="activos" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green" docId="=persona.id" docType="='persona'" showActions="preliminar"}}
+    {{param tipoExpediente="='_user'"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}      
+{{/define}}
+{{#markup}}
+  {{#template id="lista"}}
+    <div class="list-material">
+      <li class="has-action-left">
+        <div class="list-action-left"><i class="icon ion-{{icono}} text-{{color}}"></i></div>
+        <div class="list-content">
+          <span class="title">{{persona.nombreCompleto}}</span>
+          <span style="font-size:12px;">{{persona.clave}}</span>
+          <span style="font-size:12px;float:right;">{{persona._tipoSanguineo}} {{persona._genero}}</span>
+          <br><span style="font-size:12px;white-space:pre-wrap;font-style:italic;">{{_name}}</span>
+          {{#if _updated._moment}}
+          <br><span style="font-size:12px;"><strong>{{_updated._moment}}</strong></span>
+          {{/if}}
+        </div>          
+      </li>
+    </div>
+  {{/template}}
+{{/markup}}

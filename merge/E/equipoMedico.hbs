@@ -1,0 +1,95 @@
+{{#define id="equipoMedico"}}
+[.#if esSIC.]
+  {{#action id="bim" hide="true" type="bim360" label="BIM" title="=calc.concat('BIM', _items[0].persona.planta)" bim="=_items[0].persona.bim" color="grey" visibleMode="close" fromSource="persona" fromView="datosUbicacion"}}
+    {{param ubicacion="=_data.ubicacion"}}
+  {{/action}}
+  {{#action id="planta" hide="true" type="openPreview" label="Planta" title="Planta" color="grey" visibleMode="close" fromSource="persona" fromView="datosUbicacion"}}
+    {{param ubicacion="=_data.ubicacion"}}
+    {{link title="=calc.concat('Planta', _items[0].persona.planta)" href="=fn('urlPlanta', _items[0].persona.planta)"}}
+  {{/action}}
+[.else.]
+  {{#action id="ver" condition="=true" label="Ver Planeación" type="view-scheduler" color="cyan"}}
+    {{scheduler type="plan" startDayHour="=base.horaInicioDia" endDayHour="=base.horaFinDia" cellDuration="30" resourceSource="planAgenda" resourceView="agendasActivas" resourceField="schedule" views="month,week,day" currentView="day"}}
+  {{/action}}
+  {{#action id="ver2" condition="=true" label="Ver Agenda" type="view-scheduler" btnSolid="false" color="green"}}
+    {{scheduler type="busy" startDayHour="=base.horaInicioDia" endDayHour="=base.horaFinDia" cellDuration="30" resourceSource="planAgenda" resourceView="agendasActivas" resourceField="schedule" views="month,week,day" currentView="day"}}
+  {{/action}}
+[./if.]  
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base._tipoEquipoMedico"}}
+      {{include field="base._estatus"}}    
+      {{include field="base._udi"}}
+      {{sort field="base.tipoEquipoMedico" direction="asc"}}
+      {{sort field="base._udi" direction="asc"}}
+      {{search field="base._tipoEquipoMedico"}}
+      {{search field="base._udi"}}
+    {{/find}}
+  {{/view}}
+[.#if esSIC.]  
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{#field id="ubicacion"}}
+      {{#editor}}
+        {{#onChange}}
+          {{set area="=persona.area"}}
+          {{set criticidadZona="=persona.criticidadZona"}}
+          {{set vencimiento="=fn('vencimientoZona', persona.criticidadZona)"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="articulo"}}
+      {{#editor alwaysLoad="true"}}
+        {{param ubicacion="=ubicacion"}}
+        {{param planCompras="=subTipoSolicitud=='adquisicion'"}}
+        {{param estatus="=calc.in(subTipoSolicitud, ['instalacion','baja'])?'inactivo':'activo'"}}
+        {{!-- {{param estatus="=subTipoSolicitud=='instalacion'?'inactivo':'activo'"}} --}}
+        {{param noBaja="=true"}}
+        {{#onChange}}
+          {{join source="persona" as="ubicacion" id="base.ubicacion"}}
+          {{set codigo="=base.codigo"}}
+          {{set descripcion="=base.descripcion"}}
+          {{set descripcionLarga="=base.descripcionLarga"}}
+          {{set datosActivoFijo="=base.datosActivoFijo"}}
+          {{set _datosActivoFijo="=base._datosActivoFijo"}}
+          {{set ubicacion="=base.ubicacion"}}
+          {{set ubicacionArticulo="=base.ubicacion"}}
+          {{set area="=ubicacion.persona.area"}}
+          {{set criticidadZona="=ubicacion.persona.criticidadZona"}}
+          {{set vencimiento="=fn('vencimientoZona', ubicacion.persona.criticidadZona)"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="motivo"}}
+      {{#editor}}
+        {{param servicio="='equipoMedico'"}}
+        {{param partOf="=subTipoSolicitud"}}
+      {{/editor}}
+    {{/field}}
+    {{validator type="expr" validIf="=@ubicacion&&@ubicacion!=@nuevaUbicacion&&ubicacion==ubicacionArticulo" message="Ubicación Incorrecta"}}
+  {{/section}}
+[.else.]
+  {{#section id="base"}}
+    {{#field id="horaInicioDia"}}
+      {{editor interval="60"}}
+    {{/field}}
+    {{#field id="horaFinDia"}}
+      {{editor interval="60"}}
+    {{/field}}
+    {{field id="nombre" type="expr" value="=calc.concat(base._tipoEquipoMedico, base._udi)"}}
+    {{#field id="fechaExpiracion"}}
+      {{validator type="expr" validIf="=moment().diff(@fechaFabricacion, 'days')>moment().diff(@fechaExpiracion, 'days')" message="Fecha Expiracion Incorecta."}}
+    {{/field}}
+  {{/section}}
+[./if.]
+{{/define}}
+
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{base._udi}}</br>
+      <span style="font-size:12px;">{{base._tipoEquipoMedico}}</span>
+      <span style="font-size:12px;float:right;">{{base._estatus}}</span>
+    </div>    
+  {{/template}}
+{{/markup}} 

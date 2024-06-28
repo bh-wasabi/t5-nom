@@ -1,0 +1,17 @@
+{{#define id="notaEvaluacionSGG"}}
+  {{param startOnOpen="indicadores"}}
+  {{#grid id="indicadores" section="indicadores" disableEnter="true"}}
+    {{column field="ambito" width="300" readOnly="true"}}
+    {{column field="kpi" width="60" readOnly="true"}}
+    {{column field="_kpi" width="650" readOnly="true"}}
+    {{column field="resultado" width="100" required="true"}}
+  {{/grid}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

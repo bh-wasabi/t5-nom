@@ -1,0 +1,16 @@
+{{#define id="notaSolicitudAlimentacionPacientes"}}
+  {{#action id="afectar"}}
+    {{#update section="base"}}
+      {{setRef ref="alimentacionPacientes.base.vencimiento" value="=calc.dueDate(alimentacionPacientes.base.vencimiento, 'atencion', calc.dueTimes('alimentacionPacientes', alimentacionPacientes.base.subTipoSolicitud, alimentacionPacientes.base.motivo, alimentacionPacientes.base.momentoDieta, alimentacionPacientes.base.criticidadZona, alimentacionPacientes.base.tiempos))"}}
+      {{setRef ref="alimentacionPacientes.base.alerta"      value="=calc.alertDate(alimentacionPacientes.base.vencimiento, 'atencion', calc.dueTimes('alimentacionPacientes', alimentacionPacientes.base.subTipoSolicitud, alimentacionPacientes.base.motivo, alimentacionPacientes.base.momentoDieta, alimentacionPacientes.base.criticidadZona, alimentacionPacientes.base.tiempos))"}}
+    {{/update}}
+  {{/action}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

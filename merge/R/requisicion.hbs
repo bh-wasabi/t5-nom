@@ -1,0 +1,22 @@
+{{#define id="requisicion"}}  
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{#field id="articulo"}}
+      {{#editor}}
+        {{param tipoArticulo="material,medicamento,solucion"}}
+        {{#onChange}}
+          {{set codigo="=base.codigo"}}
+          {{set descripcion="=base.descripcion"}}
+          {{set codigoInternacional="=base.codigoInternacional"}}
+          {{set tipoArticulo="=base.tipoArticulo"}}
+          {{set _tipoArticulo="=base._tipoArticulo"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="areaRequirente"}}
+      {{#editor}}
+        {{param partOf="='direccion'"}}
+      {{/editor}}      
+    {{/field}}
+  {{/section}}
+{{/define}}

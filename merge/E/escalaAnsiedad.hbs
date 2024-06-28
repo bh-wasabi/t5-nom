@@ -1,0 +1,6 @@
+{{#define id="escalaAnsiedad"}}
+  {{#section id="base"}}
+    {{field id="total" type="calc" value="=calc.sumArgs(@meSientoTensoNervioso, @sientoTemorAlgoMaloSuceder, @tengoCabezaLlenaPreocupaciones, @soyCapazPermanecerTranquilo, @experimentoSensacionNervios, @meSientoInquieto, @experimentoSensacionesGranAngustia)"}}
+    {{field id="nivel" type="expr" value="=fn('escalaAnsiedad', total)"}}    
+  {{/section}}
+{{/define}} 

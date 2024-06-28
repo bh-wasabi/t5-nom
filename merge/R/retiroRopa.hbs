@@ -1,0 +1,36 @@
+{{#define id="retiroRopa"}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{#field id="ubicacionRecoleccionRopaSucia"}}
+      {{#editor}}
+        {{param tipoUbicacion="almacen,deposito"}}
+        {{param subTipoUbicacion="ropaSucia"}}
+     {{/editor}}
+     {{#onChange}}
+       {{set ubicacionOrigenRopaLimpia="=persona.ubicacionOrigenRopaLimpia"}}
+       {{set area="=persona.area"}}
+       {{set criticidadZona="=persona.criticidadZona"}}
+       {{set vencimiento="=fn('vencimientoZona', persona.criticidadZona)"}}
+       {{set ubicacionEntregaRopaLimpia="=ubicacionRecoleccionRopaSucia"}}
+     {{/onChange}}
+    {{/field}}
+    {{#field id="ubicacionEntregaRopaSucia"}}
+      {{#editor}}
+        {{param tipoUbicacion="central"}}
+        {{param subTipoUbicacion="ropaSucia"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="ubicacionRecoleccionRopaLimpia"}}
+      {{#editor}}
+        {{param tipoUbicacion="central"}}
+        {{param subTipoUbicacion="ropaLimpia"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="ubicacionEntregaRopaLimpia"}}
+      {{#editor}}
+        {{param tipoUbicacion="almacen,deposito"}}
+        {{param subTipoUbicacion="ropaLimpia"}}
+     {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

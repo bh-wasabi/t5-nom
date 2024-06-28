@@ -1,0 +1,14 @@
+{{#define id="datosTamizajeDetecciones"}}
+  {{#section id="base"}}
+    {{field id="siDepresion" type="expr" value="=calc.isTrue(tamizajeTristeDeprimido)"}}
+    {{field id="siMemoria" type="expr" value="=calc.isTrue(olvidaCosasCostumbre)"}}
+    {{field id="siOrina" type="expr" value="=calc.isTrue(tamizajeFugaOringa)"}}
+    {{field id="siCaida" type="expr" value="=calc.isTrue(tamizajeCaidas)"}}
+    {{field id="siActividadBasicas" type="expr" value="=calc.isTrue(tamizajeActividadesBasicas)"}}
+    {{field id="siActividadInstrumental" type="expr" value="=calc.isTrue(tamizajeActividadesInstrumental)"}}
+    {{!-- Tarea 3156 --}}
+    {{field id="esMayor10" type="expr" value="=calc.fromNowYears(fechaNacimiento)>=10"}}
+    {{field id="esMayor50" type="expr" value="=calc.fromNowYears(fechaNacimiento)>=50"}}
+    {{!-- Tarea 3156 --}}
+  {{/section}}
+{{/define}}

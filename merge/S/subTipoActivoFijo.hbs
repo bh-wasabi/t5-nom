@@ -1,0 +1,37 @@
+{{#define id="subTipoActivoFijo"}}
+  {{#action id="tool" label="Solicitudes Activas" condition="true" type="sub-link" btnSolid="false" color="green" visibleMode="close"}}
+    {{#link href="'/solicitud/activas'" title="=calc.concatDash('Solicitudes Activas', _name)" name="=calc.concatDash('Solicitudes Activas', _name)"}}
+      {{param tipoActivoFijo="=base.tipoActivoFijo"}}
+      {{param subTipoActivoFijo="=_id"}}
+    {{/link}}
+  {{/action}}
+  {{#action id="tool2" label="Agenda Activas" condition="true" type="view-scheduler" btnSolid="false" color="green" visibleMode="close" fromSource="solicitud" fromView="agendasActivas"}}
+    {{param tipoActivoFijo="=base.tipoActivoFijo"}}
+    {{param subTipoActivoFijo="=_id"}}
+    {{scheduler type="items" cellDuration="60" views="month,week,day" currentView="week"}}
+  {{/action}}
+
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base"}}
+      {{search field="_name"}}
+      {{search field="base._tipoActivoFijo"}}
+      {{filter condition="=tipoActivoFijo" field="base.tipoActivoFijo" eq="=tipoActivoFijo"}}
+      {{sort field="base._tipoActivoFijo" direction="asc"}}
+      {{sort field="base.orden" direction="asc"}}
+    {{/find}}
+  {{/view}}
+
+  {{#browser id="ver" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+
+{{/define}}
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}
+      <br><span style="font-size:12px;">{{base._tipoActivoFijo}}</span>      
+    </div>    
+  {{/template}}
+{{/markup}}

@@ -1,0 +1,14 @@
+{{#define id="notaAceptacionMultiple"}}
+  {{param startOnOpen="aplicacion"}}
+  {{#grid id="aplicacion" section="aplicacion" disableEnter="true" applyFilter="solicitud" applyTo="continuar" applyContinue="true"}}
+    {{column field="fecha" type="date" format="DD/MMM/YYYY" width="110" readOnly="true"}}
+    {{column field="solicitud" type="text" width="180" readOnly="true"}}
+    {{column field="_name" width="385" readOnly="true"}}
+    {{column field="_persona" width="180" readOnly="true"}}
+    {{column field="central" width="180" readOnly="true"}}
+    {{column field="cama" width="70" readOnly="true"}}
+    {{column field="solicitado" label="Solicitado" width="70" readOnly="true"}}
+    {{!-- {{column field="cantidad" label="Cantidad" width="65" readOnly="true"}} --}}  {{!-- en farmacia no quieren ver esta columna --}}
+    {{column field="continuar" width="70"}}
+  {{/grid}}
+{{/define}}

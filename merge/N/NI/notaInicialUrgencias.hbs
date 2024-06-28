@@ -1,0 +1,82 @@
+{{#define id="notaInicialUrgencias"}}
+  {{#section id="base"}}
+    {{!-- {{field id="fueraHospital" type="expr" value="=!@continuaAtencionFueraUrgencias"}}
+    {{field id="casa" type="expr" value="=continuaAtencionEnUrgencias=='casa'"}}
+    {{field id="noCasa" type="expr" value="=!casa"}}
+    {{field id="enUrgencias" type="expr" value="=continuaAtencionEnUrgencias&&noCasa"}}
+    {{field id="fueraUrgencias" type="expr" value="=!enUrgencias"}} --}}
+    {{field id="tieneCondicionAlta" type="expr" value="=(continuaAtencionFueraUrgencias||seEnviaA)"}}
+    {{!-- racc --}}
+    {{field id="tienePlanHidratacion" type="expr" value="=planHidratacion=='planA'||planHidratacion=='planB'"}}
+    {{!-- racc --}}
+  {{/section}}
+  {{#view id="sinbaUrgencias"}}
+    {{complexView type="sinbaUrgencias"}}
+  {{/view}}
+  {{#grid id="sinbaUrgencias" name="SINBA - Urgencias" view="sinbaUrgencias" exportToExcel="true" allowRefresh="true" columnChooser="true" wordWrapEnabled="true" columnAutoWidth="wordWrapEnabled"}}
+    {{column field="clues"}}
+    {{column field="folio"}}
+    {{column field="curpPaciente"}}
+    {{column field="nombre"}}
+    {{column field="primerApellido"}}
+    {{column field="segundoApellido"}}
+    {{column field="fechaDeNacimiento"}}
+    {{column field="paisOrigen"}}
+    {{column field="entidadNacimiento"}}
+    {{column field="sexo"}}
+    {{column field="derechoabiencia"}}
+    {{column field="gratuidad"}}
+    {{column field="seConsideraIndigena"}}
+    {{column field="seConsideraAfroamericano"}}
+    {{column field="paisResidencia"}}
+    {{column field="entidadDeResidencia"}}
+    {{column field="municipioDeResidencia"}}
+    {{column field="localidadDeResidencia"}}
+    {{column field="otraLocalidad"}}
+    {{column field="codigoPostal"}}
+    {{column field="atencionPrehospitalaria"}}
+    {{column field="tiempoTraslado"}}
+    {{column field="fechaDeIngreso"}}
+    {{column field="horaDeIngreso"}}
+    {{column field="tipoDeUrgencia"}}
+    {{column field="motivoDeAtención"}}
+    {{column field="tipoCama"}}
+    {{column field="trasladoTransitorio"}}
+    {{column field="cluesTraslado"}}
+    {{column field="fechaAlta"}}
+    {{column field="horaAlta"}}
+    {{column field="altaPor"}}
+    {{column field="cluesReferido"}}
+    {{column field="ministerioPúblico"}}
+    {{column field="folioCertificadoDefunción"}}
+    {{column field="mujerFertil"}}
+    {{column field="edadGestacional"}}
+    {{column field="descripcionAfeccionPrincipal"}}
+    {{column field="codigoCieAfeccionPrincipal"}}
+    {{column field="numeroComorbilidades"}}
+    {{column field="descripcionComorbilidad"}}
+    {{column field="codigoCieComorbilidad"}}
+    {{column field="afeccionPrincipalReseleccionada"}}
+    {{column field="tipoEspecialidad"}}
+    {{column field="especifiqueEspecialidad"}}
+    {{column field="paisNacimientoEspecialista"}}
+    {{column field="curpEspecialista"}}
+    {{column field="nombreMedico"}}
+    {{column field="primerApellidoMedico"}}
+    {{column field="segundoApellidoMedico"}}
+    {{column field="cedulaEspecialidad"}}
+    {{column field="numeroProcedimiento"}}
+    {{column field="codigoCieProcedimiento"}}
+    {{column field="numeroMedicamentoMinistrado"}}
+    {{column field="codigoMedicamento"}}
+    {{column field="planIras"}}
+    {{column field="planEdas"}}
+    {{column field="numeroSobres"}}
+    {{column field="paisNacimientoEspecialista"}}
+    {{column field="curpEspecialista"}}
+    {{column field="nombreMedico"}}
+    {{column field="primerApellidoMedico"}}
+    {{column field="segundoApellidoMedico"}}
+    {{column field="cedulaEspecialidad"}}
+  {{/grid}}  
+{{/define}}

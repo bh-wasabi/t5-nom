@@ -1,0 +1,18 @@
+{{#define id="notaRegistroCuentasContables"}}
+  {{param startOnOpen="n/a"}}
+  {{action id="importarDatos" condition="=true" type="menu" menu="importarDatos" label="Cargar" color="green"}}
+  {{#menu id="importarDatos" color="green"}}
+    {{item action="cargarExcel" text="Cargar Excel..."}}
+  {{/menu}}  
+  {{#action id="cargarExcel" type="openFile" label="Cargar Excel" color="green" visibleMode="close" condition="=base.estatus=='borrador'"}}
+    {{#openFile type="xlsx" as="excel" subType="registroCuentasContables" isRegistry="=true"}}
+      {{update section="cuentasContables" value="=excel"}}
+    {{/openFile}}
+  {{/action}}  
+
+  {{#grid id="cuentasContables" section="cuentasContables" keyField="codigo" allowInsert="true" allowRemove="true"}}
+    {{column field="cuenta" width="200"}}
+    {{column field="descripcion" width="400"}}
+    {{!-- {{column field="mayor" width="150"}} --}}
+  {{/grid}}
+{{/define}}

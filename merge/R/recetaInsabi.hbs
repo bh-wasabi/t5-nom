@@ -1,0 +1,5 @@
+{{#define id="recetaInsabi"}}
+  {{#section id="base"}}
+    {{validator type="expr" validIf="=@medicamentoInsabi&&medicamentoInsabi.length<21" message="Límite INSABI Máximo 20 Medicamentos por Receta"}}
+  {{/section}}
+{{/define}}

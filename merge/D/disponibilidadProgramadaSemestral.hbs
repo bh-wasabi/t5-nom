@@ -1,0 +1,5 @@
+{{#define id="disponibilidadProgramadaSemestral"}}
+	{{#section id="base"}}
+    {{field id="minutos" type="expr" value="=moment(calc.setTime2(null, hastaHora)).diff(calc.setTime2(null, desdeHora), 'm')*diaSemana.length*26"}}
+  {{/section}}
+{{/define}}

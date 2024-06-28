@@ -1,0 +1,6 @@
+{{#define id="notaSeguimientoArtritis"}}
+  {{#section id="base"}}
+    {{field id="total" type="calc" value="=calc.sumArgs(calc.getRef(@laboratorios,'base.pcr'),calc.getRef(@clinicas,'base.resultadoCdai'))"}}
+    {{field id="resultadoSdai" type="expr" value="=total<3.2?'Remisión':total>3&&total<11?'Actividad Baja':total>12&&total<26?'Actividad Moderada':total>26?'Actividad Alta':'0'"}}
+  {{/section}}
+{{/define}}

@@ -1,0 +1,35 @@
+{{#define id="motivoCancelacion"}}
+	{{#view id="lista" name="Lista"}}
+		{{#find}}
+			{{include field="base.servicio"}}
+			{{include field="base.subTipoSolicitud"}}
+			{{sort field="_name"}}
+			{{filter condition="=servicio" field="base.servicio" eq="=servicio"}}
+			{{filter condition="=partOf" field="base.subTipoSolicitud" eq="=partOf"}}
+			{{search field="_name"}}
+			{{search field="base._servicio"}}
+			{{search field="base._subTipoSolicitud"}}
+		{{/find}}
+	{{/view}}
+	{{#section id="base"}}
+		{{#field id="servicio"}}
+			{{onChange clearFields="subTipoSolicitudServicio"}}
+		{{/field}}
+    {{#field id="subTipoSolicitudServicio"}}
+    	{{#editor}}
+    		{{param partOf="=servicio"}}
+    	{{/editor}}
+    {{/field}}
+    {{field id="subTipoSolicitud" type="expr" value="=calc.cut2(subTipoSolicitudServicio,'-')"}}
+    {{field id="_subTipoSolicitud" type="expr" value="=calc.cut(_subTipoSolicitudServicio, ' (')"}}
+  {{/section}}
+{{/define}}
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}
+      </br><span style="font-size:12px;">{{base._subTipoSolicitud}}</span>
+      </br><span style="font-size:12px;">{{base._servicio}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

@@ -1,0 +1,43 @@
+{{#define id="notaSolicitudAdquisicion"}}
+  {{param removeIfEmptySection="articulos"}}
+  {{param removeIfEmptyField="cantidad"}}
+  {{action id="afectar" error="=base.tieneArticulos&&_.isEmpty(articulos)?'Faltan Indicar los Artículos':null"}}
+
+  {{action id="importarDatos" condition="=base.tieneArticulos" type="menu" menu="importarDatos" label="Cargar" color="green"}}
+  {{#menu id="importarDatos" color="green"}}
+    {{item action="cargarExcel" text="Cargar Excel..."}}
+  {{/menu}}  
+  {{#action id="cargarExcel" hide="=true" type="openFile" label="Cargar Excel" color="green" visibleMode="open"}}
+    {{#openFile type="xlsx" as="excel" subType="requisicionPAAAS" isExit="true"}}
+      {{update section="articulos" value="=excel"}}
+    {{/openFile}}
+  {{/action}}  
+
+  {{!-- {{#section id="articulos"}}
+    {{field id="importeMinimo" type="calc" value="=cantidadMinima*precioReferencia"}}
+    {{field id="importeMaximo" type="calc" value="=cantidadMaxima*precioReferencia"}}
+  {{/section}}
+
+  {{#grid id="articulos" section="articulos" keyField="cantidadMinima" allowInsert="true" allowRemove="true"}}
+    {{column field="partida" width="60" type="numeric" format="#,"}}
+    {{column field="codigo" width="150"}}
+    {{column field="descripcion" width="300"}}
+    {{column field="cnis" width="80"}}
+    {{column field="cucop" width="100"}}
+    {{column field="unidad" width="80"}}
+    {{column field="cantidadMinima" width="120" type="numeric" format="#,"}}
+    {{column field="cantidadMaxima" width="120" type="numeric" format="#,"}}
+    {{column field="precioReferencia" width="170" type="numeric" format="#,.##"}}
+    {{column field="iva" width="80"}}
+    {{column field="comentarios" width="150"}}
+  {{/grid}} --}}
+
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

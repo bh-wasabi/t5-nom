@@ -1,0 +1,21 @@
+{{#define id="notaFoCon01"}}
+	{{action id="tool" type="report-xlsx" label="Descargar Excel" title="=_name" color="teal" visibleMode="close" condition="=_isAffected" btnSolid="true" icon="arrow-down-a"}}
+	{{#section id="articulos"}}
+		{{field id="importe" type="calc" value="=cantidad*precio"}}
+    {{#onChange forceRecalc="true"}}
+      {{#update section="totales"}}
+	      {{set subTotal="=calc.sum(articulos, 'importe')"}}
+	      {{set iva="=calc.sumExpr(articulos, '=calc.tax(importe, iva)')"}}
+	      {{set total="=calc.sumExpr(articulos, '=calc.addTax(importe, iva)')"}}
+      {{/update}}
+    {{/onChange}}
+	{{/section}}
+  {{#grid id="articulos" section="articulos"}}
+    {{column field="partidaPresupuestal" width="200"}}
+    {{column field="partida" width="60" readOnly="true"}}
+    {{column field="codigo" width="200" readOnly="true"}}
+    {{column field="descripcion" width="300" readOnly="true"}}
+    {{column field="cantidad" width="150"}}
+    {{column field="precio" width="150"}}
+  {{/grid}}
+{{/define}}

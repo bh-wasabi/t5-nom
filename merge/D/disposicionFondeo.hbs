@@ -1,0 +1,10 @@
+{{#define id="disposicionFondeo"}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{#field id="cuentaBancaria"}}
+      {{#editor}}
+        {{param moneda="=moneda"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

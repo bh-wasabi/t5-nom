@@ -1,0 +1,35 @@
+{{#define id="servicio"}}
+  {{param removeIfEmptySection="acciones"}}
+  {{param removeIfEmptyField="tablero"}}
+
+  {{!-- {{action id="eliminar" hide="true"}} --}}
+  {{action id="preliminar" hide="true"}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base.descripcion"}}
+      {{include field="base.servicio"}}
+      {{include field="base.orden"}}
+      {{sort field="base.orden" direction="asc"}}
+      {{sort field="_name" direction="asc"}}
+      {{search field="_name"}}
+      {{search field="base.descripcion"}}
+      {{search field="base._servicio"}}
+    {{/find}}
+  {{/view}}
+  {{#section id="base"}}
+    {{field id="nombreCompleto" type="expr" label="Nombre" value="nombre"}}
+  {{/section}}  
+  {{#grid id="acciones" section="acciones" allowRemove="true" allowInsert="true" allowSort="true"}}
+    {{column field="tablero" width="600"}}
+    {{column field="momento" width="200"}}
+    {{column field="subMomento" width="200"}}
+  {{/grid}}
+{{/define}} 
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}<br>
+      {{!-- <span style="font-size:12px;">{{base._servicio}}</span> --}}
+    </div>
+  {{/template}}
+{{/markup}}

@@ -1,0 +1,8 @@
+{{#define id="instrumentoTerceros"}}  
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{field id="esPrestadorServicios" type="expr" value="=@tipoProveedorInstrumentoTerceros==='prestadorServicios'"}}
+    {{field id="esProveedor" type="expr" value="=@tipoProveedorInstrumentoTerceros==='proveedor'"}}
+    {{field id="esPaciente" type="expr" value="=@tipoProveedorInstrumentoTerceros==='paciente'"}}
+  {{/section}}
+{{/define}}

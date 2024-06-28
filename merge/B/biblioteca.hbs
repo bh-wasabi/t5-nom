@@ -1,0 +1,291 @@
+{{#define id="biblioteca"}}
+  {{param name="=_params._tipoBiblioteca||'Biblioteca'"}}
+
+  {{#section id="base"}}
+    {{field id="tipoBiblioteca" defaultValue="=_params.tipoBiblioteca" readOnly="true"}}
+    {{field id="tieneTipoArticulo" type="expr" value="=tipoBiblioteca=='bibliohemerotecaVideoteca'"}}
+    {{field id="tieneRolesEspecificos" type="expr" value="=tipoBiblioteca=='guiasRapidas'"}}
+    {{field id="esCientifico" type="expr" value="=tieneTipoArticulo&&tipoArticulo=='cientifico'"}}
+    {{field id="esTesis" type="expr" value="=tieneTipoArticulo&&tipoArticulo=='tesis'"}}
+  {{/section}}
+
+  {{action id="ver" type="openFolder" condition="=adjuntos" items="=adjuntos" label="Adjuntos" color="grey"}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base"}}
+      {{sort field="_name" direction="asc"}}
+      {{filter condition="=tipoBiblioteca" field="base.tipoBiblioteca" in="=tipoBiblioteca"}}
+      {{search field="base.nombre"}}
+      {{search field="base.codigo"}}
+      {{search field="base.autor"}}
+      {{search field="base.fecha"}}
+      {{search field="base.etiquetas"}}
+      {{search field="base.comentarios"}}
+    {{/find}}
+  {{/view}}
+
+  {{#view id="listaRol"}}
+    {{#find}}
+      {{include field="base"}}
+      {{sort field="_name" direction="asc"}}
+      {{filter condition="=tipoBiblioteca" field="base.tipoBiblioteca" in="=tipoBiblioteca"}}
+      {{filter field="base.rolesEspecificos" in="=user.roles"}}
+      {{search field="base.nombre"}}
+      {{search field="base.codigo"}}
+      {{search field="base.autor"}}
+      {{search field="base.fecha"}}
+      {{search field="base.etiquetas"}}
+      {{search field="base.comentarios"}}
+    {{/find}}
+  {{/view}}
+
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="400"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+
+  {{#browser id="ambulancias" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+    {{param tipoBiblioteca="ambulancias"}}
+    {{param _tipoBiblioteca="Ambulancias"}}
+  {{/browser}}
+  {{#browser id="_ambulancias" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" showActions="ver"}}
+    {{param tipoBiblioteca="ambulancias"}}
+    {{param _tipoBiblioteca="Ambulancias"}}
+  {{/browser}}
+  {{#browser id="bibliohemerotecaVideoteca" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+    {{param tipoBiblioteca="bibliohemerotecaVideoteca"}}
+    {{param _tipoBiblioteca="Bibliohemeroteca y Videoteca"}}
+  {{/browser}}
+  {{#browser id="_bibliohemerotecaVideoteca" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" showActions="ver"}}
+    {{param tipoBiblioteca="bibliohemerotecaVideoteca"}}
+    {{param _tipoBiblioteca="Bibliohemeroteca y Videoteca"}}
+  {{/browser}}
+  {{#browser id="automoviles" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+    {{param tipoBiblioteca="automoviles"}}
+    {{param _tipoBiblioteca="Automóviles"}}
+  {{/browser}}
+  {{#browser id="_automoviles" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" showActions="ver"}}
+    {{param tipoBiblioteca="automoviles"}}
+    {{param _tipoBiblioteca="Automóviles"}}
+  {{/browser}}
+  {{#browser id="manejoMedioAmbiente" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+    {{param tipoBiblioteca="manejoMedioAmbiente"}}
+    {{param _tipoBiblioteca="Manejo del Medio Ambiente"}}
+  {{/browser}}
+  {{#browser id="_manejoMedioAmbiente" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" showActions="ver"}}
+    {{param tipoBiblioteca="manejoMedioAmbiente"}}
+    {{param _tipoBiblioteca="Manejo del Medio Ambiente"}}
+  {{/browser}}
+  {{#browser id="ubicacionFisicaPersonal" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+    {{param tipoBiblioteca="ubicacionFisicaPersonal"}}
+    {{param _tipoBiblioteca="Ubicación Física del Personal"}}
+  {{/browser}}
+  {{#browser id="_ubicacionFisicaPersonal" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" showActions="ver"}}
+    {{param tipoBiblioteca="ubicacionFisicaPersonal"}}
+    {{param _tipoBiblioteca="Ubicación Física del Personal"}}
+  {{/browser}}
+  {{#browser id="ubicacionEquipo" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+    {{param tipoBiblioteca="ubicacionEquipo"}}
+    {{param _tipoBiblioteca="Ubicación de Equipo e Instrumental de Alta Especialidad"}}
+  {{/browser}}
+  {{#browser id="_ubicacionEquipo" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" showActions="ver"}}
+    {{param tipoBiblioteca="ubicacionEquipo"}}
+    {{param _tipoBiblioteca="Ubicación de Equipo e Instrumental de Alta Especialidad"}}
+  {{/browser}}
+  {{#browser id="circuitoCerrado" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+    {{param tipoBiblioteca="circuitoCerrado"}}
+    {{param _tipoBiblioteca="Circuito Cerrado/Telecapacitación y Video Bajo Demanda"}}
+  {{/browser}}
+  {{#browser id="_circuitoCerrado" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" showActions="ver"}}
+    {{param tipoBiblioteca="circuitoCerrado"}}
+    {{param _tipoBiblioteca="Circuito Cerrado/Telecapacitación y Video Bajo Demanda"}}
+  {{/browser}}
+  {{#browser id="instalacionesFamiliaresPacientes" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+    {{param tipoBiblioteca="instalacionesFamiliaresPacientes"}}
+    {{param _tipoBiblioteca="Instalaciones para Familiares de Pacientes"}}
+  {{/browser}}
+  {{#browser id="_instalacionesFamiliaresPacientes" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" showActions="ver"}}
+    {{param tipoBiblioteca="instalacionesFamiliaresPacientes"}}
+    {{param _tipoBiblioteca="Instalaciones para Familiares de Pacientes"}}
+  {{/browser}}
+  {{#browser id="videoconferencia" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+    {{param tipoBiblioteca="videoconferencia"}}
+    {{param _tipoBiblioteca="Videoconferencia"}}
+  {{/browser}}
+  {{#browser id="_videoconferencia" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" showActions="ver"}}
+    {{param tipoBiblioteca="videoconferencia"}}
+    {{param _tipoBiblioteca="Videoconferencia"}}
+  {{/browser}}
+  {{#browser id="apoyoAdministracion" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+    {{param tipoBiblioteca="apoyoAdministracion"}}
+    {{param _tipoBiblioteca="Apoyo a la Administración"}}
+  {{/browser}}
+  {{#browser id="_apoyoAdministracion" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" showActions="ver"}}
+    {{param tipoBiblioteca="apoyoAdministracion"}}
+    {{param _tipoBiblioteca="Apoyo a la Administración"}}
+  {{/browser}}
+  {{#browser id="tabletPCs" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+    {{param tipoBiblioteca="tabletPCs"}}
+    {{param _tipoBiblioteca="Tablet PCs"}}
+  {{/browser}}
+  {{#browser id="_tabletPCs" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" showActions="ver"}}
+    {{param tipoBiblioteca="tabletPCs"}}
+    {{param _tipoBiblioteca="Tablet PCs"}}
+  {{/browser}}
+  {{#browser id="sistemasMonitoreoRemoto" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+    {{param tipoBiblioteca="sistemasMonitoreoRemoto"}}
+    {{param _tipoBiblioteca="Sistemas de Monitoreo Remoto"}}
+  {{/browser}}
+  {{#browser id="_sistemasMonitoreoRemoto" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" showActions="ver"}}
+    {{param tipoBiblioteca="sistemasMonitoreoRemoto"}}
+    {{param _tipoBiblioteca="Sistemas de Monitoreo Remoto"}}
+  {{/browser}}  
+  {{#browser id="sistemasAudioRespuesta" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+    {{param tipoBiblioteca="sistemasAudioRespuesta"}}
+    {{param _tipoBiblioteca="Sistemas de Audio Respuesta"}}
+  {{/browser}}
+  {{#browser id="_sistemasAudioRespuesta" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" showActions="ver"}}
+    {{param tipoBiblioteca="sistemasAudioRespuesta"}}
+    {{param _tipoBiblioteca="Sistemas de Audio Respuesta"}}
+  {{/browser}}
+  {{#browser id="sistemaTelevisionPorDemanda" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+    {{param tipoBiblioteca="sistemaTelevisionPorDemanda"}}
+    {{param _tipoBiblioteca="Sistema de Televisión por Demanda"}}
+  {{/browser}}
+  {{#browser id="_sistemaTelevisionPorDemanda" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" showActions="ver"}}
+    {{param tipoBiblioteca="sistemaTelevisionPorDemanda"}}
+    {{param _tipoBiblioteca="Sistema de Televisión por Demanda"}}
+  {{/browser}}
+  {{#browser id="areaMedicos" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+    {{param tipoBiblioteca="areaMedicos"}}
+    {{param _tipoBiblioteca="Área Médicos"}}
+  {{/browser}}
+  {{#browser id="_areaMedicos" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" showActions="ver"}}
+    {{param tipoBiblioteca="areaMedicos"}}
+    {{param _tipoBiblioteca="Área Médicos"}}
+  {{/browser}}
+  {{#browser id="salasEspera" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+    {{param tipoBiblioteca="salasEspera"}}
+    {{param _tipoBiblioteca="Salas de Espera"}}
+  {{/browser}}
+  {{#browser id="_salasEspera" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" showActions="ver"}}
+    {{param tipoBiblioteca="salasEspera"}}
+    {{param _tipoBiblioteca="Salas de Espera"}}
+  {{/browser}}
+  {{#browser id="guiasRapidas" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+    {{param tipoBiblioteca="guiasRapidas"}}
+    {{param _tipoBiblioteca="Guías Rápidas"}}
+  {{/browser}}
+  {{#browser id="_guiasRapidas" view="listaRol" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" showActions="ver"}}
+    {{param tipoBiblioteca="guiasRapidas"}}
+    {{param _tipoBiblioteca="Guías Rápidas"}}
+  {{/browser}}
+  {{#browser id="informacionReferenciaEnsenanza" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+    {{param tipoBiblioteca="informacionReferenciaEnsenanza"}}
+    {{param _tipoBiblioteca="Información Referencia Enseñanza"}}
+  {{/browser}}
+  {{#browser id="_informacionReferenciaEnsenanza" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" showActions="ver"}}
+    {{param tipoBiblioteca="informacionReferenciaEnsenanza"}}
+    {{param _tipoBiblioteca="Información Referencia Enseñanza"}}
+  {{/browser}}
+  {{#browser id="infraestructuraEnsenanza" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+    {{param tipoBiblioteca="infraestructuraEnsenanza"}}
+    {{param _tipoBiblioteca="Infraestructura Enseñanza"}}
+  {{/browser}}
+  {{#browser id="_infraestructuraEnsenanza" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" showActions="ver"}}
+    {{param tipoBiblioteca="infraestructuraEnsenanza"}}
+    {{param _tipoBiblioteca="Infraestructura Enseñanza"}}
+  {{/browser}}
+  {{#browser id="neonatos" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+    {{param tipoBiblioteca="neonatos"}}
+    {{param _tipoBiblioteca="Infraestructura Neonatos"}}
+  {{/browser}}
+  {{#browser id="_neonatos" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" showActions="ver"}}
+    {{param tipoBiblioteca="neonatos"}}
+    {{param _tipoBiblioteca="Infraestructura Neonatos"}}
+  {{/browser}}
+  {{#browser id="atencionPublico" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+    {{param tipoBiblioteca="atencionPublico"}}
+    {{param _tipoBiblioteca="Atención al Público"}}
+  {{/browser}}
+  {{#browser id="_atencionPublico" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" showActions="ver"}}
+    {{param tipoBiblioteca="atencionPublico"}}
+    {{param _tipoBiblioteca="Atención al Público"}}
+  {{/browser}}
+  {{#browser id="consentimientosAsentamientos" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+    {{param tipoBiblioteca="consentimientosAsentamientos"}}
+    {{param _tipoBiblioteca="Consentimientos y Asentamientos"}}
+  {{/browser}}
+  {{#browser id="_consentimientosAsentamientos" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" showActions="ver"}}
+    {{param tipoBiblioteca="consentimientosAsentamientos"}}
+    {{param _tipoBiblioteca="Consentimientos y Asentamientos"}}
+  {{/browser}}
+  {{!-- {{#browser id="protocoloInvestigacion" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+    {{param tipoBiblioteca="protocoloInvestigacion"}}
+    {{param _tipoBiblioteca="Protocolo Investigación"}}
+  {{/browser}}
+  {{#browser id="_protocoloInvestigacion" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" showActions="ver"}}
+    {{param tipoBiblioteca="protocoloInvestigacion"}}
+    {{param _tipoBiblioteca="Protocolo Investigación"}}
+  {{/browser}} --}}
+{{/define}}
+
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      <span style="font-size:12px;white-space:pre-wrap;font-style:italic;">{{base.nombre}}</span></br>
+      <span style="font-size:12px;">{{base.autor}}</span>
+      <span style="font-size:12px;float:right;">{{date base.fecha "DD/MMM/YYYY"}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

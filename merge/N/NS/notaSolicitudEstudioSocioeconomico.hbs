@@ -1,0 +1,33 @@
+{{#define id="notaSolicitudEstudioSocioeconomico"}}
+  {{action id="afectar" error="=base.tipoEstudioSocioeconomico=='reclasificacion'&&!calc.hasRole('solicitudReclasificacionEstudioSocioeconomico')?'No Tiene Acceso a Solicitar una Reclasificación':null" errorType="warning"}}  
+  {{#section id="base"}}
+    {{validator type="expr" condition="=ultimoEstudioSocioeconomico" validIf="=tipoEstudioSocioeconomico==tipoEstudioSocioeconomicoInicial" message="No Puede Modificar el Tipo Estudio Solicitado"}}
+  {{/section}}
+  {{#transform id="copiar"}}
+    {{#update section="base"}}
+      {{set tipoEstudioSocioeconomico="=base.tipoEstudioSocioeconomico"}}
+      {{set fechaInicioVigenciaAnterior="=base.ultimoEstudioSocioeconomico||fn('ultimoEstudioSocioeconomico', _params.join.detalle)"}}
+      {{!-- se cambio a que sea "now" porque no se veia la fecha y hora y generaba confusion  --}}
+      {{!-- {{set fechaInicioVigencia="=fn('hospitalizacionDesde', _params.join&&_params.join.contexto)"}} --}}
+      {{set fechaInicioVigencia="=moment().format()"}}
+    {{/update}}
+    {{update section="datosSalud" value="=calc.getRef(_items&&_items[0], 'detalle.estudioSocioeconomico.datos.datosSalud')"}}
+    {{update section="condicionesEconomicas" value="=calc.getRef(_items&&_items[0], 'detalle.estudioSocioeconomico.datos.condicionesEconomicas')"}}
+    {{update section="condicionesVivienda" value="=calc.getRef(_items&&_items[0], 'detalle.estudioSocioeconomico.datos.condicionesVivienda')"}}      
+    {{update section="conclusion" value="=calc.getRef(_items&&_items[0], 'detalle.estudioSocioeconomico.datos.conclusion')"}}    
+    {{update section="persona" value="=persona"}}
+    {{update section="datosPaciente" value="=persona"}}
+    {{#update section="condicionesEconomicas"}}
+      {{set salarioMinimo="=calc.lookupInPreset('app.variableGlobal', 'campo=salarioMinimo').valor"}}
+      {{!-- {{set salarioMinimo="3121.47"}} --}}
+    {{/update}}
+    {{#update section="datosSalud"}}
+      {{set seguro="=calc.firstObj(_params.join.persona.seguro)"}}
+      {{set _seguro="=_params.join.persona._seguro"}}
+    {{/update}}
+  {{/transform}}
+  {{action id="notaCancelacionNotaSolicitud" source="notaCancelacionNotaSolicitud" label="Cancelar" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{#action id="notaEstudioSocioeconomico" source="notaEstudioSocioeconomico" label="Estudio Socioeconómico" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true" fromSource="persona" fromView="datosMadre"}}
+    {{param id="=_params.join.detalle.madre"}}
+  {{/action}}  
+{{/define}}

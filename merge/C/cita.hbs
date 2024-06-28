@@ -1,0 +1,70 @@
+{{#define id="cita"}}
+  {{param displayExpr="=base.nombre"}}
+  {{#section id="base"}}
+    {{field id="esExtraordinaria" type="expr" value="=@tipoCita=='extraordinaria'"}}
+    {{field id="esOrdinaria" type="expr" value="=!esExtraordinaria"}}
+    {{field id="nombre" type="expr" value="=(esExtraordinaria)?fn('citaExtraordinaria', @base):fn('citaNombre', @base, @agenda)"}}
+    {{field id="desde" min="now"}}
+    {{field id="esCirugia" type="expr" value="=@duracionCita==='cirugia'"}}
+    {{field id="esQuimioterapia" type="expr" value="=@duracionCita==='quimioterapia'"}}
+    {{#field id="duracionCita"}}
+      {{onChange clearFields="fechaHoraCita"}}
+    {{/field}}
+    {{#field id="duracionCirugia"}}
+      {{onChange clearFields="fechaHoraCita"}}
+    {{/field}}
+    {{#field id="duracionQuimioterapia"}}
+      {{onChange clearFields="fechaHoraCita"}}
+    {{/field}}
+    {{#field id="area"}}
+      {{onChange clearFields="espacio,recursoEspecifico,fechaHoraCita"}}
+      {{#editor}}
+        {{param condition="=calc.in(_mainDoc._created.service, ['jefaturaProgramacionQuirurgica','braquiterapia','endoscopia','endourologia','cirugiaAmbulatoria','cirugia','tococirugia'])" partOf="cirugia"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="subArea"}}
+      {{onChange clearFields="recursoEspecifico,fechaHoraCita"}}
+    {{/field}}
+    {{#field id="espacio"}}
+      {{#editor alwaysLoad="true"}}
+        {{param area="=area"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="recursoEspecifico"}}
+      {{#editor alwaysLoad="true"}}
+        {{param area="=area"}}
+        {{param citasExtraordinarias="='si'"}}
+      {{/editor}}
+    {{/field}}
+    {{!-- {{#field id="especialidad"}}
+      {{onChange clearFields="fechaHoraCita"}}
+    {{/field}}
+    {{#field id="tipoEquipoMedico"}}
+      {{onChange clearFields="fechaHoraCita"}}
+    {{/field}}
+    {{#field id="tipoUbicacion"}}
+      {{onChange clearFields="fechaHoraCita"}}
+    {{/field}} --}}
+    {{#field id="fechaHoraCita"}}
+      {{#editor source="ver" view="buscarCita" viewMethod="post" itemTemplate="slot"}}
+        {{#onChange}}
+          {{#update section="agenda"}}
+            {{set tieneCita="=haveMeeting"}}
+            {{set fechaHoraCita="=startDate"}}
+            {{set duracionCita="=duration"}}
+            {{set resumen="=summary"}}
+            {{set slots="=slots"}}            
+          {{/update}}
+          {{set tipoCita="=fn('tipoCita', -calc.fromNowHours(startDate))"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+
+  {{/section}}
+{{/define}}
+
+{{#markup}}
+  {{#template id="slot"}}
+  <span><strong style="font-size: 110%;">{{_name}}</strong></span><br>{{_details}}
+  {{/template}}
+{{/markup}}

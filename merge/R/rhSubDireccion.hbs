@@ -1,0 +1,24 @@
+{{#define id="rhSubDireccion"}}
+  {{#view id="lista" name="Lista"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="base._direccion"}}
+      {{search field="_name"}}
+      {{search field="base._direccion"}}
+      {{sort field="base._direccion" direction="asc"}}
+      {{sort field="base.orden" direction="asc"}}
+      {{sort field="_name" direction="asc"}}
+      {{filter condition="=direccion" field="base.direccion" eq="direccion"}}
+    {{/find}}
+  {{/view}}
+{{/define}}
+
+
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}</br>
+      <span style="font-size:12px;">{{base._direccion}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

@@ -1,0 +1,25 @@
+{{#define id="notaRecomendacionesElectrodiagnostico"}}
+  {{#section id="base"}}
+    {{#field id="solicitud"}}
+      {{#editor}}
+        {{param id="=persona.id"}}
+      {{/editor}}
+      {{#onChange refresh="true"}}
+        {{set indicacionesEstudio="=base.procedimiento"}}
+        {{set _indicacionesEstudio="=base._procedimiento"}}
+      {{/onChange}}
+    {{/field}}
+    {{field id="esElectroencefalograma" type="expr" value="=estudioSolicitado=='electroencefalograma'"}}
+    {{field id="esElectrocardiograma" type="expr" value="=estudioSolicitado=='electrocardiograma'"}}
+  {{/section}}
+
+  {{#grid id="instruccionesDesvelo" section="instruccionesDesvelo" allowRemove="true" allowSort="true" keyField="diaCita" allowInsert="true"}}
+    {{column field="diaCita" width="200"}}
+    {{column field="instruccion1" width="200"}}
+    {{column field="instruccion2" width="200"}}
+    {{column field="instruccion3" width="200"}}
+    {{column field="instruccion4" width="200"}}
+    {{column field="instruccion5" width="200"}}
+    {{column field="instruccionDiaCita" width="200"}}
+  {{/grid}}
+{{/define}}

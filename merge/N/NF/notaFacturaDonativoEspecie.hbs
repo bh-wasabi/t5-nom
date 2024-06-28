@@ -1,0 +1,23 @@
+{{#define id="notaFacturaDonativoEspecie"}}
+  {{param totalsSection="totales"}}
+  {{#section id="conceptos"}}
+    {{field id="subTotal" type="calc" value="=cantidad*valorUnitario"}}
+    {{field id="importeIva" type="calc" value="=cantidad*valorUnitario*(Number(@satIva)/100)"}}
+    {{field id="importe" type="calc" value="=cantidad*valorUnitario*(1+(Number(@satIva)/100))"}}
+  {{/section}}
+  {{#section id="totales"}}  {{!-- Nota: creo que algo no funciona si se llaman igual los campos --}}
+    {{field id="importeTotal" type="sum" section="conceptos" value="subTotal"}}
+    {{field id="ivaTotal" type="sum" section="conceptos" value="importeIva"}}
+    {{field id="total" type="calc" value="=importeTotal+ivaTotal"}}
+    {{field id="totalEnTexto" type="expr" value="=calc.pesos(importeTotal+ivaTotal)"}}
+  {{/section}}
+  {{#grid id="conceptos" section="conceptos" keyField="codigo" allowInsert="true" allowRemove="true"}}
+    {{column field="codigo" width="120" required="true"}}
+    {{column field="descripcion" width="400" required="true"}}
+    {{column field="cantidad" width="80" required="true"}}
+    {{column field="valorUnitario" width="120" required="true"}}
+    {{column field="satIva" width="80" required="true"}}
+    {{column field="satCodigo" width="200" required="true"}}
+    {{column field="satUnidad" width="100" required="true"}}
+  {{/grid}}
+{{/define}}

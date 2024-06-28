@@ -1,0 +1,15 @@
+{{#define id="articuloUbicacion"}}
+  {{#section id="base"}}
+    {{field id="esAlmacen" type="expr" value="=tipoAlmacen=='almacen'"}}
+    {{field id="esUbicacion" type="expr" value="=tipoAlmacen=='ubicacion'"}}
+    {{#field id="central"}}
+      {{onChange clearFields="ubicacion"}}
+    {{/field}}
+    {{#field id="ubicacion"}}
+      {{#editor view="ubicaciones" alwaysLoad="true"}}
+        {{param central="=central"}}
+        {{param tipoExpediente="='ubicacion'"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}  
+{{/define}}

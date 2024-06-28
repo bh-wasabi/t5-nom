@@ -1,0 +1,7 @@
+{{#define id="trabajoSocialGestion"}}
+  {{#section id="base"}}
+    {{field id="esValoracion" type="expr" value="=calc.in('valoracion', tipoGestion)"}}
+    {{field id="esEstudios" type="expr" value="=calc.in('estudios', tipoGestion)"}}
+    {{field id="esGestionSocial" type="expr" value="=calc.in('gestionSocial', tipoGestion)"}}
+  {{/section}}
+{{/define}} 

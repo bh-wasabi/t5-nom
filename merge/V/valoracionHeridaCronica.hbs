@@ -1,0 +1,9 @@
+{{#define id="valoracionHeridaCronica"}}
+ 	{{#section id="base"}}
+ 			{{field id="esAlta" type="expr" value="=seguimientoHeridaCronica=='alta'"}}
+ 			{{field id="esPrimeraVez" type="expr" value="=seguimientoHeridaCronica=='primeraVez'"}}
+ 			{{field id="noEsAlta" type="expr" value="=!esAlta"}}
+  		{{field id="esOtroTipoHerida" type="expr" value="=calc.in('otro', tipoHerida)"}}
+  		{{field id="esOtroUbicacionHerida" type="expr" value="=calc.in('otro', ubicacionHerida)"}}
+	{{/section}}
+{{/define}}

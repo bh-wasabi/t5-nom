@@ -1,0 +1,43 @@
+{{#define id="notaRegistroReferencia"}}
+  {{#view id="cubo"}}
+    {{#find limit="-1"}}
+      {{include field="_created.user"}}
+      {{include field="_created.date"}}
+      {{include field="persona.nombreCompleto"}}
+      {{include field="persona.clave"}}
+      {{include field="persona._genero"}}
+      {{!-- {{filter field="_created.date" gte="=calc.fromYearMonth(ejercicio,periodo)" required="true"}}
+      {{filter field="_created.date" lte="=calc.toYearMonth(ejercicio,periodo)" required="true"}} --}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+    {{/find}}
+  {{/view}}
+  {{#cube id="cubo" name="Registro Referencia" view="cubo" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{column field="_created.date" type="date" label="Año" groupInterval="year"}}
+    {{column field="_created.date" type="date" label="Mes" groupInterval="month"}}    
+    {{row field="persona._genero" width="100" width="100" label="Genero"}}
+    {{row field="persona.nombreCompleto" width="250" label="Persona"}}
+    {{row field="persona.clave" width="150" label="CURP"}}
+    {{count field="_id" label="Cantidad" format="#"}}
+  {{/cube}}    
+
+  {{#transform id="copiarNota"}}
+    {{update section="persona" value="=persona"}}
+    {{update section="base" value="=base"}}
+  {{/transform}}
+  {{!-- Nota: No se debe usar el "copiarPersona", porque entra en conflicto toma este en lugar del cfg desde persona --}}
+  {{#transform id="copiarNotaPersona"}}   
+    {{update section="persona" value="=persona"}}
+  {{/transform}}
+  {{!-- Hay que darle acceso en flowAccess --}}
+  {{action id="notaRechazoReferencia" source="notaRechazoReferencia" label="Rechazo Referencia" transform="copiarNota" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{action id="notaAceptacionReferencia" source="notaAceptacionReferencia" label="Aceptación Referencia" transform="copiarNota" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" btnSolid="true"}}
+  {{action id="notaAceptacionReferenciaUrgencias" source="notaAceptacionReferenciaUrgencias" label="Aceptación Referencia" transform="copiarNota" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" btnSolid="true"}}
+  {{action id="notaReferencia" source="notaReferencia" label="Referencia" transform="copiarNota" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{action id="notaContrarreferencia" source="notaContrarreferencia" label="Contrarreferencia" transform="copiarNota" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{action id="notaInduccionOtorgada" source="notaInduccionOtorgada" label="Inducción Otorgada" transform="copiarNotaPersona" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{#action id="notas" hide="true" type="sub-link" label="Notas Paciente" color="green" visibleMode="close"}}
+    {{#link href="'/nota/lista'" name="='Notas Paciente: '+persona.nombreCompleto" title="=persona.nombreCompleto"}}
+      {{param id="_id"}}
+    {{/link}}
+  {{/action}}
+{{/define}}

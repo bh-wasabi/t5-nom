@@ -1,0 +1,47 @@
+{{#define type="doc" id="_planCentral" name="Planeador Inventarios"}}
+  {{#menu id="menu"}}
+    {{#item text="Solicitud Abastecimiento" icon="doc" source="planInventario" type="add-subdoc" onlyPost="true" onlyRefresh="true" fromSource="ver" fromView="planInventario" toSection="articulos"}}
+      {{param ubicacion="=ubicacion"}}
+      {{param tipoPlan="orden"}}
+      {{param subTipoPlan="abastecimiento"}}
+      {{param origen="farmacia"}}
+      {{param tipoUnidad="traspaso"}}
+    {{/item}}
+    {{#item text="Recibo Abastecimiento" icon="add" source="planInventario" type="add-subdoc" onlyPost="true" onlyRefresh="true" fromSource="ver" fromView="planInventario" stockView="transito" toSection="articulos"}}
+      {{param ubicacion="=ubicacion"}}
+      {{param tipoPlan="recibo"}}
+      {{param subTipoPlan="abastecimiento"}}
+      {{param transito="repartoFarmacia"}}
+      {{param tipoUnidad="traspaso"}}
+    {{/item}}
+    {{#item text="Ministración" icon="export" source="planMinistracion" type="add-subdoc" onlyPost="true" onlyRefresh="true" fromSource="ver" fromView="planInventario" stockView="existencia" toSection="articulos"}}
+      {{param ubicacion="=ubicacion"}}
+      {{param tipoPlan="ministracion"}}
+      {{param tipoUnidad="consumo"}}
+    {{/item}}
+    {{#item text="Ver" icon="bookmark"}}
+      {{item text="(vistas)" type="cube-view-names"}}
+      {{item text="Guardar vista..." icon="save" beginGroup="true" type="cube-view-save"}}
+      {{item text="Ajustes..." icon="preferences" type="cube-view-preferences"}}
+    {{/item}}
+    {{item text="Refrescar" icon="refresh" type="refresh"}}
+  {{/menu}}
+  {{browser id="cubo" menu="menu"}}
+{{/define}}
+
+{{#markup}}
+  {{#page}}
+    {{#row}}
+      {{#col small="100%"}}
+        {{#row}}
+          {{#widget type="cube" source="ver" cube="planConsumo"}}
+            {{param ubicacion="=ubicacion"}}
+            {{param tipoPlan="consulta"}}
+            {{param origen="farmacia"}}
+            {{param tipoUnidad="consumo"}}
+          {{/widget}}
+        {{/row}}
+      {{/col}}
+    {{/row}}
+  {{/page}}
+{{/markup}}

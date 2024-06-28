@@ -1,0 +1,10 @@
+{{#define id="programaAnualResiduosHospitalarios"}}
+  {{#section id="base"}}
+  	{{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{#field id="autoAsignacion"}}
+      {{#editor}}
+        {{param servicio="='residuosHospitalarios'"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

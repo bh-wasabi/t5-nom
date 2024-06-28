@@ -1,0 +1,49 @@
+{{#define id="notaPago"}}
+  {{param startOnOpen="aplicacion"}}
+  {{param removeIfEmptySection="aplicacion"}}
+  {{param removeIfEmptyField="continuar"}}
+  {{param removeIfEmptyOrField1="importe"}}
+
+  {{#section id="base"}}
+    {{field id="totalEfectivo" type="calc" value="=calc.sumRef(formaPago, 'base.importeEfectivo')"}}
+    {{field id="totalCheques" type="calc" value="=calc.sumRef(formaPago, 'base.importeCheque')"}}
+    {{field id="totalTarjetas" type="calc" value="=calc.sumRef(formaPago, 'base.importeTarjeta')"}}
+    {{field id="totalTransferencias" type="calc" value="=calc.sumRef(formaPago, 'base.importeTransferencia')"}}
+    {{field id="totalDepositos" type="calc" value="=calc.sumRef(formaPago, 'base.importeDeposito')"}}
+    {{field id="totalPagares" type="calc" value="=calc.sumRef(formaPago, 'base.importePagare')"}}
+    {{field id="totalPagado" type="calc" value="=totalEfectivo+totalCheques+totalTarjetas+totalTransferencias+totalDepositos+totalPagares"}}
+    {{validator validIf="=(totalPagado==importeTotal)" type="expr" message="Importe Incorrecto"}}
+  {{/section}}
+  {{#section id="aplicacion"}}
+    {{#field id="importe"}}
+      {{onChange refreshApplyStatus="true"}}
+    {{/field}}
+    {{#onChange}}
+      {{#update section="base"}}
+      {{set importeTotal="=calc.sumExpr(aplicacion, '=calc.isTrue(continuar)?importe:0')"}}
+      {{/update}}
+    {{/onChange}}
+  {{/section}}
+  {{#grid id="aplicacion" section="aplicacion" keyField="importe" applyBaseColumn="saldo" applyTo="importe" applySuggest="saldo" applyValidate="true" disableEnter="true"}}
+    {{column field="fecha" type="date" format="DD/MMM/YYYY" width="100" readOnly="true"}}
+    {{column field="vencimiento" type="date" format="DD/MMM/YYYY" width="100" readOnly="true"}}
+    {{column field="_name" width="600" readOnly="true"}}
+    {{column field="saldo" type="numeric" width="120" format="currency" readOnly="true"}}
+    {{column field="importe" type="numeric" width="120" format="currency" }}
+    {{column field="continuar" width="70"}}
+  {{/grid}}
+  {{#workflow id="afectar" start="afectar"}}
+    {{#step id="afectar"}}
+      {{#user}}
+        {{validate condition="=base.totalPagado!==base.importeTotal" error="Importe Incorrecto"}}
+        {{validate condition="=!_name" error="Nombre Incorrecto"}}
+        {{#spAffect engine="node"}}
+          {{#update section="base"}}
+            {{set estatus="afectado"}}
+            {{set _estatus="Afectado"}}
+          {{/update}}
+        {{/spAffect}}
+      {{/user}}
+    {{/step}}
+  {{/workflow}}
+{{/define}}

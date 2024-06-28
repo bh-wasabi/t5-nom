@@ -1,0 +1,23 @@
+{{#define id="notaSolicitudMedicamentoGratuito"}}
+  {{#section id="base"}}
+    {{field id="esHospitalizacion" type="expr" value="=tipoEpisodio=='hospitalizacion'"}}
+    {{!-- {{#field id="central"}}
+      {{#onChange clearFields="ubicacionMultidosis,cama"}}
+        [.#if esMulti.]
+        [.else.]      
+        {{set prioridad="=fn('prioridadCentral', central)"}}
+        [./if.]
+      {{/onChange}}
+    {{/field}}
+    {{#field id="ubicacionMultidosis"}}
+      {{#editor alwaysLoad="true"}}
+        {{param central="=central"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="cama"}}
+      {{#editor alwaysLoad="true"}}
+        {{param central="=central"}}
+      {{/editor}}
+    {{/field}} --}}
+  {{/section}}
+{{/define}}

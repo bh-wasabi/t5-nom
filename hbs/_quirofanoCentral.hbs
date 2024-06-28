@@ -1,0 +1,22 @@
+{{#define type="doc" id="_quirofanoCentral" name="Programación Quirófano Central"}}
+  {{param pagesStart="1"}}
+  {{param pagesTabsPosition="left"}}
+  {{param pagesTabsWidth="20%"}}
+
+  {{#menu id="menu"}}
+    {{item text="Refrescar" icon="refresh" type="refresh"}}
+  {{/menu}}
+
+  {{browser id="agendas" menu="menu"}}
+  {{scheduler id="agendas" type="busy" views="week, day" currentView="week" firstDayOfWeek="0" startDayHour="0" endDayHour="24" source="planAgenda" view="agendasCirugia" multiResources="true" resourceLabel="Quirófano Central" resourceId="actor" resourceName="_actor" resourceRemovePrefix="Quirófano Central -"}}
+{{/define}}
+
+{{#markup}}
+  {{#page}}
+    {{#row}}
+      {{#col medium="100%"}}
+        {{widget type="scheduler" scheduler="agendas"}}
+      {{/col}}
+    {{/row}}
+  {{/page}}
+{{/markup}}

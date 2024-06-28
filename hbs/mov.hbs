@@ -1,0 +1,1565 @@
+{{#define type="doc" id="mov"}}
+  {{#view id="inv"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter condition="=id" field="='cuenta'" eq="=id"}}
+      {{filter condition="=tipoubicacion" field="tipoUbicacion" eq="=tipoubicacion"}}
+      {{filter condition="=tipoarticulo" field="tipoArticulo" eq="=tipoarticulo"}}
+      {{!-- {{group field="grupo"}} --}}
+      {{group field="cuenta"}}
+      {{group field="_cuenta"}}
+      {{group field="codigo"}}
+      {{group field="lote"}}
+      {{group field="vencimiento"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{!-- {{group field="importeFactor" type="sum" as="importe"}} --}}
+      {{match field="cantidad" neq="=0"}}
+    {{/pipeline}}
+    {{join source="articulo" view="descripcion" id="codigo" key="base.codigo" fields="base.descripcion,base._servicio" as="articulo"}}
+    {{calc field="_lote" value="=calc.concat(lote, calc.format('date', vencimiento, 'DD/MMM/YYYY'))"}}
+  {{/view}}
+  {{#cube id="inv" name="Inventario" view="inv" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+[.#if esSIC.]
+    {{column field="articulo.base._servicio" label="Servicio" width="150"}}
+[./if.]    
+    {{row field="codigo" label="Código" width="200"}}
+    {{row field="articulo.base.descripcion" label="Descripción" width="400"}}
+    {{row field="_lote" label="Lote" width="140"}}
+    {{sum field="cantidad" label="Existencia" format="#,.##"}}
+    {{!-- {{sum field="importe" label="Importe" format="currency"}} --}}
+  {{/cube}}
+
+  {{#view id="inv3"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter field="nota.date" lt="='2023-08'"}}
+      {{filter condition="=id" field="='cuenta'" eq="=id"}}
+      {{filter condition="=tipoubicacion" field="tipoUbicacion" eq="=tipoubicacion"}}
+      {{filter condition="=tipoarticulo" field="tipoArticulo" eq="=tipoarticulo"}}
+      {{!-- {{group field="grupo"}} --}}
+      {{group field="cuenta"}}
+      {{group field="_cuenta"}}
+      {{group field="codigo"}}
+      {{group field="lote"}}
+      {{group field="vencimiento"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{group field="importeFactor" type="sum" as="importe"}}
+      {{match field="cantidad" neq="=0"}}
+    {{/pipeline}}
+    {{join source="articulo" view="descripcion" id="codigo" key="base.codigo" fields="base.descripcion,base._servicio" as="articulo"}}
+    {{calc field="_lote" value="=calc.concat(lote, calc.format('date', vencimiento, 'DD/MMM/YYYY'))"}}
+  {{/view}}
+  {{#cube id="inv3" name="Inventario" view="inv3" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{row field="codigo" label="Código" width="200"}}
+    {{row field="articulo.base.descripcion" label="Descripción" width="400"}}
+    {{row field="_lote" label="Lote" width="140"}}
+    {{sum field="cantidad" label="Existencia" format="#,.##"}}
+    {{sum field="importe" label="Importe" format="currency"}}
+  {{/cube}}
+
+  {{#view id="invNota"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter condition="=cuenta" field="='cuenta'" eq="=cuenta"}}
+      {{filter condition="=subCuenta" field="='subCuenta'" eq="=subCuenta"}}
+      {{group field="codigo"}}
+      {{group field="lote"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{group field="importeFactor" type="sum" as="importe"}}
+    {{/pipeline}}
+  {{/view}}
+
+  {{#view id="validacionInventario" onlyMapped2="true"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter condition="=id" field="='cuenta'" eq="=id"}}
+      {{filter condition="=tipoubicacion" field="tipoUbicacion" eq="=tipoubicacion"}}
+      {{filter condition="=tipoarticulo" field="tipoArticulo" eq="=tipoarticulo"}}
+      {{filter condition="=tipoArticulo" field="tipoArticulo" eq="=tipoArticulo"}}
+      {{group field="cuenta"}}
+      {{group field="_cuenta"}}
+      {{group field="codigo"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{match field="cantidad" neq="=0"}}
+    {{/pipeline}}
+    {{join source="articulo" view="descripcion" id="codigo" key="base.codigo" as="art"}}
+    {{join source="persona" view="datosPersona" id="cuenta" as="ubicacion2"}}
+    {{!-- {{map field="tipoActivoFijo" label="Tipo Activo" value="=art.base.tipoActivoFijo"}}
+    {{map field="_tipoActivoFijo" label="Tipo Activo" value="=art.base._tipoActivoFijo"}} --}}
+    {{map field="ubicacion" label="Ubicación" value="=cuenta"}}
+    {{map field="_ubicacion" label="Ubicación" value="=_cuenta"}}
+    {{map field="codigoUbicacion" label="Código Ubicación" value="=ubicacion2.persona.codigo"}}
+    {{map field="codigo" label="Código" value="=codigo"}}
+    {{map field="descripcion" label="Descripción" value="=art.base.descripcion"}}
+    {{map field="responsableMantenimiento" label="Provisto por" value="=art.base.datosActivoFijo.base.responsableMantenimiento"}}
+    {{map field="_responsableMantenimiento" label="Provisto por" value="=art.base.datosActivoFijo.base._responsableMantenimiento"}}
+    {{map field="articulo" label="Artículo" value="=art._id"}}
+    {{map field="_articulo" label="Artículo" value="=art._name"}}
+    {{map field="cantidad" label="Cantidad" value="=cantidad"}}
+  {{/view}}
+
+  {{#view id="invRopa"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter condition="=id" field="='cuenta'" eq="=id"}}
+      {{filter condition="=tipoubicacion" field="tipoUbicacion" eq="=tipoubicacion"}}
+      {{filter condition="=tipoarticulo" field="tipoArticulo" eq="=tipoarticulo"}}
+      {{group field="cuenta"}}
+      {{group field="_cuenta"}}
+      {{group field="codigo"}}
+      {{!-- {{group field="lote"}}
+      {{group field="vencimiento"}} --}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{match field="cantidad" neq="=0"}}
+    {{/pipeline}}
+    {{join source="articulo" view="descripcion" id="codigo" key="base.codigo" as="articulo"}}
+  {{/view}}
+  {{#cube id="invRopa" name="Inventario Ropa" view="invRopa" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{column field="articulo.base.datosRopa.base._establecimiento" label="Establecimiento" width="150"}}
+    {{column field="_cuenta" label="Ubicación"}}
+    {{row field="articulo.base.descripcion" label="Descripción" width="250"}}
+    {{row field="articulo.base.datosRopa.base._talla" label="Talla" width="20"}}
+    {{row field="codigo" label="Código" width="100"}}
+    {{!-- {{row field="codigo" label="Código" width="150"}} --}}
+    {{!-- {{row field="_lote" label="Lote" width="150"}} --}}
+    {{sum field="cantidad" label="Existencia" format="#,"}}
+  {{/cube}}
+
+  {{#view id="costoPromedio" onlyMapped2="true"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter condition="=almacen" field="='cuenta'" eq="=almacen"}}
+      {{filter condition="=codigo" field="='codigo'" eq="=codigo"}}
+      {{filter condition="=tipoubicacion" field="tipoUbicacion" eq="=tipoubicacion"}}
+      {{filter condition="=tipoarticulo" field="tipoArticulo" eq="=tipoarticulo"}}
+      {{group field="codigo"}}
+      {{!-- {{group field="lote"}}
+      {{group field="vencimiento"}} --}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{group field="importeFactor" type="sum" as="importe"}}
+      {{match field="cantidad" neq="=0"}}
+    {{/pipeline}}
+    {{sort field="codigo" having="cantidad"}}
+    {{!-- {{calc field="_lote" value="=calc.concat(lote, calc.format('date', vencimiento, 'DD/MMM/YYYY'))"}} --}}
+    {{calc field="costoPromedio" value="=importe/cantidad"}}
+    {{join source="articulo" view="descripcion" id="codigo" key="base.codigo" fields="base.descripcion,base._unidadExistencia" as="articulo"}}    
+    {{calc2 field="descripcion" value="=articulo.base.descripcion"}}
+    {{calc2 field="_unidadExistencia" value="=articulo.base._unidadExistencia"}}
+    {{map field="codigo" label="Código" value="=codigo"}}
+    {{map field="descripcion" label="Descripción" value="=descripcion"}}
+    {{!-- {{map field="_lote" label="Lote" value="=_lote"}} --}}
+    {{map field="_unidadExistencia"  label="Unidad Medida" value="=articulo.base._unidadExistencia"}}
+    {{map field="cantidad" label="Cantidad" value="=cantidad"}}
+    {{map field="costoPromedio" label="Costo Promedio" value="=costoPromedio"}}
+    {{map field="importe" label="Importe" value="=importe"}}
+  {{/view}}
+
+  {{#view id="invPersona"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter condition="=id" field="='cuenta'" eq="=id"}}
+      {{filter condition="=tipoubicacion" field="tipoUbicacion" eq="=tipoubicacion"}}
+      {{filter condition="=tipoarticulo" field="tipoArticulo" eq="=tipoarticulo"}}
+      {{group field="cuenta"}}
+      {{group field="_cuenta"}}
+      {{group field="subCuenta"}}
+      {{group field="_subCuenta"}}
+      {{group field="codigo"}}
+      {{group field="descripcion"}}
+      {{group field="lote"}}
+      {{group field="vencimiento"}}
+      {{group field="seguridad"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{match field="cantidad" neq="=0"}}
+    {{/pipeline}}
+    {{join source="articulo" view="descripcion" id="codigo" key="base.codigo" fields="base.descripcion" as="articulo"}}
+    {{calc field="_lote" value="=calc.concat(lote, calc.format('date', vencimiento, 'DD/MMM/YYYY'))"}}
+    {{calc field="_seguridad" value="=calc.format('date', seguridad, 'DD/MMM/YYYY h:mma')"}}
+  {{/view}}
+  {{#cube id="invPersona" name="Inventario" view="invPersona" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{column field="_subCuenta" label="Sub Cuenta"}}
+[.#if esSIC.]
+    {{row field="articulo.base.descripcion" label="Descripción" width="400"}}
+    {{row field="codigo" label="Código" width="140"}}
+[.else.]
+    {{row field="codigo" label="Código" width="140" expanded="true"}}
+    {{row field="articulo.base.descripcion" label="Descripción" width="400" expanded="true"}}
+    {{row field="_lote" label="Lote" width="140"}}
+    {{!-- {{row field="_seguridad" label="Bioseguridad" width="140"}} --}}
+[./if.]
+    {{sum field="cantidad" label="Cantidad" format="#,.##"}}
+  {{/cube}}
+  {{#cube id="invPersona2" name="Inventario" view="invPersona" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="false" showColumnTotals="false" showRowTotals="false"}}
+    {{row field="codigo" label="Código" width="150" expanded="true"}}
+    {{row field="articulo.base.descripcion" label="Descripción" width="600"}}
+    {{column field="_subCuenta" label="Sub Cuenta"}}
+    {{sum field="cantidad" label="Cantidad" format="#,.##"}}
+  {{/cube}}
+
+  {{#view id="invGases" where='{"categoria":"Gases Medicinales"}'}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter condition="=id" field="='cuenta'" eq="=id"}}
+      {{filter condition="=tipoubicacion" field="tipoUbicacion" eq="=tipoubicacion"}}
+      {{filter condition="=tipoarticulo" field="tipoArticulo" eq="=tipoarticulo"}}
+      {{group field="cuenta"}}
+      {{group field="_cuenta"}}
+      {{group field="codigo"}}
+      {{group field="lote"}}
+      {{group field="vencimiento"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{match field="cantidad" neq="=0"}}
+    {{/pipeline}}
+    {{join source="articulo" view="descripcion" id="codigo" key="base.codigo" fields="base.descripcion,base.categoria" as="articulo"}}
+    {{calc field="categoria" value="=articulo.base.categoria"}}
+  {{/view}}
+  {{#cube id="invGases" name="Inventario Gases" view="invGases" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{column field="_cuenta" label="Almacén"}}
+    {{row field="articulo.base.descripcion" label="Descripción" width="400"}}
+    {{row field="codigo" label="Código" width="140"}}
+    {{sum field="cantidad" label="Cantidad" format="#,.##"}}
+  {{/cube}}
+
+  {{#view id="invServicio" fromSource="articulo" fromView="materialesDelServicio"}} {{!-- where='{"categoria":"Gases Medicinales"}' --}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter condition="=id" field="='cuenta'" eq="=id"}}
+      {{filter condition="=tipoubicacion" field="tipoUbicacion" eq="=tipoubicacion"}}
+      {{filter condition="=tipoarticulo" field="tipoArticulo" eq="=tipoarticulo"}}
+      {{filter condition="=servicio" field="codigo" in="=_.pluck(_items, 'codigo')"}}
+      {{group field="cuenta"}}
+      {{group field="_cuenta"}}
+      {{group field="codigo"}}
+      {{group field="descripcion"}}
+      {{group field="lote"}}
+      {{group field="vencimiento"}}
+      {{group field="seguridad"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{match field="cantidad" neq="=0"}}
+    {{/pipeline}}
+    {{join source="articulo" view="descripcion" id="codigo" key="base.codigo" fields="base.descripcion,base.categoria" as="articulo"}}
+    {{calc field="categoria" value="=articulo.base.categoria"}}
+    {{calc field="_lote" value="=calc.concat(lote, calc.format('date', vencimiento, 'DD/MMM/YYYY'))"}}
+    {{calc field="_seguridad" value="=calc.format('date', seguridad, 'DD/MMM/YYYY h:mma')"}}
+  {{/view}}
+  {{#cube id="invServicio" name="Inventario Servicio" view="invServicio" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{column field="_cuenta" label="Almacén"}}
+    {{row field="articulo.base.descripcion" label="Descripción" width="400"}}
+    {{row field="codigo" label="Código" width="140"}}
+    {{sum field="cantidad" label="Cantidad" format="#,.##"}}
+  {{/cube}}
+
+  {{#view id="sugerirPlanCompra" onlyMapped2="true"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter field="='cuenta'" eq="=contrato"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{group field="codigo"}}
+      {{match field="cantidad" gt="=0"}}
+    {{/pipeline}}
+    {{join source="articulo" view="descripcion" id="codigo" key="base.codigo" fields="_name" as="art"}}
+    {{sort field="codigo"}}
+    {{map field="articulo" value="=art._id"}}
+    {{map field="_articulo" value="=art._name"}}
+    {{map field="codigo" value="=codigo"}}
+    {{map field="descripcion" value="=art._name"}}
+    {{map field="disponible" value="=cantidad"}}
+    {{map field="cantidad" value="=cantidad"}}
+  {{/view}}
+
+  {{#view id="planCompra"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter condition="=id" field="='cuenta'" eq="=id"}}
+      {{filter condition="=tipoubicacion" field="tipoUbicacion" eq="=tipoubicacion"}}
+      {{filter condition="=tipoarticulo" field="tipoArticulo" eq="=tipoarticulo"}}
+      {{group field="situacion"}}
+      {{group field="cuenta"}}
+      {{group field="_cuenta"}}
+      {{group field="codigo"}}
+      {{group field="descripcion"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{match field="cantidad" neq="=0"}}
+    {{/pipeline}}
+    {{join source="articulo" view="descripcion" id="codigo" key="base.codigo" fields="base.descripcion,tipoActivo.campo8" as="art"}}
+  {{/view}}
+  {{#cube id="planCompra" name="Plan Compra" view="planCompra" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{column field="situacion" label="Situación"}}
+    {{row field="codigo" label="Código" width="140"}}
+    {{row field="art.base.descripcion" label="Descripción" width="400"}}
+    {{sum field="cantidad" label="Cantidad" format="#,.##"}}
+  {{/cube}}
+
+  {{#view id="invMetas"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter field="cuenta" eq="=id"}}
+      {{filter field="tipoArticulo" eq="='meta'"}}
+      {{group field="lote"}}
+      {{group field="referencia"}}
+      {{group field="vencimiento"}}
+      {{group field="situacion"}}
+      {{group field="codigo"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{match field="cantidad" neq="=0"}}
+    {{/pipeline}}
+    {{join source="articulo" view="descripcion" id="codigo" key="base.codigo" fields="base.descripcion,base.categoria,base.grupo,base.familia,base.unidadEvaluacion" as="art"}}
+  {{/view}}
+  {{#cube id="invMetas" name="Metas" view="invMetas" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnTotals="false" showColumnGrandTotals="false"}}
+    {{column field="lote" label="Ejercicio" expanded="true"}}
+    {{column field="situacion" label="Situación" fixedOrder="Meta,Avance Preliminar,Avance Final"}}
+    {{row field="art.base.grupo" label="Eje Estratégico" width="150" expanded="true"}}
+    {{row field="art.base.categoria" label="Línea" width="400"}}
+    {{row field="art.base.descripcion" label="Meta Colectiva" width="250"}}
+    {{row field="referencia" label="Meta Individual" width="250"}}
+    {{row field="art.base.unidadEvaluacion" label="Unidad" width="100"}}
+    {{sum field="cantidad" label="Cantidad" format="#,.##"}}
+  {{/cube}}
+  {{#view id="invTodasMetas"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter field="tipoArticulo" eq="='meta'"}}
+      {{filter field="cuenta" neq="='metasColectivas'"}}
+      {{group field="cuenta"}}
+      {{group field="lote"}}
+      {{group field="referencia"}}
+      {{group field="vencimiento"}}
+      {{group field="situacion"}}
+      {{group field="codigo"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{match field="cantidad" neq="=0"}}
+    {{/pipeline}}
+    {{join source="articulo" view="descripcion" id="codigo" key="base.codigo" fields="base.descripcion,base.categoria,base.grupo,base.familia,base.unidadEvaluacion" as="art"}}
+    {{join source="persona" view="datosPersona" as="persona" id="cuenta"}}
+  {{/view}}
+  {{#cube id="invTodasMetas" name="Todas Metas" view="invTodasMetas" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnTotals="false" showColumnGrandTotals="false"}}
+    {{column field="lote" label="Ejercicio" expanded="true"}}
+    {{column field="situacion" label="Situación" fixedOrder="Meta,Avance Preliminar,Avance Final"}}
+    {{row field="persona._name" label="Persona" width="200"}}
+    {{row field="art.base.grupo" label="Eje Estratégico" width="150" expanded="true"}}
+    {{row field="art.base.categoria" label="Línea" width="300"}}
+    {{row field="art.base.descripcion" label="Meta Colectiva" width="200"}}
+    {{row field="referencia" label="Meta Individual" width="200"}}
+    {{row field="art.base.unidadEvaluacion" label="Unidad" width="100"}}
+    {{sum field="cantidad" label="Cantidad" format="#,.##"}}
+  {{/cube}}
+
+  {{#view id="invCompetencias"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter field="cuenta" eq="=id"}}
+      {{filter field="tipoArticulo" eq="='competencia'"}}
+      {{group field="lote"}}
+      {{group field="vencimiento"}}
+      {{group field="situacion"}}
+      {{group field="codigo"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{match field="cantidad" neq="=0"}}
+    {{/pipeline}}
+    {{join source="articulo" view="descripcion" id="codigo" key="base.codigo" fields="base.descripcion,base.categoria,base.grupo,base.familia" as="art"}}
+  {{/view}}
+  {{#cube id="invCompetencias" name="Competencias" view="invCompetencias" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnTotals="false" showColumnGrandTotals="false"}}
+    {{column field="lote" label="Ejercicio" expanded="true"}}
+    {{column field="situacion" label="Situación" fixedOrder="Autoevaluación,Jefe Directo,Jefe Indirecto"}}
+    {{row field="art.base.grupo" label="Grupo" width="250" expanded="true"}}
+    {{row field="art.base.categoria" label="Competencia" width="250"}}
+    {{row field="art.base.descripcion" label="Comportamiento Asociado" width="500"}}
+    {{sum field="cantidad" label="Cantidad" format="#,.##"}}
+  {{/cube}}
+  {{#view id="invTodasCompetencias"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter field="tipoArticulo" eq="='competencia'"}}
+      {{group field="cuenta"}}
+      {{group field="lote"}}
+      {{group field="vencimiento"}}
+      {{group field="situacion"}}
+      {{group field="codigo"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{match field="cantidad" neq="=0"}}
+    {{/pipeline}}
+    {{join source="articulo" view="descripcion" id="codigo" key="base.codigo" fields="base.descripcion,base.categoria,base.grupo,base.familia" as="art"}}
+    {{join source="persona" view="datosPersona" as="persona" id="cuenta"}}
+  {{/view}}
+  {{#cube id="invTodasCompetencias" name="Todas Competencias" view="invTodasCompetencias" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnTotals="false" showColumnGrandTotals="false"}}
+    {{column field="lote" label="Ejercicio" expanded="true"}}
+    {{column field="situacion" label="Situación" fixedOrder="Autoevaluación,Jefe Directo,Jefe Indirecto"}}
+    {{row field="art.base.grupo" label="Grupo" width="200" expanded="true"}}
+    {{row field="persona._name" label="Persona" width="250"}}
+    {{row field="art.base.categoria" label="Competencia" width="250"}}
+    {{row field="art.base.descripcion" label="Comportamiento Asociado" width="400"}}
+    {{sum field="cantidad" label="Cantidad" format="#,.##"}}
+  {{/cube}}
+
+  {{#view id="sugerirMetas" onlyMapped2="true"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter field="cuenta" eq="=id"}}
+      {{filter field="lote" eq="=ejercicio"}}
+      {{filter field="tipoArticulo" eq="='meta'"}}
+      {{filter field="situacion" eq="='Meta'"}}
+      {{group field="codigo"}}
+      {{group field="referencia"}}
+      {{group field="vencimiento"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{match field="cantidad" neq="=0"}}
+    {{/pipeline}}
+    {{join source="articulo" view="descripcion" id="codigo" key="base.codigo" fields="_name,base.descripcion,base.categoria,base.grupo,base.familia,base.unidadEvaluacion" as="art"}}
+    {{sort field="codigo"}}
+    {{map field="articulo" value="=art._id"}}
+    {{map field="_articulo" value="=art._name"}}
+    {{map field="codigo" value="=art.base.codigo"}}
+    {{map field="descripcion" value="=art.base.descripcion"}}
+    {{map field="referencia" value="=referencia"}}
+    {{map field="cantidad" value="=cantidad"}}
+    {{map field="vencimiento" value="=vencimiento"}}
+    {{map field="categoria" value="=art.base.categoria"}}
+    {{map field="grupo" value="=art.base.grupo"}}
+    {{map field="familia" value="=art.base.familia"}}
+    {{map field="unidadEvaluacion" value="=art.base.unidadEvaluacion"}}
+  {{/view}}
+
+  {{#cube id="invCuenta" name="Inventario" view="inv" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="false"}}
+    {{column field="_cuenta" label="Cuenta"}}  
+    {{row field="codigo" label="Código" width="140"}}
+    {{row field="articulo.base.descripcion" label="Descripción" width="400"}}
+    {{row field="_lote" label="Lote" width="140"}}
+    {{sum field="cantidad" label="Cantidad" format="#,"}}
+    {{sum field="importe" label="Importe" format="currency"}}
+  {{/cube}}
+
+  {{#view id="existenciaAcum"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter condition="=persona" field="cuenta" in="=persona"}}
+      {{filter condition="=codigo" field="codigo" in="=codigo"}}
+      {{group field="cuenta" as="persona"}}
+      {{group field="codigo"}}
+      {{group field="cantidadFactor" type="sum" as="existencia"}}
+    {{/pipeline}}
+  {{/view}}
+  {{#view id="existenciaAcum2"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter condition="=cuenta" field="cuenta" in="=cuenta"}}
+      {{filter condition="=codigo" field="codigo" in="=codigo"}}
+      {{group field="cuenta"}}
+      {{group field="codigo"}}
+      {{group field="cantidadFactor" type="sum" as="existencia"}}
+    {{/pipeline}}
+  {{/view}}
+  {{#view id="existencias"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter field="='codigo'" eq="=codigo"}}
+      {{group field="cuenta"}}
+      {{group field="_cuenta"}}
+      {{group field="lote"}}
+      {{group field="vencimiento"}}
+      {{group field="cantidadFactor" type="sum" as="existencia"}}      
+    {{/pipeline}}
+    {{sort field="_cuenta" having="existencia"}}
+  {{/view}}
+  {{#view id="existenciasSinPacientes"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter field="='codigo'" eq="=codigo"}}
+[.#if esHRAEI.]      
+      {{filter field="cuenta" in="almacenCuracion,almacenGeneral,almacenProveedor,almacenTemporal,bodegaAcanto,farmacia,farmaciaGratuita,cuarentenaCuracion,cuarentenaFarmacia,cuarentenaFarmaciaGratuita,5ede9ed5f707353325674ccb,5d596f5a4da5c37d945899a7,5ec3123b46fc785eba0df75b,5d596f634da5c37d945899a9,5ec3145e5086c55eb368b75b,5ec31431d1e97d64a0436b31,5d596f554da5c37d945899a5,5ebf19189e1d6914b2fc1213,5d596f484da5c37d945899a1,5d7842356ab6416967204396,5d596fa0c4fb7163f48cfcf8,5d78413849a62d1cb6d0d5a4,5d7841b0cd78d406cb5d2439,5d596f77c4fb7163f48cfced,5d596f87c4fb7163f48cfcee,5d596f99c4fb7163f48cfcf5,5d5c431940d374671678a12c,5d596fdbc4fb7163f48cfd03,5d596fbf4da5c37d945899b0,5d596fcac4fb7163f48cfcfd,5d596fd8c4fb7163f48cfd02,5d596f4f4da5c37d945899a2,5d596fe3c4fb7163f48cfd07,5d596fcdc4fb7163f48cfcfe,5d784114742d1c07720667f3,5d596eccd17f977d628363c6,5ec313e1f6b0002f1f98cf12,5d596f15d17f977d628363cf,615e2b0369bf3755b7b7258a,5dd6dfaa4f6fc77a0a6fd4bd,5d596f514da5c37d945899a3,5d596f72c4fb7163f48cfcec,5d596fb74da5c37d945899ad,5d7840aacd78d406cb5d2430,613c16d2c6d97623f572b089,6126725186a1f449dae85d80,5d596f0bd17f977d628363cc,5d596f26d17f977d628363d4,5d596f384da5c37d9458999b,5d596f96c4fb7163f48cfcf4,5d596fd0c4fb7163f48cfcff,5d596fe6c4fb7163f48cfd08,5d596fa6c4fb7163f48cfcfa,5d596f414da5c37d9458999e,5d596f534da5c37d945899a4,5d596f74d17f977d628363d6,5d596f65c4fb7163f48cfce9,5d596fbd4da5c37d945899af,5d596f2897acf7641577f909,5d596f2c4da5c37d94589997,5d596f334da5c37d94589999,5d596f354da5c37d9458999a,5d596f434da5c37d9458999f,5d596f464da5c37d945899a0,5d596f5e4da5c37d945899a8,5d596f60c4fb7163f48cfce8,5d784208f6946a1de37b8676,5d783f0047b97a6af112bc57,5ec40afe4a20c66e618eaf4e,5d596fe0c4fb7163f48cfd06,5d596f04d17f977d628363c9,5d596f21d17f977d628363d3,5d6e690cd5c4f1293897cba0,5d596f10d17f977d628363ce,5d596f70d17f977d628363d5,6126723386a1f449dae85d75,601c3b011fb0fa7587c5b16e,5dd6cff97e87130bffe1a7d1,5d596fc24da5c37d945899b1,5ede9eb1864b9c1e0c356887,5ede9ef153816d34d20146f6,5ec3152da854275f3d475174,5d596f07d17f977d628363ca,5d783d9e6ab64169672039fc,5d596f3e4da5c37d9458999d,5d596f68c4fb7163f48cfcea,5e950b94abc9464114d2300d,5d783e54fb769e042ea64cd5,5d783f84cd78d406cb5d2426,5dd6de73abaf957009aea746,5d596fd2c4fb7163f48cfd00,5d596f17d17f977d628363d0,60428fce0faa3937aa0b97b4,5d596fc64da5c37d945899b2,5ec3138746fc785eba0df76e,5ebed27fc726253636b90a89,5d596f94c4fb7163f48cfcf3,5d596f584da5c37d945899a6,5d596f89c4fb7163f48cfcef,5d596f8cc4fb7163f48cfcf0,5d596f92c4fb7163f48cfcf2,5d596fa8c4fb7163f48cfcfb,5d596fb24da5c37d945899ab,5d596f9dc4fb7163f48cfcf7,5d596f2a97acf7641577f90a,5d596f2f4da5c37d94589998,5d596f3b4da5c37d9458999c,5d596f6bc4fb7163f48cfceb,5d783ce89cd8da69ff34c708,5d596f1bd17f977d628363d2,5d783e2847b97a6af112bc53,5d596fae4da5c37d945899aa,5d7841d364e21503d2533d9b,5d7842acc7f87c680b6ccdee,5d596f09d17f977d628363cb,5d596f0ed17f977d628363cd,5e9f60a77fabe568f54a817e,5e9f60cb2cd13a691350286c,613fdaa5f6c30b1b9ec6c6cc,5d6e68e577a66a1db4e0f68f,5d6e68ac5da5812c5bebecf3,5d596fba4da5c37d945899ae,5d596fa3c4fb7163f48cfcf9,5d596f9bc4fb7163f48cfcf6,6079dee22b09aa6f5587872c,5d596f19d17f977d628363d1,5d596fd5c4fb7163f48cfd01,5d783dd3c7f87c680b6ccd2b,5d7840cbc7f87c680b6ccd5b,5d78426a89de306bb08b8e94,5d795f4e7699d77ba086d4b5,5d596f8ec4fb7163f48cfcf1,5d596fb54da5c37d945899ac,5d596fabc4fb7163f48cfcfc,5d7961c806b4207c160f033a,5d79625038481d7bd009b381,5d79626d7a9dcd203c302246,5d712c7d7aaf6503f62d9d21,5d596fddc4fb7163f48cfd05,5d783f219cd8da69ff34c727,5d78424e89de306bb08b8e8b,5d7840f1c7f87c680b6ccd64,5d6e691a754e5c48d0031447,642495ed4a0b31d331c20a80,6442c7371f73d19ac8c82d4a"}}
+[./if.]      
+      {{group field="cuenta"}}
+      {{group field="_cuenta"}}
+      {{group field="lote"}}
+      {{group field="vencimiento"}}
+      {{group field="cantidadFactor" type="sum" as="existencia"}}      
+    {{/pipeline}}
+    {{sort field="_cuenta" having="existencia"}}
+  {{/view}}
+  {{#view id="existenciasAlmacen"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter field="='codigo'" eq="=codigo"}}
+      {{filter field="='cuenta'" eq="=almacen"}}
+      {{group field="cuenta"}}
+      {{group field="_cuenta"}}
+      {{group field="lote"}}
+      {{group field="vencimiento"}}
+      {{group field="cantidadFactor" type="sum" as="existencia"}}      
+    {{/pipeline}}
+    {{sort field="_cuenta" having="existencia"}}
+  {{/view}}
+  {{#view id="existenciasUnidadCompra"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter field="='cuenta'" eq="=almacen"}}
+      {{group field="codigo"}}
+      {{group field="descripcion"}}
+      {{group field="lote"}}
+      {{group field="vencimiento"}}
+      {{group field="cantidadFactor" type="sum" as="existencia"}}      
+    {{/pipeline}}
+    {{sort field="codigo" having="existencia"}}
+    {{join source="articulo" as="articulo" view="datosProveedor" id="codigo" key="base.codigo"}}
+    {{calc field="descripcion" value="=articulo._name.substr(0,100)"}}
+    {{calc field="factorCompra" value="=calc.first(articulo.base.articuloProveedor).base.factorCompra"}}
+    {{calc field="unidadProveedor" value="=calc.first(articulo.base.articuloProveedor).base.unidadProveedor"}}
+    {{calc field="_unidadProveedor" value="=calc.first(articulo.base.articuloProveedor).base._unidadProveedor"}}
+    {{calc field="existenciaFactor" type="expr" value="=existencia/factorCompra"}}
+  {{/view}}
+  {{#view id="disponible"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter field="='cuenta'" eq="=cuenta"}}
+      {{filter field="='codigo'" eq="=codigo"}}
+      {{filter condition="=vencimiento" field="vencimiento" gte="=vencimiento"}}
+      {{group field="codigo"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{sort field="_id._cuenta" direction="asc"}}
+    {{/pipeline}}
+  {{/view}}
+  {{#view id="disponibleEnAlmacen"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter field="='cuenta'" eq="=almacen"}}
+      {{group field="codigo"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+    {{/pipeline}}
+    {{sort field="codigo" having="cantidad"}}
+  {{/view}}
+  {{#view id="disponibleMultiple"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter field="='cuenta'" in="=cuenta"}}
+      {{filter field="='codigo'" in="=codigo"}}
+      {{filter condition="=vencimiento" field="vencimiento" gte="=vencimiento"}}
+      {{group field="codigo"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{sort field="_id._cuenta" direction="asc"}}
+    {{/pipeline}}
+  {{/view}}
+  {{#view id="disponibleEnAlmacenes"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter field="tipoUbicacion" eq="='Almacenes'"}}
+      {{filter field="='codigo'" eq="=codigo"}}
+      {{filter condition="=vencimiento" field="vencimiento" gte="=vencimiento"}}
+      {{group field="codigo"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{sort field="_id._cuenta" direction="asc"}}
+    {{/pipeline}}
+  {{/view}}
+  {{#view id="abiertoDisponible"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter field="='cuenta'" in="=cuenta"}}
+      {{filter field="='codigo'" in="=codigo"}}
+      {{filter field="abierto" eq="=true"}}
+      {{filter field="seguridad" gt="=moment().format()"}}
+      {{group field="codigo"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+    {{/pipeline}}
+  {{/view}}
+  {{#view id="saldoInicialCaja"}}
+    {{#pipeline}}
+      {{filter field="nota.date" lt="=desde"}}
+      {{filter field="aux" eq="='caja'"}}
+      {{filter field="nota.type" nin="notaCajaCierre,notaCajaRecoleccion"}}
+      {{filter condition="=cajero" field="='cuenta'" eq="=cajero"}}
+      {{filter condition="=persona" field="='persona.id'" eq="=persona"}}
+      {{group field="importeFactor" type="sum"}}
+    {{/pipeline}}
+  {{/view}}
+  {{#view id="kardexCaja"}}  {{!-- before="saldoInicialCaja" --}}
+    {{#pipeline}}
+      {{filter field="importe" neq="=0"}}
+      {{filter field="nota.date" gte="=desde"}}
+      {{filter field="nota.date" lt="=moment(hasta).add(1, 'day').format('YYYY-MM-DD')"}}
+      {{filter field="aux" eq="='caja'"}}
+      {{filter field="nota.type" nin="notaCajaCierre,notaCajaRecoleccion"}}
+      {{filter condition="=cajero" field="='cuenta'" eq="=cajero"}}
+      {{filter condition="=persona" field="='persona.id'" eq="=persona"}}
+      {{group field="nota"}}
+      {{group field="persona"}}
+      {{group field="_cuenta"}}
+      {{group field="descripcion"}}
+      {{group field="importeFactor" type="sum"}}
+    {{/pipeline}}
+    {{sort field="fecha"}}
+    {{calc field="fecha" value="=nota.date"}}
+    {{calc field="ingreso" value="=(importeFactor>0)?importeFactor:null"}}
+    {{calc field="egreso" value="=(importeFactor<0)?-importeFactor:null"}}
+    {{calc field="movimiento" value="=@nota&&nota.name||'Saldo Inicial'"}}
+    {{acum field="saldo" type="sum" value="=importeFactor"}}
+  {{/view}}
+  {{#view id="kardexCajaCentral"}}
+    {{#pipeline}}
+      {{filter field="importe" neq="=0"}}
+      {{filter field="nota.date" gte="=desde"}}
+      {{filter field="nota.date" lt="=moment(hasta).add(1, 'day').format('YYYY-MM-DD')"}}
+      {{filter field="aux" eq="='caja'"}}
+      {{!-- {{filter field="nota.type" nin="notaCajaCierre,notaCajaRecoleccion"}} --}}
+      {{filter field="='cuenta'" eq="='cajaCentral'"}}
+      {{filter condition="=persona" field="='persona.id'" eq="=persona"}}
+      {{group field="nota"}}
+      {{group field="persona"}}
+      {{group field="_cuenta"}}
+      {{group field="descripcion"}}
+      {{group field="importeFactor" type="sum"}}
+    {{/pipeline}}
+    {{sort field="fecha"}}
+    {{calc field="fecha" value="=nota.date"}}
+    {{calc field="ingreso" value="=(importeFactor>0)?importeFactor:null"}}
+    {{calc field="egreso" value="=(importeFactor<0)?-importeFactor:null"}}
+    {{calc field="movimiento" value="=@nota&&nota.name||'Saldo Inicial'"}}
+    {{acum field="saldo" type="sum" value="=importeFactor"}}
+  {{/view}}
+  {{#view id="kardexCaja2"}}
+    {{#find limit="-1"}}
+      {{filter field="importe" neq="=0"}}
+      {{filter field="nota.date" gte="=desde"}}
+      {{filter field="nota.date" lt="=moment(hasta).add(1, 'day').format('YYYY-MM-DD')"}}
+      {{filter field="aux" eq="='caja'"}}
+      {{filter field="nota.type" nin="notaCajaCierre,notaCajaRecoleccion"}}
+      {{filter condition="=cajero" field="='cuenta'" eq="=cajero"}}
+      {{filter condition="=persona" field="='persona.id'" eq="=persona"}}
+      {{sort field="nota.tipoMovimiento" direction="asc"}}
+      {{sort field="nota.folio" direction="asc"}}
+    {{/find}}
+    {{calc field="fecha" value="=nota.date"}}
+    {{calc field="ingreso" value="=(importeFactor>0)?importeFactor:null"}}
+    {{calc field="egreso" value="=(importeFactor<0)?-importeFactor:null"}}
+    {{calc field="movimiento" value="=@nota&&nota.name"}}
+  {{/view}}
+  {{#view id="kardexCajaCobros"}}
+    {{#find limit="-1"}}
+      {{filter field="importe" neq="=0"}}
+      {{filter field="nota.date" gte="=desde"}}
+      {{filter field="nota.date" lt="=moment(hasta).add(1, 'day').format('YYYY-MM-DD')"}}
+      {{filter field="aux" eq="='caja'"}}
+      {{filter field="nota.type" in="notaCobro,notaCobroAnticipo"}}
+      {{filter condition="=cajero" field="='cuenta'" eq="=cajero"}}
+      {{filter condition="=persona" field="='persona.id'" eq="=persona"}}
+      {{sort field="nota.tipoMovimiento" direction="asc"}}
+      {{sort field="nota.folio" direction="asc"}}
+    {{/find}}
+    {{calc field="fecha" value="=nota.date"}}
+    {{calc field="ingreso" value="=(importeFactor>0)?importeFactor:null"}}
+    {{calc field="egreso" value="=(importeFactor<0)?-importeFactor:null"}}
+    {{calc field="movimiento" value="=@nota&&nota.name"}}
+  {{/view}}
+  {{#view id="saldoInicialFormaPago"}}
+    {{#pipeline}}
+      {{filter field="nota.date" lt="=desde"}}
+      {{filter field="aux" eq="='caja'"}}
+      {{filter field="factor" eq="=1"}}
+      {{filter condition="=cajero" field="='cuenta'" eq="=cajero"}}
+      {{filter condition="=persona" field="='persona.id'" eq="=persona"}}
+      {{group field="codigo"}}
+      {{group field="descripcion"}}
+      {{group field="importeFactor" type="sum"}}
+    {{/pipeline}}
+  {{/view}}
+  {{#view id="resumenFormaPago" before="saldoInicialFormaPago"}}
+    {{#pipeline}}
+      {{filter field="nota.date" gte="=desde"}}
+      {{filter field="nota.date" lt="=moment(hasta).add(1, 'day').format('YYYY-MM-DD')"}}
+      {{filter field="aux" eq="='caja'"}}
+      {{filter condition="=cajero" field="='cuenta'" eq="=cajero"}}
+      {{filter condition="=persona" field="='persona.id'" eq="=persona"}}
+      {{group field="_cuenta"}}
+      {{group field="factor"}}
+      {{group field="codigo"}}
+      {{group field="descripcion"}}
+      {{group field="_cuenta" type="count" as="cantidad"}}
+      {{group field="importeFactor" type="sum"}}
+    {{/pipeline}}
+    {{sort condition="=!@cajero" field="_cuenta" having="_cuenta"}}
+    {{sort condition="=cajero" field="descripcion"}}
+    {{calc field="codigo" value="=codigo"}}
+    {{calc field="descripcion" value="=descripcion"}}
+    {{calc field="ingresos" value="=(factor>0)?importeFactor:0"}}
+    {{calc field="egresos" value="=(factor<0)?-importeFactor:0"}}
+    {{calc field="neto" value="=ingresos-egresos"}}
+  {{/view}}
+
+  {{#view id="resumenFormaPagoCubo" before="saldoInicialFormaPago"}}
+    {{#pipeline}}
+      {{filter field="nota.type" nin="notaCajaCentralApertura,notaCajaCentralCierre,notaCajaApertura,notaCajaRecoleccion,notaCajaCierre,notaCajaAsignacionFondoFijo,notaCajaDevolucionFondoFijo"}}
+      {{filter field="nota.date" gte="=desde"}}
+      {{filter field="nota.date" lt="=moment(hasta).add(1, 'day').format('YYYY-MM-DD')"}}
+      {{filter field="aux" eq="='caja'"}}
+      {{filter condition="=cajero" field="='cuenta'" eq="=cajero"}}
+      {{filter condition="=persona" field="='persona.id'" eq="=persona"}}
+      {{group field="_cuenta"}}
+      {{group field="factor"}}
+      {{group field="codigo"}}
+      {{group field="descripcion"}}
+      {{group field="_cuenta" type="count" as="cantidad"}}
+      {{group field="importeFactor" type="sum"}}
+    {{/pipeline}}
+    {{sort condition="=!@cajero" field="_cuenta" having="_cuenta"}}
+    {{sort condition="=cajero" field="descripcion"}}
+    {{calc field="codigo" value="=codigo"}}
+    {{calc field="descripcion" value="=descripcion"}}
+    {{calc field="ingresos" value="=(factor>0)?importeFactor:0"}}
+    {{calc field="egresos" value="=(factor<0)?-importeFactor:0"}}
+    {{calc field="neto" value="=ingresos-egresos"}}
+  {{/view}}
+  {{#cube id="resumenFormaPagoCubo" name="Resumen - Forma Pago (sin Aperturas ni Cierres)" view="resumenFormaPagoCubo" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{column field="descripcion" label="Forma Pago" width="200"}}
+    {{row field="_cuenta" label="Cajero" width="200"}}  
+    {{sum field="cantidad" label="Cantidad" width="200" format="#,"}}
+    {{sum field="ingresos" label="Ingresos" width="200" format="currency"}}
+    {{sum field="egresos" label="Egresos" width="200" format="currency"}}
+    {{sum field="neto" label="Neto" width="200" format="currency"}}
+  {{/cube}}
+
+  {{#view id="saldoInicialInv"}}
+    {{#pipeline}}
+      {{filter field="nota.date" lt="=desde"}}
+
+      {{filter condition="=!calc.isTrue(@addFix)" field="aux" eq="inv"}}
+      {{filter condition="=calc.isTrue(addFix)" field="aux" in="inv,inv-fix"}}
+      {{filter condition="=calc.isTrue(addFix)" field="fixDuplicados" exists="=false"}}
+      {{!-- {{filter field="aux" in="inv,inv-fix"}}
+      {{filter field="fixDuplicados" exists="=false"}} --}}
+
+      {{filter field="='codigo'" eq="=codigo"}}
+      {{group field="cantidadFactor" type="sum"}}
+      {{group field="importeFactor" type="sum"}}
+    {{/pipeline}}
+  {{/view}}
+  {{#view id="kardex" before="saldoInicialInv"}}
+    {{#find limit="-1"}}
+      {{filter field="cantidad" neq="=0"}}
+      {{filter field="nota.date" gte="=desde"}}
+      {{filter field="nota.date" lt="=moment(hasta).add(1, 'day').format('YYYY-MM-DD')"}}
+
+      {{filter condition="=!calc.isTrue(@addFix)" field="aux" eq="inv"}}
+      {{filter condition="=calc.isTrue(addFix)" field="aux" in="inv,inv-fix"}}
+      {{filter condition="=calc.isTrue(addFix)" field="fixDuplicados" exists="=false"}}
+      {{!-- {{filter field="aux" in="inv,inv-fix"}}
+      {{filter field="fixDuplicados" exists="=false"}} --}}
+
+      {{filter field="='codigo'" eq="=codigo"}}
+      {{sort field="nota.date" direction="asc"}}
+    {{/find}}
+    {{join source="articulo" as="articulo" view="lista" id="codigo" key="base.codigo"}}
+    {{join source="solicitud" as="solicitudInfo" view="entregado" id="solicitud"}}
+    {{calc field="_usuario" value="=nota._user"}}
+    {{calc field="fecha" value="=nota.date"}}
+    {{calc field="entrada" value="=(cantidadFactor>0)?cantidadFactor:null"}}
+    {{calc field="salida" value="=(cantidadFactor<0)?-cantidadFactor:null"}}
+    {{calc field="_entregado" label="Entregado" value="=solicitudInfo._moment.entregado._doc"}}
+    {{calc field="_cancelado" label="Cancelado" value="=solicitudInfo._moment.cancelado&&'(Cancelado)'"}}
+    {{calc field="movimiento" label="Movimiento" type="expr" value="=calc.concat4(calc.concat(@nota&&nota.name, _cancelado)||'Cantidad Inicial', _entregado)"}}
+    {{calc field="_lote" value="=calc.concat(@lote, calc.format('date', @vencimiento, 'DD/MMM/YYYY'))"}}
+    {{!-- {{calc field="costoUnitario" value="=articulo.base.costoUnitario"}}
+    {{calc field="costoTotal" value="=costoUnitario*cantidadFactor"}} --}}
+    {{calc field="costoUnitario" value="=calc.safeDiv(importeFactor,cantidadFactor)"}}
+    {{calc field="costoTotal" value="=importeFactor"}}
+    {{acum field="existencia" type="sum" value="=cantidadFactor"}}
+  {{/view}}
+  {{#view id="entradas"}}
+    {{#find limit="-1"}}
+      {{filter field="nota.date" gte="=desde"}}
+      {{filter field="nota.date" lt="=moment(hasta).add(1, 'day').format('YYYY-MM-DD')"}}
+
+      {{filter condition="=!calc.isTrue(@addFix)" field="aux" eq="inv"}}
+      {{filter condition="=calc.isTrue(addFix)" field="aux" in="inv,inv-fix"}}
+      {{filter condition="=calc.isTrue(addFix)" field="fixDuplicados" exists="=false"}}
+      {{!-- {{filter field="aux" in="inv,inv-fix"}}
+      {{filter field="fixDuplicados" exists="=false"}} --}}
+
+      {{filter field="='codigo'" eq="=codigo"}}
+      {{filter field="='factor'" gt="=0"}}
+      {{sort field="nota.date" direction="asc"}}
+    {{/find}}
+    {{join source="articulo" as="articulo" view="lista" id="codigo" key="base.codigo"}}
+    {{calc field="fecha" value="=nota.date"}}
+    {{calc field="entrada" value="=(cantidadFactor>0)?cantidadFactor:null"}}
+    {{calc field="movimiento" value="=@nota&&nota.name"}}
+    {{calc field="_lote" value="=calc.concat(@lote, calc.format('date', @vencimiento, 'DD/MMM/YYYY'))"}}
+    {{!-- {{calc field="costoUnitario" value="=articulo.base.costoUnitario"}}
+    {{calc field="costoTotal" value="=costoUnitario*cantidadFactor"}} --}}
+    {{calc field="costoUnitario" value="=calc.safeDiv(importeFactor,cantidadFactor)"}}
+    {{calc field="costoTotal" value="=importeFactor"}}
+  {{/view}}
+  {{#view id="salidas"}}
+    {{#find limit="-1"}}
+      {{filter field="nota.date" gte="=desde"}}
+      {{filter field="nota.date" lt="=moment(hasta).add(1, 'day').format('YYYY-MM-DD')"}}
+
+      {{filter condition="=!calc.isTrue(@addFix)" field="aux" eq="inv"}}
+      {{filter condition="=calc.isTrue(addFix)" field="aux" in="inv,inv-fix"}}
+      {{filter condition="=calc.isTrue(addFix)" field="fixDuplicados" exists="=false"}}
+      {{!-- {{filter field="aux" in="inv,inv-fix"}}
+      {{filter field="fixDuplicados" exists="=false"}} --}}
+
+      {{filter field="='codigo'" eq="=codigo"}}
+      {{filter field="='factor'" lt="=0"}}
+      {{sort field="nota.date" direction="asc"}}
+    {{/find}}
+    {{join source="articulo" as="articulo" view="lista" id="codigo" key="base.codigo"}}
+    {{calc field="fecha" value="=nota.date"}}
+    {{calc field="salida" value="=(cantidadFactor<0)?-cantidadFactor:null"}}
+    {{calc field="movimiento" value="=@nota&&nota.name"}}
+    {{calc field="_lote" value="=calc.concat(@lote, calc.format('date', @vencimiento, 'DD/MMM/YYYY'))"}}
+    {{!-- {{calc field="costoUnitario" value="=articulo.base.costoUnitario"}}
+    {{calc field="costoTotal" value="=costoUnitario*cantidadFactor"}} --}}
+    {{calc field="costoUnitario" value="=calc.safeDiv(importeFactor,cantidadFactor)"}}
+    {{calc field="costoTotal" value="=importeFactor"}}
+  {{/view}}
+  {{#view id="saldoInicialInvAlmacen"}}
+    {{#pipeline}}
+      {{filter field="nota.date" lt="=desde"}}
+
+      {{filter condition="=!calc.isTrue(@addFix)" field="aux" eq="inv"}}
+      {{filter condition="=calc.isTrue(addFix)" field="aux" in="inv,inv-fix"}}
+      {{filter condition="=calc.isTrue(addFix)" field="fixDuplicados" exists="=false"}}
+      {{!-- {{filter field="aux" in="inv,inv-fix"}}
+      {{filter field="fixDuplicados" exists="=false"}} --}}
+
+      {{filter condition="=tipoubicacion" field="tipoUbicacion" eq="=tipoubicacion"}}
+      {{filter condition="=tipoarticulo" field="tipoArticulo" eq="=tipoarticulo"}}
+      {{filter condition="=almacen" field="cuenta" eq="=almacen"}}
+      {{filter condition="=codigo" field="='codigo'" eq="=codigo"}}
+      {{filter condition="=movs&&movs.length" field="nota.type" in="=movs"}}
+      {{group field="codigo"}}
+      {{!-- {{group field="descripcion"}} --}}
+      {{group field="cantidadFactor" type="sum"}}
+      {{group field="importeFactor" type="sum"}}
+    {{/pipeline}}
+    {{join source="articulo" as="articulo" view="lista" id="codigo" key="base.codigo" fields="_name,base._unidadExistencia"}}
+  {{/view}}
+  {{#view id="existenciasMensuales" before="saldoInicialInvAlmacen"}}
+    {{#pipeline}}
+      {{filter field="cantidad" neq="=0"}}
+      {{filter field="nota.date" gte="=desde"}}
+      {{filter field="nota.date" lt="=moment(hasta).add(1, 'day').format('YYYY-MM-DD')"}}
+
+      {{filter condition="=!calc.isTrue(@addFix)" field="aux" eq="inv"}}
+      {{filter condition="=calc.isTrue(addFix)" field="aux" in="inv,inv-fix"}}
+      {{filter condition="=calc.isTrue(addFix)" field="fixDuplicados" exists="=false"}}
+      {{filter condition="=tipoubicacion" field="tipoUbicacion" eq="=tipoubicacion"}}
+      {{filter condition="=tipoarticulo" field="tipoArticulo" eq="=tipoarticulo"}}
+      {{filter condition="=almacen" field="cuenta" eq="=almacen"}}
+      {{filter condition="=codigo" field="='codigo'" eq="=codigo"}}
+      {{filter condition="=movs&&movs.length" field="nota.type" in="=movs"}}
+
+      {{group field="codigo"}}
+      {{group field="factor"}}
+      {{group field="nota.type" as="type"}}
+      {{group field="cantidad" type="sum"}}
+    {{/pipeline}}
+    {{join source="articulo" as="articulo" view="lista" id="codigo" key="base.codigo" fields="_name,base._unidadExistencia"}}
+    {{calc field="descripcion" label="Descripción" value="=articulo._name"}}
+    {{calc field="_unidadExistencia" label="Descripción" value="=articulo.base._unidadExistencia"}}
+    {{calc field="inicial" value="=cantidadFactor"}}    {{!-- si tiene cantidadFactor (porque es el saldoInicial) a nivel detalle uso cantidad y factor por separado --}}
+    {{calc field="devolucionInterna" value="=calc.in(@type,['notaPorDevolver'])?cantidad:0"}}
+    {{calc field="devolucionProveedor" value="=calc.in(@type,['notaPorDevolverProveedor2'])?cantidad:0"}}
+    {{calc field="cantidadMov" value="=cantidad-devolucionInterna-devolucionProveedor"}}
+    {{calc field="entrada" value="=(!inicial&&factor>0)?cantidadMov:0"}}
+    {{calc field="salida" value="=(!inicial&&factor<0)?cantidadMov:0"}}
+    {{calc field="final" value="=calc.number(inicial)+calc.number(@entrada)-calc.number(@salida)+calc.number(@devolucionInterna)-calc.number(@devolucionProveedor)"}}
+    {{sort field="codigo"}}
+    {{mapReduce keys="codigo,descripcion,_unidadExistencia" values="inicial,entrada,salida,devolucionInterna,devolucionProveedor,final"}}
+  {{/view}}  
+  {{#view id="kardexAlmacen" before="saldoInicialInvAlmacen" onlyMapped2="true"}}
+    {{#find limit="-1"}}
+      {{filter field="cantidad" neq="=0"}}
+      {{filter field="nota.date" gte="=desde"}}
+      {{filter field="nota.date" lt="=moment(hasta).add(1, 'day').format('YYYY-MM-DD')"}}
+
+      {{filter condition="=!calc.isTrue(@addFix)" field="aux" eq="inv"}}
+      {{filter condition="=calc.isTrue(addFix)" field="aux" in="inv,inv-fix"}}
+      {{filter condition="=calc.isTrue(addFix)" field="fixDuplicados" exists="=false"}}
+      {{!-- {{filter field="aux" in="inv,inv-fix"}}
+      {{filter field="fixDuplicados" exists="=false"}} --}}
+
+      {{filter condition="=tipoubicacion" field="tipoUbicacion" eq="=tipoubicacion"}}
+      {{filter condition="=tipoarticulo" field="tipoArticulo" eq="=tipoarticulo"}}
+      {{filter condition="=almacen" field="cuenta" eq="=almacen"}}
+      {{filter condition="=codigo" field="='codigo'" eq="=codigo"}}
+      {{filter condition="=movs&&movs.length" field="nota.type" in="=movs"}}
+      {{sort field="nota.date" direction="asc"}}
+    {{/find}}
+    {{join source="articulo" as="articulo" view="lista" id="codigo" key="base.codigo"}}
+    {{join source="solicitud" as="solicitudInfo" view="entregado" id="solicitud"}}
+    {{calc field="verPersona" type="expr" value="=!calc.in(nota.type, ['notaPorSurtirSalidaMerma'])"}}
+    {{map field="codigo" label="Código" value="=codigo"}}
+    {{map field="descripcion" label="Descripción" value="=articulo._name.substr(0,100)"}}
+    {{map field="fecha" label="Fecha/Hora" value="=nota.date"}}
+    {{map field="_origen" label="Origen" value="=fn('movOrigen',nota.type,@referencia,@_origen,@_destino)"}}
+    {{map field="_destino" label="Destino" value="=fn('movDestino',nota.type,@referencia,@_origen,@_destino)"}}
+    {{map field="cantidadFactor" label="Cantidad" value="=cantidadFactor" excelFormat="0.00"}}
+    {{map field="entrada" label="Entrada" value="=(cantidadFactor>0)?cantidadFactor:null" excelFormat="0.00"}}
+    {{map field="salida" label="Salida" value="=(cantidadFactor<0)?-cantidadFactor:null" excelFormat="0.00"}}
+    {{map field="_centralDestino" label="Central/Destino" value="=@_central||@_destino||verPersona&&calc.getRef(@persona, 'nombreCompleto')||@_cuenta"}}
+    {{map field="_usuarioSolicitante" label="Usuario/Solicitante" value="=@_solicitante||calc.getRef(@solicitudInfo, '_created._user')||nota._user"}}
+    {{map field="_entregado" label="Entregado" value="=solicitudInfo._moment.entregado._doc"}}
+    {{map field="_cancelado" label="Cancelado" value="=solicitudInfo._moment.cancelado&&'(Cancelado)'"}}
+    {{map field="movimiento" label="Movimiento" value="=calc.concat4(calc.concat(@nota&&nota.name, _cancelado)||'Cantidad Inicial', (@nota&&nota.name!=_entregado)?_entregado:null)"}}
+    {{map field="_unidadPresentacion" label="Unidad Presentación" value="=articulo.base._unidadPresentacion"}}
+    {{map field="_unidadExistencia"  label="Unidad Medida" value="=articulo.base._unidadExistencia"}}
+    {{map field="_lote" label="Lote/Caducidad" value="=calc.concat(@lote, calc.format('date', @vencimiento, 'DD/MMM/YYYY'))"}}
+    {{!-- {{map field="costoUnitario" label="Costo Unitario" value="=articulo.base.costoUnitario"}}
+    {{map field="costoTotal" label="Costo Total" value="=costoUnitario*cantidadFactor"}} --}}
+    {{map field="costoUnitario" value="=calc.safeDiv(importeFactor,cantidadFactor)" excelFormat="0.00"}}
+    {{map field="costoTotal" value="=importeFactor" excelFormat="0.00"}}
+    {{!-- {{sort field="codigo"}} --}}  {{!-- para poner esto hay que hacer muchas pruebas en produccion, pero creo que funciona mejor --}}
+    {{acum field="costoAcum" label="Costo Acumulado" type="sum" value="=calc.round(importeFactor,4)" excelFormat="0.00"}}
+    {{acum field="existencia" label="Existencia" type="sum" value="=calc.round(cantidadFactor,4)" excelFormat="0.00"}}
+    {{calc3 field="costoPromedio" type="expr" value="=calc.safeDiv(costoAcum,existencia)" excelFormat="0.00"}}
+  {{/view}}
+  {{#view id="saldoInicialInvAlmacenPresentacion"}}
+    {{#pipeline}}
+      {{filter field="nota.date" lt="=desde"}}
+
+      {{filter condition="=!calc.isTrue(@addFix)" field="aux" eq="inv"}}
+      {{filter condition="=calc.isTrue(addFix)" field="aux" in="inv,inv-fix"}}
+      {{filter condition="=calc.isTrue(addFix)" field="fixDuplicados" exists="=false"}}
+      {{!-- {{filter field="aux" in="inv,inv-fix"}}
+      {{filter field="fixDuplicados" exists="=false"}} --}}
+
+      {{filter condition="=tipoubicacion" field="tipoUbicacion" eq="=tipoubicacion"}}
+      {{filter condition="=tipoarticulo" field="tipoArticulo" eq="=tipoarticulo"}}
+      {{filter condition="=almacen" field="cuenta" eq="=almacen"}}
+      {{filter condition="=codigo" field="='codigo'" eq="=codigo"}}
+      {{filter condition="=movs&&movs.length" field="nota.type" in="=movs"}}
+      {{group field="codigo"}}
+      {{group field="descripcion"}}
+      {{group field="cantidadFactor" type="sum"}}
+      {{group field="importeFactor" type="sum"}}
+    {{/pipeline}}
+    {{join source="articulo" as="articulo" view="lista" id="codigo" key="base.codigo"}}
+  {{/view}}
+  {{#view id="kardexAlmacenPresentacion" before="saldoInicialInvAlmacenPresentacion" onlyMapped2="true"}}
+    {{#find limit="-1"}}
+      {{filter field="cantidad" neq="=0"}}
+      {{filter field="nota.date" gte="=desde"}}
+      {{filter field="nota.date" lt="=moment(hasta).add(1, 'day').format('YYYY-MM-DD')"}}
+
+      {{filter condition="=!calc.isTrue(@addFix)" field="aux" eq="inv"}}
+      {{filter condition="=calc.isTrue(addFix)" field="aux" in="inv,inv-fix"}}
+      {{filter condition="=calc.isTrue(addFix)" field="fixDuplicados" exists="=false"}}
+      {{!-- {{filter field="aux" in="inv,inv-fix"}}
+      {{filter field="fixDuplicados" exists="=false"}} --}}
+
+      {{filter condition="=tipoubicacion" field="tipoUbicacion" eq="=tipoubicacion"}}
+      {{filter condition="=tipoarticulo" field="tipoArticulo" eq="=tipoarticulo"}}
+      {{filter condition="=almacen" field="cuenta" eq="=almacen"}}
+      {{filter condition="=codigo" field="='codigo'" eq="=codigo"}}
+      {{filter condition="=movs&&movs.length" field="nota.type" in="=movs"}}
+      {{sort field="nota.date" direction="asc"}}
+    {{/find}}
+    {{join source="articulo" as="articulo" view="lista" id="codigo" key="base.codigo"}}
+    {{join source="solicitud" as="solicitudInfo" view="entregado" id="solicitud"}}
+    {{calc field="verPersona" type="expr" value="=!calc.in(nota.type, ['notaPorSurtirSalidaMerma'])"}}
+    {{map field="codigo" label="Código" value="=codigo"}}
+    {{map field="descripcion" label="Descripción" value="=articulo._name.substr(0,100)"}}
+    {{map field="fecha" label="Fecha/Hora" value="=nota.date"}}
+    {{map field="_origen" label="Origen" value="=fn('movOrigen',nota.type,@referencia,@_origen,@_destino)"}}
+    {{map field="_destino" label="Destino" value="=fn('movDestino',nota.type,@referencia,@_origen,@_destino)"}}
+    {{map field="cantidadFactor" label="Cantidad" value="=cantidadFactor*(articulo.base.presentacion||1)"}}
+    {{map field="entrada" label="Entrada" value="=(cantidadFactor>0)?cantidadFactor:null"}}
+    {{map field="salida" label="Salida" value="=(cantidadFactor<0)?-cantidadFactor:null"}}
+    {{map field="_centralDestino" label="Central/Destino" value="=@_central||@_destino||verPersona&&calc.getRef(@persona, 'nombreCompleto')||@_cuenta"}}
+    {{map field="_usuarioSolicitante" label="Usuario/Solicitante" value="=@_solicitante||calc.getRef(@solicitudInfo, '_created._user')||nota._user"}}
+    {{map field="_entregado" label="Entregado" value="=solicitudInfo._moment.entregado._doc"}}
+    {{map field="_cancelado" label="Cancelado" value="=solicitudInfo._moment.cancelado&&'(Cancelado)'"}}
+    {{map field="movimiento" label="Movimiento" value="=calc.concat4(calc.concat(@nota&&nota.name, _cancelado)||'Cantidad Inicial', (@nota&&nota.name!=_entregado)?_entregado:null)"}}
+    {{map field="_unidadPresentacion" label="Unidad Presentación" value="=articulo.base._unidadPresentacion"}}
+    {{map field="_unidadExistencia"  label="Unidad Medida" value="=articulo.base._unidadExistencia"}}
+    {{map field="_lote" label="Lote/Caducidad" value="=calc.concat(@lote, calc.format('date', @vencimiento, 'DD/MMM/YYYY'))"}}
+    {{!-- {{map field="costoUnitario" label="Costo Unitario" value="=articulo.base.costoUnitario"}}
+    {{map field="costoTotal" label="Costo Total" value="=costoUnitario*cantidadFactor"}} --}}
+    {{map field="costoUnitario" value="=calc.safeDiv(importeFactor,cantidadFactor*(articulo.base.presentacion||1))"}}
+    {{map field="costoTotal" value="=importeFactor/(articulo.base.presentacion||1)"}}
+    {{acum field="existencia" label="Existencia" type="sum" value="=cantidadFactor*(articulo.base.presentacion||1)"}}
+  {{/view}}
+
+  {{#view id="salidasAlmacen" onlyMapped2="true"}}
+    {{!-- {{remote alias="t1" collection="mov"}}     --}}
+    {{#find limit="-1"}}
+      {{filter field="nota.date" gte="=desde"}}
+      {{filter field="nota.date" lt="=moment(hasta).add(1, 'day').format('YYYY-MM-DD')"}}
+
+      {{filter condition="=!calc.isTrue(@addFix)" field="aux" eq="inv"}}
+      {{filter condition="=calc.isTrue(addFix)" field="aux" in="inv,inv-fix"}}
+      {{filter condition="=calc.isTrue(addFix)" field="fixDuplicados" exists="=false"}}
+      {{!-- {{filter field="aux" in="inv,inv-fix"}}
+      {{filter field="fixDuplicados" exists="=false"}} --}}
+
+      {{filter condition="=tipoubicacion" field="tipoUbicacion" eq="=tipoubicacion"}}
+      {{filter condition="=tipoarticulo" field="tipoArticulo" eq="=tipoarticulo"}}
+      {{filter condition="=almacen" field="cuenta" eq="=almacen"}}
+      {{filter field="='factor'" lt="=0"}}
+      {{filter condition="=codigo" field="='codigo'" eq="=codigo"}}
+      {{filter condition="=movs&&movs.length" field="nota.type" in="=movs"}}
+      {{sort field="nota.date" direction="asc"}}
+    {{/find}}
+    {{join source="articulo" as="articulo" view="lista" id="codigo" key="base.codigo"}}
+    {{join source="solicitud" as="solicitudInfo" view="entregado" id="solicitud"}}
+    {{calc field="verPersona" type="expr" value="=!calc.in(nota.type, ['notaPorSurtirSalidaMerma'])"}}
+    {{map field="codigo" label="Código" value="=codigo"}}
+    {{map field="descripcion" label="Descripción" value="=articulo._name.substr(0,100)"}}
+    {{map field="_partidaPresupuestal" label="Partida Presupuestal" value="=articulo.base._partidaPresupuestal"}}
+    {{map field="fecha" label="Fecha/Hora" value="=nota.date"}}
+    {{map field="salida" label="Salida" value="=(cantidadFactor<0)?-cantidadFactor:null"}}
+    {{map field="_destino" label="Destino" value="=_destino"}}
+    {{map field="referencia" label="Referencia" value="=referencia"}}
+    {{map field="_centralDestino" label="Central/Destino" value="=@_central||@_destino||verPersona&&calc.getRef(@persona, 'nombreCompleto')||@_cuenta"}}
+    {{map field="_usuarioSolicitante" label="Usuario/Solicitante" value="=@_solicitante||calc.getRef(@solicitudInfo, '_created._user')||nota._user"}}
+    {{map field="_entregado" label="Entregado" value="=solicitudInfo._moment.entregado._doc"}}
+    {{map field="_cancelado" label="Cancelado" value="=solicitudInfo._moment.cancelado&&'(Cancelado)'"}}
+    {{map field="movimiento" label="Movimiento" value="=calc.concat4(calc.concat(@nota&&nota.name, _cancelado)||'Cantidad Inicial', _entregado)"}}
+    {{map field="_unidadPresentacion" label="Unidad Presentación" value="=articulo.base._unidadPresentacion"}}
+    {{map field="_unidadExistencia"  label="Unidad Medida" value="=articulo.base._unidadExistencia"}}
+    {{map field="_lote" label="Lote/Caducidad" value="=calc.concat(@lote, calc.format('date', @vencimiento, 'DD/MMM/YYYY'))"}}
+    {{!-- {{map field="costoUnitario" label="Costo Unitario" value="=articulo.base.costoUnitario"}}
+    {{map field="costoTotal" label="Costo Total" value="=costoUnitario*cantidadFactor"}} --}}
+    {{map field="costoUnitario" value="=calc.safeDiv(importeFactor,cantidadFactor)"}}
+    {{map field="costoTotal" value="=importeFactor"}}
+    {{map field="iva" value="=costoTotal*(calc.number(articulo.base.ivaCompra)/100)"}}
+    {{map field="total" value="=costoTotal*(1+calc.number(articulo.base.ivaCompra)/100)"}}
+  {{/view}}
+
+   {{#view id="salidasCobradas" onlyMapped2="true"}}
+    {{#pipeline}}
+      {{filter field="nota.date" gte="=desde"}}
+      {{filter field="nota.date" lt="=moment(hasta).add(1, 'day').format('YYYY-MM-DD')"}}
+
+      {{filter condition="=!calc.isTrue(@addFix)" field="aux" eq="inv"}}
+      {{filter condition="=calc.isTrue(addFix)" field="aux" in="inv,inv-fix"}}
+      {{filter condition="=calc.isTrue(addFix)" field="fixDuplicados" exists="=false"}}
+      {{!-- {{filter field="aux" in="inv,inv-fix"}}
+      {{filter field="fixDuplicados" exists="=false"}} --}}
+
+      {{filter condition="=tipoubicacion" field="tipoUbicacion" eq="=tipoubicacion"}}
+      {{filter condition="=tipoarticulo" field="tipoArticulo" eq="=tipoarticulo"}}
+      {{filter condition="=almacen" field="cuenta" eq="=almacen"}}
+      {{filter field="='factor'" lt="=0"}}
+      {{group field="solicitud"}}
+      {{group field="codigo"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{match field="cantidad" neq="=0"}}
+    {{/pipeline}}
+    {{join source="articulo" as="articulo" view="lista" id="codigo" key="base.codigo"}}
+    {{join source="solicitud" as="solicitudInfo" view="salidasCobradas" id="solicitud"}}
+    {{map field="codigo" label="Código" value="=codigo"}}
+    {{map field="descripcion" label="Descripción" value="=articulo._name.substr(0,100)"}}
+    {{map field="_unidadPresentacion" label="Unidad Presentación" value="=articulo.base._unidadPresentacion"}}
+    {{map field="_unidadExistencia"  label="Unidad Medida" value="=articulo.base._unidadExistencia"}}
+    {{map field="movimiento" label="Solicitud" value="=solicitudInfo._created.folio"}}
+    {{map field="fecha" label="Fecha/Hora" value="=solicitudInfo._date"}}
+    {{map field="salida" label="Salida" value="=(cantidad<0)?-cantidad:null"}}
+    {{map field="_destino" label="Destino" value="=solicitudInfo.persona.nombreCompleto"}}
+    {{map field="_centralDestino" label="Central/Destino" value="=solicitudInfo.base._central"}}
+    {{map field="_usuarioSolicitante" label="Usuario/Solicitante" value="=solicitudInfo.base._solicitante"}}
+    {{map field="ministrado" label="Ministrado" value="=solicitudInfo.control.ministrado*solicitudInfo.base.cantidad"}}
+    {{map field="utilizado" label="Utilizado" value="=solicitudInfo.control.utilizado"}}
+    {{map field="importe" label="Importe" value="=solicitudInfo.control.importe"}}
+    {{map field="porCobrar" label="por Cobrar" value="=solicitudInfo.control.porCobrar"}}
+    {{map field="cobrado" label="cobrado" value="=solicitudInfo.control.importe-solicitudInfo.control.porCobrar"}}
+  {{/view}} 
+
+  {{#view id="entradasAlmacen" onlyMapped2="true"}}
+    {{#find limit="-1"}}
+      {{filter field="nota.date" gte="=desde"}}
+      {{filter field="nota.date" lt="=moment(hasta).add(1, 'day').format('YYYY-MM-DD')"}}
+
+      {{filter condition="=!calc.isTrue(@addFix)" field="aux" eq="inv"}}
+      {{filter condition="=calc.isTrue(addFix)" field="aux" in="inv,inv-fix"}}
+      {{filter condition="=calc.isTrue(addFix)" field="fixDuplicados" exists="=false"}}
+      {{!-- {{filter field="aux" in="inv,inv-fix"}}
+      {{filter field="fixDuplicados" exists="=false"}} --}}
+
+      {{filter condition="=tipoubicacion" field="tipoUbicacion" eq="=tipoubicacion"}}
+      {{filter condition="=tipoarticulo" field="tipoArticulo" eq="=tipoarticulo"}}
+      {{filter condition="=almacen" field="cuenta" eq="=almacen"}}
+      {{filter field="='factor'" gt="=0"}}
+      {{filter condition="=codigo" field="='codigo'" eq="=codigo"}}
+      {{sort field="nota.date" direction="asc"}}
+    {{/find}}
+    {{join source="articulo" as="articulo" view="lista" id="codigo" key="base.codigo"}}
+    {{map field="codigo" label="Código" value="=codigo"}}
+    {{map field="descripcion" label="Descripción" value="=articulo._name.substr(0,100)"}}
+    {{map field="cuadroBasico" label="Cuadro Básico" value="=articulo.base.cuadroBasico"}}
+    {{map field="partidaPresupuestal" label="Partida Presupuestal" value="=articulo.base.partidaPresupuestal"}}
+    {{map field="cucop" label="CUCOP" value="=articulo.base.cucop"}}
+    {{map field="fecha" label="Fecha/Hora" value="=nota.date"}}
+    {{map field="entrada" label="Entrada" value="=(cantidadFactor>0)?cantidadFactor:null"}}
+    {{map field="movimiento" label="Movimiento" value="=@nota&&nota.name||'Cantidad Inicial'"}}
+    {{map field="_unidadPresentacion" label="Unidad Presentación" value="=articulo.base._unidadPresentacion"}}
+    {{map field="_unidadExistencia"  label="Unidad Medida" value="=articulo.base._unidadExistencia"}}
+    {{map field="_lote" label="Lote/Caducidad" value="=calc.concat(@lote, calc.format('date', @vencimiento, 'DD/MMM/YYYY'))"}}
+    {{map field="_origen" label="Origen" value="=fn('movOrigen',nota.type,@referencia,@_origen,@_destino)"}}
+    {{map field="_destino" label="Destino" value="=fn('movDestino',nota.type,@referencia,@_origen,@_destino)"}}
+    {{!-- {{map field="costoUnitario" label="Costo Unitario" value="=articulo.base.costoUnitario"}}
+    {{map field="costoTotal" label="Costo Total" value="=costoUnitario*cantidadFactor"}} --}}
+    {{map field="costoUnitario" value="=calc.safeDiv(importeFactor,cantidadFactor)"}}
+    {{map field="costoTotal" value="=importeFactor"}}
+    {{map field="iva" value="=costoTotal*(calc.number(articulo.base.ivaCompra)/100)"}}
+    {{map field="total" value="=costoTotal*(1+calc.number(articulo.base.ivaCompra)/100)"}}
+  {{/view}}
+
+  {{#view id="entradasGases" onlyMapped2="true" fromSource="articulo" fromView="articulosDeLaCategoria"}}
+    {{#find limit="-1"}}
+      {{filter field="nota.date" gte="=desde"}}
+      {{filter field="nota.date" lt="=moment(hasta).add(1, 'day').format('YYYY-MM-DD')"}}
+
+      {{filter condition="=!calc.isTrue(@addFix)" field="aux" eq="inv"}}
+      {{filter condition="=calc.isTrue(addFix)" field="aux" in="inv,inv-fix"}}
+      {{filter condition="=calc.isTrue(addFix)" field="fixDuplicados" exists="=false"}}
+      {{!-- {{filter field="aux" in="inv,inv-fix"}}
+      {{filter field="fixDuplicados" exists="=false"}} --}}
+
+      {{filter condition="=tipoubicacion" field="tipoUbicacion" eq="=tipoubicacion"}}
+      {{filter condition="=tipoarticulo" field="tipoArticulo" eq="=tipoarticulo"}}
+      {{filter condition="=almacen" field="cuenta" eq="=almacen"}}
+      {{filter field="='factor'" gt="=0"}}
+      {{filter condition="=codigo" field="='codigo'" eq="=codigo"}}
+      {{filter condition="=categoria" field="codigo" in="=_.pluck(_items, 'codigo')"}}
+      {{sort field="nota.date" direction="asc"}}
+    {{/find}}
+    {{join source="articulo" as="articulo" view="lista" id="codigo" key="base.codigo"}}
+    {{map field="codigo" label="Código" value="=codigo"}}
+    {{map field="descripcion" label="Descripción" value="=articulo._name.substr(0,100)"}}
+    {{map field="fecha" label="Fecha/Hora" value="=nota.date"}}
+    {{map field="entrada" label="Entrada" value="=(cantidadFactor>0)?cantidadFactor:null"}}
+    {{map field="movimiento" label="Movimiento" value="=@nota&&nota.name||'Cantidad Inicial'"}}
+    {{map field="fechaFactura" label="Fecha Factura" value="=nota.fechaFactura"}}
+    {{map field="folioFactura" label="Folio Factura" value="=nota.folioFactura"}}
+    {{map field="comentariosFactura" label="Comentarios Factura" value="=nota.comentariosFactura"}}
+    {{map field="_unidadPresentacion" label="Unidad Presentación" value="=articulo.base._unidadPresentacion"}}
+    {{map field="_unidadExistencia"  label="Unidad Medida" value="=articulo.base._unidadExistencia"}}
+    {{map field="_lote" label="Lote/Caducidad" value="=calc.concat(@lote, calc.format('date', @vencimiento, 'DD/MMM/YYYY'))"}}
+    {{map field="_origen" label="Origen" value="=fn('movOrigen',nota.type,@referencia,@_origen,@_destino)"}}
+    {{map field="_destino" label="Destino" value="=fn('movDestino',nota.type,@referencia,@_origen,@_destino)"}}
+    {{!-- {{map field="costoUnitario" label="Costo Unitario" value="=articulo.base.costoUnitario"}}
+    {{map field="costoTotal" label="Costo Total" value="=costoUnitario*cantidadFactor"}} --}}
+    {{map field="costoUnitario" value="=calc.safeDiv(importeFactor,cantidadFactor)"}}
+    {{map field="costoTotal" value="=importeFactor"}}
+    {{map field="iva" value="=costoTotal*(calc.number(articulo.base.ivaCompra)/100)"}}
+    {{map field="total" value="=costoTotal*(1+calc.number(articulo.base.ivaCompra)/100)"}}
+  {{/view}}
+
+  {{#view id="devolucionesAlmacen" onlyMapped2="true"}}
+    {{#find limit="-1"}}
+      {{filter field="nota.type" in="notaPorRecibirDevolucion,notaPorAutorizarDevolucion,notaPorDevolverUbicacion"}}
+      {{filter field="nota.date" gte="=desde"}}
+      {{filter field="nota.date" lt="=moment(hasta).add(1, 'day').format('YYYY-MM-DD')"}}
+
+      {{filter condition="=!calc.isTrue(@addFix)" field="aux" eq="inv"}}
+      {{filter condition="=calc.isTrue(addFix)" field="aux" in="inv,inv-fix"}}
+      {{filter condition="=calc.isTrue(addFix)" field="fixDuplicados" exists="=false"}}
+      {{!-- {{filter field="aux" in="inv,inv-fix"}}
+      {{filter field="fixDuplicados" exists="=false"}} --}}
+
+      {{filter condition="=tipoubicacion" field="tipoUbicacion" eq="=tipoubicacion"}}
+      {{filter condition="=tipoarticulo" field="tipoArticulo" eq="=tipoarticulo"}}
+      {{filter condition="=almacen" field="cuenta" eq="=almacen"}}
+      {{filter field="='factor'" gt="=0"}}
+      {{filter condition="=codigo" field="='codigo'" eq="=codigo"}}
+      {{sort field="nota.date" direction="asc"}}
+    {{/find}}
+    {{join source="articulo" as="articulo" view="lista" id="codigo" key="base.codigo"}}
+    {{map field="codigo" label="Código" value="=codigo"}}
+    {{map field="descripcion" label="Descripción" value="=articulo._name.substr(0,100)"}}
+    {{map field="_partidaPresupuestal" label="Partida Presupuestal" value="=articulo.base._partidaPresupuestal"}}
+    {{map field="fecha" label="Fecha/Hora" value="=nota.date"}}
+    {{map field="_usuario" label="Usuario" value="=nota._user"}}
+    {{map field="entrada" label="Entrada" value="=(cantidadFactor>0)?cantidadFactor:null"}}
+    {{map field="movimiento" label="Movimiento" value="=@nota&&nota.name||'Cantidad Inicial'"}}
+    {{map field="_unidadPresentacion" label="Unidad Presentación" value="=articulo.base._unidadPresentacion"}}
+    {{map field="_unidadExistencia"  label="Unidad Medida" value="=articulo.base._unidadExistencia"}}
+    {{map field="_lote" label="Lote/Caducidad" value="=calc.concat(@lote, calc.format('date', @vencimiento, 'DD/MMM/YYYY'))"}}
+    {{map field="_origen" label="Origen" value="=fn('movOrigen',nota.type,@referencia,@_origen,@_destino)"}}
+    {{map field="_central" label="Central" value="=@_central"}}
+    {{map field="_destino" label="Destino" value="=fn('movDestino',nota.type,@referencia,@_origen,@_destino)"}}
+    {{!-- {{map field="costoUnitario" label="Costo Unitario" value="=articulo.base.costoUnitario"}}
+    {{map field="costoTotal" label="Costo Total" value="=costoUnitario*cantidadFactor"}} --}}
+    {{map field="costoUnitario" value="=calc.safeDiv(importeFactor,cantidadFactor)"}}
+    {{map field="costoTotal" value="=importeFactor"}}
+    {{map field="iva" value="=costoTotal*(calc.number(articulo.base.ivaCompra)/100)"}}
+    {{map field="total" value="=costoTotal*(1+calc.number(articulo.base.ivaCompra)/100)"}}
+  {{/view}}
+
+  {{#view id="mermasAlmacen" onlyMapped2="true"}}
+    {{#find limit="-1"}}
+      {{filter field="nota.type" in="notaPorRechazarDevolucion,notaPorSurtirSalidaMerma,notaPorSurtirSalidaMerma2"}}
+      {{filter field="nota.date" gte="=desde"}}
+      {{filter field="nota.date" lt="=moment(hasta).add(1, 'day').format('YYYY-MM-DD')"}}
+
+      {{filter condition="=!calc.isTrue(@addFix)" field="aux" eq="inv"}}
+      {{filter condition="=calc.isTrue(addFix)" field="aux" in="inv,inv-fix"}}
+      {{filter condition="=calc.isTrue(addFix)" field="fixDuplicados" exists="=false"}}
+      {{!-- {{filter field="aux" in="inv,inv-fix"}}
+      {{filter field="fixDuplicados" exists="=false"}} --}}
+
+      {{filter condition="=tipoubicacion" field="tipoUbicacion" eq="=tipoubicacion"}}
+      {{filter condition="=tipoarticulo" field="tipoArticulo" eq="=tipoarticulo"}}
+      {{!-- {{filter condition="=almacen=='farmacia'" field="tipoArticulo" in="medicamento,solucion,mezcla"}}
+      {{filter condition="=almacen=='almacenCuracion'" field="tipoArticulo" in="material"}} --}}
+      {{filter field="='factor'" lt="=0"}}
+      {{filter condition="=codigo" field="='codigo'" eq="=codigo"}}
+      {{sort field="nota.date" direction="asc"}}
+    {{/find}}
+    {{join source="articulo" as="articulo" view="lista" id="codigo" key="base.codigo"}}
+    {{map field="codigo" label="Código" value="=codigo"}}
+    {{map field="descripcion" label="Descripción" value="=articulo._name.substr(0,100)"}}
+    {{map field="fecha" label="Fecha/Hora" value="=nota.date"}}
+    {{map field="salida" label="Salida" value="=(cantidadFactor<0)?-cantidadFactor:null"}}
+    {{map field="movimiento" label="Movimiento" value="=calc.concat(@nota&&nota.name||'Cantidad Inicial')"}}
+    {{map field="concepto" label="Concepto" value="=concepto"}}
+    {{map field="_unidadPresentacion" label="Unidad Presentación" value="=articulo.base._unidadPresentacion"}}
+    {{map field="_unidadExistencia"  label="Unidad Medida" value="=articulo.base._unidadExistencia"}}
+    {{map field="_lote" label="Lote/Caducidad" value="=calc.concat(@lote, calc.format('date', @vencimiento, 'DD/MMM/YYYY'))"}}
+    {{map field="_origen" label="Origen" value="=fn('movOrigen',nota.type,@referencia,@_origen,@_destino)"}}
+    {{map field="_destino" label="Destino" value="=fn('movDestino',nota.type,@referencia,@_origen,@_destino)"}}
+    {{!-- {{map field="costoUnitario" label="Costo Unitario" value="=articulo.base.costoUnitario"}}
+    {{map field="costoTotal" label="Costo Total" value="=costoUnitario*cantidadFactor"}} --}}
+    {{map field="costoUnitario" value="=-importeFactor/-cantidadFactor"}}
+    {{map field="costoTotal" value="=-importeFactor"}}
+  {{/view}}
+
+  {{#view id="pendientesCorteCaja"}}
+    {{#find}}
+      {{sort field="_id" direction="asc"}}
+      {{filter field="aux" eq="='caja'"}}
+      {{filter field="='cuenta'" eq="=cuenta"}}
+      {{filter field="corteCaja" exists="=false"}}
+      {{filter field="nota.type" nin="notaCajaRecoleccion,notaCajaCierre,notaCajaCentralCierre"}}
+    {{/find}}
+    {{calc field="referencia" value="=nota.name"}}
+    {{calc field="fecha" value="=nota.date"}}
+    {{calc field="usuario" value="=nota._user"}}
+    {{calc field="persona" value="=persona.nombreCompleto"}}
+    {{calc field="formaPago" value="=nota.atributo1"}}
+    {{calc field="importeCobrado" value="=(factor==1)?importe:null"}}
+    {{calc field="importePagado" value="=(factor==-1)?-importe:null"}}
+  {{/view}}  
+  {{#view id="pendientesCorteCajaCentral"}}
+    {{#find}}
+      {{sort field="_id" direction="asc"}}
+      {{filter field="aux" eq="='caja'"}}
+      {{filter field="='cuenta'" eq="=cuenta"}}
+      {{filter field="corteCajaCentral" exists="=false"}}
+      {{filter field="nota.type" nin="notaCajaRecoleccion,notaCajaCierre,notaCajaCentralCierre"}}
+    {{/find}}
+    {{calc field="referencia" value="=nota.name"}}
+    {{calc field="fecha" value="=nota.date"}}
+    {{calc field="usuario" value="=nota._user"}}
+    {{calc field="persona" value="=persona.nombreCompleto"}}
+    {{calc field="formaPago" value="=nota.atributo1"}}
+    {{calc field="importeCobrado" value="=(factor==1)?importe:null"}}
+    {{calc field="importePagado" value="=(factor==-1)?-importe:null"}}
+  {{/view}}  
+  {{#view id="valuacionInventario"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter field="='cuenta'" eq="=id"}}
+      {{group field="codigo"}}
+      {{!-- {{group field="descripcion"}} --}}
+      {{group field="lote"}}
+      {{group field="vencimiento"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{group field="importeFactor" type="sum" as="importe"}}
+      {{sort field="_id.codigo" direction="asc"}}
+      {{match field="cantidad" neq="=0"}}
+    {{/pipeline}}
+    {{join source="articulo" as="articulo" view="lista" id="codigo" key="base.codigo"}}
+    {{calc field="descripcion" value="=articulo._name.substr(0,100)"}}
+    {{!-- {{calc field="costoUnitario" value="=articulo.base.costoUnitario"}}
+    {{calc field="costoTotal" value="=costoUnitario*cantidad"}} --}}
+    {{calc field="costoUnitario" type="calc" value="=importe/cantidad"}}
+    {{calc field="costoTotal" value="=importe"}}
+  {{/view}}  
+  {{#view id="reporteCostoPromedio"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter field="='codigo'" eq="=codigo"}}
+      {{group field="_cuenta"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{group field="importeFactor" type="sum" as="importe"}}
+      {{sort field="_id.codigo" direction="asc"}}
+      {{match field="cantidad" neq="=0"}}
+    {{/pipeline}}
+    {{calc field="costoUnitario" type="calc" value="=importe/cantidad"}}
+    {{calc field="costoTotal" value="=importe"}}
+  {{/view}}  
+  {{#view id="resumenInventario"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter condition="=id" field="='cuenta'" eq="=id"}}
+      {{group field="codigo"}}
+      {{group field="descripcion"}}
+      {{group field="lote"}}
+      {{group field="vencimiento"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{match field="cantidad" neq="=0"}}
+      {{sort field="codigo" direction="asc"}}
+    {{/pipeline}}
+    {{calc field="etiqueta" type="expr" value="=codigo"}}
+    {{calc field="nombre" type="expr" value="=calc.concat(calc.format('number', cantidad, '#,'), @lote||@descripcion, @vencimiento&&calc.format('date', @vencimiento, 'DD/MMM/YYYY'))"}}
+  {{/view}}
+  {{#view id="resumenCaja"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='caja'"}}
+      {{filter condition="=id" field="='cuenta'" eq="=id"}}
+      {{group field="descripcion"}}
+      {{group field="importeFactor" type="sum" as="importe"}}
+      {{match field="importe" neq="=0"}}
+    {{/pipeline}}
+    {{calc field="etiqueta" type="expr" value="=descripcion"}}
+    {{calc field="nombre" type="expr" value="=calc.format('number', importe, 'currency')"}}
+  {{/view}}
+  {{#view id="resumenBancos"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='bancos'"}}
+      {{filter condition="=id" field="='cuenta'" eq="=id"}}
+      {{group field="importeFactor" type="sum" as="importe"}}
+      {{match field="importe" neq="=0"}}
+    {{/pipeline}}
+    {{calc field="etiqueta" type="expr" value="='Saldo'"}}
+    {{calc field="nombre" type="expr" value="=calc.format('number', importe, 'currency')"}}
+  {{/view}}
+  {{#view id="saldosCaja"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='caja'"}}
+      {{filter field="='cuenta'" eq="=cuenta"}}
+      {{group field="cuenta"}}
+      {{group field="_cuenta"}}
+      {{group field="codigo"}}
+      {{group field="descripcion"}}
+      {{!-- {{group field="factor"}} --}}
+      {{!-- {{group field="hash"}} --}}
+      {{group field="importeFactor" type="sum" as="importe"}}
+    {{/pipeline}}
+  {{/view}}  
+  {{#view id="caja"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='caja'"}}
+      {{group field="cuenta"}}
+      {{group field="_cuenta"}}
+      {{group field="codigo"}}
+      {{group field="descripcion"}}
+      {{group field="importeFactor" type="sum" as="importe"}}
+      {{match field="importe" neq="=0"}}
+    {{/pipeline}}
+  {{/view}}
+  {{#cube id="caja" name="Cajas" view="caja" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{column field="_cuenta" label="Caja"}}
+    {{row field="descripcion" label="Descripción" width="250"}}
+    {{sum field="importe" label="Importe" format="currency"}}
+  {{/cube}}
+  {{#view id="lotes" distinct="true"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter field="='codigo'" eq="=codigo"}}
+      {{group field="lote"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{sort field="_id.vencimiento" direction="asc"}}
+      {{match field="cantidad" neq="=0"}}
+    {{/pipeline}}
+    {{editor display="lote"}}
+  {{/view}}
+  {{#view id="loteEspecifico" distinct="true"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter field="='codigo'" eq="=codigo"}}
+      {{filter condition="=cuenta" field="cuenta" eq="=cuenta"}}
+      {{filter condition="=subCuenta" field="subCuenta" eq="=subCuenta"}}
+      {{group field="lote"}}
+      {{group field="vencimiento"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{sort field="_id.vencimiento" direction="asc"}}
+      {{match field="cantidad" gt="=0"}}
+    {{/pipeline}}
+    {{calc field="loteVencimiento" type="expr" value="=calc.concat(lote, '-', vencimiento)"}}
+    {{editor display="loteVencimiento"}}
+  {{/view}}
+  {{#view id="corregirLotes"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter field="='codigo'" eq="=codigo"}}
+      {{group field="hash"}}
+      {{group field="cuenta"}}
+      {{group field="_cuenta"}}
+      {{group field="lote"}}
+      {{group field="vencimiento"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{group field="importeFactor" type="sum" as="importe"}}
+      {{sort field="_id._cuenta" direction="asc"}}
+      {{sort field="_id.vencimiento" direction="asc"}}
+      {{match field="cantidad" neq="=0"}}
+    {{/pipeline}}
+    {{calc field="nuevoLote" type="expr" value="=lote"}}
+    {{calc field="nuevoVencimiento" type="expr" value="=vencimiento"}}
+  {{/view}}
+  {{#view id="invFisico"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter field="='codigo'" eq="=codigo"}}
+      {{filter field="='cuenta'" eq="=almacen"}}
+      {{group field="lote"}}
+      {{group field="vencimiento"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{group field="importeFactor" type="sum" as="importe"}}
+      {{sort field="_id._cuenta" direction="asc"}}
+      {{sort field="_id.vencimiento" direction="asc"}}
+      {{match field="cantidad" neq="=0"}}
+    {{/pipeline}}
+    {{calc field="cantidad" type="expr" value="=null"}}
+  {{/view}}
+  {{#view id="movimientosUbicacion"}}
+    {{#find}}
+      {{sort field="nota.date" direction="asc"}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter condition="=id" field="='cuenta'" eq="=id"}}
+      {{filter field="nota.date" gte="=calc.fromYearMonth(ejercicio,periodo)" required="true"}}
+      {{filter field="nota.date" lte="=calc.toYearMonth(ejercicio,periodo)" required="true"}}
+    {{/find}}
+    {{calc field="_usuario" value="=nota._user"}}
+    {{calc field="fecha" value="=nota.date"}}
+    {{calc field="entrada" value="=(cantidadFactor>0)?cantidadFactor:null"}}
+    {{calc field="salida" value="=(cantidadFactor<0)?-cantidadFactor:null"}}
+    {{calc field="movimiento" value="=nota.name"}}
+    {{calc field="_lote" value="=calc.concat(@lote, calc.format('date', @vencimiento, 'DD/MMM/YYYY'))"}}
+  {{/view}}
+  {{#grid id="movimientosUbicacion" view="movimientosUbicacion" exportToExcel="true" filters="true" allowRefresh="true" pageSize="40" wordWrapEnabled="true" columnAutoWidth="wordWrapEnabled"}}
+    {{column field="fecha" type="date" label="Fecha" format="DD/MMM/YYYY"}}
+    {{column field="movimiento" label="Movimiento"}}
+    {{column field="_usuario" label="Usuario"}}
+    {{column field="codigo" label="Código"}}
+    {{column field="descripcion" label="Descripción"}}
+    {{column field="entrada" label="Entrada"}}
+    {{column field="salida" label="Salida"}}
+    {{column field="_lote" label="Lote"}}
+  {{/grid}}
+  {{#view id="lotesProximosVencer"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{!-- {{filter field="vencimiento" lte="=moment().add(3, 'month').format('YYYY-MM-DD')"}} --}}
+      {{filter condition="=ubicacion" field="='cuenta'" eq="=ubicacion"}}
+      {{!-- {{filter field="cuenta" in="almacenGeneral,almacenCuracion,almacenProveedor,almacenTemporal,bodegaAcanto,farmacia,farmaciaGratuita,ceyeSucio,ceyeEnEsterilizacion,ceyeEsterilizado,ropa,urgencias,cuarentenaCuracion,cuarentenaFarmacia,cuarentenaFarmaciaGratuita"}} --}}
+      {{group field="_cuenta"}}
+      {{group field="codigo"}}
+      {{!-- {{group field="descripcion"}} --}}
+      {{group field="lote"}}
+      {{group field="vencimiento"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{match field="cantidad" gt="=0"}}
+      {{!-- {{sort field="codigo" direction="asc"}} --}}
+    {{/pipeline}}
+    {{calc field="existencia" value="=calc.round(cantidad,2)"}}
+    {{sort field="codigo" having="existencia"}}
+    {{sort field="vencimiento" lte="=moment().add(3, 'month').format('YYYY-MM-DD')"}}
+  {{/view}}
+  {{#grid id="lotesProximosVencer" view="lotesProximosVencer" exportToExcel="true" filters="true" allowRefresh="true" pageSize="40" wordWrapEnabled="true" columnAutoWidth="wordWrapEnabled"}}
+    {{column field="_cuenta" label="Ubicación"}}
+    {{column field="codigo" label="Código"}}
+    {{!-- {{column field="descripcion" label="Descripción"}} --}}
+    {{column field="lote" label="Lote"}}
+    {{column field="existencia" label="Existencia"}}
+    {{column field="vencimiento" label="Vencimiento" format="DD/MMM/YYYY" sortOrder="asc"}}
+  {{/grid}}
+  {{!-- {{#view id="negativos"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{group field="cuenta"}}
+      {{group field="_cuenta"}}
+      {{group field="codigo"}}
+      {{group field="descripcion"}}
+      {{group field="lote"}}
+      {{group field="vencimiento"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+      {{group field="importeFactor" type="sum" as="importe"}}
+      {{match field="cantidad" lt="=0"}}
+    {{/pipeline}}
+    {{calc field="_lote" value="=calc.concat(lote, calc.format('date', vencimiento, 'DD/MMM/YYYY'))"}}
+  {{/view}}
+
+  {{#cube id="negativos" name="Negativos" view="negativos" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{column field="_cuenta" label="Ubicación"}}  
+    {{row field="codigo" label="Código" width="140"}}
+    {{row field="descripcion" label="Descripción" width="400"}}
+    {{row field="_lote" label="Lote" width="140"}}
+    {{sum field="cantidad" label="Cantidad" format="#,"}}
+    {{sum field="importe" label="Importe" format="currency"}}
+  {{/cube}} --}}
+
+   {{#view id="sugerirMermas"}}
+     {{#pipeline}}
+       {{filter field="aux" eq="='inv'"}}
+       {{filter condition="=almacen" field="='cuenta'" eq="=almacen"}}
+       {{filter condition="=porVencimiento" field="vencimiento" lt="=moment().format()"}}
+       {{filter condition="=porSeguridad" field="seguridad" lt="=moment().format()"}}
+       {{group field="codigo"}}
+       {{group field="lote" as="loteEspecifico"}}
+       {{group field="vencimiento"}}
+       {{group field="fechaApertura"}}
+       {{group field="seguridad" as="seguridadEspecifica"}}
+       {{group field="cantidadFactor" type="sum" as="cantidad"}}
+     {{/pipeline}}
+     {{join source="articulo" view="descripcion" id="codigo" key="base.codigo" fields="base.descripcion,base.tipoArticulo,base._tipoArticulo" as="articulo"}}
+     {{calc field="tipoArticulo" type="expr" value="=articulo.base.tipoArticulo"}}
+     {{calc field="_tipoArticulo" type="expr" value="=articulo.base._tipoArticulo"}}
+     {{calc field="descripcion" type="expr" value="=articulo.base.descripcion"}}
+     {{calc field="continuar" type="expr" value="=(cantidad)?'si':'no'"}}
+     {{mapReduce keys="tipoArticulo,_tipoArticulo,codigo,descripcion,vencimiento,fechaApertura,seguridad,continuar" values="cantidad"}}
+     {{sort field="codigo" having="cantidad"}}
+   {{/view}}
+   
+   {{#view id="sugerirInventario"}}
+    {{#pipeline}}
+      {{filter field="cuenta" eq="=almacen"}}
+      {{filter condition="=tipoArticulo" field="tipoArticulo" eq="=tipoArticulo"}}
+      {{group field="codigo"}}
+      {{group field="descripcion"}}
+      {{group field="tipoArticulo"}}
+      {{group field="cantidadFactor" type="sum" as="existencia"}}
+      {{match field="existencia" gt="=0"}}
+    {{/pipeline}}
+  {{/view}} 
+  {{#view id="sugerirInventarioCantidad"}}
+    {{#pipeline}}
+      {{filter field="cuenta" eq="=almacen"}}
+      {{filter condition="=tipoArticulo" field="tipoArticulo" eq="=tipoArticulo"}}
+      {{group field="codigo"}}
+      {{group field="descripcion"}}
+      {{group field="tipoArticulo"}}
+      {{group field="cantidadFactor" type="sum" as="existencia"}}
+      {{match field="existencia" gt="=0"}}
+    {{/pipeline}}
+    {{calc field="cantidad" value="=existencia"}}
+  {{/view}} 
+  {{#view id="sugerirInventarioUbicacion" onlyMapped2="true"}}
+    {{#pipeline}}
+      {{filter field="aux" eq="='inv'"}}
+      {{filter field="cuenta" eq="=ubicacion"}}
+      {{group field="codigo"}}
+      {{group field="descripcion"}}
+      {{group field="tipoArticulo"}}
+      {{group field="cantidadFactor" type="sum" as="cantidad"}}
+    {{/pipeline}}
+    {{sort field="codigo" having="cantidad"}}
+    {{join source="articulo" view="descripcion" id="codigo" key="base.codigo" as="articulo"}}
+    {{map field="articulo" value="=articulo._id"}}
+    {{map field="_articulo" value="=codigo"}}
+    {{map field="descripcion" value="=descripcion"}}
+    {{map field="codigo" value="=codigo"}}
+    {{map field="tipoArticulo" value="=tipoArticulo"}}
+    {{map field="unidad" value="='pieza'"}}
+    {{map field="factor" value="=1"}}
+    {{map field="cantidad" value="=cantidad"}}
+    {{map field="disponible" value="=cantidad"}}
+[.#if esSIC.]
+    {{map field="tipoPrenda" value="=_articulo.base.datosRopa.base.tipoPrenda"}}
+    {{map field="talla" value="=_articulo.base.datosRopa.base.talla"}}
+    {{map field="color" value="=_articulo.base.datosRopa.base.color"}}
+    {{map field="peso" value="=_articulo.base.datosRopa.base.peso"}}    
+[./if.]    
+  {{/view}} 
+{{/define}}

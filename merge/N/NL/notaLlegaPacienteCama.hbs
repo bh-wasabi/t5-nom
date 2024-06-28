@@ -1,0 +1,15 @@
+{{#define id="notaLlegaPacienteCama"}}
+  {{action id="cancelar" forceReadOnly="true"}}  
+  {{action id="afectar" forceReadOnly="true"}}  
+  {{#section id="base"}}
+    {{#field id="central"}}
+      {{onChange clearFields="cama"}}
+    {{/field}}
+    {{#field id="cama"}}
+      {{#editor alwaysLoad="true"}}
+        {{param estatus="='reservada'"}}
+        {{param central="=central"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

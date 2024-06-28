@@ -1,0 +1,20 @@
+{{#define id="substancia"}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base.descripcion"}}
+      {{include field="base.estatus"}}    
+      {{include field="base.codigo"}}
+      {{sort field="base.descripcion" direction="asc"}}
+    {{/find}}
+  {{/view}}
+{{/define}}
+
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{base.descripcion}}</br>
+      <span style="font-size:12px;">{{base.codigo}}</span>
+      <span style="font-size:12px;float:right;">{{base.estatus}}</span>
+    </div>    
+  {{/template}}
+{{/markup}}

@@ -1,0 +1,7 @@
+{{#define id="notaResultadoImagenologia"}}
+  {{!-- {{param startOnOpen="n/a"}} --}}
+  {{#action id="ver" type="sub-link" label="Visualizar Imagen" condition="=base.referencia" color="blue" btnSolid="true" }}
+    {{!-- {{link href="='ie:http://10.150.21.18/AMI/HTML/Webviewer.html?view&un=MEDICO&pw=MEDICO2&order_nbr='+base.referencia" external="true"}} --}}
+		{{link href="='https://10.150.21.74/zfp?lights=off&mode=proxy#view&ris_exam_id='+base.referencia+'&un=WEBAPI&pw=RnRpxKe4jyB%2bsRys%2b5IdW%2bcZYSBBQofJg7YWcAUG%2fZDW1IA%2brSFviL0u6P8W%2bf%2bX'" external="true"}}
+  {{/action}}
+{{/define}}

@@ -1,0 +1,349 @@
+curl -XGET 'https://vpc-hraei-logs-sm6u4i4pbbyxlr35jessujixx4.us-east-1.es.amazonaws.com/_count?pretty'
+curl -XGET 'https://vpc-hraei-logs-sm6u4i4pbbyxlr35jessujixx4.us-east-1.es.amazonaws.com/_search?pretty&q=5d5aef48ab64462d33fe5fbf'
+
+curl -XGET 'https://vpc-hraei-logs-sm6u4i4pbbyxlr35jessujixx4.us-east-1.es.amazonaws.com/_count?pretty&q=5d58d0954b0fb0654c2a3ad8'
+curl -XGET 'https://vpc-hraei-logs-sm6u4i4pbbyxlr35jessujixx4.us-east-1.es.amazonaws.com/_search?pretty&size=10&q=date:2020-04-20'
+
+// hay una limitante de 10,000 registros, tal vez se puede cambiar
+// esto me funciono asi, lo tube que ordenar por fecha
+curl -X GET "https://vpc-hraei-logs-sm6u4i4pbbyxlr35jessujixx4.us-east-1.es.amazonaws.com/_search?pretty&size=10000&q=user.id:5d58d0954b0fb0654c2a3ad8" -H 'Content-Type: application/json' -o 5d58d0954b0fb0654c2a3ad8.json -d'
+{
+    "query": {
+        "range": {
+            "date": {
+                "gte": "2020-04-20",
+                "lte": "2020-04-24"
+            }
+       }
+    }
+}'
+
+curl -XGET 'http://localhost:9200/demo.test/_count?pretty'
+curl -XGET 'http://localhost:9200/his.paciente/_count?pretty'
+curl -XGET 'http://localhost:9200/his.solicitud/_count?pretty'
+curl -XGET 'http://localhost:9200/his.nota/_count?pretty'
+
+curl -XDELETE 'http://localhost:9200/solicitud?pretty'
+curl -XDELETE 'http://localhost:9200/nota?pretty'
+curl -XDELETE 'http://localhost:9200/persona?pretty'
+
+curl -XDELETE 'http://localhost:9200/his.solicitud?pretty'
+curl -XDELETE 'http://localhost:9200/his.nota?pretty'
+curl -XDELETE 'http://localhost:9200/demo.test?pretty'
+curl -XDELETE 'http://localhost:9200/his._folio?pretty'
+curl -XDELETE 'http://localhost:9200/his._workflow?pretty'
+curl -XDELETE 'http://localhost:9200/his.paciente?pretty'
+curl -XDELETE 'http://localhost:9200/his.persona?pretty'
+curl -XDELETE 'http://localhost:9200/his.nota?pretty'
+curl -XDELETE 'http://localhost:9200/his.movpoliza?pretty'
+
+curl -XGET 'https://vpc-hraei-logs-sm6u4i4pbbyxlr35jessujixx4.us-east-1.es.amazonaws.com/_search?pretty&size=10000&q=user.id:5d58d0954b0fb0654c2a3ad8&sort=date:desc' -o 5d58d0954b0fb0654c2a3ad8.json
+curl -XGET 'https://vpc-hraei-logs-sm6u4i4pbbyxlr35jessujixx4.us-east-1.es.amazonaws.com/_search?pretty&size=10000&q=user.id:5d58d0954b0fb0654c2a399a&sort=date:desc' -o 5d58d0954b0fb0654c2a399a.json
+
+// para copiar a s3
+aws s3 cp 5d58d0954b0fb0654c2a3ad8.json s3://his-mongoexport
+aws s3 cp 5d58d0954b0fb0654c2a399a.json s3://his-mongoexport
+
+// estos comandos se corren desde moy.enlanube.io
+
+curl -XDELETE 'search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/his4?pretty'
+curl -XPUT 'search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/his4?pretty' -H 'Content-Type: application/json' -d'{
+  "mappings": {
+    "help": {
+      "properties": {
+        "name": {
+          "type": "keyword"
+        },
+        "code": {
+          "type": "keyword"
+        }
+      }
+    }
+  },
+  "settings": {
+    "analysis": {
+      "filter": {
+        "ngram_filter": {
+          "type": "ngram",
+          "min_gram": 2,
+          "max_gram": 20
+        }
+      },
+      "analyzer": {
+        "default": {
+          "tokenizer": "keyword",
+          "filter": [
+            "lowercase",
+            "asciifolding"
+          ]
+        },
+        "ngram_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "ngram_filter"
+          ]
+        }
+      }
+    }
+  }
+}'
+
+curl -XDELETE 'search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/salud4?pretty'
+curl -XPUT 'search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/salud4?pretty' -H 'Content-Type: application/json' -d'{
+  "mappings": {
+    "clues": {
+      "properties": {
+        "nombre": {
+          "type": "text",
+          "fielddata": true
+        }
+      }
+    },
+    "cie9": {
+      "properties": {
+        "nombre": {
+          "type": "text",
+          "fielddata": true
+        }
+      }
+    },
+    "cie10": {
+      "properties": {
+        "nombre": {
+          "type": "text",
+          "fielddata": true
+        }
+      }
+    },
+    "sepomex": {
+      "properties": {
+        "nombre": {
+          "type": "text",
+          "fielddata": true
+        }
+      }
+    }
+  }
+}'
+
+curl -XGET 'search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/salud5/cucop/_count?pretty'
+curl -XDELETE 'search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/salud5?pretty'
+curl -XPUT 'search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/salud5?pretty' -H 'Content-Type: application/json' -d'{
+  "mappings": {
+    "cucop": {
+      "properties": {
+        "nombre": {
+          "type": "text",
+          "fielddata": true
+        }
+      }
+    }
+  }
+}'
+curl -X POST search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/salud5/cucop/_bulk --data-binary "@cucop.json"
+curl -XGET 'search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/salud4/cie10/_count?pretty'
+
+curl -X POST search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/salud4/cie10/_bulk --data-binary "@cie10a.json"
+curl -X POST search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/salud4/cie10/_bulk --data-binary "@cie10b.json"
+curl -X POST search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/salud4/cie10/_bulk --data-binary "@cie10c.json"
+curl -X POST search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/salud4/cie10/_bulk --data-binary "@cie10d.json"
+curl -X POST search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/salud4/cie10/_bulk --data-binary "@cie10-ajuste.json"
+curl -X POST search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/salud4/cie10/_bulk --data-binary "@cie10-covid.json"
+curl -XGET 'search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/salud4/cie10/_search?q=NCOV&pretty'
+curl -XGET 'search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/salud4/cie10/_count?pretty'
+
+curl -X POST search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/salud4/clues/_bulk --data-binary "@clues.json"
+curl -XGET 'search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/salud4/clues/_count?pretty'
+
+
+
+curl -XPOST "https://vpc-hraei-prod3-rfjf23wveinoonccmhmcwk7nae.us-east-1.es.amazonaws.com/salud4/clues/_bulk" --data-binary "@clues.json" -H "Content-Type: application/x-ndjson"
+curl -XGET 'https://vpc-hraei-prod3-rfjf23wveinoonccmhmcwk7nae.us-east-1.es.amazonaws.com/salud4/clues/_search?default_operator=AND&sort=nombre&from=0&size=20&q=*'
+curl -XGET 'https://vpc-hraei-prod3-rfjf23wveinoonccmhmcwk7nae.us-east-1.es.amazonaws.com/salud4/clues/_count?pretty'
+
+
+
+curl -XDELETE 'search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/tfja?pretty'
+curl -XPUT 'search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/tfja?pretty' -H 'Content-Type: application/json' -d'{
+  "mappings": {
+    "help": {
+      "properties": {
+        "name": {
+          "type": "keyword"
+        },
+        "code": {
+          "type": "keyword"
+        }
+      }
+    }
+  },
+  "settings": {
+    "analysis": {
+      "filter": {
+        "ngram_filter": {
+          "type": "ngram",
+          "min_gram": 2,
+          "max_gram": 20
+        }
+      },
+      "analyzer": {
+        "default": {
+          "tokenizer": "keyword",
+          "filter": [
+            "lowercase",
+            "asciifolding"
+          ]
+        },
+        "ngram_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "ngram_filter"
+          ]
+        }
+      }
+    }
+  }
+}'
+
+
+curl -XGET 'search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/hds/_count?pretty'
+curl -XDELETE 'search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/hds?pretty'
+curl -XPUT 'search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/hds?pretty' -H 'Content-Type: application/json' -d'{
+  "mappings": {
+    "help": {
+      "properties": {
+        "name": {
+          "type": "keyword"
+        },
+        "code": {
+          "type": "keyword"
+        }
+      }
+    }
+  },
+  "settings": {
+    "analysis": {
+      "filter": {
+        "ngram_filter": {
+          "type": "ngram",
+          "min_gram": 2,
+          "max_gram": 20
+        }
+      },
+      "analyzer": {
+        "default": {
+          "tokenizer": "keyword",
+          "filter": [
+            "lowercase",
+            "asciifolding"
+          ]
+        },
+        "ngram_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "ngram_filter"
+          ]
+        }
+      }
+    }
+  }
+}'
+
+
+
+curl -XDELETE 'http://localhost:9200/nota?pretty'
+curl -XGET 'http://localhost:9200/nota/_mapping?pretty'
+// https://www.elastic.co/es/blog/moving-from-types-to-typeless-apis-in-elasticsearch-7-0
+// creo que el mapping ya no se necesita ?
+curl -XPUT 'http://localhost:9200/nota?pretty' -H 'Content-Type: application/json' -d'{
+  "mappings": {
+    "_doc": {
+      "include_type_name": true,
+      "properties": {
+        "_name": {
+          "type": "keyword"
+        }
+      }
+    }
+  }
+}'
+
+curl -XPUT 'http://localhost:9200/persona?pretty' -H 'Content-Type: application/json' -d'{
+  "properties": {
+    "nombre": {
+      "type": "text",
+      "fielddata": true      
+    }
+  }
+}'
+
+
+// T1
+curl -XGET 'http://localhost:9200/_count?pretty'
+curl -XDELETE 'https://localhost:9200/persona?pretty'
+curl -XDELETE 'https://localhost:9200/nota?pretty'
+curl -XDELETE 'https://localhost:9200/solicitud?pretty'
+
+// ver como servicio en ec2 linux
+sudo systemctl status elasticsearch.service
+sudo systemctl start elasticsearch.service
+sudo systemctl stop elasticsearch.service
+
+
+curl -XGET 'search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/vidal/_count?pretty'
+
+curl -XDELETE 'search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/vidal?pretty'
+curl -XPUT 'search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/vidal?pretty' -H 'Content-Type: application/json' -d'{
+  "mappings": {
+    "productos": {
+      "properties": {
+        "name": {
+          "type": "text",
+          "fielddata": true
+        }
+      }
+    },
+    "genericos": {
+      "properties": {
+        "name": {
+          "type": "text",
+          "fielddata": true
+        }
+      }
+    },
+    "alergias": {
+      "properties": {
+        "name": {
+          "type": "text",
+          "fielddata": true
+        }
+      }
+    },
+    "moleculas": {
+      "properties": {
+        "name": {
+          "type": "text",
+          "fielddata": true
+        }
+      }
+    }
+  }
+}'
+curl -X POST search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/vidal/productos/_bulk --data-binary "@productos.json"
+curl -X POST search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/vidal/genericos/_bulk --data-binary "@genericos.json"
+curl -X POST search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/vidal/alergias/_bulk --data-binary "@alergias.json"
+curl -X POST search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/vidal/moleculas/_bulk --data-binary "@moleculas.json"
+
+curl -XGET 'search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/vidal/_count?pretty'
+curl -XGET 'search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/vidal/productos/_search?q=BONADOXINA*&size=25'
+curl -XGET 'search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/vidal/genericos/_search?q=IBU*&size=25'
+curl -XGET 'search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/vidal/alergias/_search?q=*lactosa*&size=25'
+curl -XGET 'search-demo2-sfnxh6bo6x2neciryq2uanasni.us-east-1.es.amazonaws.com/vidal/moleculas/_search?q=CACA*&size=25'
+
+

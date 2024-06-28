@@ -1,0 +1,6 @@
+{{#define id="datosComaGlasgowPediatrica"}}
+  {{#section id="base"}}
+    {{field id="total" type="calc" value="=calc.sumArgs(calc.sumCase(aperturaOjosGlasgowPediatrico,'aperturaOjosGlasgowPediatrica'),calc.sumCase(respuestaVerbalGlasgowPediatrico,'respuestaVerbalGlasgowPediatrica'),calc.sumCase(respuestaMotoraGlasgowPediatrico,'respuestaMotoraGlasgowPediatrica'))"}}
+    {{field id="resultadoGlasgow" type="expr" value="=total"}}
+  {{/section}}
+{{/define}}

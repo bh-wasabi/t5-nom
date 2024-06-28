@@ -1,0 +1,3470 @@
+{{#define id="articulo"}}
+  {{param name="=_params._tipoArticulo=='Página'?_params._name:(_params._tipoActivoFijo||_params._tipoArticulo||'Artículo')"}}
+  {{param removeIfEmptySection="materiales"}}
+  {{param removeIfEmptyField="articulo"}}
+
+  {{action id="eliminar" hide="true"}}
+  {{!-- {{action id="altaMedicamento" source="notaAltaArticulo" subType="medicamento" subTypeName="Medicamento" label="Alta Medicamento" hide="true" type="add-subdoc" visibleMode="close" color="indigo" isBrowserAction="true" onlyPost="true"}}   --}}
+[.#if esSIC.]
+  {{action id="subdoc" condition="=base.tipoArticulo=='activoFijo'" type="menu" menu="subdoc" label="Plano" color="grey" visibleMode="close"}}
+  {{#menu id="subdoc" color="grey"}}
+    {{item action="bim" text="BIM"}}
+    {{item action="planta" text="Planta"}}
+  {{/menu}}  
+  {{#action id="bim" hide="true" type="bim360" label="BIM" title="=calc.concat('BIM', _items[0].persona.planta)" bim="=_items[0].persona.bim" color="grey" visibleMode="close" fromSource="persona" fromView="datosUbicacion"}}
+    {{param ubicacion="=base.ubicacion"}}
+  {{/action}}
+  {{#action id="planta" hide="true" type="openPreview" label="Planta" title="Planta" color="grey" visibleMode="close" fromSource="persona" fromView="datosUbicacion"}}
+    {{param ubicacion="=base.ubicacion"}}
+    {{link title="=calc.concat('Planta', _items[0].persona.planta)" href="=fn('urlPlanta', _items[0].persona.planta)"}}
+  {{/action}}
+  {{#action id="subdoc2" condition="=base.datosActivoFijo.base.urlCompra" type="openPreview" label="Factura Compra" title="Factura Compra" color="grey" visibleMode="close"}}
+    {{link href="=base.datosActivoFijo.base.urlCompra" title="=calc.concat('Factura Compra',base.datosActivoFijo.base._facturaCompra)" name="Factura Compra"}}
+  {{/action}}
+  {{#action id="tool" condition="=base.tipoArticulo=='activoFijo'" label="Ver Planeación" type="view-scheduler" color="cyan" visibleMode="close"}}
+    {{scheduler type="plan" lastDate="=ultimoMantenimiento" description="=calc.concatEnter(@_procedimiento, @comentarios)" text="=calc.concatDash(@_subTipoSolicitud, @_motivo)" time="=periodicidad" timeUnit="=tiempo" timeTable="=horario" startDayHour="0" endDayHour="24" cellDuration="60" resourceItems="=mantenimiento" resourceText="=_subTipoSolicitud" views="month,week,day" currentView="month"}}
+  {{/action}}
+[.else.]
+  {{#action id="tool" condition="=base.tipoArticulo=='activoFijo'" label="Ver Planeación" type="view-scheduler" color="cyan" visibleMode="close"}}
+    {{scheduler type="plan" startDayHour="=base.horaInicioDia" endDayHour="=base.horaFinDia" cellDuration="30" resourceSource="planAgenda" resourceView="agendasActivas" resourceField="schedule" views="month,week,day" currentView="day"}}
+  {{/action}}
+  {{#action id="tool2" condition="=base.tipoArticulo=='activoFijo'" label="Ver Agenda" type="view-scheduler" btnSolid="false" color="green" visibleMode="close"}}
+    {{scheduler type="busy" startDayHour="=base.horaInicioDia" endDayHour="=base.horaFinDia" cellDuration="30" resourceSource="planAgenda" resourceView="agendasActivas" resourceField="schedule" views="month,week,day" currentView="day"}}
+  {{/action}}
+[./if.]    
+  {{action id="tool3" condition="=true" type="menu" menu="tool3" label="Ver" color="grey" visibleMode="close"}}
+  {{#menu id="tool3" color="grey"}}
+    {{item action="verSolicitudes" text="Solicitudes"}}
+    {{item action="verSolicitudesMantenimiento" text="Solicitudes Mantenimiento"}}
+    {{item action="verRegistros" text="Registros"}}
+  {{/menu}}  
+  {{#action id="verRegistros" condition="=true" label="Ver Registros" type="sub-link" btnSolid="false" color="green" visibleMode="close"}}
+    {{#link href="'/nota/lista'" title="=calc.concat('Registros', _name)" name="=calc.concat('Registros', _name, '-', base.codigo)"}}
+      {{param referencia="=base.codigo"}}
+    {{/link}}
+  {{/action}}
+  {{#action id="verSolicitudes" label="Ver Solicitudes" type="sub-link" btnSolid="false" color="green" visibleMode="close" condition="=base.tipoArticulo!='procedimientoMantenimiento'"}}
+    {{ask field="desde" type="date" label="Desde" value="=moment().add(-7,'day').format('YYYY-MM-DD')"}}
+    {{ask field="hasta" type="date" label="Hasta" value="=moment().format('YYYY-MM-DD')"}}
+    {{#link href="'/solicitud/lista'" title="=calc.concat('Solicitudes', _name)" name="=calc.concat('Solicitudes', _name, '-', base.codigo, '(Desde:', moment(desde).format('DD/MMM/YYYY'), '-', 'Hasta:', moment(hasta).format('DD/MMM/YYYY')+')')"}}
+      {{param articulo="=_id"}}
+    {{/link}}
+  {{/action}}
+  {{#action id="verSolicitudesMantenimiento" label="Ver Solicitudes Mantenimiento" type="sub-link" btnSolid="false" color="green" visibleMode="close" condition="=base.tipoArticulo=='procedimientoMantenimiento'"}}
+    {{#link href="'/solicitud/lista'" title="=calc.concat('Solicitudes Mantenimiento', _name)" name="=calc.concat('Solicitudes Mantenimiento', _name, '-', base.codigo)"}}
+      {{param articuloMantenimiento="=_id"}}
+    {{/link}}
+  {{/action}}
+  {{#action id="verRegistroConsumoElectrico" condition="=true" label="Bitácora Consumo Eléctrico" type="sub-link" btnSolid="false" color="grey" visibleMode="close"}}
+    {{#link href="'/nota/lista?tipo=notaRegistroConsumoElectrico'" title="=calc.concat('Bitácora Consumo Eléctrico', _name)" name="=calc.concat('Bitácora Consumo Eléctrico', _name, '-', base.codigo)"}}
+      {{param referencia="=base.codigo"}}
+    {{/link}}
+  {{/action}}
+  {{action id="ver2" type="openFolder" condition="=adjuntos" items="=adjuntos" label="Adjuntos" color="grey" visibleMode="close"}}
+  [.#if esSIC.]  
+  {{action id="copiar" label="Copiar..." condition="=true" confirm="true" confirmMessage="¿Desea Copiar el Artículo?" btnSolid="false" color="grey"}}
+  [./if.]
+  {{!-- {{action id="compartir" type="share" label="Compartir" color="grey" icon="share" visibleMode="close"}} --}}
+  {{!-- {{action id="tool" type="attachTemplate" label="Adjuntar Plantilla..." color="grey" visibleMode="close" condition="=true"}} --}}
+
+  {{#section id="base"}}
+[.#if esERP.]
+    {{field id="nombre" type="expr" value="=calc.concatValueKey(@descripcion, @codigo)"}}
+[.else.]
+    {{field id="nombre" type="expr" value="=@descripcion"}}
+[./if.]        
+[.#if esSIC.]
+    {{field id="nombre2" type="expr" value="=calc.concat(@_servicio, '-', @descripcion, '('+@codigo+')')"}}
+[./if.]    
+    {{field id="tipoArticulo" defaultValue="=_params.tipoArticulo" readOnly="true"}}
+    {{field id="tipoActivoFijo" defaultValue="=_params.tipoActivoFijo" readOnly="true"}}
+    {{field id="esMaterial" type="expr" value="=tipoArticulo==='material'"}}
+    {{field id="esMaterialCeye" type="expr" value="=tipoArticulo==='materialCeye'"}}
+    {{field id="esInstrumento" type="expr" value="=tipoArticulo==='instrumento'"}}
+    {{field id="esTipoActivo" type="expr" value="=tipoArticulo==='tipoActivo'"}}
+    {{field id="esTipoEquipo" type="expr" value="=tipoArticulo==='tipoEquipo'"}}
+    {{field id="esActivoFijo" type="expr" value="=tipoArticulo==='activoFijo'"}}
+    {{field id="esActivoInactivo" type="expr" value="=esActivoFijo&&estatus=='inactivo'"}}
+    {{field id="puedeSustituir" type="expr" value="=esActivoFijo&&estatus=='inactivo'"}}
+    {{field id="esActivoSustituido" type="expr" value="=puedeSustituir&&sustituido=='si'"}}
+    {{field id="esKit" type="expr" value="=calc.in(tipoArticulo, ['kit','kitMedico','menu','pagina','mezcla'])"}}
+    {{field id="esKitMedico" type="expr" value="=tipoArticulo==='kitMedico'"}}
+    {{field id="esMenu" type="expr" value="=tipoArticulo==='menu'"}}
+    {{field id="esMenuDia" type="expr" value="=tipoArticulo==='menuDia'"}}
+    {{field id="esPagina" type="expr" value="=tipoArticulo==='pagina'"}}
+    {{field id="esMedicamento" type="expr" value="=calc.in(tipoArticulo, ['medicamento','medicamentoGratuito'])"}}
+    {{field id="esMedicamentoGratuito" type="expr" value="=tipoArticulo==='medicamentoGratuito'"}}
+    {{field id="esSolucion" type="expr" value="=tipoArticulo==='solucion'"}}
+    {{field id="esMedicamentoSolucion" type="expr" value="=calc.in(tipoArticulo, ['medicamento','medicamentoGratuito','solucion'])"}}
+    {{field id="esMezcla" type="expr" value="=tipoArticulo==='mezcla'"}}
+    {{field id="esProcedimiento" type="expr" value="=tipoArticulo==='procedimiento'"}}
+    {{field id="esProcedimientoMantenimiento" type="expr" value="=tipoArticulo==='procedimientoMantenimiento'"}}
+    {{field id="esMultiservicio" type="expr" value="=tipoArticulo==='multiservicio'"}}
+    {{field id="esPlanCompras" type="expr" value="=tipoArticulo==='planCompras'"}}
+    {{field id="esConceptoGasto" type="expr" value="=tipoArticulo==='conceptoGasto'"}}
+    {{field id="esConceptoNomina" type="expr" value="=tipoArticulo==='conceptoNomina'"}}
+    {{field id="esRonda" type="expr" value="=tipoArticulo=='ronda'"}}
+    {{field id="esLlave" type="expr" value="=tipoArticulo=='llave'"}}
+    {{field id="esTarjetaAcceso" type="expr" value="=tipoArticulo=='tarjetaAcceso'"}}
+    {{field id="esSeguridad" type="expr" value="=esLlave||esTarjetaAcceso||esRonda"}}
+    {{field id="esOtroServicio" type="expr" value="=tipoArticulo==='otroServicio'"}}
+    {{field id="esCurso" type="expr" value="=tipoArticulo=='curso'"}}
+    {{field id="esMoi" type="expr" value="=esActivoFijo&&tipoActivoFijo==='moi'"}}
+    {{field id="esControlVectores" type="expr" value="=esActivoFijo&&tipoActivoFijo==='controlVectores'"}}
+    {{field id="esOtroTipoVector" type="expr" value="=escontrolVectores&&tipoVector=='otros'"}}
+    {{field id="esVehiculo" type="expr" value="=esActivoFijo&&tipoActivoFijo=='vehiculo'"}}
+    {{!-- {{field id="esEvaluacion" type="expr" value="=calc.in(tipoArticulo, ['competencia'])"}} --}}
+    {{field id="esCompetencia" type="expr" value="=tipoArticulo==='competencia'"}}
+    {{field id="esServicio" type="expr" value="=(esProcedimiento||esProcedimientoMantenimiento||esOtroServicio||esMultiservicio||esPlanCompras||esKit||esMenuDia||esSeguridad||esConceptoGasto||esConceptoNomina||esCurso)&&!esMenu"}}
+    {{field id="noEsServicio" type="expr" value="=!esServicio"}}
+    {{field id="esBien" type="expr" value="=!esServicio&&!esActivoFijo&&!esTipoActivo&&!esTipoEquipo&&!esCompetencia"}}
+    {{field id="esProducto" type="expr" value="=calc.in(tipoArticulo, ['producto','productoCafeteria'])"}}
+    {{field id="esProductoCafeteria" type="expr" value="=tipoArticulo==='productoCafeteria'"}}
+    {{field id="esRopa" type="expr" value="=tipoArticulo==='ropa'"}}
+    {{field id="sePuedeProducir" type="expr" value="=calc.in(tipoArticulo, ['material','ropa'])"}}
+    {{field id="seProduce" type="expr" value="=calc.isTrue(base.produccion)"}}
+    {{field id="tieneIvaVenta" type="expr" value="=esBien||esProcedimiento||esOtroServicio||esTipoActivo"}}
+    {{field id="tieneIvaCompra" type="expr" value="=esBien||esConceptoGasto||esActivoFijo||esTipoActivo"}}
+    {{field id="tieneRetenciones" type="expr" value="=esConceptoGasto"}}
+    {{field id="tieneDatosMedicamento" type="expr" value="=esMedicamento||esSolucion"}}
+    {{field id="tieneUbicacion" type="expr" value="=esActivoFijo||esMultiservicio||esPlanCompras"}}
+    {{field id="tieneEstablecimiento" type="expr" value="=tieneUbicacion||esRopa"}}   
+    {{field id="tienePersonal" type="expr" value="=esLlave||esTarjetaAcceso"}}
+    {{field id="tieneEspecialidad" type="expr" value="=esMoi"}}
+    {{field id="tieneMateriales" type="expr" value="=sePuedeProducir&&seProduce"}}
+    {{field id="tieneDeducibilidad" type="expr" value="=esActivoFijo||esConceptoGasto"}}
+    {{field id="tieneClasificadores" type="expr" value="=esBien||esCompetencia"}}
+    {{field id="tieneCuentaMayor" type="expr" value="=esConceptoGasto||esConceptoNomina||esTipoActivo"}}
+    {{field id="esPorcentajeDeducibilidad" type="expr" value="=tieneDeducibilidad&&tipoDeducibilidad=='porcentaje'"}}
+    {{field id="esTopeDeducibilidad" type="expr" value="=tieneDeducibilidad&&tipoDeducibilidad=='tope'"}}
+    {{field id="costoEstandar" type="calc" value="=calc.sumRef(hojaCostos, 'costoTotal')"}}
+    {{#field id="cuentaContable"}}
+      {{#onChange}}
+        {{set cuenta="=base.cuenta"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="cuentaContableDepreciacionActivos"}}
+      {{#onChange}}
+        {{set cuentaDepreciacionActivos="=base.cuenta"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="cuentaContableDepreciacionGastos"}}
+      {{#onChange}}
+        {{set cuentaDepreciacionGastos="=base.cuenta"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="subTipoActivoFijo"}}
+      {{#editor}}
+        {{param tipoActivoFijo="=tipoActivoFijo"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="sustituto"}}
+      {{#editor}}
+        {{param notId="=_id"}}
+        {{param tipoArticulo="=tipoArticulo"}}
+      {{/editor}}      
+    {{/field}}
+    {{#field id="servicio" defaultValue="=_params.servicio"}}
+      {{onChange clearFields="ubicacionAbre,activoFijoAbre"}}
+[.#if esSIC.]      
+      {{#editor}}
+        {{param condition="=fn('servicioDelArticulo', base.tipoArticulo, base.tipoActivoFijo)!=null" partOf="=fn('servicioDelArticulo', base.tipoArticulo, base.tipoActivoFijo)"}}
+      {{/editor}}
+[./if.]      
+    {{/field}}
+    {{#field id="ubicacion"}}
+      {{#editor}}
+[.#if esSIC.]    
+        {{param establecimiento="=establecimiento"}}
+[./if.]      
+        {{!-- {{#onChange}}
+          {{set area="=persona.area"}}
+          {{set criticidadZona="=persona.criticidadZona"}}
+        {{/onChange}} --}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="ubicaciones"}}
+      {{editor itemTemplate="nombre2" display="persona.nombre2"}}
+    {{/field}}
+    {{#field id="activosFijos"}}
+      {{editor itemTemplate="nombre2" display="base.nombre2"}}
+    {{/field}}
+    {{!-- {{#field id="partidaPresupuestal"}}
+      {{onChange clearFields="cucop"}}
+    {{/field}}
+    {{#field id="cucop"}}
+      {{#editor}}
+        {{param partOf="=partidaPresupuestal"}}
+      {{/editor}}      
+    {{/field}} --}}
+    {{!-- {{#field id="subTipoActivoFijo"}}
+      {{#editor}}
+        {{param partOf="=tipoActivoFijo"}}
+      {{/editor}}      
+    {{/field}} --}}
+    {{#field id="especialidad"}}
+      {{#editor}}
+        {{param partOf="=tipoActivoFijo"}}
+        {{onChange clearFields="subEspecialidad"}}
+      {{/editor}}      
+    {{/field}}
+    {{#field id="subEspecialidad"}}
+      {{#editor}}
+        {{param partOf="=especialidad"}}
+      {{/editor}}      
+    {{/field}}
+    {{#field id="cliente"}}
+      {{#editor}}
+        {{param tipoExpediente="='cliente'"}}
+      {{/editor}}      
+    {{/field}}
+    {{field id="esAlmacenProduccion" type="expr" value="=seProduce&&tipoAlmacenProduccion=='almacen'"}}
+    {{field id="esUbicacionProduccion" type="expr" value="=seProduce&&tipoAlmacenProduccion=='ubicacion'"}}
+    {{field id="esPersonaProduccion" type="expr" value="=seProduce&&tipoAlmacenProduccion=='persona'"}}
+    {{field id="esServicioProduccion" type="expr" value="=seProduce&&tipoAlmacenProduccion=='servicio'"}}
+    {{#field id="ubicacionProduccion"}}
+      {{#editor}}
+        {{param tipoExpediente="='ubicacion'"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="personaProduccion"}}
+      {{#editor}}
+        {{param tipoExpediente="='paciente'"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="servicioProduccion"}}
+      {{#editor}}
+        {{param tipoExpediente="='servicio'"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="sustituidoPor"}}
+      {{#editor}}
+        {{param notId="=_id"}}
+        {{param tipoActivoFijo="=tipoActivoFijo"}}
+        {{param estatus="='inactivo'"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+  {{#section id="hojaCostos"}}
+    {{field id="costoTotal" type="calc" value="=cantidad*costoUnitario"}}
+    {{onChange forceRecalc="true"}}
+  {{/section}}
+
+  {{#transform id="copiarActivoFijo"}}
+    {{#update section="base"}}
+      {{set articulo="_id"}}
+      {{set _articulo="_name"}}
+      {{set codigo="base.codigo"}}
+      {{set descripcion="base.descripcion"}}
+    {{/update}}
+    {{update section="niveles" value="=calc.tagsToArray(base.datosActivoFijo.base.niveles, 'nivel')"}}
+  {{/transform}}
+
+  {{#view id="todo"}}
+    {{#find limit="1"}}
+      {{filter condition="=articulo" field="_id" eq="=articulo" isObjectId="true"}}
+      {{filter condition="=codigo" field="base.codigo" eq="=codigo"}}
+    {{/find}}
+  {{/view}}
+
+  {{#view id="descripcion"}}
+    {{#find}}
+      {{include field="base.descripcion"}}
+      {{include field="base.unidadExistencia"}}
+      {{include field="base._unidadExistencia"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base._tipoArticulo"}}
+      {{include field="base.servicio"}}
+      {{include field="base.datosRopa"}}
+      {{include field="base.categoria"}}
+[.#if esSIC.]      
+      {{include field="tipoActivo.campo8"}}
+[./if.]      
+    {{/find}}
+  {{/view}}
+
+  {{#view id="articulosDeLaCategoria"}}
+    {{#find limit="-1" flatten="true"}}
+      {{include field="base.codigo" as="codigo"}} 
+      {{filter field="base.categoria" eq="=categoria"}}
+    {{/find}}
+  {{/view}}
+
+  {{#view id="listaArticulos"}}
+    {{#find limit="-1"}}
+      {{include field="base.codigo"}} 
+      {{include field="base.descripcion"}}
+      {{include field="base.datosRopa"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.multidosis"}}
+      {{include field="base.datosRopa.base._tipoPrenda"}}
+      {{include field="base.partidaPresupuestal"}}
+      {{include field="base.cucop"}}
+      {{include field="base.unidadExistencia"}}
+      {{include field="base.articuloProveedor"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter condition="=codigo" field="base.codigo" in="=codigo"}}
+      {{filter condition="=tipoArticulo" field="base.tipoArticulo" in="=tipoArticulo"}}
+      {{filter condition="=tipoActivoFijo" field="base.tipoActivoFijo" in="=tipoActivoFijo"}}
+    {{/find}}
+  {{/view}}
+
+  {{#view id="materialesDelServicio"}}
+    {{#find limit="-1" flatten="true"}}
+      {{include field="base.codigo" as="codigo"}} 
+      {{filter field="base.tipoArticulo" eq="='material'"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+    {{/find}}
+  {{/view}}
+
+  {{#view id="listaActivos"}}
+    {{#find limit="-1"}}
+      {{include field="base"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter condition="=tipoArticulo" field="base.tipoArticulo" in="=tipoArticulo"}}
+      {{filter condition="=tipoActivoFijo" field="base.tipoActivoFijo" in="=tipoActivoFijo"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+    {{/find}}
+  {{/view}}
+
+  {{#view id="listaDisponibilidadActivos"}}
+    {{#find limit="-1"}}
+      {{include field="base"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter condition="=tipoArticulo" field="base.tipoArticulo" in="=tipoArticulo"}}
+      {{filter condition="=tipoActivoFijo" field="base.tipoActivoFijo" in="=tipoActivoFijo"}}
+    {{/find}}
+    {{calc field="tiempoTotal" type="expr" value="=base.datosActivoFijo.base.disponibilidadProgramadaSemestral.base.minutos"}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{#join2 source="solicitud" view="tiempoNoDisponibilidad" key="codigo" id="codigo" as="tiempoNoDisponibilidad" value="minutos"}}
+      {{param codigo="=codigo"}}
+    {{/join2}}
+    {{calc2 field="disponibilidadActual" type="calc" value="=100-(@tiempoNoDisponibilidad||0)/tiempoTotal"}}
+  {{/view}}
+
+  {{#view id="sugerirArticulos"}}
+    {{#find limit="-1" flatten="true"}}
+      {{include field="_id" as="articulo"}}
+      {{include field="_name" as="_articulo"}}
+      {{include field="base.codigo" as="codigo"}}
+      {{include field="base.descripcion" as="descripcion"}}
+      {{include field="base.categoria" as="categoria"}}
+      {{include field="base.grupo" as="grupo"}}
+      {{include field="base.familia" as="familia"}}
+      {{include field="base.unidadEvaluacion" as="unidadEvaluacion"}}
+      {{include field="base.ejercicio" as="ejercicio"}}
+      {{include field="base.ponderacion" as="ponderacion"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.estatus" eq="='activo'"}}
+      {{filter condition="=tipoArticulo" field="base.tipoArticulo" in="=tipoArticulo"}}
+      {{filter condition="=ejercicio" field="base.ejercicio" in="=ejercicio"}}
+    {{/find}}
+  {{/view}}
+
+  {{#view id="sugerirInsumosUtilizados"}}
+    {{#find limit="-1" flatten="true"}}
+      {{include field="_id" as="articulo"}}
+      {{include field="_name" as="_articulo"}}
+      {{include field="base.codigo" as="codigo"}}
+      {{include field="base.descripcion" as="descripcion"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.estatus" eq="='activo'"}}
+      {{filter field="base.tipoArticulo" in="='material'"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+    {{/find}}
+  {{/view}}
+
+  {{#view id="sugerirCompetencias"}}
+    {{#find limit="-1" flatten="true"}}
+      {{include field="_id" as="articulo"}}
+      {{include field="_name" as="_articulo"}}
+      {{include field="base.codigo" as="codigo"}}
+      {{include field="base.descripcion" as="descripcion"}}
+      {{include field="base.categoria" as="categoria"}}
+      {{!-- {{include field="base.grupo" as="grupo"}} --}}
+      {{!-- {{include field="base.familia" as="familia"}} --}}
+      {{include field="base.unidadEvaluacion" as="unidadEvaluacion"}}
+      {{include field="base.ponderacion" as="cantidad"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.estatus" eq="='activo'"}}
+      {{filter condition="=tipoArticulo" field="base.tipoArticulo" in="=tipoArticulo"}}
+      {{filter condition="=grupo" field="base.grupo" in="=grupo"}}
+    {{/find}}
+  {{/view}}
+
+  {{#view id="sugerirPlanInstalacion"}}
+    {{#find limit="-1" flatten="true"}}
+      {{include field="_id" as="articulo"}}
+      {{include field="_name" as="_articulo"}}
+      {{include field="base.codigo" as="codigo"}}
+      {{include field="base.descripcion" as="descripcion"}}
+      {{include field="tipoActivo.campo8" as="campo8"}}
+      {{include field="base.ubicacion" as="ubicacion"}}
+      {{include field="base._ubicacion" as="_ubicacion"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.estatus" eq="='inactivo'"}}
+      {{filter condition="=tipoActivoFijo" field="base.tipoActivoFijo" in="=tipoActivoFijo"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+    {{/find}}
+    {{calc field="cantidad" type="expr" value="=1"}}
+  {{/view}}
+
+  {{#view id="mantenimientoPreventivo"}}
+    {{#find limit="-1" flatten="true"}}
+      {{include field="_id" as="articulo"}}
+      {{include field="_name" as="_articulo"}}
+      {{include field="base.codigo" as="codigo"}}
+      {{include field="base.descripcion" as="descripcion"}}
+      {{include field="base.ubicacion" as="ubicacion"}}
+      {{include field="base._ubicacion" as="_ubicacion"}}
+      {{include field="base.datosActivoFijo.base.periodicidadMantenimiento" as="periodicidadMantenimiento"}}
+      {{include field="base.datosActivoFijo.base.tiempoMantenimiento" as="tiempoMantenimiento"}}
+      {{include field="base.datosActivoFijo.base.ultimoMantenimiento" as="ultimoMantenimiento"}}
+      {{include field="base.datosActivoFijo.base.siguienteMantenimiento" as="siguienteMantenimiento"}}
+      {{sort field="base._ubicacion" direction="asc"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.servicio" in="=servicio"}}
+      {{filter field="base.estatus" eq="='activo'"}}
+    {{/find}}
+  {{/view}}
+
+  {{#view id="validacionInventario" onlyMapped2="true"}}
+    {{#find limit="-1"}}
+      {{include field="_id"}}
+      {{include field="_name"}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base._tipoActivoFijo"}}
+      {{include field="base.ubicacion"}}
+      {{include field="base._ubicacion"}}
+      {{include field="base.datosActivoFijo.base.responsableMantenimiento"}}
+      {{include field="base.datosActivoFijo.base._responsableMantenimiento"}}      
+      {{include field="base.datosActivoFijo.base.tipoActivo"}}
+      {{sort field="base._tipoActivoFijo" direction="asc"}}
+      {{sort field="base._ubicacion" direction="asc"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" eq="activoFijo"}}
+      {{filter condition="=servicio" field="base.servicio" eq="=servicio"}}
+      {{filter condition="=ubicaciones" field="base.ubicacion" in="=ubicaciones"}}
+    {{/find}}
+    {{join source="persona" view="datosPersona" id="base.ubicacion" as="join"}}
+    {{join source="articulo" view="todo" id="base.datosActivoFijo.base.tipoActivo" as="tipoActivo"}}
+    {{map field="articulo" value="=_id"}}
+    {{map field="_articulo" value="=_name"}}
+    {{map field="codigo" value="=base.codigo"}}
+    {{map field="descripcion" value="=base.descripcion"}}
+    {{map field="tipoActivoFijo" value="=base.tipoActivoFijo"}}
+    {{map field="_tipoActivoFijo" value="=base._tipoActivoFijo"}}
+    {{map field="ubicacion" value="=base.ubicacion"}}
+    {{map field="_ubicacion" value="=base._ubicacion"}}
+    {{map field="responsableMantenimiento" value="=base.datosActivoFijo.base.responsableMantenimiento"}}
+    {{map field="_responsableMantenimiento" value="=base.datosActivoFijo.base._responsableMantenimiento"}}
+    {{map field="cantidad" type="expr" value="=1"}}
+    {{map field="codigoUbicacion" value="=join.persona.codigo"}}
+    {{map field="area" value="=join.persona.area"}}
+    {{map field="_area" value="=join.persona._area"}}
+    {{map field="codigoTipoActivo" value="=tipoActivo.base.codigo"}}
+    {{map field="descripcionTipoActivo" value="=tipoActivo.base.descripcion"}}
+    {{map field="familiaTipoActivo" value="=tipoActivo.tipoActivo.campo5"}}
+  {{/view}}
+
+  {{#view id="listaMantenimientosPreventivos"}}
+    {{#find limit="-1"}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.subTipoActivoFijo"}}  
+      {{include field="base.datosActivoFijo"}}
+      {{include field="base.mantenimientoPreventivoActivoFijo"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" eq="activoFijo"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=desde" field="base.mantenimientoPreventivoActivoFijo.base.siguenteServicio" gt="=desde"}}
+      {{filter condition="=hasta" field="base.mantenimientoPreventivoActivoFijo.base.siguenteServicio" lt="=hasta"}}
+    {{/find}}
+    {{#unwind field="base.mantenimientoPreventivoActivoFijo"}}
+      {{filter field="base.mantenimientoPreventivoActivoFijo.base.estatus" in="nuevo,continuar"}}
+      {{filter condition="=desde" field="base.mantenimientoPreventivoActivoFijo.base.siguenteServicio" gt="=desde"}}
+      {{filter condition="=hasta" field="base.mantenimientoPreventivoActivoFijo.base.siguenteServicio" lt="=hasta"}}
+    {{/unwind}}
+  {{/view}}
+
+  {{#view id="minimosMaximos"}}
+    {{#find limit="-1"}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.articuloUbicacion"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter condition="=almacen" field="base.articuloUbicacion.base.almacen" eq="=almacen"}}
+      {{filter condition="=ubicacion" field="base.articuloUbicacion.base.ubicacion" eq="=ubicacion"}}
+    {{/find}}
+    {{#unwind field="base.articuloUbicacion"}}
+      {{filter condition="=almacen" field="base.articuloUbicacion.base.almacen" eq="=almacen"}}
+      {{filter condition="=ubicacion" field="base.articuloUbicacion.base.ubicacion" eq="=ubicacion"}}
+    {{/unwind}}
+  {{/view}}
+
+  {{#view id="abajoDelMinimo"}}
+    {{#find limit="-1"}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.articuloUbicacion"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.estatus" eq="='activo'"}}
+      {{filter condition="=almacen" field="base.articuloUbicacion.base.almacen" eq="=almacen"}}
+      {{filter condition="=ubicacion" field="base.articuloUbicacion.base.ubicacion" eq="=ubicacion"}}
+    {{/find}}
+    {{#unwind field="base.articuloUbicacion"}}
+      {{filter condition="=almacen" field="base.articuloUbicacion.base.almacen" eq="=almacen"}}
+      {{filter condition="=ubicacion" field="base.articuloUbicacion.base.ubicacion" eq="=ubicacion"}}
+    {{/unwind}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="cuenta" type="expr" value="=base.articuloUbicacion.base.almacen||base.articuloUbicacion.base.ubicacion"}}
+    {{union source="mov" view="existenciaAcum2" leftOuterJoin="codigo,cuenta" merge="existencia"}}
+    {{calc2 field="visible" type="expr" value="=(@existencia||0)<base.articuloUbicacion.base.minimo"}}
+    {{sort field="codigo" having="visible"}}
+  {{/view}}
+
+  {{#view id="arribaDelMaximo"}}
+    {{#find limit="-1"}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.articuloUbicacion"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.estatus" eq="='activo'"}}
+      {{filter condition="=almacen" field="base.articuloUbicacion.base.almacen" eq="=almacen"}}
+      {{filter condition="=ubicacion" field="base.articuloUbicacion.base.ubicacion" eq="=ubicacion"}}
+    {{/find}}
+    {{#unwind field="base.articuloUbicacion"}}
+      {{filter condition="=almacen" field="base.articuloUbicacion.base.almacen" eq="=almacen"}}
+      {{filter condition="=ubicacion" field="base.articuloUbicacion.base.ubicacion" eq="=ubicacion"}}
+    {{/unwind}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="cuenta" type="expr" value="=base.articuloUbicacion.base.almacen||base.articuloUbicacion.base.ubicacion"}}
+    {{union source="mov" view="existenciaAcum2" leftOuterJoin="codigo,cuenta" merge="existencia"}}
+    {{calc2 field="visible" type="expr" value="=(@existencia||0)>base.articuloUbicacion.base.maximo"}}
+    {{calc2 field="cantidad" type="expr" value="=@existencia"}}
+    {{sort field="codigo" having="visible"}}
+  {{/view}}
+
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.descripcionAlmacen"}}
+      {{include field="base.estatus"}}
+      {{include field="base.datosRopa"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.cuadroBasico"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.esActivoFijo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.datosActivoFijo"}}
+      {{include field="base.cucop"}}
+      {{include field="base.categoria"}}
+      {{include field="base.grupo"}}
+      {{include field="base.familia"}}
+      {{include field="base.ejercicio"}}
+      {{include field="base.partidaPresupuestal"}}
+      {{include field="base.unidadExistencia"}}
+      {{include field="base._unidadExistencia"}}
+      {{include field="base.nivelCombustible"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter condition="=ids" field="_id" in="=ids" isObjectId="true"}}
+      {{filter condition="=esBien" field="base.esBien" eq="=true"}}
+      {{filter condition="=notId" field="_id" neq="=notId" isObjectId="true"}}
+      {{filter condition="=tipoArticulo" field="base.tipoArticulo" in="=tipoArticulo"}}
+      {{filter condition="=tipoActivoFijo" field="base.tipoActivoFijo" in="=tipoActivoFijo"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=enConsultaExterna" field="base.enConsultaExterna" eq="=true"}}
+      {{filter condition="=puedeAsignar" field="_moment.asignado" exists="=false"}}
+      {{filter condition="=puedeAsignar" field="base.datosActivoFijo.base.permiteAsignacion" eq="='si'"}}
+      {{filter condition="=deTercero" field="base.datosActivoFijo.base.responsableMantenimiento" eq="='tercero'"}}
+      {{filter condition="=noDeTercero" field="base.datosActivoFijo.base.responsableMantenimiento" neq="='tercero'"}}
+      {{filter condition="=personal" field="base.personal" eq="=personal"}}
+      {{filter condition="=proveedor" field="base.articuloProveedor.base.proveedor" in="=proveedor"}}
+      {{filter condition="=actividadInstitucional" field="base.actividadInstitucional" in="=actividadInstitucional"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+      {{search field="base._tipoArticulo"}}
+      {{search field="base.datosRopa.base._talla"}}
+      {{search field="base.categoria"}}
+      {{search field="base.grupo"}}
+      {{search field="base.familia"}}
+      {{search field="base.ejercicio"}}
+      {{search field="base.etiquetas"}}
+[.#if esSIC.]
+      {{search field="tipoActivo.campo8"}}
+[.else.]
+      {{filter condition="=esBien" field="base.cuadroBasico" exists="=true"}}
+      {{filter condition="=esBien" field="base.cucop" exists="=true"}}
+[./if.]      
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{calc field="estaAfuera" type="expr" value="=!_.isEmpty(calc.getRef(@_moment, 'afuera'))"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="paginas"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.estatus"}}
+      {{include field="base.datosRopa"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.esActivoFijo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.datosActivoFijo"}}
+      {{include field="base.cucop"}}
+      {{include field="base.partidaPresupuestal"}}
+      {{include field="base.unidadExistencia"}}
+      {{include field="base._unidadExistencia"}}
+      {{include field="base.imagen"}}
+      {{include field="base.etiquetas"}}
+      {{include field="componentes"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter condition="=notId" field="_id" neq="=notId" isObjectId="true"}}
+      {{filter condition="=tipoArticulo" field="base.tipoArticulo" in="=tipoArticulo"}}
+      {{filter condition="=tipoActivoFijo" field="base.tipoActivoFijo" in="=tipoActivoFijo"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=enConsultaExterna" field="base.enConsultaExterna" eq="=true"}}
+      {{filter condition="=puedeAsignar" field="_moment.asignado" exists="=false"}}
+      {{filter condition="=puedeAsignar" field="base.datosActivoFijo.base.permiteAsignacion" eq="='si'"}}
+      {{filter condition="=deTercero" field="base.datosActivoFijo.base.responsableMantenimiento" eq="='tercero'"}}
+      {{filter condition="=noDeTercero" field="base.datosActivoFijo.base.responsableMantenimiento" neq="='tercero'"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+      {{search field="base._tipoArticulo"}}
+      {{search field="base.datosRopa.base._talla"}}
+      {{search field="componentes._articulo"}}
+      {{search field="componentes.descripcion"}}
+      {{search field="base.etiquetas"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{calc field="estaAfuera" type="expr" value="=!_.isEmpty(calc.getRef(@_moment, 'afuera'))"}}
+    {{calc field="esOferta" value="=calc.in('Oferta', base.etiquetas)"}}
+    {{calc field="demo01" value="=base.codigo=='INTIMA-2021-01'"}}
+    {{calc field="demo05" value="=base.codigo=='INTIMA-2021-05'"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="tipoActivo"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.esActivoFijo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.datosActivoFijo"}}
+      {{include field="tipoActivo"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" eq="='tipoActivo'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=ubicacion" field="base.ubicacion" eq="=ubicacion"}}
+      {{filter condition="=campo8" field="tipoActivo.campo8" eq="=campo8"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+      {{search field="base._tipoArticulo"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="tipoEquipo"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.esActivoFijo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.datosActivoFijo"}}
+      {{include field="tipoActivo"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" eq="='tipoEquipo'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=ubicacion" field="base.ubicacion" eq="=ubicacion"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+      {{search field="base._tipoArticulo"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="mobiliario"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.esActivoFijo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.datosActivoFijo"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter condition="=calc.isTrue(@planCompras)" field="base.tipoArticulo" eq="='planCompras'"}}
+      {{filter condition="=!calc.isTrue(@planCompras)" field="base.tipoArticulo" eq="='activoFijo'"}}
+      {{filter condition="=!calc.isTrue(@planCompras)" field="base.tipoActivoFijo" eq="='mobiliario'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=noBaja" field="base.baja" neq="='si'"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=enConsultaExterna" field="base.enConsultaExterna" eq="=true"}}
+      {{filter condition="=puedeAsignar" field="_moment.asignado" exists="=false"}}
+      {{filter condition="=puedeAsignar" field="base.datosActivoFijo.base.permiteAsignacion" eq="='si'"}}
+      {{filter condition="=ubicacion" field="base.ubicacion" eq="=ubicacion"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+      {{search field="base._tipoArticulo"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{calc field="estaAfuera" type="expr" value="=!_.isEmpty(calc.getRef(@_moment, 'afuera'))"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="equipoMedico"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.esActivoFijo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.datosActivoFijo"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter condition="=calc.isTrue(@planCompras)" field="base.tipoArticulo" eq="='planCompras'"}}
+      {{filter condition="=!calc.isTrue(@planCompras)" field="base.tipoArticulo" eq="='activoFijo'"}}
+      {{filter condition="=!calc.isTrue(@planCompras)" field="base.tipoActivoFijo" eq="='equipoMedico'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=noBaja" field="base.baja" neq="='si'"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=enConsultaExterna" field="base.enConsultaExterna" eq="=true"}}
+      {{filter condition="=puedeAsignar" field="_moment.asignado" exists="=false"}}
+      {{filter condition="=puedeAsignar" field="base.datosActivoFijo.base.permiteAsignacion" eq="='si'"}}
+      {{filter condition="=ubicacion" field="base.ubicacion" eq="=ubicacion"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+      {{search field="base._tipoArticulo"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{calc field="estaAfuera" type="expr" value="=!_.isEmpty(calc.getRef(@_moment, 'afuera'))"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="elementoTecnologico"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.esActivoFijo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.datosActivoFijo"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" eq="='activoFijo'"}}
+      {{filter field="base.tipoActivoFijo" eq="='elementoTecnologico'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=enConsultaExterna" field="base.enConsultaExterna" eq="=true"}}
+      {{filter condition="=puedeAsignar" field="_moment.asignado" exists="=false"}}
+      {{filter condition="=puedeAsignar" field="base.datosActivoFijo.base.permiteAsignacion" eq="='si'"}}
+      {{filter condition="=ubicacion" field="base.ubicacion" eq="=ubicacion"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+      {{search field="base._tipoArticulo"}}      
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{calc field="estaAfuera" type="expr" value="=!_.isEmpty(calc.getRef(@_moment, 'afuera'))"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="moi"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.esActivoFijo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.datosActivoFijo"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" eq="='activoFijo'"}}
+      {{filter field="base.tipoActivoFijo" eq="='moi'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=enConsultaExterna" field="base.enConsultaExterna" eq="=true"}}
+      {{filter condition="=puedeAsignar" field="_moment.asignado" exists="=false"}}
+      {{filter condition="=puedeAsignar" field="base.datosActivoFijo.base.permiteAsignacion" eq="='si'"}}
+      {{filter condition="=ubicacion" field="base.ubicacion" eq="=ubicacion"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+      {{search field="base._tipoArticulo"}}      
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{calc field="estaAfuera" type="expr" value="=!_.isEmpty(calc.getRef(@_moment, 'afuera'))"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="maquinaDispensadora"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.esActivoFijo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.datosActivoFijo"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" eq="='activoFijo'"}}
+      {{filter field="base.tipoActivoFijo" eq="='maquinaDispensadora'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=enConsultaExterna" field="base.enConsultaExterna" eq="=true"}}
+      {{filter condition="=puedeAsignar" field="_moment.asignado" exists="=false"}}
+      {{filter condition="=puedeAsignar" field="base.datosActivoFijo.base.permiteAsignacion" eq="='si'"}}
+      {{filter condition="=ubicacion" field="base.ubicacion" eq="=ubicacion"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+      {{search field="base._tipoArticulo"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{calc field="estaAfuera" type="expr" value="=!_.isEmpty(calc.getRef(@_moment, 'afuera'))"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="controlVectores"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.esActivoFijo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.datosActivoFijo"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" eq="='activoFijo'"}}
+      {{filter field="base.tipoActivoFijo" eq="='controlVectores'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=enConsultaExterna" field="base.enConsultaExterna" eq="=true"}}
+      {{filter condition="=puedeAsignar" field="_moment.asignado" exists="=false"}}
+      {{filter condition="=puedeAsignar" field="base.datosActivoFijo.base.permiteAsignacion" eq="='si'"}}
+      {{filter condition="=ubicacion" field="base.ubicacion" eq="=ubicacion"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+      {{search field="base._tipoArticulo"}}      
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{calc field="estaAfuera" type="expr" value="=!_.isEmpty(calc.getRef(@_moment, 'afuera'))"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="multiservicio"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.esActivoFijo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.datosActivoFijo"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" eq="='multiservicio'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=enConsultaExterna" field="base.enConsultaExterna" eq="=true"}}
+      {{filter condition="=puedeAsignar" field="_moment.asignado" exists="=false"}}
+      {{filter condition="=puedeAsignar" field="base.datosActivoFijo.base.permiteAsignacion" eq="='si'"}}
+      {{filter condition="=ubicacion" field="base.ubicacion" eq="=ubicacion"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+      {{search field="base._tipoArticulo"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{calc field="estaAfuera" type="expr" value="=!_.isEmpty(calc.getRef(@_moment, 'afuera'))"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="produccion"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.esActivoFijo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.datosActivoFijo"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" in="material,ropa"}}
+      {{filter field="base.produccion" eq="='si'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=enConsultaExterna" field="base.enConsultaExterna" eq="=true"}}
+      {{filter condition="=puedeAsignar" field="_moment.asignado" exists="=false"}}
+      {{filter condition="=puedeAsignar" field="base.datosActivoFijo.base.permiteAsignacion" eq="='si'"}}
+      {{filter condition="=ubicacion" field="base.ubicacion" eq="=ubicacion"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+      {{search field="base._tipoArticulo"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{calc field="estaAfuera" type="expr" value="=!_.isEmpty(calc.getRef(@_moment, 'afuera'))"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="planCompras"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.esActivoFijo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.datosActivoFijo"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" eq="='planCompras'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=enConsultaExterna" field="base.enConsultaExterna" eq="=true"}}
+      {{filter condition="=puedeAsignar" field="_moment.asignado" exists="=false"}}
+      {{filter condition="=puedeAsignar" field="base.datosActivoFijo.base.permiteAsignacion" eq="='si'"}}
+      {{filter condition="=ubicacion" field="base.ubicacion" eq="=ubicacion"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+      {{search field="base._tipoArticulo"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{calc field="estaAfuera" type="expr" value="=!_.isEmpty(calc.getRef(@_moment, 'afuera'))"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="procedimientoMantenimiento"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" eq="='procedimientoMantenimiento'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=ubicacion" field="base.ubicacion" eq="=ubicacion"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+      {{search field="base._tipoArticulo"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="ronda"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.ubicacionAbre"}}
+      {{include field="base.activoFijoAbre"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" eq="='ronda'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=enConsultaExterna" field="base.enConsultaExterna" eq="=true"}}
+      {{filter condition="=puedeAsignar" field="_moment.asignado" exists="=false"}}
+      {{filter condition="=puedeAsignar" field="base.datosActivoFijo.base.permiteAsignacion" eq="='si'"}}
+      {{filter condition="=personal" field="base.personal" eq="=personal"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+      {{search field="base._tipoArticulo"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{calc field="estaAfuera" type="expr" value="=!_.isEmpty(calc.getRef(@_moment, 'afuera'))"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="llave"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.ubicacionAbre"}}
+      {{include field="base.activoFijoAbre"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" eq="='llave'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=enConsultaExterna" field="base.enConsultaExterna" eq="=true"}}
+      {{filter condition="=puedeAsignar" field="_moment.asignado" exists="=false"}}
+      {{filter condition="=puedeAsignar" field="base.datosActivoFijo.base.permiteAsignacion" eq="='si'"}}
+      {{filter condition="=personal" field="base.personal" eq="=personal"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+      {{search field="base._tipoArticulo"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{calc field="estaAfuera" type="expr" value="=!_.isEmpty(calc.getRef(@_moment, 'afuera'))"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="tarjetaAcceso"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.ubicacionAbre"}}
+      {{include field="base.activoFijoAbre"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" eq="='tarjetaAcceso'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=enConsultaExterna" field="base.enConsultaExterna" eq="=true"}}
+      {{filter condition="=puedeAsignar" field="_moment.asignado" exists="=false"}}
+      {{filter condition="=puedeAsignar" field="base.datosActivoFijo.base.permiteAsignacion" eq="='si'"}}
+      {{filter condition="=personal" field="base.personal" eq="=personal"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+      {{search field="base._tipoArticulo"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{calc field="estaAfuera" type="expr" value="=!_.isEmpty(calc.getRef(@_moment, 'afuera'))"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="conceptosGasto"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.descripcionLarga"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.esMenu"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" eq="='conceptoGasto'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=tipoMenu" field="base.tipoMenu" eq="=tipoMenu"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="conceptosNomina"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.descripcionLarga"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.esMenu"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" eq="='conceptoNomina'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=tipoMenu" field="base.tipoMenu" eq="=tipoMenu"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="kits"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.descripcionLarga"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.esMenu"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" eq="='kit'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=tipoMenu" field="base.tipoMenu" eq="=tipoMenu"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{!-- {{#view id="meta"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.descripcionLarga"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.servicio"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" eq="='meta'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=tipoMenu" field="base.tipoMenu" eq="=tipoMenu"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}} --}}
+
+  {{#view id="competencia"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.descripcionLarga"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.servicio"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" eq="='competencia'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=tipoMenu" field="base.tipoMenu" eq="=tipoMenu"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="cursos"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.descripcionLarga"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.servicio"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" eq="='curso'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=!@estatus" field="base.estatus" eq="='activo'"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="menu"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.descripcionLarga"}}
+      {{include field="base.regimenAlimenticio"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.tipoMenu"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.esMenu"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" eq="='menu'"}}
+      {{filter condition="=menus" field="_id" in="=menus" isObjectId="true"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=tipoMenu" field="base.tipoMenu" eq="=tipoMenu"}}
+      {{filter condition="=momentoDieta" field="base.momentoDieta" in="=momentoDieta"}}
+      {{filter condition="=regimenAlimenticio" field="base.regimenAlimenticio" in="=regimenAlimenticio"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+      {{search field="base._tipoArticulo"}}
+      {{search field="base._regimenAlimenticio"}}      
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="menuDia"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.descripcionLarga"}}
+      {{include field="base.regimenAlimenticio"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.tipoMenu"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="menuDia"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" eq="='menuDia'"}}
+      {{filter condition="=articulo" field="_id" eq="=articulo" isObjectId="true"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=tipoMenu" field="base.tipoMenu" eq="=tipoMenu"}}
+      {{filter condition="=momentoDieta" field="base.momentoDieta" in="=momentoDieta"}}
+      {{filter condition="=regimenAlimenticio" field="base.regimenAlimenticio" in="=regimenAlimenticio"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+      {{search field="base._tipoArticulo"}}
+      {{search field="base._regimenAlimenticio"}}      
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+  
+  {{#view id="alimentacion"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.descripcionLarga"}}
+      {{include field="base.regimenAlimenticio"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.tipoMenu"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.esMenu"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" eq="='menu'"}}
+      {{filter field="base.tipoMenu" eq="='alimentacion'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=momentoDieta" field="base.momentoDieta" in="=momentoDieta"}}
+      {{filter condition="=regimenAlimenticio" field="base.regimenAlimenticio" in="=regimenAlimenticio"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+      {{search field="base._tipoArticulo"}}
+      {{search field="base._regimenAlimenticio"}}      
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="hidratacion"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.descripcionLarga"}}
+      {{include field="base.regimenAlimenticio"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.tipoMenu"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.esMenu"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" eq="='menu'"}}
+      {{filter field="base.tipoMenu" eq="='hidratacion'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=momentoDieta" field="base.momentoDieta" in="=momentoDieta"}}
+      {{filter condition="=regimenAlimenticio" field="base.regimenAlimenticio" in="=regimenAlimenticio"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+      {{search field="base._tipoArticulo"}}
+      {{search field="base._regimenAlimenticio"}}      
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="noKits"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.esActivoFijo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.datosActivoFijo"}}
+      {{include field="_moment"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" neq="='kit'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=enConsultaExterna" field="base.enConsultaExterna" eq="=true"}}
+      {{filter condition="=puedeAsignar" field="_moment.asignado" exists="=false"}}
+      {{filter condition="=puedeAsignar" field="base.datosActivoFijo.base.permiteAsignacion" eq="='si'"}}
+      {{filter condition="=ubicacion" field="base.ubicacion" eq="=ubicacion"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+      {{search field="base._tipoArticulo"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{calc field="estaAfuera" type="expr" value="=!_.isEmpty(calc.getRef(@_moment, 'afuera'))"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="datosProveedor"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.articuloProveedor"}}
+      {{include field="_moment"}}
+    {{/find}}
+  {{/view}}
+
+  {{#view id="activos"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadCompra"}}
+      {{include field="base.factorCompra"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.unidadEvaluacion"}}
+      {{include field="base.datosRopa.base.usoMaterial"}}
+      {{include field="base.categoria"}}
+      {{include field="base.grupo"}}
+      {{include field="base.familia"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=!@estatus" field="base.estatus" eq="='activo'"}}
+      {{filter condition="=tipoArticulo" field="base.tipoArticulo" in="=tipoArticulo"}}
+      {{filter condition="=sinTipoArticulo" field="base.tipoArticulo" nin="=sinTipoArticulo"}}
+      {{filter condition="=tipoActivoFijo" field="base.tipoActivoFijo" in="=tipoActivoFijo"}}
+      {{filter condition="=sinTipoActivoFijo" field="base.tipoActivoFijo" nin="=sinTipoActivoFijo"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=ejercicio" field="base.ejercicio" in="=ejercicio"}}
+      {{filter condition="=enConsultaExterna" field="base.enConsultaExterna" eq="=true"}}
+      {{filter condition="=verComponentesKit" field="base.datosRopa.base.tipoPrenda" eq="componenteKit"}}
+      {{filter condition="=excluirProcedimiento" field="base.articuloDatosProcedimiento.base.excluir" nin="=excluirProcedimiento"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+      {{search field="base._tipoArticulo"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="enPuntoReorden"}}
+    {{#find limit="-1"}}
+      {{include field="base"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.articuloUbicacion" exists="=true"}}
+      {{filter condition="categoria" field="base.tipoArticulo" eq="=categoria"}}
+    {{/find}}
+    {{unwind field="base.articuloUbicacion"}}
+    {{calc field="tipoArticulo" type="expr" value="=base.tipoArticulo"}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="descripcion" type="expr" value="=base.descripcion"}}
+    {{calc field="central" type="expr" value="=base.articuloUbicacion.base._central"}}
+    {{calc field="persona" type="expr" value="=base.articuloUbicacion.base.ubicacion"}}
+    {{calc field="_persona" type="expr" value="=base.articuloUbicacion.base._ubicacion"}}
+    {{!-- {{calc field="unidad" type="expr" value="=base.unidadTraspaso"}}
+    {{calc field="_unidad" type="expr" value="=base._unidadTraspaso"}}
+    {{calc field="factor" type="expr" value="=base.factorTraspaso||1"}} --}}
+    {{calc field="unidad" type="expr" value="='pieza'"}}
+    {{calc field="_unidad" type="expr" value="='Pieza'"}}
+    {{calc field="factor" type="expr" value="=1"}}
+    {{union source="mov" view="existenciaAcum" leftOuterJoin="codigo,persona" merge="existencia"}}
+    {{union source="solicitud" view="solicitadoAcum" leftOuterJoin="codigo,persona" merge="solicitado"}}
+    {{!-- {{calc2 field="sugerido" type="expr" value="=fn('puntoReorden', (@existencia||0)/factor, (@solicitado||0)/factor, base.articuloUbicacion.base.minimo, base.articuloUbicacion.base.maximo)"}} --}}
+    {{calc2 field="sugerido" type="expr" value="=fn('puntoReorden',@existencia,@solicitado,base.articuloUbicacion.base.minimo,base.articuloUbicacion.base.maximo)"}}
+  {{/view}}
+
+  {{#view id="recibirProveedor"}}
+    {{#find limit="1000"}}
+      {{include field="base"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.esBien" eq="=true"}}
+      {{filter condition="=proveedor" field="base.proveedor" eq="=proveedor"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="descripcion" type="expr" value="=base.descripcion"}}
+    {{calc field="tipoArticulo" type="expr" value="=base.tipoArticulo"}}
+    {{calc field="unidadProveedor" type="expr" value="=base.unidadProveedor"}}
+    {{calc field="unidad" type="expr" value="=base.unidadCompra"}}
+    {{calc field="factor" type="expr" value="=base.factorCompra"}}
+    {{calc field="costoUnitario" type="expr" value="=base.costoUnitario*base.factorCompra"}}
+  {{/view}}
+
+  {{#view id="prespuestoVenta"}}
+    {{#find limit="1000"}}
+      {{include field="base"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.esProducto" eq="=true"}}
+      {{filter condition="=cliente" field="base.cliente" eq="=cliente"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="descripcion" type="expr" value="=base.descripcion"}}
+    {{calc field="tipoArticulo" type="expr" value="=base.tipoArticulo"}}
+    {{calc field="unidad" type="expr" value="=base.unidadTraspaso"}}
+    {{calc field="factor" type="expr" value="=base.factorTraspaso"}}
+    {{calc field="precioUnitario" type="expr" value="=base.precioUnitario*base.factorTraspaso"}}
+  {{/view}}
+
+  {{#view id="recibirInventario"}}
+    {{#find limit="1000"}}
+      {{include field="base"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter condition="=proveedor" field="base.proveedor" eq="=proveedor"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{calc field="descripcion" type="expr" value="=base.descripcion"}}
+    {{calc field="unidad" type="expr" value="='pieza'"}}
+    {{calc field="factor" type="expr" value="=1"}}
+    {{calc field="costoUnitario" type="expr" value="=base.costoUnitario"}}
+  {{/view}}  
+
+  {{#view id="exportar"}}
+    {{#find limit="-1"}}
+      {{include field="base.codigo"}} 
+      {{include field="_name"}}
+      {{filter condition="=tipoArticulo" field="base.tipoArticulo" in="=tipoArticulo"}}
+      {{sort field="base.codigo" direction="asc"}}
+    {{/find}}
+  {{/view}}
+
+  {{#report id="preliminar-encabezado2"}}
+    {{#stack}}
+      {{#columns margin="20" widths="220,150,*"}}
+        {{#column}}
+          {{row image="logo" alignment="left" imageWidth="210" margin="0,-15,0,0"}}
+        {{/column}}
+        {{#column margin="0,-10,0,0"}}
+          {{row text="Hospital Regional de Alta Especialidad Ixtapaluca" alignment="left" fontSize="6" color="grey"}}
+          {{row text="Carretera Federal México Puebla Km. 34.5" alignment="left" fontSize="6" color="grey"}}
+          {{row text="Pueblo de Zoquiapan 56530, Ixtapaluca, Méx." alignment="left" fontSize="6" color="grey"}}
+          {{row text="Teléfono: 55 5972 9800, CLUES: MCSSA018786" alignment="left" fontSize="6" color="grey"}}
+        {{/column}}
+        {{#column}}
+          {{row}}
+        {{/column}}
+      {{/columns}}
+    {{/stack}}
+  {{/report}}
+
+  {{#transform id="copiarPorProducir"}}
+    {{#update section="base"}}
+      {{set articulo="=_id"}}
+      {{set _articulo="=_name"}}
+      {{set codigo="=base.codigo"}}
+      {{set descripcion="=base.descripcion"}}
+      {{set tipoArticulo="=base.tipoArticulo"}}
+      {{set _tipoArticulo="=base._tipoArticulo"}}
+      {{set tipoAlmacen="=base.tipoAlmacenProduccion"}}
+      {{set _tipoAlmacen="=base._tipoAlmacenProduccion"}}
+      {{set almacen="=base.almacenProduccion"}}
+      {{set _almacen="=base._almacenProduccion"}}
+      {{set ubicacion="=base.ubicacionProduccion"}}
+      {{set _ubicacion="=base._ubicacionProduccion"}}
+      {{set persona="=base.personaProduccion"}}
+      {{set _persona="=base._personaProduccion"}}
+      {{set servicio="=base.servicioProduccion"}}
+      {{set _servicio="=base._servicioProduccion"}}
+    {{/update}}
+    {{update section="materiales" value="=materiales"}}
+  {{/transform}}
+
+  {{#transform id="copiarInventarioFisico"}}
+    {{#update section="base"}}
+      {{set articulo="=_id"}}
+      {{set _articulo="=_name"}}
+      {{set codigo="=base.codigo"}}
+      {{set descripcion="=base.descripcion"}}
+      {{set tipoArticulo="=base.tipoArticulo"}}
+      {{set _tipoArticulo="=base._tipoArticulo"}}
+      {{set unidad="=(_params.almacen=='almacenGeneral')?base.unidadTraspaso:'pieza'"}}
+      {{set factor="=(_params.almacen=='almacenGeneral')?base.factorTraspaso:1"}}
+      {{set almacen="=_params.almacen"}}
+      {{set costoUnitario="=calc.getRef(_items2, '0.costoPromedio')||_params.costoReferencia"}}
+    {{/update}}
+  {{/transform}}
+
+  {{action id="ver" condition="=base.esBien||base.esTipoActivo||base.esTipoEquipo" type="menu" menu="menuReportesInventario" label="Reportes" color="grey"}}
+  {{#menu id="menuReportesInventario" color="grey"}}
+    {{item action="verExistencias" text="Existencias"}}
+    {{item action="verEntradas" text="Entradas" beginGroup="true"}}
+    {{item action="verSalidas" text="Salidas"}}
+    {{!-- {{item action="verKardex" text="Trazabilidad" beginGroup="true"}}
+    {{item action="verKardex2" text="Trazabilidad 2"}} --}}
+[.#if esSIC.]    
+    {{item action="reporteKardex" text="Inventarios Insumos" beginGroup="true"}}
+    {{item action="reporteKardex2" text="Reporte de Insumos (Inventario)"}}
+    {{item action="reporteKardex3" text="Reporte de Insumos (Movimientos)"}}
+[.else.]
+    {{item action="reporteKardex" text="Kardex" beginGroup="true" userRole="costosInventario"}}
+    {{item action="reporteKardex2" text="Kardex 2" userRole="soporteKardex"}}
+[./if.]
+    {{item action="reporteCostoPromedio" text="Costo Promedio" beginGroup="true"}}
+  {{/menu}}  
+
+  {{#report id="reporteCostoPromedio" fontSize="8" header="preliminar-encabezado" showStandarFooter="true" source="mov" view="reporteCostoPromedio"}}
+    {{#stack}}
+[.#if esSIC.]
+      {{image id="logo" url="https://his-imagenes.s3.amazonaws.com/logos/hospital-del-salvador-csso.png"}}
+[.else.]
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+[./if.]
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{row expr="=calc.concat('Costo Promedio',base.codigo)" fontSize="10" bold="true" margin="-10,0,0,10"}}
+      {{#table widths="80,50,50,50" section="_items" fontSize="6" titleStyle="title" layout="lightHorizontalLines" headerStyle="field2" margin="-10,0,0,10" fontSize="8"}}
+        {{column field="_cuenta" label="Almacén" type="text"}}
+        {{column field="cantidad" label="Cantidad" type="number" align="right" format="#,"}}
+        {{column expr="=calc.safeDiv(calc.round(@costoTotal,2),calc.round(@cantidad,2))||0" label="Costo Promedio" type="number" align="right" format="currency"}}
+        {{column field="costoTotal" label="Costo Total" type="number" align="right" total="sum" format="currency"}}
+      {{/table}}
+    {{/stack}}
+  {{/report}}
+  {{#action id="reporteCostoPromedio" type="report-pdf" hide="true" report="reporteCostoPromedio" fileName="='valuacionInventario-almacenCuracion'" label="Valuación Inventario" color="brown" visibleMode="close"}}
+    {{param codigo="=base.codigo"}}
+  {{/action}}
+
+  {{action id="menuReportesArticulos" hide="true" type="menu" menu="menuReportesArticulos" label="Reportes" color="grey" isBrowserAction="true"}}
+  {{#menu id="menuReportesArticulos" color="grey"}}
+    {{item action="reporteEtiquetasIdentificacion" text="Etiquetas Identificación"}}
+    {{item action="reporteListaArticulos" text="Lista Artículos"}}
+  {{/menu}}  
+
+  {{action id="menuReportesActivos" hide="true" type="menu" menu="menuReportesActivos" label="Reportes" color="grey" isBrowserAction="true"}}
+  {{#menu id="menuReportesActivos" color="grey"}}
+    {{item action="reporteEtiquetasIdentificacion" text="Etiquetas Identificación"}}
+    {{item action="reporteListaActivos" text="=calc.concat('Lista',_params._tipoActivoFijo)"}}
+    {{item action="reporteListaDisponibilidadActivos" text="Lista Disponibiliad Activos"}}
+  {{/menu}}  
+
+  {{#view id="reporteEtiquetasIdentificacion"}}
+    {{#find limit="-1"}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base._tipoArticulo"}}
+      {{filter condition="=tipoArticulo" field="base.tipoArticulo" eq="=tipoArticulo"}}
+      {{filter condition="=tipoActivoFijo" field="base.tipoActivoFijo" in="=tipoActivoFijo"}}
+      {{filter condition="=delCodigo" field="base.codigo" gte="=delCodigo"}}
+      {{filter condition="=alCodigo" field="base.codigo" lte="=alCodigo"}}
+      {{sort field="base.codigo" direction="asc"}}
+    {{/find}}
+    {{image field="codigoBarras" type="barcode" format="CODE128" encoding="base64" value="=base.codigo"}}
+  {{/view}}
+
+  {{#report id="reporteEtiquetasIdentificacion" fontSize="6" pageMargins="20,15,20,15" source="articulo" view="reporteEtiquetasIdentificacion"}}
+    {{#stack}}
+      {{#table section="_items" widths="100,175,100,175" layout="noBorders" withoutHeader="true"}}
+        {{column field="codigoBarras" isImage="true" label="Código Barras" imageFit="true" imageWidth="101" imageHeight="50"}}
+        {{column expr="=calc.maxStringLength(base.descripcion,270)" label="Artículo"}}
+        {{column field="codigoBarras" isImage="true" label="Código Barras" imageFit="true" imageWidth="101" imageHeight="50"}}
+        {{column expr="=calc.maxStringLength(base.descripcion,270)" label="Artículo"}}
+      {{/table}}
+    {{/stack}}
+  {{/report}}
+
+  {{#action id="reporteEtiquetasIdentificacion" hide="true" type="report-pdf" report="reporteEtiquetasIdentificacion" fileName="=_name" label="Etiquetas Identificación" color="brown" visibleMode="close"}}
+    {{ask field="delCodigo" case="upper" type="text" label="Del Código"}}
+    {{ask field="alCodigo" case="upper" type="text" label="Al Código"}}
+    {{!-- {{ask field="_export" type="select" label="Formato" keys="pdf,xlsx,csv" names="PDF,Excel,CSV" value="pdf"}} --}}
+    {{param tipoArticulo="=base.tipoArticulo"}}
+    {{param tipoActivoFijo="=base.tipoActivoFijo"}}
+  {{/action}}
+
+  {{#action id="reporteListaArticulos" hide="true" type="quickReport" source="articulo" view="listaArticulos"}}
+    {{param tipoArticulo="=base.tipoArticulo"}}
+    {{param tipoActivoFijo="=base.tipoActivoFijo"}}
+  {{/action}}
+
+  {{#action id="reporteListaActivos" hide="true" type="quickReport" source="articulo" view="listaActivos" title="=calc.concat('Lista',base._tipoActivoFijo)"}}
+    {{param servicio="=_params.servicio"}}
+    {{param tipoArticulo="=base.tipoArticulo"}}
+    {{param tipoActivoFijo="=base.tipoActivoFijo"}}
+  {{/action}}
+
+  {{#action id="reporteListaDisponibilidadActivos" hide="true" type="quickReport" source="articulo" view="listaDisponibilidadActivos" title="=calc.concat('Lista Disponibilidad',base._tipoActivoFijo)"}}
+    {{param tipoArticulo="=base.tipoArticulo"}}
+    {{param tipoActivoFijo="=base.tipoActivoFijo"}}
+  {{/action}}
+
+  {{#view id="inventarioFisicoRealizado" scopeParams="true"}}
+    {{#find limit="-1"}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="control"}}
+      {{filter condition="=tipoArticulo" field="base.tipoArticulo" in="=tipoArticulo"}}
+      {{sort field="='control.inventarioFisico.'+almacen" direction="asc"}}
+      {{sort field="base.codigo" direction="asc"}}
+    {{/find}}
+    {{calc field="almacen" type="expr" value="=almacen"}}
+    {{calc field="codigo" type="expr" value="=base.codigo" label="Código"}}
+    {{calc field="ultimoInventario" type="expr" value="=calc.getRef(control, 'inventarioFisico.'+almacen+'.date')"}}
+  {{/view}}
+
+  {{#view id="exportar"}}
+    {{#find limit="-1"}}
+      {{exclude field="_id"}}
+      {{exclude field="_name"}}
+      {{exclude field="_type"}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base._tipoArticulo"}}
+      {{filter condition="=tipoArticulo" field="base.tipoArticulo" in="=tipoArticulo"}}
+    {{/find}}
+  {{/view}}
+
+  {{#report id="inventarioFisicoRealizado" fontSize="8" header="preliminar-encabezado2" showStandarFooter="true" source="articulo" view="inventarioFisicoRealizado"}}
+    {{#stack}}
+[.#if esSIC.]
+      {{image id="logo" url="https://his-imagenes.s3.amazonaws.com/logos/hospital-del-salvador-csso.png"}}
+[.else.]
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+[./if.]
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{row expr="Inventario Físico Realizado" fontSize="10" bold="true"}}
+      {{#table section="_items" fontSize="6" titleStyle="title" layout="lightHorizontalLines" headerStyle="field2" margin="-10,0,0,10" widths="65,50,290,50,40"}}
+        {{column expr="=fn('_almacen', almacen)" label="Almacén"}}
+        {{column expr="=codigo" label="Código"}}
+        {{column expr="=base.descripcion" label="Descripción"}}
+        {{column expr="=base._tipoArticulo" label="Tipo Artículo"}}
+        {{column expr="=calc.format('date', ultimoInventario, 'DD/MMM/YYYY')" label="Último Inventario"}}
+      {{/table}}
+    {{/stack}}
+  {{/report}}
+
+  {{#action id="inventarioFisicoRealizado" hide="true" type="report-pdf" report="inventarioFisicoRealizado" fileName="='inventarioFisicoRealizado-'+_params.almacen" label="Inventario Físico Realizado" color="brown" visibleMode="close"}}
+    {{ask field="_export" type="select" label="Formato" keys="pdf,xlsx,csv" names="PDF,Excel,CSV" value="pdf"}}    
+    {{param almacen="=_params.almacen"}}
+    {{param tipoArticulo="=fn('tipoArticuloAlmacen', _params.almacen)"}}
+  {{/action}}
+
+  {{action id="reportesInventarioFisico" hide="true" type="menu" menu="reportesInventarioFisico" label="Reportes" color="brown"}}
+  {{#menu id="reportesInventarioFisico" color="brown"}}
+    {{item action="inventarioFisicoRealizado" text="Inventario Físico Realizado"}}
+  {{/menu}}  
+
+  {{#action id="verKardex" hide="true" type="report-pdf" report="kardex" fileName="=_name" label="Trazabilidad" color="brown" visibleMode="close"}}
+    {{ask field="desde" type="date" label="Desde"}}
+    {{ask field="hasta" type="date" label="Hasta"}}
+    {{ask field="_export" type="select" label="Formato" keys="pdf,xlsx,csv" names="PDF,Excel,CSV" value="pdf"}}
+    {{param codigo="=base.codigo"}}
+  {{/action}}
+
+  {{#action id="verKardex2" hide="true" type="report-pdf" report="kardex" fileName="=_name" label="Trazabilidad 2" color="brown" visibleMode="close"}}
+    {{ask field="desde" type="date" label="Desde"}}
+    {{ask field="hasta" type="date" label="Hasta"}}
+    {{ask field="_export" type="select" label="Formato" keys="pdf,xlsx,csv" names="PDF,Excel,CSV" value="pdf"}}
+    {{param codigo="=base.codigo"}}
+    {{!-- {{param addFix="=true"}} --}}
+  {{/action}}
+
+  {{#action id="verEntradas" hide="true" type="report-pdf" report="entradas" fileName="=_name" label="Entradas" color="brown" visibleMode="close"}}
+    {{ask field="desde" type="date" label="Desde"}}
+    {{ask field="hasta" type="date" label="Hasta"}}
+    {{ask field="_export" type="select" label="Formato" keys="pdf,xlsx,csv" names="PDF,Excel,CSV" value="pdf"}}
+    {{param codigo="=base.codigo"}}
+  {{/action}}
+
+  {{#action id="verSalidas" hide="true" type="report-pdf" report="salidas" fileName="=_name" label="salidas" color="brown" visibleMode="close"}}
+    {{ask field="desde" type="date" label="Desde"}}
+    {{ask field="hasta" type="date" label="Hasta"}}
+    {{ask field="_export" type="select" label="Formato" keys="pdf,xlsx,csv" names="PDF,Excel,CSV" value="pdf"}}
+    {{param codigo="=base.codigo"}}
+  {{/action}}
+
+  {{#action id="verExistencias" hide="true" type="report-pdf" report="existencias" fileName="=_name" label="Existencias" color="brown" visibleMode="close"}}
+    {{ask field="_export" type="select" label="Formato" keys="pdf,xlsx,csv" names="PDF,Excel,CSV" value="pdf"}}
+    {{param codigo="=base.codigo"}}
+  {{/action}}
+
+  {{#action id="verExistenciasAlmacen" hide="true" type="report-pdf" report="existenciasAlmacen" fileName="=_name" label="Existencias en Almacén" color="brown" visibleMode="close"}}
+    {{ask field="_export" type="select" label="Formato" keys="pdf,xlsx,csv" names="PDF,Excel,CSV" value="pdf"}}
+    {{param codigo="=base.codigo"}}
+    {{param almacen="=_params.almacen"}}
+  {{/action}}
+  {{action id="notaControlPagosDerechos" source="notaControlPagosDerechos" label="Control Pagos Derechos" hide="true" transform="copiarActivoFijo" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
+  {{action id="notaRegistroSiniestro" source="notaRegistroSiniestro" label="Registro Siniestro" hide="true" transform="copiarActivoFijo" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
+  {{action id="notaRegistroNivelesActivoFijo" source="notaRegistroNivelesActivoFijo" label="Registro Niveles" hide="true" transform="copiarActivoFijo" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
+  {{action id="notaRegistroConsumoElectrico" source="notaRegistroConsumoElectrico" label="Registro Consumo Eléctrico" hide="true" transform="copiarActivoFijo" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" btnSolid="true"}}  
+  {{action id="notaRegresaActivoFijo" source="notaRegresaActivoFijo" label="Regresa Activo Fijo" hide="true" transform="copiarActivoFijo" type="add-subdoc" visibleMode="close" color="primary" onlyPost="true" btnSolid="true" condition="=calc.getRef(_params, '_moment.afuera')"}}  
+  {{action id="notaSaleActivoFijo" source="notaSaleActivoFijo" label="Sale Activo Fijo" hide="true" transform="copiarActivoFijo" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" btnSolid="true" condition="=!calc.getRef(_params, '_moment.afuera')"}}
+  {{action id="notaPorProducir" source="notaPorProducir" label="Producción" hide="true" transform="copiarPorProducir" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" btnSolid="true"}}  
+
+[.#if esSIC.]
+  {{#action id="reporteKardex" hide="true" label="Inventarios Insumos" title="Inventarios Insumos" type="quickReport" source="mov" view="kardex"}}
+    {{ask field="desde" type="date" label="Desde"}}
+    {{ask field="hasta" type="date" label="Hasta"}}
+    {{param codigo="=base.codigo"}}
+    {{#grid pdfFontSize="6" pdfPageOrientation="landscape" pdfFrom="desde" pdfTo="hasta" filters="false" exportToExcel="true" allowRefresh="true" columnChooser="false" allowSearch="true" wordWrapEnabled="true" columnAutoWidth="wordWrapEnabled"}}
+      {{column field="fecha" label="Fecha" format="DD/MMM/YYYY h:mma" width="250"}}
+      {{column field="cantidadFactor" label="Cantidad" width="100" format="#,"}}
+      {{column field="movimiento" dataType="text" label="Movimiento" width="200"}}
+      {{column field="costoUnitario" label="Costo Promedio" width="100" format="currency"}}
+      {{column field="costoTotal" label="Costo Total" width="100" format="currency"}}
+      {{column field="existencia" label="Existencia" width="100" format="#,"}}
+      {{column field="_lote" label="Lote" width="150"}}
+      {{column field="_usuario" label="Usuario" width="150"}}
+      {{column field="_cuenta" label="Ubicación" width="200"}}
+    {{/grid}}
+  {{/action}}
+  {{#action id="reporteKardex2" hide="true" label="Reporte de Insumos (Inventario)" title="Reporte de Insumos (Inventario)" type="quickReport" source="mov" view="kardex"}}
+    {{ask field="desde" type="date" label="Desde"}}
+    {{ask field="hasta" type="date" label="Hasta"}}
+    {{param codigo="=base.codigo"}}
+    {{#grid pdfFontSize="6" pdfPageOrientation="landscape" pdfFrom="desde" pdfTo="hasta" filters="false" exportToExcel="true" allowRefresh="true" columnChooser="false" allowSearch="true" wordWrapEnabled="true" columnAutoWidth="wordWrapEnabled"}}
+      {{column field="fecha" label="Fecha" format="DD/MMM/YYYY h:mma" width="250"}}
+      {{column field="cantidadFactor" label="Cantidad" width="100" format="#,"}}
+      {{column field="movimiento" dataType="text" label="Movimiento" width="200"}}
+      {{column field="costoUnitario" label="Costo Promedio" width="100" format="currency"}}
+      {{column field="costoTotal" label="Costo Total" width="100" format="currency"}}
+      {{column field="existencia" label="Existencia" width="100" format="#,"}}
+      {{column field="_lote" label="Lote" width="150"}}
+      {{column field="_usuario" label="Usuario" width="150"}}
+      {{column field="_cuenta" label="Ubicación" width="200"}}
+    {{/grid}}
+  {{/action}}
+  {{#action id="reporteKardex3" hide="true" label="Reporte de Insumos (Movimientos)" title="Reporte de Insumos (Movimientos)" type="quickReport" source="mov" view="kardex"}}
+    {{ask field="desde" type="date" label="Desde"}}
+    {{ask field="hasta" type="date" label="Hasta"}}
+    {{param codigo="=base.codigo"}}
+    {{#grid pdfFontSize="6" pdfPageOrientation="landscape" pdfFrom="desde" pdfTo="hasta" filters="false" exportToExcel="true" allowRefresh="true" columnChooser="false" allowSearch="true" wordWrapEnabled="true" columnAutoWidth="wordWrapEnabled"}}
+      {{column field="fecha" label="Fecha" format="DD/MMM/YYYY h:mma" width="250"}}
+      {{column field="cantidadFactor" label="Cantidad" width="100" format="#,"}}
+      {{column field="movimiento" dataType="text" label="Movimiento" width="200"}}
+      {{column field="costoUnitario" label="Costo Promedio" width="100" format="currency"}}
+      {{column field="costoTotal" label="Costo Total" width="100" format="currency"}}
+      {{column field="existencia" label="Existencia" width="100" format="#,"}}
+      {{column field="_lote" label="Lote" width="150"}}
+      {{column field="_usuario" label="Usuario" width="150"}}
+      {{column field="_cuenta" label="Ubicación" width="200"}}
+    {{/grid}}
+  {{/action}}
+[.else.]  
+  {{#action id="reporteKardex" hide="true" label="Kardex" title="Kardex" type="quickReport" source="mov" view="kardex"}}
+    {{ask field="desde" type="date" label="Desde"}}
+    {{ask field="hasta" type="date" label="Hasta"}}
+    {{param codigo="=base.codigo"}}
+    {{#grid pdfFontSize="6" pdfPageOrientation="landscape" pdfFrom="desde" pdfTo="hasta" filters="false" exportToExcel="true" allowRefresh="true" columnChooser="false" allowSearch="true" wordWrapEnabled="true" columnAutoWidth="wordWrapEnabled"}}
+      {{column field="fecha" label="Fecha" format="DD/MMM/YYYY h:mma" width="250"}}
+      {{column field="cantidadFactor" label="Cantidad" width="100" format="#,"}}
+      {{column field="movimiento" dataType="text" label="Movimiento" width="200"}}
+      {{column field="costoUnitario" label="Costo Promedio" width="100" format="currency"}}
+      {{column field="costoTotal" label="Costo Total" width="100" format="currency"}}
+      {{column field="existencia" label="Existencia" width="100" format="#,"}}
+      {{column field="_lote" label="Lote" width="150"}}
+      {{column field="_usuario" label="Usuario" width="150"}}
+      {{column field="_cuenta" label="Ubicación" width="200"}}
+    {{/grid}}
+  {{/action}}
+  {{#action id="reporteKardex2" hide="true" label="Kardex 2" title="Kardex 2" type="quickReport" source="mov" view="kardex"}}
+    {{ask field="desde" type="date" label="Desde"}}
+    {{ask field="hasta" type="date" label="Hasta"}}
+    {{param codigo="=base.codigo"}}
+    {{#grid pdfFontSize="6" filters="false" exportToExcel="true" allowRefresh="true" columnChooser="false" allowSearch="true" wordWrapEnabled="true" columnAutoWidth="wordWrapEnabled"}}
+      {{column field="fecha" label="Fecha" format="DD/MMM/YYYY h:mma" width="200"}}
+      {{column field="cantidadFactor" label="Cantidad" width="100" format="#,"}}
+      {{column field="movimiento" label="Movimiento" width="250"}}
+      {{column field="costoUnitario" label="Costo Promedio" width="120" format="currency"}}
+      {{column field="costoTotal" label="Costo Total" width="120" format="currency"}}
+      {{column field="existencia" label="Existencia" width="120" format="#,"}}
+      {{column field="_lote" label="Lote" width="150"}}
+      {{column field="_usuario" label="Usuario" width="200"}}
+      {{column field="_cuenta" label="Ubicación" width="250"}}
+    {{/grid}}
+  {{/action}}
+[./if.]
+
+  {{#report id="existencias" fontSize="8" header="preliminar-encabezado" showStandarFooter="true" source="mov" view="existenciasSinPacientes"}}
+    {{#stack}}
+[.#if esSIC.]
+      {{image id="logo" url="https://his-imagenes.s3.amazonaws.com/logos/hospital-del-salvador-csso.png"}}
+[.else.]
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+[./if.]
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{#record title="Artículo" titleStyle="title" layout="lightHorizontalLines" fontSize="8" section="base" headerStyle="field" margin="-10,0,0,10" widths="100,430"}}
+        {{row field="codigo" align="left"}}
+        {{row field="descripcion" align="left"}}
+        {{row field="estatus" align="left"}}
+      {{/record}}
+    {{/stack}}
+    {{#stack}}
+      {{row text="Existencias" fontSize="10" bold="true"}}
+      {{#table section="_items" fontSize="8" titleStyle="title" layout="lightHorizontalLines" headerStyle="field2" margin="-10,0,0,10" fontSize="8"}}
+        {{column field="_cuenta" label="Ubicación"}}
+        {{column field="lote" label="Lote"}}
+        {{column field="vencimiento" label="Caducidad" type="date" format="DD/MMM/YYYY"}}
+        {{column field="existencia" label="Existencia" type="number" format="#," align="right" total="sum"}}
+      {{/table}}
+    {{/stack}}
+  {{/report}}
+
+  {{#report id="existenciasAlmacen" fontSize="8" header="preliminar-encabezado" showStandarFooter="true" source="mov" view="existenciasAlmacen"}}
+    {{#stack}}
+[.#if esSIC.]
+      {{image id="logo" url="https://his-imagenes.s3.amazonaws.com/logos/hospital-del-salvador-csso.png"}}
+[.else.]
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+[./if.]
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{#record title="Artículo" titleStyle="title" layout="lightHorizontalLines" fontSize="8" section="base" headerStyle="field" margin="-10,0,0,10" widths="60,470"}}
+        {{row field="codigo" align="left"}}
+        {{row field="descripcion" align="left"}}
+        {{row field="estatus" align="left"}}
+      {{/record}}
+    {{/stack}}
+    {{#stack}}
+      {{row text="Existencias" fontSize="10" bold="true"}}
+      {{#table section="_items" fontSize="8" titleStyle="title" layout="lightHorizontalLines" headerStyle="field2" margin="-10,0,0,10" fontSize="8"}}
+        {{column field="_cuenta" label="Ubicación"}}
+        {{column field="lote" label="Lote"}}
+        {{column field="vencimiento" label="Caducidad" type="date" format="DD/MMM/YYYY"}}
+        {{column field="existencia" label="Existencia" type="number" format="#," align="right" total="sum"}}
+      {{/table}}
+    {{/stack}}
+  {{/report}}
+  
+  {{#report id="kardex" fontSize="8" header="preliminar-encabezado" showStandarFooter="true" source="mov" view="kardex"}}
+    {{#stack}}
+[.#if esSIC.]
+      {{image id="logo" url="https://his-imagenes.s3.amazonaws.com/logos/hospital-del-salvador-csso.png"}}
+[.else.]
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+[./if.]
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{#record title="Artículo" titleStyle="title" layout="lightHorizontalLines" fontSize="6" section="base" headerStyle="field" margin="-10,0,0,10" widths="80,400"}}
+        {{row field="codigo" align="left"}}
+        {{row field="descripcion" align="left"}}
+        {{row field="estatus" align="left"}}
+      {{/record}}
+    {{/stack}}
+    {{#stack}}
+      {{row text="Trazabilidad" fontSize="10" bold="true"}}
+      {{row expr="=calc.concat('Desde:', moment(_query.desde).format('DD/MMM/YYYY'), '- Hasta:', moment(_query.hasta).format('DD/MMM/YYYY'))" fontSize="8" bold="true" margin="-10,0,0,10"}}
+      {{#table section="_items" fontSize="6" titleStyle="title" layout="lightHorizontalLines" headerStyle="field2" margin="-10,0,0,10" fontSize="8"}}
+        {{column field="movimiento" label="Movimiento" total="count"}}
+        {{column field="_usuario" label="Usuario"}}
+        {{column field="fecha" label="Fecha/Hora" type="date" format="DD/MMM/YYYY hh:mma"}}
+        {{column field="_cuenta" label="Ubicación"}}
+        {{column field="entrada" label="Entrada" type="number" format="#," align="right"}}
+        {{column field="salida" label="Salida" type="number" format="#," align="right"}}
+        {{column field="existencia" label="Existencia" type="number" format="#," align="right"}}
+        {{column field="_lote" label="Lote/Caducidad"}}
+        {{column field="costoUnitario" label="Costo Promedio" type="number" align="right" format="currency"}}
+        {{column field="costoTotal" label="Costo Total" type="number" align="right" format="currency"}}
+      {{/table}}
+    {{/stack}}
+  {{/report}}
+
+  {{#report id="entradas" fontSize="8" header="preliminar-encabezado" showStandarFooter="true" source="mov" view="entradas"}}
+    {{#stack}}
+[.#if esSIC.]
+      {{image id="logo" url="https://his-imagenes.s3.amazonaws.com/logos/hospital-del-salvador-csso.png"}}
+[.else.]
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+[./if.]
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{#record title="Artículo" titleStyle="title" layout="lightHorizontalLines" fontSize="6" section="base" headerStyle="field" margin="-10,0,0,10" widths="80,400"}}
+        {{row field="codigo" align="left"}}
+        {{row field="descripcion" align="left"}}
+        {{row field="estatus" align="left"}}
+      {{/record}}
+    {{/stack}}
+    {{#stack}}
+      {{row text="Entradas" fontSize="10" bold="true"}}
+      {{row expr="=calc.concat('Desde:', moment(_query.desde).format('DD/MMM/YYYY'), '- Hasta:', moment(_query.hasta).format('DD/MMM/YYYY'))" fontSize="8" bold="true" margin="-10,0,0,10"}}
+      {{#table section="_items" fontSize="6" titleStyle="title" layout="lightHorizontalLines" headerStyle="field2" margin="-10,0,0,10" fontSize="8"}}
+        {{column field="movimiento" label="Movimiento" total="count"}}
+        {{column field="fecha" label="Fecha/Hora" type="date" format="DD/MMM/YYYY hh:mma"}}
+        {{column field="_cuenta" label="Ubicación"}}
+        {{column field="entrada" label="Entrada" type="number" format="#," align="right" total="sum"}}
+        {{column field="_lote" label="Lote/Caducidad"}}
+        {{column field="costoUnitario" label="Costo Promedio" type="number" align="right" format="currency"}}
+        {{column field="costoTotal" label="Costo Total" type="number" align="right" total="sum" format="currency"}}
+      {{/table}}
+    {{/stack}}
+  {{/report}}
+
+  {{#report id="salidas" fontSize="8" header="preliminar-encabezado" showStandarFooter="true" source="mov" view="salidas"}}
+    {{#stack}}
+[.#if esSIC.]
+      {{image id="logo" url="https://his-imagenes.s3.amazonaws.com/logos/hospital-del-salvador-csso.png"}}
+[.else.]
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+[./if.]
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{#record title="Artículo" titleStyle="title" layout="lightHorizontalLines" fontSize="6" section="base" headerStyle="field" margin="-10,0,0,10" widths="80,400"}}
+        {{row field="codigo" align="left"}}
+        {{row field="descripcion" align="left"}}
+        {{row field="estatus" align="left"}}
+      {{/record}}
+    {{/stack}}
+    {{#stack}}
+      {{row text="Salidas" fontSize="10" bold="true"}}
+      {{row expr="=calc.concat('Desde:', moment(_query.desde).format('DD/MMM/YYYY'), '- Hasta:', moment(_query.hasta).format('DD/MMM/YYYY'))" fontSize="8" bold="true" margin="-10,0,0,10"}}
+      {{#table section="_items" fontSize="6" titleStyle="title" layout="lightHorizontalLines" headerStyle="field2" margin="-10,0,0,10" fontSize="8"}}
+        {{column field="movimiento" label="Movimiento" total="count"}}
+        {{column field="fecha" label="Fecha/Hora" type="date" format="DD/MMM/YYYY hh:mma"}}
+        {{column field="_cuenta" label="Ubicación"}}
+        {{column field="salida" label="Salida" type="number" format="#," align="right" total="sum"}}
+        {{column field="_lote" label="Lote/Caducidad"}}
+        {{column field="costoUnitario" label="Costo Promedio" type="number" align="right" format="currency"}}
+        {{column field="costoTotal" label="Costo Total" type="number" align="right" total="sum" format="currency"}}
+      {{/table}}
+    {{/stack}}
+  {{/report}}
+
+  {{!-- Esta nota se genera automaticamete al afectar el InventarioFisico --}}
+  {{!-- {{action id="notaInventarioFisicoRetorno" hide="true" source="notaInventarioFisicoRetorno" label="Retorno" transform="copiarInventarioFisico" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}} --}}
+
+  {{#action id="notaInventarioFisico" hide="true" source="notaInventarioFisico" label="Inventario Físico" transform="copiarInventarioFisico" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"  btnSolid="true" fromSource="mov" fromView="invFisico" toSection="lotes" fromSource2="mov" fromView2="costoPromedio"}}
+    {{param codigo="=base.codigo"}}
+    {{param almacen="=_params.almacen"}}
+    {{param costoReferencia="=base.costoReferencia"}}
+  {{/action}}  
+
+  {{#view id="bienes"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.descripcionAlmacen"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.datosRopa"}}
+      {{include field="base.cuadroBasico"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.costoReferencia"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadCompra"}}
+      {{include field="base.factorCompra"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{include field="base.unidadExistencia"}}
+      {{include field="base._unidadExistencia"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.esBien" eq="=true"}}
+      {{filter condition="=tipoArticulo" field="base.tipoArticulo" in="=tipoArticulo"}}
+      {{filter condition="=sinTipoArticulo" field="base.tipoArticulo" nin="=sinTipoArticulo"}}
+      {{filter condition="=@tipoPrenda&&@tipoPrenda!='ropaLimpia'" field="base.datosRopa.base.tipoPrenda" eq="=tipoPrenda"}}
+      {{filter condition="=tipoPrenda=='ropaLimpia'" field="base.datosRopa.base.tipoPrenda" nin="uniforme,toalla"}}
+      {{filter condition="=establecimiento" field="base.establecimiento" eq="=establecimiento"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=enConsultaExterna" field="base.enConsultaExterna" eq="=true"}}
+      {{filter condition="=proveedor" field="base.articuloProveedor.base.proveedor" in="=proveedor"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+      {{search field="base.datosRopa.base._talla"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="activosFijos"}}
+    {{#find}}
+      {{include field="base.nombre2"}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.tipoActivoFijo"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadCompra"}}
+      {{include field="base.factorCompra"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter condition="=notId" field="_id" neq="=notId" isObjectId="true"}}
+      {{filter field="base.tipoArticulo" eq="='activoFijo'"}}
+      {{filter field="base.baja" neq="='si'"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=tipoActivoFijo" field="base.tipoActivoFijo" eq="=tipoActivoFijo"}}
+      {{filter condition="=subTipoActivoFijo" field="base.subTipoActivoFijo" eq="=subTipoActivoFijo"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=ubicacion" field="base.ubicacion" eq="=ubicacion"}}
+      {{filter condition="=puedeAsignar" field="_moment.asignado" exists="=false"}}
+      {{filter condition="=puedeAsignar" field="base.datosActivoFijo.base.permiteAsignacion" eq="='si'"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="medicamentos"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadCompra"}}
+      {{include field="base.factorCompra"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.esBien" eq="=true"}}
+      {{filter field="base.tipoArticulo" in="medicamento,solucion"}}
+      {{filter condition="=tipoArticulo" field="base.tipoArticulo" eq="=tipoArticulo"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=enConsultaExterna" field="base.enConsultaExterna" eq="=true"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="medicamentosGratuitos"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadCompra"}}
+      {{include field="base.factorCompra"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.esBien" eq="=true"}}
+      {{filter field="base.tipoArticulo" in="medicamentoGratuito"}}
+      {{filter condition="=tipoArticulo" field="base.tipoArticulo" eq="=tipoArticulo"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=enConsultaExterna" field="base.enConsultaExterna" eq="=true"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#view id="mezclas"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoArticulo"}}
+      {{include field="base.enConsultaExterna"}}
+      {{include field="base.servicio"}}
+      {{include field="base.presentacion"}}
+      {{include field="base.unidadPresentacion"}}
+      {{include field="base.codigoInternacional"}}
+      {{include field="base.costoUnitario"}}
+      {{include field="base.unidadProveedor"}}
+      {{include field="base.unidadCompra"}}
+      {{include field="base.factorCompra"}}
+      {{include field="base.unidadTraspaso"}}
+      {{include field="base.factorTraspaso"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{filter field="base.tipoArticulo" in="mezcla"}}
+      {{filter condition="=tipoArticulo" field="base.tipoArticulo" eq="=tipoArticulo"}}
+      {{filter condition="=tipoMezcla" field="base.tipoMezcla" eq="=tipoMezcla"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=enConsultaExterna" field="base.enConsultaExterna" eq="=true"}}
+      {{search field="base.descripcion"}}
+      {{search field="base.codigo"}}
+      {{search field="base._servicio"}}
+    {{/find}}
+    {{calc field="codigo" type="expr" value="=base.codigo"}}
+    {{display field="_name" label="Descripción" width="80"}}
+    {{display field="codigo" label="Código" width="20"}}
+  {{/view}}
+
+  {{#grid id="precios" section="precios" disableEnter="true" applyFilter="central"}}
+    {{column field="listaPrecios" width="200" readOnly="true"}}
+    {{column field="precio" width="100"}}
+  {{/grid}}
+
+  {{#browser id="productos" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="producto"}}
+    {{param _tipoArticulo="Producto"}}
+  {{/browser}}
+  {{#browser id="medicamentos" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}  {{!-- ,altaMedicamento --}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarMedicamentos"}}
+      {{edit userRole="configuracionEditarMedicamentos"}}
+    {{/list}}
+    {{param tipoArticulo="medicamento"}}
+    {{param _tipoArticulo="Medicamento"}}
+  {{/browser}}
+  {{#browser id="medicamentosGratuitos" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+    {{param tipoArticulo="medicamentoGratuito"}}
+    {{param _tipoArticulo="Medicamento o Material Gratuito"}}
+  {{/browser}}
+  {{#browser id="mezclas" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarMezclas"}}
+      {{edit userRole="configuracionEditarMezclas"}}
+    {{/list}}
+    {{param tipoArticulo="mezcla"}}
+    {{param _tipoArticulo="Mezcla"}}
+  {{/browser}}
+  {{#browser id="soluciones" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarMedicamentos"}}
+      {{edit userRole="configuracionEditarMedicamentos"}}
+    {{/list}}
+    {{param tipoArticulo="solucion"}}
+    {{param _tipoArticulo="Solución"}}
+  {{/browser}}
+  {{#browser id="procedimientos" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarMedicamentos"}}
+      {{edit userRole="configuracionEditarMedicamentos"}}
+    {{/list}}
+    {{param tipoArticulo="procedimiento"}}
+    {{param _tipoArticulo="Procedimiento"}}
+  {{/browser}}
+  {{#browser id="procedimientosMantenimiento" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="procedimientoMantenimiento"}}
+    {{param _tipoArticulo="Procedimiento del Servicio"}}
+  {{/browser}}
+  {{#browser id="materiales" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="material"}}
+    {{param _tipoArticulo="Material o Insumo"}}
+  {{/browser}}
+  {{#browser id="materialesCeye" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="materialCeye"}}
+    {{param _tipoArticulo="Material CEYE"}}
+  {{/browser}}
+  {{#browser id="instrumentos" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="instrumento"}}
+    {{param _tipoArticulo="Instrumento"}}
+  {{/browser}}
+  {{#browser id="conceptosGasto" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="conceptoGasto"}}
+    {{param _tipoArticulo="Concepto Gasto"}}
+  {{/browser}}
+  {{#browser id="conceptosNomina" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="conceptoNomina"}}
+    {{param _tipoArticulo="Concepto Nómina"}}
+  {{/browser}}
+  {{!-- {{#browser id="metas" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="clasificadores" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="meta"}}
+    {{param _tipoArticulo="Meta"}}
+  {{/browser}} --}}
+  {{#browser id="cursos" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="='curso'"}}
+    {{param _tipoArticulo="='Curso'"}}
+  {{/browser}}
+  {{#browser id="competencias" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="competencia"}}
+    {{param _tipoArticulo="Competencia"}}
+  {{/browser}}
+  {{#browser id="kits" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="kit"}}
+    {{param _tipoArticulo="Kit"}}
+  {{/browser}}
+  {{#browser id="kitsMedicos" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="kitMedico"}}
+    {{param _tipoArticulo="Kit Médico"}}
+  {{/browser}}
+  {{#browser id="ropa" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="ropa"}}
+    {{param _tipoArticulo="Ropa"}}
+  {{/browser}}
+  {{#browser id="productosCafeteria" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="productoCafeteria"}}
+    {{param _tipoArticulo="Producto Cafetería"}}
+  {{/browser}}
+  {{#browser id="menus" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="menu"}}
+    {{param _tipoArticulo="Menú"}}
+  {{/browser}}
+  {{#browser id="menusDia" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="menuDia"}}
+    {{param _tipoArticulo="Menú del Día o Minuta"}}
+  {{/browser}}
+  {{#browser id="paginas" view="paginas" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="pagina"}}
+    {{param _tipoArticulo="Página"}}
+  {{/browser}}
+  {{#browser id="equipoComputo" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesActivos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="equipoComputo"}}
+    {{param _tipoActivoFijo="Equipo Cómputo"}}
+  {{/browser}}
+  {{#browser id="equipoComunicacion" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesActivos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="equipoComunicacion"}}
+    {{param _tipoActivoFijo="Equipo Comunicación"}}
+  {{/browser}}
+  {{#browser id="equipoMedico" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesActivos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="equipoMedico"}}
+    {{param _tipoActivoFijo="Equipo Médico y Mobiliario Clínico"}}
+  {{/browser}}
+  {{#browser id="herramienta" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesActivos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="herramienta"}}
+    {{param _tipoActivoFijo="Herramienta"}}
+  {{/browser}}
+  {{#browser id="inmueble" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesActivos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="inmueble"}}
+    {{param _tipoActivoFijo="Inmueble"}}
+  {{/browser}}
+  {{#browser id="instalacion" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesActivos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="instalacion"}}
+    {{param _tipoActivoFijo="Instalación"}}
+  {{/browser}}
+  {{#browser id="maquinaria" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesActivos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="maquinaria"}}
+    {{param _tipoActivoFijo="Maquinaria"}}
+  {{/browser}}
+  {{#browser id="tipoActivo" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesActivos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="tipoActivo"}}
+    {{param _tipoArticulo="Tipo Activo"}}
+  {{/browser}}
+  {{#browser id="tipoEquipo" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesActivos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="tipoEquipo"}}
+    {{param _tipoArticulo="Tipo Equipo / Mobiliario"}}
+  {{/browser}}
+  {{#browser id="activosFijos" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesActivos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+  {{/browser}}
+  {{#browser id="mobiliario" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesActivos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="mobiliario"}}
+    {{param _tipoActivoFijo="Mobiliario No Clínico"}}
+  {{/browser}}
+  {{#browser id="elementoTecnologico" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesActivos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="elementoTecnologico"}}
+    {{param _tipoActivoFijo="Elemento Tecnológico"}}
+  {{/browser}}
+  {{#browser id="moi" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesActivos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="moi"}}
+    {{param _tipoActivoFijo="Activos de Mantenimiento Operaciones Infraestructura (MOI)"}}
+  {{/browser}}
+  {{#browser id="controlVectores" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesActivos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="controlVectores"}}
+    {{param _tipoActivoFijo="Control Vectores"}}
+  {{/browser}}
+  {{#browser id="maquinaDispensadora" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesActivos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="maquinaDispensadora"}}
+    {{param _tipoActivoFijo="Máquina Dispensadora"}}
+  {{/browser}}
+  {{#browser id="multiservicio" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="multiservicio"}}
+    {{param _tipoArticulo="Multiservicio"}}
+  {{/browser}}
+  {{#browser id="planCompras" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="planCompras"}}
+    {{param _tipoArticulo="Plan Compras"}}
+  {{/browser}}
+  {{#browser id="ronda" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="ronda"}}
+    {{param _tipoArticulo="Ronda"}}
+  {{/browser}}
+  {{#browser id="llave" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="llave"}}
+    {{param _tipoArticulo="Llave"}}
+  {{/browser}}
+  {{#browser id="tarjetaAcceso" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="tarjetaAcceso"}}
+    {{param _tipoArticulo="Tarjeta Acceso"}}
+  {{/browser}}
+  {{#browser id="vehiculo" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesActivos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="vehiculo"}}
+    {{param _tipoActivoFijo="Vehículo"}}
+  {{/browser}}
+  {{#browser id="otroActivoFijo" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesActivos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="otroActivoFijo"}}
+    {{param _tipoActivoFijo="Otro Activo Fijo"}}
+  {{/browser}}
+  {{#browser id="otrosServicios" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="cancelar,adjuntar,abrir,subdoc,subdoc2,ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="otroServicio"}}
+    {{param _tipoArticulo="Otro Servicio"}}
+  {{/browser}}
+
+  {{#browser id="verProductos" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="producto"}}
+    {{param _tipoArticulo="Producto"}}
+  {{/browser}}
+  {{#browser id="verMedicamentos" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="medicamento"}}
+    {{param _tipoArticulo="Medicamento"}}
+  {{/browser}}
+  {{#browser id="verMedicamentosGratuitos" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="medicamentoGratuito"}}
+    {{param _tipoArticulo="Medicamento o Material Gratuito"}}
+  {{/browser}}
+  {{#browser id="verMezclas" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="mezcla"}}
+    {{param _tipoArticulo="Mezcla"}}
+  {{/browser}}
+  {{#browser id="verSoluciones" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="solucion"}}
+    {{param _tipoArticulo="Solución"}}
+  {{/browser}}
+  {{#browser id="verProcedimientos" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="procedimiento"}}
+    {{param _tipoArticulo="Procedimiento"}}
+  {{/browser}}
+  {{#browser id="verProcedimientosMantenimiento" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="procedimientoMantenimiento"}}
+    {{param _tipoArticulo="Procedimiento del Servicio"}}
+  {{/browser}}
+  {{#browser id="verMateriales" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="material"}}
+    {{param _tipoArticulo="Material o Insumo"}}
+  {{/browser}}
+  {{#browser id="verMaterialesCeye" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="materialCeye"}}
+    {{param _tipoArticulo="Material CEYE"}}
+  {{/browser}}
+  {{#browser id="verInstrumentos" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="instrumento"}}
+    {{param _tipoArticulo="Instrumento"}}
+  {{/browser}}
+  {{#browser id="verKits" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="kit"}}
+    {{param _tipoArticulo="Kit"}}
+  {{/browser}}
+  {{#browser id="verKitsMedicos" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="kitMedico"}}
+    {{param _tipoArticulo="Kit Médico"}}
+  {{/browser}}
+  {{#browser id="verPaginas" view="paginas" showDoc="true" docOrientation="vertical" docPosition="80%" zoom="80%" showActions="ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos,compartir"}}
+    {{list itemTemplate="paginaResumen" allowSearch="true" allowRefresh="true" docTemplate="pagina"}}
+    {{param tipoArticulo="pagina"}}
+    {{param _tipoArticulo="Página"}}
+  {{/browser}}
+  {{#browser id="verMenus" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="menu"}}
+    {{param _tipoArticulo="Menú"}}
+  {{/browser}}
+  {{#browser id="verRopa" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="ropa"}}
+    {{param _tipoArticulo="Ropa"}}
+  {{/browser}}
+  {{#browser id="verProductosCafeteria" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="ver,ver2,tool,tool2,tool3,copiar,preliminar,menuReportesArticulos"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="ProductoCafeteria"}}
+    {{param _tipoArticulo="Producto Cafetería"}}
+  {{/browser}}
+  {{#browser id="verLlavesTarjetasAcceso" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param servicio="=null"}}
+    {{param tipoArticulo="llave,tarjetaAcceso"}}
+    {{param _tipoArticulo="Llave y Tarjeta Acceso"}}
+  {{/browser}}
+  {{#browser id="verActivosFijos" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+  {{/browser}}
+  {{#browser id="verEquipoComputo" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="equipoComputo"}}
+    {{param _tipoActivoFijo="Equipo Cómputo"}}
+  {{/browser}}
+  {{#browser id="verEquipoComunicacion" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="equipoComunicacion"}}
+    {{param _tipoActivoFijo="Equipo Comunicación"}}
+  {{/browser}}
+  {{#browser id="verEquipoMedico" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="equipoMedico"}}
+    {{param _tipoActivoFijo="Equipo Médico y Mobiliario Clínico"}}
+  {{/browser}}
+  {{#browser id="verHerramienta" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="herramienta"}}
+    {{param _tipoActivoFijo="Herramienta"}}
+  {{/browser}}
+  {{#browser id="verInmueble" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="inmueble"}}
+    {{param _tipoActivoFijo="Inmueble"}}
+  {{/browser}}
+  {{#browser id="verInstalacion" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="instalacion"}}
+    {{param _tipoActivoFijo="Instalación"}}
+  {{/browser}}
+  {{#browser id="verMaquinaria" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="maquinaria"}}
+    {{param _tipoActivoFijo="Maquinaria"}}
+  {{/browser}}
+  {{#browser id="verTipoActivo" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="tipoActivo"}}
+    {{param _tipoArticulo="Tipo Activo"}}
+  {{/browser}}
+  {{#browser id="verTipoEquipo" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="tipoEquipo"}}
+    {{param _tipoArticulo="Tipo Equipo / Mobiliario"}}
+  {{/browser}}
+  {{#browser id="verMobiliario" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="mobiliario"}}
+    {{param _tipoActivoFijo="Mobiliario No Clínico"}}
+  {{/browser}}
+  {{#browser id="verMaquinaDispensadora" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="maquinaDispensadora"}}
+    {{param _tipoActivoFijo="Máquina Dispensadora"}}
+  {{/browser}}
+  {{#browser id="verElementoTecnologico" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="elementoTecnologico"}}
+    {{param _tipoActivoFijo="Elemento Tecnológico"}}
+  {{/browser}}
+  {{#browser id="verMoi" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="moi"}}
+    {{param _tipoActivoFijo="Activos de Mantenimiento Operaciones Infraestructura (MOI)"}}
+  {{/browser}}
+  {{#browser id="verVehiculo" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" }}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="vehiculo"}}
+    {{param _tipoActivoFijo="Vehículo"}}
+  {{/browser}}
+  {{#browser id="verOtroActivoFijo" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="activoFijo"}}
+    {{param _tipoArticulo="Activo Fijo"}}
+    {{param tipoActivoFijo="otroActivoFijo"}}
+    {{param _tipoActivoFijo="Otro Activo Fijo"}}
+  {{/browser}}
+  {{#browser id="verOtrosServicios" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="ver,ver2,tool,tool2,tool3,copiar,preliminars"}}
+    {{#list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+      {{insert userRole="configuracionAgregarArticulos"}}
+      {{edit userRole="configuracionEditarArticulos"}}
+    {{/list}}
+    {{param tipoArticulo="otroServicio"}}
+    {{param _tipoArticulo="Otro Servicio"}}
+  {{/browser}}
+
+  {{#section id="materiales"}}
+    {{#field id="articulo"}}
+      {{#editor display="base.codigo" sendSearchValue="true"}}
+[.#if esSIC.]
+        {{param servicio="=base.servicio"}}
+        {{param verComponentesKit="=base.tipoArticulo=='ropa'&&calc.getRef(base, 'datosRopa.base.tipoPrenda')=='kit'?true:false"}}
+        {{!-- {{param sinTipoArticulo="=base.tipoArticulo"}} --}}
+[.else.]
+        {{param tipoArticulo="material,instrumento"}}
+[./if.]
+      {{/editor}}
+      {{#onChange}}
+        {{set codigo="=_scope.base.codigo"}}
+        {{set descripcion="=_scope.base.descripcion"}}
+        {{set tipoArticulo="=_scope.base.tipoArticulo"}}
+        {{set usoMaterial="=calc.getRef(_scope.base.datosRopa, 'base.usoMaterial')||'consumible'"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+  {{#section id="productos"}}
+    {{#field id="articulo"}}
+      {{#editor display="base.codigo" sendSearchValue="true"}}
+[.#if esSIC.]
+        {{param servicio="=base.servicio"}}
+        {{param sinTipoArticulo="=base.tipoArticulo"}}
+[.else.]
+        {{param tipoArticulo="material,instrumento"}}
+[./if.]
+      {{/editor}}
+      {{#onChange}}
+        {{set codigo="=_scope.base.codigo"}}
+        {{set descripcion="=_scope.base.descripcion"}}
+        {{set tipoArticulo="=_scope.base.tipoArticulo"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+
+  {{#section id="componentes"}}
+    {{#field id="articulo"}}
+      {{#editor display="base.codigo" sendSearchValue="true"}}
+[.#if esSIC.]
+        {{param servicio="=base.servicio"}}
+        {{param sinTipoArticulo="=base.tipoArticulo"}}
+[.else.]
+        {{param tipoArticulo="=base.tipoArticulo=='mezcla'?'solucion,medicamento':'material,instrumento'"}}        
+[./if.]
+      {{/editor}}
+      {{#onChange}}
+        {{set codigo="=_scope.base.codigo"}}
+        {{set descripcion="=_scope.base.descripcion"}}
+        {{set tipoArticulo="=_scope.base.tipoArticulo"}}
+        {{!-- {{set unidadProveedor="=base.unidadProveedor"}}
+        {{set factor="=base.factorCompra"}}
+        {{set costoUnitario="=base.costoUnitario*base.factorCompra"}} --}}
+      {{/onChange}}
+    {{/field}}
+    {{#onChange}}
+      {{#update section="base"}}
+        {{set condition="=base.tipoArticulo=='menu'" descripcionLarga="_.pluck(componentes, 'descripcion').join('\n')"}}
+      {{/update}}
+    {{/onChange}}
+  {{/section}}
+  {{#section id="menuDia"}}
+    {{#field id="regimenAlimenticio"}}
+      {{onChange clearFields="desayuno,colacionAM,almuerzo,colacionPM,cena,colacionNoche,colacionExtra"}}
+    {{/field}}
+    {{#field id="desayuno"}}
+      {{#editor}}
+        {{param momentoDieta="='desayuno'"}}
+        {{param regimenAlimenticio="=@regimenAlimenticio"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="colacionAM"}}
+      {{#editor}}
+        {{param momentoDieta="='colacionAM'"}}
+        {{param regimenAlimenticio="=@regimenAlimenticio"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="almuerzo"}}
+      {{#editor}}
+        {{param momentoDieta="='almuerzo'"}}
+        {{param regimenAlimenticio="=@regimenAlimenticio"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="colacionPM"}}
+      {{#editor}}
+        {{param momentoDieta="='colacionPM'"}}
+        {{param regimenAlimenticio="=@regimenAlimenticio"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="cena"}}
+      {{#editor}}
+        {{param momentoDieta="='cena'"}}
+        {{param regimenAlimenticio="=@regimenAlimenticio"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="colacionNoche"}}
+      {{#editor}}
+        {{param momentoDieta="='colacionNoche'"}}
+        {{param regimenAlimenticio="=@regimenAlimenticio"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="colacionExtra"}}
+      {{#editor}}
+        {{param momentoDieta="='colacionExtra'"}}
+        {{param regimenAlimenticio="=@regimenAlimenticio"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+  {{#section id="mantenimiento"}}
+    {{#field id="procedimiento"}}
+      {{#editor}}
+        {{param servicio="=base.servicio"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="motivo"}}
+      {{#editor alwaysLoad="true"}}
+        {{param servicio="=base.servicio"}}
+        {{param partOf="=subTipoSolicitud"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+
+  {{#grid id="materiales" section="materiales" allowRemove="true" allowSort="true" keyField="articulo" allowInsert="true"}}
+    {{column field="articulo" width="150"}}
+    {{column field="descripcion" width="300" readOnly="true"}}
+    {{column field="tipoArticulo" width="150" readOnly="true"}}
+    {{column field="usoMaterial" width="150" required="true" readOnly="true"}}
+    {{column field="cantidad" width="130" defaultValue="1"}}
+  {{/grid}}
+  {{#grid id="productos" section="productos" allowRemove="true" allowSort="true" keyField="articulo" allowInsert="true"}}
+    {{column field="articulo" width="150"}}
+    {{column field="descripcion" width="300" readOnly="true"}}
+    {{column field="tipoArticulo" width="150" readOnly="true"}}
+    {{column field="cantidad" width="80" defaultValue="1"}}
+    {{column field="distribucionCosto" width="140" defaultValue="100" validateTotal="100"}}
+  {{/grid}}
+
+  {{#grid id="componentes" section="componentes" allowRemove="true" allowSort="true" keyField="articulo" allowInsert="true"}}
+    {{column field="articulo" width="200"}}
+    {{column field="descripcion" width="400" readOnly="true"}}
+    {{column field="tipoArticulo" width="150" readOnly="true"}}
+    {{column field="cantidad" width="80" defaultValue="1"}}
+  {{/grid}}
+  {{#grid id="hojaCostos" section="hojaCostos" allowRemove="true" allowSort="true" keyField="tipoInsumo" allowInsert="true"}}
+    {{column field="tipoInsumo" width="200"}}
+    {{column field="descripcion" width="400"}}
+    {{column field="unidad" width="120"}}
+    {{column field="cantidad" width="80" defaultValue="1"}}
+    {{column field="costoUnitario" width="100" format="currency"}}
+  {{/grid}}
+  {{#grid id="menuDia" section="menuDia" allowRemove="true" allowSort="true" keyField="regimenAlimenticio" allowInsert="true"}}
+    {{column field="tipoPaciente" width="150"}}
+    {{column field="regimenAlimenticio" width="180"}}
+    {{column field="desayuno" width="180"}}
+    {{column field="colacionAM" width="180"}}
+    {{column field="almuerzo" width="180"}}
+    {{column field="colacionPM" width="180"}}
+    {{column field="cena" width="180"}}
+    {{column field="colacionNoche" width="180"}}
+    {{column field="colacionExtra" width="180"}}
+  {{/grid}}
+  {{#grid id="mantenimiento" section="mantenimiento" allowRemove="true" allowSort="true" keyField="motivo" allowInsert="true"}}
+    {{column field="subTipoSolicitud" width="150"}}
+    {{column field="procedimiento" width="150"}}
+    {{column field="motivo" width="150"}}
+    {{column field="periodicidad" width="70"}}
+    {{column field="tiempo" width="90"}}
+    {{column field="horario" width="100" validateHours="true"}}
+    {{column field="diasAtencion" width="100"}}
+    {{column field="ultimoMantenimiento" width="160" validateDate="true"}}
+    {{column field="siguienteMantenimiento" width="170" validateDate="true"}}
+    {{column field="autoAsignacion" width="150"}}
+    {{column field="comentarios" width="150"}}
+  {{/grid}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="400"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}
+
+{{#markup}}
+  {{#template id="lista"}}
+    <div class="list-material">
+      <li class="has-action-left">
+        <div class="list-action-left"><i class="icon ion-flag text-{{#if color}}{{color}}{{else}}grey{{/if}}"></i></div>
+        <div class="list-content">
+          <span class="title">{{base.codigo}}</span>
+          {{#if persona.id}}
+            <span style="font-size:12px;"><strong>{{persona.nombreCompleto}}</strong></span></br>
+          {{/if}}
+          <span style="font-size:12px;white-space:pre-wrap;font-style:italic;">{{base.descripcion}}</span>          
+          {{#if _moment}}
+            <br>
+            {{#if base.nivelCombustible}}
+            <span class="fondo-verde" style="font-size:12px;"><strong>&nbsp;&nbsp;{{base._nivelCombustible}}&nbsp;&nbsp;</strong></span>
+            {{/if}}
+            {{#if _moment.mantenimiento}}
+            <span class="fondo-cafe" style="font-size:12px;"><strong>&nbsp;&nbsp;Mantenimiento&nbsp;&nbsp;</strong></span>
+            {{/if}}          
+            {{#if _moment.asignado}}
+            <span class="fondo-azul" style="font-size:12px;"><strong>&nbsp;&nbsp;Asignado&nbsp;&nbsp;</strong></span>
+            {{/if}}
+            {{#if _moment.afuera}}
+            <span class="fondo-naranja" style="font-size:12px;"><strong>&nbsp;&nbsp;Afuera&nbsp;&nbsp;</strong></span>
+            {{/if}}
+          {{else}}
+            {{#if base.nivelCombustible}}
+            <br><span class="fondo-verde" style="font-size:12px;"><strong>&nbsp;&nbsp;{{base._nivelCombustible}}&nbsp;&nbsp;</strong></span>
+            {{/if}}
+          {{/if}}
+          {{#if base.servicio}}
+          </br><span style="font-size:12px;">{{base._servicio}}</span>
+          {{/if}}
+          <br><span style="font-size:12px;">{{base._estatus}}</span>
+          <span style="font-size:12px;float:right;">{{base._tipoArticulo}}</span>
+          {{#if base.esActivoFijo}}            
+            <br><span style="font-size:12px;">{{base.datosActivoFijo.base.marca}} {{base.datosActivoFijo.base.color}}</span>      
+            <span style="font-size:12px;float:right;">{{base._tipoActivoFijo}}</span>
+          {{/if}}
+        </div>
+      </li>
+    </div>
+  {{/template}}
+  {{#template id="clasificadores"}}
+    <div class="list-material">
+      <li class="has-action-left">
+        <div class="list-action-left"><i class="icon ion-flag text-{{#if color}}{{color}}{{else}}grey{{/if}}"></i></div>
+        <div class="list-content">
+          <span class="title">{{base.codigo}}</span>
+          {{#if base.ejercicio}}
+          <span style="font-size:12px;float:right;">{{base.ejercicio}}</span>
+          {{/if}}
+          {{#if persona.id}}
+            <span style="font-size:12px;"><strong>{{persona.nombreCompleto}}</strong></span></br>
+          {{/if}}
+          <span style="font-size:12px;white-space:pre-wrap;font-style:italic;">{{base.descripcion}}</span>          
+          {{#if _moment}}
+            <br>
+            {{#if _moment.mantenimiento}}
+            <span class="fondo-cafe" style="font-size:12px;"><strong>&nbsp;&nbsp;Mantenimiento&nbsp;&nbsp;</strong></span>
+            {{/if}}          
+            {{#if _moment.asignado}}
+            <span class="fondo-azul" style="font-size:12px;"><strong>&nbsp;&nbsp;Asignado&nbsp;&nbsp;</strong></span>
+            {{/if}}
+            {{#if _moment.afuera}}
+            <span class="fondo-naranja" style="font-size:12px;"><strong>&nbsp;&nbsp;Afuera&nbsp;&nbsp;</strong></span>
+            {{/if}}
+          {{/if}}
+          {{#if base.servicio}}
+          </br><span style="font-size:12px;">{{base._servicio}}</span>
+          {{/if}}
+          {{#if base.categoria}}
+          </br><span style="font-size:12px;white-space:pre-wrap;">{{base.categoria}}</span>
+          {{/if}}
+          {{#if base.grupo}}
+          </br><span style="font-size:12px;white-space:pre-wrap;">{{base.grupo}}</span>
+          {{/if}}
+          {{#if base.familia}}
+          </br><span style="font-size:12px;white-space:pre-wrap;">{{base.familia}}</span>
+          {{/if}}
+          <br><span style="font-size:12px;">{{base._estatus}}</span>
+          <span style="font-size:12px;float:right;">{{base._tipoArticulo}}</span>
+          {{#if base.esActivoFijo}}            
+            <br><span style="font-size:12px;">{{base.datosActivoFijo.base.marca}} {{base.datosActivoFijo.base.color}}</span>      
+            <span style="font-size:12px;float:right;">{{base._tipoActivoFijo}}</span>
+          {{/if}}
+        </div>
+      </li>
+    </div>
+  {{/template}}
+  {{#template id="paginaResumen"}}
+    <div class="list-material">
+      <li class="has-action-left">
+        {{!-- <div class="list-action-left"><i class="icon ion-flag text-{{#if color}}{{color}}{{else}}grey{{/if}}"></i></div> --}}
+        <div class="list-content">
+          <span class="title">{{base.descripcion}}</span>
+          {{#if esOferta}}
+          <span class="fondo-rojo" style="position:relative;top:25px;left:200px"><strong>&nbsp;&nbsp;Oferta&nbsp;&nbsp;</strong></span>
+          {{/if}}
+          <br><img style="height:180px;" src="{{base.imagen}}">
+        </div>
+      </li>
+    </div>
+  {{/template}}
+  {{#template id="pagina"}}
+    <div>
+      <img style="width:100%;margin-left:10px;padding-right:20px;" src="{{base.imagen}}">
+      {{#if _params.esOferta}}
+        <span class="fondo-rojo" style="font-size:40px;position:absolute;top:10%;left:85%"><strong>&nbsp;&nbsp;Oferta&nbsp;&nbsp;</strong></span>
+      {{/if}}
+      {{#if _params.demo01}}
+      <a style="position:absolute;top:25%;left:28%;" data-source="articulo" data-id="5ed7fa79cbafdf8b9f29f4cc"><img src="https://mx-imagenes.s3.amazonaws.com/logos/target.png" style="height:30px"></a>
+      <a style="position:absolute;top:30%;left:9%;"  data-source="articulo" data-id="6058bdccb52d3bdf60b3751f" data-title="Intima Hogar - Lámpara Titanio" data-confirm="<img src='https://mx-imagenes.s3.amazonaws.com/paginas/lampara.jpg' style='height:340px;'/><br>Lampara Titanio<br>Precio Contado $999 ó 12 Pagos $99<br>Disponibilidad Inmediata<br><br>¿Desea Agregar al Carrito?" data-success="Se Agregó la Lámpara Titanio al Carrito"><img src="https://mx-imagenes.s3.amazonaws.com/logos/target.png" style="height:30px"></a>
+      <a style="position:absolute;top:60%;left:7%;"  data-source="articulo" data-id="5ed7fb385b23560f367bf502"><img src="https://mx-imagenes.s3.amazonaws.com/logos/target.png" style="height:30px"></a>
+      <a style="position:absolute;top:52%;left:46%;" data-source="articulo" data-id="5ed7fb4ee694991eb595d353"><img src="https://mx-imagenes.s3.amazonaws.com/logos/target.png" style="height:30px"></a>
+      <a style="position:absolute;top:43%;left:56%;" data-source="articulo" data-id="6058d0bd745777f4d59400d9" data-title="Intima Hogar - Sillón Titanio" data-confirm="<img src='https://mx-imagenes.s3.amazonaws.com/paginas/sillon-tela.jpg'/>Sillón Tela Premium<br>Precio Contado $1,999 ó 12 Pagos $199<br>Disponibilidad Inmediata<br><br>¿Desea Agregar al Carrito?" data-success="Se Agregó el Sillón Titanio al Carrito"><img src="https://mx-imagenes.s3.amazonaws.com/logos/target.png" style="height:30px"></a>
+      <a style="position:absolute;top:56%;left:87%;" data-source="articulo" data-id="6058d17a751d9f2f7f939e98"><img src="https://mx-imagenes.s3.amazonaws.com/logos/target.png" style="height:30px"></a>
+      <a style="position:absolute;top:80%;left:70%;" data-source="articulo" data-id="6058d17a751d9f2f7f939e9c"><img src="https://mx-imagenes.s3.amazonaws.com/logos/target.png" style="height:30px"></a>
+      <a style="position:absolute;top:52%;left:18%;" data-source="articulo" data-id="6058d17a751d9f2f7f939e9b"><img src="https://mx-imagenes.s3.amazonaws.com/logos/target.png" style="height:30px"></a>
+      <a style="position:absolute;top:36%;left:39%;" data-source="articulo" data-id="6058d0bd745777f4d59400d9"><img src="https://mx-imagenes.s3.amazonaws.com/logos/target.png" style="height:30px"></a>
+      {{/if}}
+      {{#if _params.demo05}}
+      <a style="position:absolute;top:39%;left:91%;" data-source="articulo" data-id="6058bdccb52d3bdf60b3751f" data-title="Intima Hogar - Lámpara Báltico" data-confirm="<img src='https://mx-imagenes.s3.amazonaws.com/paginas/lampara2.jpg' style='height:340px;'/><br>Lampara Báltico<br>Precio Contado $899 ó 12 Pagos $89<br>Disponibilidad Inmediata<br><br>¿Desea Agregar al Carrito?" data-success="Se Agregó la Lámpara Báltico al Carrito"><img src="https://mx-imagenes.s3.amazonaws.com/logos/target.png" style="height:30px"></a>
+      <a style="position:absolute;top:58%;left:2%;"  data-source="articulo" data-id="6058bdccb52d3bdf60b3751f"><img src="https://mx-imagenes.s3.amazonaws.com/logos/target.png" style="height:30px"></a>
+      <a style="position:absolute;top:68%;left:10%;" data-source="articulo" data-id="6058d0bd745777f4d59400d9" data-title="Intima Hogar - Sillón Báltico" data-confirm="<img src='https://mx-imagenes.s3.amazonaws.com/paginas/sillon-tela2.png' style='height:345px;'/>Sillón Tela Premium<br>Precio Contado $1,499 ó 12 Pagos $149<br>Disponibilidad 3 Días<br><br>¿Desea Agregar al Carrito?" data-success="Se Agregó el Sillón Báltico al Carrito"><img src="https://mx-imagenes.s3.amazonaws.com/logos/target.png" style="height:30px"></a>
+      <a style="position:absolute;top:52%;left:46%;" data-source="articulo" data-id="5ed7fb4ee694991eb595d353"><img src="https://mx-imagenes.s3.amazonaws.com/logos/target.png" style="height:30px"></a>
+      <a style="position:absolute;top:40%;left:76%;" data-source="articulo" data-id="6058d0f995c2be20e79df9e4"><img src="https://mx-imagenes.s3.amazonaws.com/logos/target.png" style="height:30px"></a>
+      <a style="position:absolute;top:60%;left:87%;" data-source="articulo" data-id="6058d17a751d9f2f7f939e98"><img src="https://mx-imagenes.s3.amazonaws.com/logos/target.png" style="height:30px"></a>
+      <a style="position:absolute;top:80%;left:70%;" data-source="articulo" data-id="6058d17a751d9f2f7f939e9c"><img src="https://mx-imagenes.s3.amazonaws.com/logos/target.png" style="height:30px"></a>
+      <a style="position:absolute;top:48%;left:17%;" data-source="articulo" data-id="6058d17a751d9f2f7f939e9b"><img src="https://mx-imagenes.s3.amazonaws.com/logos/target.png" style="height:30px"></a>
+      <a style="position:absolute;top:25%;left:56%;" data-source="articulo" data-id="6058d0bd745777f4d59400d9"><img src="https://mx-imagenes.s3.amazonaws.com/logos/target.png" style="height:30px"></a>
+      <a style="position:absolute;top:76%;left:41%;" data-source="articulo" data-id="6058d17a751d9f2f7f939e9c"><img src="https://mx-imagenes.s3.amazonaws.com/logos/target.png" style="height:30px"></a>
+      {{/if}}
+    </div>
+  {{/template}}
+  {{#template id="nombre2"}}
+    {{#if persona.nombre2}}{{persona.nombre2}}{{else}}{{#if base.nombre2}}{{base.nombre2}}{{else}}{{_name}}{{/if}}{{/if}}
+  {{/template}}
+{{/markup}}

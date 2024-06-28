@@ -1,0 +1,21 @@
+{{#define id="cuentaMonetaria"}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base.nombre"}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoCuentaMonetaria"}}
+      {{sort field="base.nombre" direction="asc"}}
+      {{search field="base.nombre"}}
+      {{search field="base._tipoCuentaMonetaria"}}
+    {{/find}}
+  {{/view}}
+{{/define}} 
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{base.nombre}}</br>
+      <span style="font-size:12px;">{{base._estatus}}</span>
+      <span style="font-size:12px;float:right;"><strong>{{base._tipoCuentaMonetaria}}</strong></span>
+    </div>
+  {{/template}}
+{{/markup}}

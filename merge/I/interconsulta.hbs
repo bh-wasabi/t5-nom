@@ -1,0 +1,25 @@
+{{#define id="interconsulta"}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{!-- {{field id="medicoInterconsultante" defaultValue="=user.id"}} --}}
+    {{field id="servicioInterconsultante" defaultValue="=_.first(user.service)"}}
+
+    {{#field id="medicoInterconsultante"}}
+      {{#onChange}}
+        {{set especialidadMedicoInterconsultante="=prestadorServicios._especialidad"}}
+        {{set cedulaMedicoInterconsultante="=_.first(prestadorServicios.datosEspecialidad).base.cedulaEspecialidad"}}
+        {{set paisMedicoInterconsultante="=prestadorServicios._paisNacimiento"}}
+        {{set curpMedicoInterconsultante="=prestadorServicios.clave"}}
+      {{/onChange}}
+    {{/field}}
+
+    {{#field id="medicoInterconsultado"}}
+      {{#onChange}}
+        {{set especialidadMedicoInterconsultado="=prestadorServicios._especialidad"}}
+        {{set cedulaMedicoInterconsultado="=_.first(prestadorServicios.datosEspecialidad).base.cedulaEspecialidad"}}
+        {{set paisMedicoInterconsultado="=prestadorServicios._paisNacimiento"}}
+        {{set curpMedicoInterconsultado="=prestadorServicios.clave"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+{{/define}}

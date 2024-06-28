@@ -1,0 +1,51 @@
+{{#define id="notaPorSurtirSalidaConciliacion"}}
+  {{param attribute1="=_created.service"}}
+  {{param removeIfEmptySection="articulos"}}
+  {{param removeIfEmptyField="cantidad"}}
+  {{!-- {{param startOnOpen="articulos"}} --}}
+
+  {{#section id="base"}}
+    {{field id="esAlmacen" type="expr" value="=tipoAlmacen=='almacen'"}}
+    {{field id="esUbicacion" type="expr" value="=tipoAlmacen=='ubicacion'"}}
+    {{field id="esPersona" type="expr" value="=tipoAlmacen=='persona'"}}
+    {{field id="esServicio" type="expr" value="=tipoAlmacen=='servicio'"}}
+    {{#field id="ubicacion"}}
+      {{#editor}}
+        {{param tipoExpediente="='ubicacion'"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="persona"}}
+      {{#editor}}
+        {{param tipoExpediente="='paciente'"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="servicio"}}
+      {{#editor}}
+        {{param tipoExpediente="='servicio'"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+
+  {{#section id="articulos"}}
+    {{#field id="articulo"}}
+      {{editor display="base.codigo" view="bienes"}}
+      {{#onChange}}
+        {{set codigo="=base.codigo"}}
+        {{set descripcion="=base.descripcion"}}
+        {{set tipoArticulo="=base.tipoArticulo"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+  
+  {{#grid id="articulos" section="articulos" keyField="cantidad" allowInsert="true" allowRemove="true"}}
+    {{column field="articulo" label="Código" width="150" validateDuplicate="true"}}
+    {{column field="descripcion" label="Descripción" width="350" readOnly="true"}}
+    {{column field="tipoArticulo" label="Tipo Artículo" width="150" readOnly="true"}}
+    {{!-- {{column field="codigo" label="Código" width="150" validateDuplicate="true"}}
+    {{column field="descripcion" label="Descripción" width="350"}}
+    {{column field="tipoArticulo" label="Tipo Artículo" width="150"}} --}}
+
+    {{column field="cantidad" label="Cantidad" width="100" type="numeric" format="#,"}}
+    {{column field="loteEspecifico" label="Lote Especifico" width="150" validateDuplicate="true"}}
+  {{/grid}}
+{{/define}}

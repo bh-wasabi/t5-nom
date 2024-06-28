@@ -1,0 +1,8 @@
+{{#define id="notaEntrevistaPsicologicaRH"}}
+  {{#action id="afectar"}}
+    {{#update section="base"}}
+      {{set puntos="=calc.sumArgs(@actitudDisposicion,@presentacionPersonal,@anosExperienciaSector,@calificacionServicio,@toleranciaEstres,@tomaDecisiones,@trabajoEnEquipo,@Adaptabilidad,@innovacion,@toleranciaFrustracion,@erroresPracticaLaboral,@razonRapidaResolver,@escucharComentariosTrabajo,@tratoALosDemas,@aprendizajeConjunto,@actualizacionPracticas,@solucionProblemas,@restrasoTrabajo,@razonesFaltarTrabajoSinAvisar)"}}
+      {{set resultadoDictamen="=base.puntos<20?'noAceptado':'aceptado'"}}
+    {{/update}}
+  {{/action}}
+{{/define}}

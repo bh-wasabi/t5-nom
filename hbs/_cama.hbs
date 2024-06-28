@@ -1,0 +1,59 @@
+{{#define type="doc" id="_cama" name="Camas"}}
+
+  {{#report id="preliminar-encabezado"}}
+    {{#columns margin="20" widths="0,*"}}
+      {{#column}}
+        {{row image="logo" alignment="left" imageWidth="200" margin="0,-15,0,0"}}
+      {{/column}}
+      {{#column margin="0,-10,0,0" color="grey"}}
+        {{row text="Hospital Regional de Alta Especialidad Ixtapaluca" alignment="right" fontSize="6"}}
+        {{row text="Carretera Federal México Puebla Km. 34.5" alignment="right" fontSize="6"}}
+        {{row text="Pueblo de Zoquiapan 56530, Ixtapaluca, Méx." alignment="right" fontSize="6"}}
+        {{row text="Teléfono: 55 5972 9800, CLUES: MCSSA018786" alignment="right" fontSize="6"}}
+      {{/column}}
+    {{/columns}}
+  {{/report}}
+
+  {{#report id="ocupacion" fontSize="8" header="preliminar-encabezado" showStandarFooter="true" source="cama" view="ocupacion"}}
+    {{#stack}}
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{row expr="=calc.concat('Ocupación al', moment().format('DD/MMM/YYYY'))" fontSize="10" bold="true" margin="-10,0,0,0"}}
+      {{#table section="_items" fontSize="6" titleStyle="title" layout="lightHorizontalLines" headerStyle="field2" margin="-10,0,0,10" fontSize="8" widths="200,35,35,45,35,35"}}
+        {{column field="_central" label="Central" type="text"}}
+        {{column field="camas" label="Camas" type="number" align="right" total="sum"}}
+        {{column field="disponible" label="Disponibles" type="number" align="right" total="sum"}}
+        {{column field="mantenimiento" label="Mantenimiento" type="number" align="right" total="sum"}}
+        {{column field="ocupada" label="Ocupadas" type="number" align="right" total="sum"}}
+        {{column field="ocupacion" label="% Ocupación" type="number" align="right"}}
+      {{/table}}
+    {{/stack}}
+  {{/report}}
+  {{#action id="verOcupacion" type="report-pdf" report="ocupacion" fileName="='ocupacion'" label="Ocupación" color="brown" visibleMode="close"}}
+    {{ask field="_export" type="select" label="Formato" keys="pdf,xlsx,csv" names="PDF,Excel,CSV" value="pdf"}}
+  {{/action}}
+
+  {{#menu id="menu"}}
+    {{#item text="Ver" icon="bookmark"}}
+      {{item text="(vistas)" type="cube-view-names"}}
+      {{item text="Guardar vista..." icon="save" beginGroup="true" type="cube-view-save"}}
+      {{item text="Ajustes..." icon="preferences" type="cube-view-preferences"}}
+    {{/item}}
+    {{item text="Refrescar" icon="refresh" type="refresh"}}
+  {{/menu}}
+  {{browser id="cubo" menu="menu"}}
+{{/define}}
+
+{{#markup}}
+  {{#page}}
+    {{#row}}
+      {{#col small="100%"}}
+        {{#row}}
+          {{widget type="cube" source="cama" cube="cubo"}}
+        {{/row}}
+      {{/col}}
+    {{/row}}
+  {{/page}}
+{{/markup}}

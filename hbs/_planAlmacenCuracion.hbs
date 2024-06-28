@@ -1,0 +1,43 @@
+{{#define type="doc" id="_planAlmacenCuracion" name="Planeador Almacén Curación"}}
+  {{#menu id="menu"}}
+    {{#item text="Recolección" icon="cart" source="planInventario" type="add-subdoc" onlyPost="true" onlyRefresh="true" fromSource="ver" fromView="planInventario" toSection="articulos"}}  {{!-- stockView="existencia"  --}}
+      {{param ubicacion="almacenCuracion"}}
+      {{param tipoPlan="recoleccion"}}
+      {{param tipoUnidad="traspaso"}}
+    {{/item}}
+    {{#item text="Empaque" icon="gift" source="planInventario" type="add-subdoc" onlyPost="true" onlyRefresh="true" fromSource="ver" fromView="planInventario" toSection="articulos"}}  {{!-- stockView="recolectado"  --}}
+      {{param ubicacion="almacenCuracion"}}
+      {{param tipoPlan="empaque"}}
+      {{param tipoUnidad="traspaso"}}
+   {{/item}}
+    {{#item text="Entrega" icon="export" source="planInventario" type="add-subdoc" onlyPost="true" onlyRefresh="true" fromSource="ver" fromView="planInventario" toSection="articulos"}}  {{!-- stockView="empacado"  --}}
+      {{param ubicacion="almacenCuracion"}}
+      {{param tipoPlan="entrega"}}
+      {{param transito="repartoAlmacenCuracion"}}
+      {{param tipoUnidad="traspaso"}}
+    {{/item}}
+    {{#item text="Ver" icon="bookmark"}}
+      {{item text="(vistas)" type="cube-view-names"}}
+      {{item text="Guardar vista..." icon="save" beginGroup="true" type="cube-view-save"}}
+      {{item text="Ajustes..." icon="preferences" type="cube-view-preferences"}}
+    {{/item}}
+    {{item text="Refrescar" icon="refresh" type="refresh"}}
+  {{/menu}}
+  {{browser id="cubo" menu="menu"}}
+{{/define}}
+
+{{#markup}}
+  {{#page}}
+    {{#row}}
+      {{#col small="100%"}}
+        {{#row}}
+          {{#widget type="cube" source="ver" cube="planDistribucion"}}
+            {{param ubicacion="almacenCuracion"}}
+            {{param tipoPlan="consulta"}}
+            {{param tipoUnidad="trapaso"}}
+          {{/widget}}
+        {{/row}}
+      {{/col}}
+    {{/row}}
+  {{/page}}
+{{/markup}}

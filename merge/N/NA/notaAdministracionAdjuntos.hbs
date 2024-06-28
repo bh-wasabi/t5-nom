@@ -1,0 +1,112 @@
+{{#define id="notaAdministracionAdjuntos"}}
+  {{param startOnOpen="n/a"}}
+  {{#grid id="adjuntos" section="adjuntos" sortBy="orden, fecha" disableEnter="true"}}
+    {{column field="nombre" width="300"}}
+    {{column field="referencia" width="200"}}
+[.#if esRH.]    
+    {{column field="grupo" width="200" items="=['Académicos','Personales','Laborales','Amonestaciones']"}}
+[.else.]
+    {{column field="grupo" width="200"}}
+[./if.]    
+    {{column field="tipo" width="150"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="80" readOnly="true"}}
+    {{column field="tamano" width="80" readOnly="true"}}
+    {{column field="orden" width="60"}}
+    {{column field="eliminar" width="100"}}
+  {{/grid}}
+  
+  {{#report id="grupo" fontSize="15"}}
+    {{#stack}}
+      {{#columns margin="-10,0,0,0"}}
+        {{#box layout="noBorders" width="150"}}
+          {{row expr="=grupo" color="white" fillColor="#2b7b47" align="center" fontSize="10"}}
+        {{/box}}
+      {{/columns}}
+    {{/stack}}
+  {{/report}}
+  {{#report id="preliminar" fontSize="8" header="preliminar-encabezado" showStandarFooter="true" pageMargins="30,120,30,40" barcode="=persona.clave"}}
+    {{#stack}}
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{#record title="Datos Generales" titleStyle="title" layout="lightHorizontalLines" fontSize="7" section="base" headerStyle="field" margin="-10,0,0,10" widths="100,450"}}
+        {{row expr="=calc.format('date', _updated.date||_created.date, 'DD/MMM/YYYY h:mma')" label="Fecha Emisión"}}
+        {{row expr="=_created._service" label="Servicio"}}
+        {{row field="responsableAcademico" condition="esEstudiante" align="left"}}
+        {{row field="comentarios" align="left"}}
+      {{/record}}
+    {{/stack}}
+    {{#stack}}
+      {{#row text="Adjuntos" fontSize="10" bold="true" margin="-10,0,0,0" condition="=!_.isEmpty(adjuntos)"}}
+      {{/row}}
+      {{#table title="Adjuntos" titleStyle="title" layout="lightHorizontalLines" fontSize="7" section="adjuntos" headerStyle="field" margin="-10,0,0,10" removeEmptyCols="true" groupBy="grupo" beginGroup="grupo"}}
+        {{column field="nombre"}}
+        {{column field="tipo"}}
+        {{column field="referencia"}}
+        {{column field="grupo"}}
+        {{column field="tamano"}}
+        {{column field="fecha"}}
+        {{column field="ext"}}
+        {{column field="eliminar"}}
+      {{/table}}
+    {{/stack}}
+    {{#stack}}
+      {{#columns widths="425,25,100"}}
+        {{#column}}
+          {{#record title="Firmas" titleStyle="title" layout="lightHorizontalLines" fontSize="8" section="_stamp" headerStyle="field" margin="-10,0,0,10" widths="100,325"}}
+            {{row expr="=_created._user" label="Elabora"}}
+            {{row expr="=_created._turn" label="Turno Elabora"}}
+            {{row expr="=_created._identification" label="Especialidad Elabora"}}
+            {{row expr="=''" label="Firma Elabora"}}
+            {{row condition="=!base.esEstudiante" expr="=_created._responsable" label="Responsable"}}
+            {{row condition="=!base.esEstudiante" expr="=_created._responsableId" label="Especialidad Responsable"}}
+            {{row condition="=!base.esEstudiante" expr="=''" label="Firma Responsable"}}
+            {{row condition="=base.esEstudiante" expr="=base._responsableAcademico" label="Médico Responsable"}}
+            {{row condition="=base.esEstudiante" expr="=base._identificacionResponsableAcademico" label="Especialidad Médico Responsable"}}
+            {{row condition="=base.esEstudiante" expr="=''" label="Firma Médico Responsable"}}
+            {{row condition="=calc.in(_created.service, ['inventarios','farmacia','almacen','ceye'])" expr="=''" label="Transporte / Recibe"}}
+            {{row field="text" label="Cadena Original"}}
+            {{row field="signature" label="Sello Digital"}}
+          {{/record}}
+        {{/column}}
+        {{#column}}
+          {{row}}
+        {{/column}}
+        {{#column}}
+          {{#record title="QR's" titleStyle="title" layout="lightHorizontalLines" fontSize="6" section="_stamp" headerStyle="field" margin="-10,0,0,10" widths="50,50"}}
+            {{row qr="=calc.concatHost('doc', 'persona', persona.id)" label="=fn('_tipoExpediente', persona.tipoExpediente)" qrFit="50" condition="=(persona.id)?true:false"}}
+            {{row}}
+            {{row qr="=calc.concatHost('doc', '_user', _created.user)" label="Elabora" qrFit="50"}}
+            {{row condition="=(_created.responsable&&!base.esEstudiante)?true:false"}}
+            {{row qr="=calc.concatHost('doc', '_user', _created.responsable)" label="Responsable" qrFit="50" condition="=(_created.responsable&&!base.esEstudiante)?true:false"}}
+            {{row condition="=(_created.responsableAcademico&&base.esEstudiante)?true:false"}}
+            {{row qr="=calc.concatHost('doc', '_user', _created.responsableAcademico)" label="Médico Responsable" qrFit="50" condition="=(_created.responsableAcademico&&base.esEstudiante)?true:false"}}
+            {{row condition="=(persona.id)?true:false"}}
+            {{row qr="=calc.concatHost('doc', _type, _id)" label="Nota" qrFit="50"}}
+          {{/record}}
+        {{/column}}
+      {{/columns}}
+    {{/stack}}
+    {{#stack condition="=actualizacion"}}
+      {{#row text="Actualizaciones" fontSize="10" bold="true" margin="-10,0,0,0" condition="=!_.isEmpty(actualizacion)"}}
+      {{/row}}
+      {{#table title="Actualizaciones" titleStyle="title" layout="lightHorizontalLines" fontSize="5" section="actualizacion" headerStyle="field" margin="-10,0,0,10" removeEmptyCols="true"}}
+        {{column field="nota"}}
+        {{column field="fechaHora"}}
+        {{column field="usuario"}}
+        {{column field="nombreAnterior"}}
+        {{column field="nombreNuevo"}}
+        {{column field="claveAnterior"}}
+        {{column field="claveNueva"}}
+        {{column field="fechaNacimientoAnterior"}}
+        {{column field="fechaNacimientoNueva"}}
+        {{column field="generoAnterior"}}
+        {{column field="generoNuevo"}}
+        {{column field="entidadNacimientoAnterior"}}
+        {{column field="entidadNacimientoNueva"}}
+      {{/table}}
+    {{/stack}}
+  {{/report}}    
+{{/define}}

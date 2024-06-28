@@ -1,0 +1,16 @@
+{{#define id="medicamentoPreanestesico"}}  
+  {{#section id="base"}}
+    {{#field id="articulo"}}
+      {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+      {{#editor}}
+        {{param tipoArticulo="='medicamento'"}}
+        {{#onChange}}
+          {{set codigo="=base.codigo"}}
+          {{set codigoInternacional="=base.codigoInternacional"}}
+          {{set dosis="=base.presentacion"}}
+          {{set dosisUnidad="=base.unidadPresentacion"}} 
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

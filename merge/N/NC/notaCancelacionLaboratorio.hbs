@@ -1,0 +1,7 @@
+{{#define id="notaCancelacionLaboratorio"}}
+  {{#section id="base"}}
+    {{field id="esOtroMotivoCancelacion" type="expr" value="=motivoCancelacion==='otro'"}}
+    {{field id="esRecursoFaltante" type="expr" value="=motivoCancelacion==='falta-recurso'"}}
+    {{field id="esOtroRecursoFaltante" type="expr" value="=recursoFaltante==='otro'"}}
+  {{/section}}
+{{/define}}

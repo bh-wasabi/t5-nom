@@ -1,0 +1,52 @@
+{{#define id="notaRegistroReciboProveedor"}}
+  {{param removeIfEmptySection="articulos"}}
+  {{param removeIfEmptyField="cantidad"}}
+  {{action id="afectar" error="=_.isEmpty(adjuntos)?'Falta Incluir el Archivo Adjunto Correspondiente':(!calc.sumRef(articulos, 'cantidad')?'Faltan Indicar los Artículos':null)"}}
+  {{#section id="base"}}
+    {{#field id="nombreProveedor"}}
+      {{editor items="=proveedores"}}
+    {{/field}}
+  {{/section}}
+  {{#section id="articulos"}}
+    {{#field id="codigo"}}
+      {{#onChange}}
+        {{#join source="articulo" view="listaArticulos" as="articulo"}}
+          {{param codigo="=codigo"}}
+        {{/join}}
+        {{set cantidad="=1"}}
+        {{set costoUnitario="=_doc.base.costos[codigo]"}}
+        {{set descripcion="=articulo.base.descripcion"}}
+        {{set tipoArticulo="=articulo.base.tipoArticulo"}}
+      {{/onChange}}
+    {{/field}}
+    {{field id="costoTotal" type="calc" value="=cantidad*costoUnitario"}}
+    {{#field id="tipoActivo"}}
+      {{#editor display="base.codigo"}}
+        {{param campo8="=codigo"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+
+  {{#grid id="articulos" section="articulos" keyField="cantidad" allowInsert="true" allowRemove="true"}}
+    {{column field="codigo" label="Código" width="130" items="=base.referencias"}}
+    {{column field="descripcion" label="Descripción" width="350" readOnly="true"}}
+    {{column field="tipoArticulo" label="Tipo Artículo" width="120" readOnly="true" hide="true"}}
+    {{column field="cantidad" label="Cantidad" width="100" type="numeric" format="#," readOnly="true"}}
+    {{column field="costoUnitario" label="Costo Unitario" width="100" type="numeric" format="currency" required="true"}}
+    {{column field="tipoActivo" label="Tipo Activo" width="130" required="true"}}
+    {{column field="codigoActivoFijo" label="Código Activo Fijo" width="130" required="true"}}
+    {{column field="numeroSerie" label="Número Serie" width="130" required="true"}}
+    {{column field="ubicacion" label="Ubicación" width="200" required="true"}}
+    {{!-- {{column field="solicitarInstalacion" label="Solicitar Instalación" width="130"}} --}}
+    {{!-- {{column field="costoUnitario" label="Costo Unitario" width="120" type="numeric" format="#,"}} --}}
+  {{/grid}}
+
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

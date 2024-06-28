@@ -1,0 +1,18 @@
+{{#define id="notaAsignacionAcceso"}}
+  {{#section id="base"}}
+    {{#field id="empleado"}}
+      {{#editor}}
+        {{!-- {{param servicio="=_created.service=='residuosHospitalarios'?'aseo,residuosHospitalarios':_created.service"}} --}}
+        {{param servicio="=fn('asignacionAccesoEmpleado', _created.service)"}}
+
+        {{param criticidadZona="=_created.service=='aseo'?base.solicitud.base.criticidadZona:null"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="procedimientoMantenimiento"}}
+      {{#editor}}
+        {{param servicio="=_created.service"}}
+      {{/editor}}
+    {{/field}}
+    {{validator type="expr" validIf="=_created.service!='residuosHospitalarios'||empleado.length" message="Falta Asignar Personal"}}
+  {{/section}}
+{{/define}}

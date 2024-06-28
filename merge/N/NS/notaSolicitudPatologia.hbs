@@ -1,0 +1,24 @@
+{{#define id="notaSolicitudPatologia"}}
+
+  {{#action id="historialPatologia" hide="true" type="quickReport" label="Historial Patología" source="solicitud" view="historialSolicitudes"}}
+    {{param persona="=persona.id"}}
+    {{param servicio="='patologia'"}}
+    {{param desde="=from"}}
+    {{param hasta="=to"}}
+    {{#grid exportToExcel="true" allowSearch="true" allowRefresh="true" filters="true" defaultDate="all" showDates="all,next30,next15,next7,next3,tomorrow,today,yesterday,last3,last7,last15,last30" wordWrapEnabled="true" pdfFontSize="6" pdfPageOrientation="portrait" columnAutoWidth="wordWrapEnabled"}}
+      {{column field="persona.nombreCompleto" label="Paciente"}}
+      {{column field="persona._edadActual" label="Edad"}}
+      {{column field="persona._genero" label="Genero"}}
+      {{column field="_created.date" type="date" label="Fecha Emisión" format="DD/MMM/YYYY hh:mma"}}
+      {{column field="base.codigo" label="Código"}}
+      {{column field="base.descripcion" label="Descripción"}}
+      {{column field="base._prestadorServicios" label="Médico"}}
+      {{column field="base._especialidad" label="Especialidad"}}
+      {{column field="_moment.finalizado.date" label="Fecha Finalización" format="DD/MMM/YYYY hh:mma"}}
+    {{/grid}}
+  {{/action}}
+
+  {{#section id="base"}}
+    {{field id="esHospitalizacion" type="expr" value="=tipoEpisodio=='hospitalizacion'"}}
+  {{/section}}
+{{/define}}

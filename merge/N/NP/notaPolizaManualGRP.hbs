@@ -1,0 +1,33 @@
+{{#define id="notaPolizaManualGRP"}}
+  {{param startOnOpen="n/a"}}
+  {{param removeIfEmptySection="aplicacion"}}
+  {{param removeIfEmptyField="cuentaContable"}}
+
+  {{action id="importarDatos" condition="=true" type="menu" menu="importarDatos" label="Cargar" color="green"}}
+  {{#menu id="importarDatos" color="green"}}
+    {{item action="cargarExcel" text="Cargar Excel..."}}
+  {{/menu}}  
+  {{#action id="cargarExcel" type="openFile" label="Cargar Excel" color="green" visibleMode="close" condition="=base.estatus=='borrador'"}}
+    {{#openFile type="xlsx" as="excel" subType="polizaManual" isRegistry="=true"}}
+      {{update section="aplicacion" value="=excel"}}
+    {{/openFile}}
+  {{/action}}  
+
+  {{#section id="aplicacion"}}
+    {{#field id="cuentaContable"}}
+      {{#onChange}}
+        {{set cuenta="=base.cuenta"}}
+        {{set descripcion="=base.descripcion"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+
+  {{#grid id="aplicacion" section="aplicacion" keyField="cuentaContable" allowInsert="true" allowRemove="true"}}
+    {{column field="cuentaContable" width="300"}}
+    {{!-- {{column field="centroCostos" width="200"}} --}}
+    {{column field="concepto" width="200"}}
+    {{column field="referencia" width="200"}}
+    {{column field="debe" width="150" type="numeric" format="#,.##"}}
+    {{column field="haber" width="150" type="numeric" format="#,.##"}}
+  {{/grid}}
+{{/define}}

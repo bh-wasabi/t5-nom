@@ -1,0 +1,31 @@
+{{#define id="notaPorIncrementarPlanCompra"}}
+  {{param startOnOpen="n/a"}}
+  {{param removeIfEmptySection="articulos"}}
+  {{param removeIfEmptyField="cantidad"}}
+  {{#action id="excel" condition="=base.estatus=='borrador'"}}
+    {{#openFile type="xlsx" as="excel" service="=base.servicio" subType="sic-planCompra"}}
+      {{update section="articulos" value="=excel"}}
+    {{/openFile}}
+  {{/action}}
+
+  {{#section id="articulos"}}
+    {{#field id="articulo"}}
+      {{#editor display="base.codigo" view="tipoActivo"}}
+        {{param servicio="=base.servicio"}}
+      {{/editor}}
+      {{#onChange}}
+        {{set codigo="=base.codigo"}}
+        {{set descripcion="=base.descripcion"}}
+        {{set tipoArticulo="=base.tipoArticulo"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+
+  {{#grid id="articulos" section="articulos" keyField="cantidad" allowInsert="false" allowRemove="false"}}
+    {{column field="campo0" label="N° ítem" width="120" readOnly="true"}}
+    {{column field="articulo" label="Código" width="120" readOnly="true"}}
+    {{column field="descripcion" label="Descripción" width="550" readOnly="true"}}
+    {{column field="tipoArticulo" label="Tipo Artículo" width="180" readOnly="true"}}
+    {{column field="cantidad" label="Cantidad" width="100" type="numeric" format="#," readOnly="true"}}
+  {{/grid}}
+{{/define}}

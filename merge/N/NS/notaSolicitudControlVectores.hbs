@@ -1,0 +1,16 @@
+{{#define id="notaSolicitudControlVectores"}}
+  {{#action id="afectar" error="=calc.getRef(base,'controlVectores.base.ubicacion')?null:'Solicitud Incorrecta'"}}
+    {{#update section="base"}}
+      {{setRef ref="controlVectores.base.vencimiento" value="=calc.dueDate(controlVectores.base.vencimiento, 'atencion', calc.dueTimes('controlVectores', controlVectores.base.subTipoSolicitud, controlVectores.base.motivo, controlVectores.base.momentoDieta, controlVectores.base.criticidadZona, controlVectores.base.tiempos))"}}
+      {{setRef ref="controlVectores.base.alerta"      value="=calc.alertDate(controlVectores.base.vencimiento, 'atencion', calc.dueTimes('controlVectores', controlVectores.base.subTipoSolicitud, controlVectores.base.motivo, controlVectores.base.momentoDieta, controlVectores.base.criticidadZona, controlVectores.base.tiempos))"}}
+    {{/update}}
+  {{/action}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

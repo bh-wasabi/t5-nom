@@ -1,0 +1,7 @@
+{{#define id="formaPagoInicial"}}
+  {{#section id="base"}}
+    {{field id="esTarjeta" type="expr" value="=calc.in(@formaPago, ['04','28','29'])"}}
+    {{field id="esOtro" type="expr" value="=@formaPago=='99'"}}
+    {{field id="realizoValidacion" type="expr" value="=esTarjeta&&calc.isTrue(@tarjetaValidacion)"}}
+  {{/section}}
+{{/define}}

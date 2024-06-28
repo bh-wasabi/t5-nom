@@ -1,0 +1,34 @@
+{{#define id="notaResultadoEstudio"}}
+  {{param startOnOpen="n/a"}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="persona.nombreCompleto"}}
+      {{include field="persona.clave"}}
+      {{sort field="_id" direction="desc"}}
+      {{search field="_name"}}
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="_created._request"}}
+    {{/find}}
+  {{/view}}
+  {{#action id="preliminar" type="sub-link"}}
+    {{link href="=adjuntos[0].url"}}
+  {{/action}}
+  {{#action id="importarDatos" type="pasteText" label="Importar Datos..." color="blue" btnSolid="true" condition="=true"}}
+    {{#pasteText type="edi-lis" as="datos"}}
+      {{update section="resultados" value="=datos"}}
+    {{/pasteText}}
+  {{/action}}
+{{/define}}
+{{#markup}}  
+  {{#template id="verNota"}}
+    <div>{{persona.nombreCompleto}}</div>
+    <span style="font-size:12px;">{{_name}}</span>
+    <span style="font-size:12px;float:right;">{{date _created.date "DD/MMM/YYYY hh:mma"}}</span>
+    {{#if _created.request}}
+    <br><span style="font-size:12px;">Solicitud: {{_created._request}}</span>
+    {{/if}}
+  {{/template}}
+{{/markup}}

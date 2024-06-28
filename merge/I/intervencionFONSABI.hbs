@@ -1,0 +1,25 @@
+{{#define id="intervencionFONSABI"}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base.programa"}}
+      {{include field="base.grupo"}}
+      {{sort field="base._programa"}}
+      {{sort field="base._grupo"}}
+      {{sort field="_name"}}
+      {{search field="_name"}}
+      {{search field="base._programa"}}
+      {{search field="base._grupo"}}
+      {{filter condition="=programa" field="base.programa" eq="=programa"}}
+      {{filter condition="=grupo" field="base.grupo" eq="=grupo"}}
+    {{/find}}
+  {{/view}}
+{{/define}} 
+{{#markup}}
+  {{#template id="lista"}}
+    <div>      
+      <span style="white-space:pre-wrap;">{{_name}}</span></br>
+      <span style="font-size:12px;white-space:pre-wrap;">{{base._grupo}}</span>
+      <span style="font-size:12px;float:right;">{{base._programa}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

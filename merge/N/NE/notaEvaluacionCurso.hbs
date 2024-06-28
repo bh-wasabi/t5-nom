@@ -1,0 +1,38 @@
+{{#define id="notaEvaluacionCurso"}}
+  {{#view id="lista" name="Lista"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="_created.date"}}
+      {{include field="base.seleccionarCurso"}}
+      {{include field="base.calificacionCurso"}}
+      {{include field="persona.id"}}
+      {{include field="persona.nombreCompleto"}}
+      {{search field="_name"}}
+      {{sort field="_id" direction="desc"}}
+      {{filter condition="=curso" field="base.seleccionarCurso" eq="=curso"}}
+    {{/find}}
+    {{editor display="_name"}}
+  {{/view}}
+
+  {{#section id="base"}}
+    {{#field id="seleccionarInscripcionCurso"}}
+      {{#editor}}
+        {{param persona="=persona.id"}}
+        {{#onChange}}
+          {{set seleccionarCurso="=base.curso"}}
+          {{set _seleccionarCurso="=base._curso"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}
+
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      <strong>{{persona.nombreCompleto}}<span style="float:right;">{{number base.calificacionCurso}}</span></strong></br>
+      <span style="font-size:12px;">{{_name}}</span>
+      <span style="font-size:12px;float:right;">{{date _created.date "DD/MMM/YYYY h:mma"}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

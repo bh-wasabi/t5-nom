@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0kj98rm" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.0.0">
+  <bpmn:collaboration id="consultaExterna">
+    <bpmn:participant id="Participant_12j5v6j" name="Consulta Externa" processRef="Process_0hexubq" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_0hexubq" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_1dw1y7a">
+      <bpmn:lane id="Lane_1sa95g1" name="Usuario">
+        <bpmn:flowNodeRef>Event_0nmybhs</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>pendiente</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_1exdgmq" name="Enferemera">
+        <bpmn:flowNodeRef>programado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>pre</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_0pzndnd" name="Médico">
+        <bpmn:flowNodeRef>trans</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>finalizado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_08ryzik</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Event_0nmybhs">
+      <bpmn:outgoing>Flow_1ej2iac</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="pendiente" name="Solicitud Consulta Externa">
+      <bpmn:incoming>Flow_1ej2iac</bpmn:incoming>
+      <bpmn:outgoing>Flow_0wjc15z</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="programado" name="Programación">
+      <bpmn:incoming>Flow_0wjc15z</bpmn:incoming>
+      <bpmn:outgoing>Flow_07qq38v</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0wjc15z" sourceRef="pendiente" targetRef="programado" />
+    <bpmn:sequenceFlow id="Flow_1ej2iac" sourceRef="Event_0nmybhs" targetRef="pendiente" />
+    <bpmn:sequenceFlow id="Flow_07qq38v" sourceRef="programado" targetRef="pre" />
+    <bpmn:sequenceFlow id="Flow_1tq9b46" sourceRef="finalizado" targetRef="Event_08ryzik" />
+    <bpmn:task id="pre" name="Central Enfermeria">
+      <bpmn:incoming>Flow_07qq38v</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ufs3u4</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_1ufs3u4" sourceRef="pre" targetRef="trans" />
+    <bpmn:task id="trans" name="Central Médica">
+      <bpmn:incoming>Flow_1ufs3u4</bpmn:incoming>
+      <bpmn:outgoing>Flow_1xxqgio</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_1xxqgio" sourceRef="trans" targetRef="finalizado" />
+    <bpmn:task id="finalizado" name="Finalizado">
+      <bpmn:incoming>Flow_1xxqgio</bpmn:incoming>
+      <bpmn:outgoing>Flow_1tq9b46</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="Event_08ryzik">
+      <bpmn:incoming>Flow_1tq9b46</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="consultaExterna">
+      <bpmndi:BPMNShape id="Participant_12j5v6j_di" bpmnElement="Participant_12j5v6j" isHorizontal="true">
+        <dc:Bounds x="129" y="79" width="721" height="421" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1exdgmq_di" bpmnElement="Lane_1exdgmq" isHorizontal="true">
+        <dc:Bounds x="159" y="229" width="691" height="151" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1sa95g1_di" bpmnElement="Lane_1sa95g1" isHorizontal="true">
+        <dc:Bounds x="159" y="79" width="691" height="150" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0pzndnd_di" bpmnElement="Lane_0pzndnd" isHorizontal="true">
+        <dc:Bounds x="159" y="380" width="691" height="120" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_07qq38v_di" bpmnElement="Flow_07qq38v">
+        <di:waypoint x="389" y="309" />
+        <di:waypoint x="460" y="309" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ej2iac_di" bpmnElement="Flow_1ej2iac">
+        <di:waypoint x="237" y="144" />
+        <di:waypoint x="289" y="144" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wjc15z_di" bpmnElement="Flow_0wjc15z">
+        <di:waypoint x="339" y="184" />
+        <di:waypoint x="339" y="269" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1tq9b46_di" bpmnElement="Flow_1tq9b46">
+        <di:waypoint x="730" y="440" />
+        <di:waypoint x="772" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ufs3u4_di" bpmnElement="Flow_1ufs3u4">
+        <di:waypoint x="510" y="349" />
+        <di:waypoint x="510" y="400" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1xxqgio_di" bpmnElement="Flow_1xxqgio">
+        <di:waypoint x="560" y="440" />
+        <di:waypoint x="630" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_0nmybhs_di" bpmnElement="Event_0nmybhs">
+        <dc:Bounds x="201" y="126" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0efcrf6_di" bpmnElement="pendiente">
+        <dc:Bounds x="289" y="104" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_17ty7d5_di" bpmnElement="programado">
+        <dc:Bounds x="289" y="269" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0jz9uev_di" bpmnElement="pre">
+        <dc:Bounds x="460" y="269" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1qixzx9_di" bpmnElement="trans">
+        <dc:Bounds x="460" y="400" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ejnfb9_di" bpmnElement="finalizado">
+        <dc:Bounds x="630" y="400" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_08ryzik_di" bpmnElement="Event_08ryzik">
+        <dc:Bounds x="772" y="422" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,0 +1,10 @@
+{{#define id="notaSolicitudSesionComite"}}  
+  {{param removeIfEmptySection="convocados"}}
+  {{param removeIfEmptyField="usuario"}}
+  {{#grid id="convocados" section="convocados" allowRemove="true" allowInsert="true" allowSort="true" sortBy="orden"}}
+    {{column field="usuario" width="500"}}
+    {{column field="cargo" width="200"}}
+    {{column field="estatus" width="100"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

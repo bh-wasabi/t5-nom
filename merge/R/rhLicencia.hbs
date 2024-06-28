@@ -1,0 +1,5 @@
+{{#define id="rhLicencia"}}
+  {{#section id="base"}}
+    {{field id="dias" value="=moment(@hasta).diff(moment(@desde), 'days')+1"}}
+  {{/section}}
+{{/define}}

@@ -1,0 +1,17 @@
+{{#define id="notaSolicitudCorrespondencia"}}
+  {{action id="afectar" error="=calc.getRef(base,'correspondencia.base.motivo')?null:'Solicitud Incorrecta'"}}
+  {{#action id="afectar"}}
+    {{#update section="base"}}
+      {{setRef ref="correspondencia.base.vencimiento" value="=calc.dueDate(correspondencia.base.vencimiento, 'atencion', calc.dueTimes('correspondencia', correspondencia.base.subTipoSolicitud, correspondencia.base.motivo, correspondencia.base.momentoDieta, correspondencia.base.criticidadZona, correspondencia.base.tiempos))"}}
+      {{setRef ref="correspondencia.base.alerta"      value="=calc.alertDate(correspondencia.base.vencimiento, 'atencion', calc.dueTimes('correspondencia', correspondencia.base.subTipoSolicitud, correspondencia.base.motivo, correspondencia.base.momentoDieta, correspondencia.base.criticidadZona, correspondencia.base.tiempos))"}}
+    {{/update}}
+  {{/action}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

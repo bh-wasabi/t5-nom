@@ -1,0 +1,16 @@
+{{#define id="devolucionRopa"}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{#field id="ubicacionDevolucionRopa"}}
+      {{#editor}}
+        {{param tipoExpediente="funcionario"}}
+        {{param conToalla="=@subTipoSolicitud=='toalla'"}}
+      {{/editor}}
+      {{#onChange}}
+        {{set area="=persona.area"}}
+        {{set criticidadZona="=persona.criticidadZona||'z4'"}}
+        {{set vencimiento="=fn('vencimientoZona', persona.criticidadZona||'z4')"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+{{/define}}

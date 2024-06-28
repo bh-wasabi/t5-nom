@@ -1,0 +1,8 @@
+{{#define id="notaInsumosUtilizados"}}
+  {{param startOnOpen="articulos"}}
+  {{#grid id="articulos" section="articulos" disableEnter="true"}}    
+    {{column field="codigo" label="Código" width="150" readOnly="true"}}
+    {{column field="descripcion" label="Descripción" width="300" readOnly="true"}}
+    {{column field="utilizado" label="Utilizado" width="120"}}
+  {{/grid}}
+{{/define}}

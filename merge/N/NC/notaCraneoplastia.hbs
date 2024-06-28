@@ -1,0 +1,7 @@
+{{#define id="notaCraneoplastia"}}
+  {{#section id="base"}}
+    {{field id="esOtroEtiologiaDefecto" type="expr" value="=etiologiaDefectoCraneal==='otro'"}}
+    {{field id="esOtroSintomasCraniectomizadoPre" type="expr" value="=calc.in('otro', @evaluacionSintomasCraniectomizadoPre)"}}
+    {{field id="esOtroSintomasCraniectomizadoPost" type="expr" value="=calc.in('otro', @evaluacionSintomasCraniectomizadoPost)"}}
+  {{/section}}
+{{/define}} 

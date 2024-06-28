@@ -1,0 +1,13 @@
+{{#define id="notaCompatibilidadEmpleoRH"}}
+  {{#view id="reporte"}}
+    {{#find limit="-1"}}
+      {{include field="_created"}}
+      {{include field="base"}}
+      {{include field="persona"}}
+      {{sort field="_id" direction="asc"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{filter condition="=desde" field="_created.date" gt="=moment(desde).format('YYYY-MM-DD')"}}
+      {{filter condition="=hasta" field="_created.date" lt="=moment(hasta).format('YYYY-MM-DD')"}}
+    {{/find}}
+  {{/view}}
+{{/define}}

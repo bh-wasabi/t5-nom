@@ -1,0 +1,5 @@
+{{#define id="valoracionTriageObstetrico"}}
+  {{#section id="base"}}
+    {{field id="resultado" type="expr" value="=fn('resultadoTriage', calc.toArray(@__triageObstetricoConciencia, @__triageObstetricoConvulsiones, @__triageObstetricoVasoespasmo, @__triageObstetricoDolorEpigastrio, @__triageObstetricoMovimientosFetales, @__triageObstetricoSangradoVaginal, @__triageObstetricoLiquidoAmniotico, @__triageObstetricoTrabajoParto, @__triageObstetricoPresentacion))"}}
+  {{/section}}
+{{/define}}

@@ -1,0 +1,23 @@
+{{#define id="notaIniciaAsignacionSubTipoActivoFijo"}}
+  {{#section id="base"}}
+    {{field id="esVehiculo" type="expr" value="=@tipoActivoFijo=='vehiculo'"}}
+    {{#field id="articulo"}}
+      {{#editor}}
+        {{param tipoActivoFijo="=tipoActivoFijo"}}
+        {{param subTipoActivoFijo="=subTipoActivoFijo"}}
+        {{param puedeAsignar="=true"}}
+        {{#onChange}}
+          {{set codigo="=base.codigo"}}
+          {{set descripcion="=base.descripcion"}}
+          {{set datosVehiculo="=base.datosVehiculo"}}
+          {{set _datosVehiculo="=base._datosVehiculo"}}
+          {{!-- {{set datosActivoFijo="=base.datosActivoFijo"}}
+          {{set _datosActivoFijo="=base._datosActivoFijo"}} --}}
+          {{set kmActual="=base.datosVehiculo.base.kmActual"}}
+          {{set nivelCombustible="=base.nivelCombustible"}}
+          {{set _nivelCombustible="=base._nivelCombustible"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}  
+{{/define}}

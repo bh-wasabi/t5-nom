@@ -1,0 +1,11 @@
+{{#define id="registroReferencia"}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{#field id="cluesOrigen"}}
+		{{#onChange}}
+			{{set entidad="=_remoteScope.entidad"}}
+			{{set municipio="=_remoteScope.municipio"}}
+  		{{/onChange}}
+    {{/field}}
+  {{/section}}
+{{/define}}    

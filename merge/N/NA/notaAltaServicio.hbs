@@ -1,0 +1,22 @@
+{{#define id="notaAltaServicio"}}
+  {{#section id="base"}}
+    {{field id="tieneTraslado" type="expr" value="=motivoAltaServicio=='trasladoOtroUnidad'"}}
+    {{!-- RACC --}}
+    {{field id="defuncion" type="expr" value="=motivoAltaServicio=='defuncion'"}}
+    {{!-- RACC --}}
+    {{#field id="central"}}
+      {{onChange clearFields="cama"}}
+    {{/field}}
+    {{#field id="cama"}}
+      {{#editor alwaysLoad="true"}}
+        {{param estatus="='preAlta'"}}
+        {{param central="=central"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+  {{#grid id="solicitudesEgreso" section="solicitudesEgreso" allowInsert="false" allowRemove="false"}}
+    {{column field="_name" width="800" readOnly="true"}}
+    {{column field="_moment" width="250" readOnly="true"}}
+    {{column field="accion" width="90"}}
+  {{/grid}}
+{{/define}}

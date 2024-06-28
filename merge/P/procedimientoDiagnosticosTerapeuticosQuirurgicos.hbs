@@ -1,0 +1,12 @@
+{{!-- Tarea 2504 --}}
+{{#define id="procedimientoDiagnosticosTerapeuticosQuirurgicos"}}
+  {{#section id="base"}}
+  	{{#onChange}}
+  		{{#update}}
+  			{{set cantidadProcedimientos="=procedimientosCirugiasCie9.length"}}
+  		{{/update}}
+  	{{/onChange}}
+  	{{validator type="expr" validIf="=procedimientosCirugiasCie9.length<9" message="Máximo 8 Procedimientos"}}
+  {{/section}}
+{{/define}}
+{{!-- Tarea 2504 --}}

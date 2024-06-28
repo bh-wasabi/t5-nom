@@ -1,0 +1,63 @@
+{{#define id="candidato"}}
+  {{param name="=_params.name||'Candidato'"}}
+  {{action id="eliminar" hide="true"}}
+  
+  {{#action id="tool" condition="true" type="photo" label="Tomar Foto" color="grey" as="foto" icon="camera"}}
+    {{#update section="base"}}
+      {{setRef ref="foto.base.nombre" value="='Fotografía'"}}
+      {{setRef ref="foto.base.url" value="=foto.url"}}
+    {{/update}}
+  {{/action}}   
+  {{action id="tool2" type="openFolder" condition="=adjuntos" items="=adjuntos" label="Adjuntos" color="grey" visibleMode="close"}}  
+  {{#action id="sugerirCurp" hide="true" type="update"}}
+    {{#update section="base"}}
+      {{set clave="=calc.curp(nombres, apellidoPaterno, apellidoMaterno, genero, entidadNacimiento, fechaNacimiento)"}}
+    {{/update}}
+  {{/action}}
+
+  {{#section id="base"}}
+    {{field id="nombreCompleto" type="expr" label="Nombre" value="=calc.concat(@nombres, @apellidoPaterno, @apellidoMaterno)"}}
+    {{field id="esMujer" type="expr" value="=base.genero==='mujer'"}}
+    {{#field id="puesto"}}
+      {{#onChange clearFields="documentacionRequerida"}}
+        {{set documentacionRequerida="=_remoteScope.persona.documentacionRequerida"}}
+        {{set _documentacionRequerida="=_remoteScope.persona._documentacionRequerida"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base.nombreCompleto"}}
+      {{include field="base.clave"}}    
+      {{include field="base.genero"}}
+      {{include field="base.puesto"}}
+      {{include field="base.fechaNacimiento"}}
+      {{include field="_readOnly"}}
+      {{sort field="base.nombreCompleto" direction="asc"}}
+      {{search field="base.nombreCompleto"}}
+      {{search field="base.clave" directSearchIfLength="9,12,13,14,15,16,17,18"}}
+      {{search field="base.fechaNacimiento"}}
+      {{search field="base._puesto"}}
+    {{/find}}
+  {{/view}}
+{{/define}}
+
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{base.nombreCompleto}}</br>
+      <span style="font-size:12px;">{{base._puesto}}</span>
+      {{#if _readOnly}}
+      <span class="read-only" style="font-size:12px;"><strong>&nbsp;&nbsp;Solo Lectura&nbsp;&nbsp;</strong></span>
+      {{/if}}
+    </div>
+  {{/template}}
+{{/markup}}

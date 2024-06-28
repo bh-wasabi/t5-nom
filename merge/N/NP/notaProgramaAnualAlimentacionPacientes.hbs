@@ -1,0 +1,17 @@
+{{#define id="notaProgramaAnualAlimentacionPacientes"}}
+  {{param startOnOpen="programaAnualAlimentacionPacientes"}}
+  {{param addClass="w50"}}
+  {{#grid id="programaAnualAlimentacionPacientes" section="programaAnualAlimentacionPacientes" disableEnter="true" fixedColumnsLeft="3"}}
+    {{column field="fecha" width="120" readOnly="true"}}
+    {{column field="diaSemana" width="100" readOnly="true"}}
+    {{column field="menuDia" width="200"}}
+  {{/grid}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

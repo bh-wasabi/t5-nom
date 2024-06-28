@@ -1,0 +1,27 @@
+{{#define id="asignacionActivoFijo"}}  
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{field id="tieneVigencia" type="expr" value="=@tipoAsignacion==='temporal'"}}
+    {{field id="esVehiculo" type="expr" value="=@tipoActivoFijo=='vehiculo'"}}
+    {{#field id="tipoActivoFijo"}}
+      {{onChange clearFields="articulo"}}
+    {{/field}}
+    {{#field id="articulo"}}
+      {{#editor}}
+        {{param tipoArticulo="='activoFijo'"}}
+        {{param tipoActivoFijo="=tipoActivoFijo"}}
+        {{param puedeAsignar="=true"}}
+        {{#onChange}}
+          {{set codigo="=base.codigo"}}
+          {{set descripcion="=base.descripcion"}}
+          {{!-- {{set subTipoActivoFijo="=base.subTipoActivoFijo"}}
+          {{set _subTipoActivoFijo="=base._subTipoActivoFijo"}} --}}
+          {{set datosVehiculo="=base.datosVehiculo"}}
+          {{set _datosVehiculo="=base._datosVehiculo"}}
+          {{set datosActivoFijo="=base.datosActivoFijo"}}
+          {{set _datosActivoFijo="=base._datosActivoFijo"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

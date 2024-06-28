@@ -1,0 +1,217 @@
+{{#define type="doc" id="solicitudHistorial" name="Historial Largo Plazo"}}
+  {{#view id="inactivos"}}    {{!-- collection="solicitudInactivo" --}}
+    {{#find}}
+      {{include field="_created"}}
+      {{include field="_updated"}}
+      {{include field="_date"}}
+      {{include field="_parent"}}
+      {{include field="_attributes"}}
+      {{include field="persona"}}
+      {{include field="base"}}
+      {{include field="reprogramado"}}
+      {{include field="control"}}
+      {{include field="info"}}
+      {{include field="_moment"}}
+      {{sort condition="=conPrioridad" field="base.prioridad" direction="asc"}}
+      {{sort condition="=ordenNombreCorto" field="base.nombreCorto" direction="asc"}}
+      {{!-- {{sort field="base.fechaHoraCita" direction="asc"}} --}}
+      {{sort field="_id" direction="desc"}}
+      {{search field="_name"}}
+      {{!-- {{search field="_parent.name"}}
+      {{search field="persona.id"}} --}}
+      {{!-- {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}} --}}
+      {{!-- {{search field="persona.fechaNacimiento"}} --}}
+      {{!-- {{search field="base.fechaHoraCita"}}
+      {{search field="base._cita"}}
+      {{search field="base._central"}}
+      {{search field="base._solicitante"}}
+      {{search field="base._especialidad"}}
+      {{search field="base._especialidad3"}} --}}
+      {{search field="_created.folio" type="number"}}
+      {{!-- {{search field="info.base.folioReferencia"}}
+      {{search field="base._prioridad"}}      
+      {{search field="base._servicioOrigen"}} --}}
+      {{search field="_date" type="date"}}
+      {{filter field="base.estatus" in="=fn('listaEstatus','activos')"}}
+      {{filter field="_updated.moment" in="finalizado,cancelado,descartado,rechazado,suspendido,facturado,fragmentado"}}
+      {{filter condition="=central" field="base.central" eq="=central"}}
+      {{filter condition="=servicio" field="base.servicio" eq="=servicio" orInPresetPartOf="cfg.servicio"}}
+      {{filter condition="=tipoSolicitud" field="base.tipoSolicitud" eq="=tipoSolicitud"}}
+      {{filter condition="=situacionActual" field="control.situacionActual" eq="=situacionActual"}}
+      {{filter condition="=tipoSuive" field="base.tipoSuive" exists="=true"}}
+      {{filter condition="=categoria" field="base.categoria" eq="=categoria"}}
+      {{filter condition="=prioridad" field="base.prioridad" eq="=prioridad"}}
+      {{filter condition="=conPrioridad" field="base.prioridad" in="urgente,alta"}}
+      {{filter condition="=sinPrioridad" field="base.prioridad" nin="urgente,alta"}}
+      {{filter condition="=momento" field="_updated.moment" eq="=momento"}}
+      {{filter condition="=surtirDe" field="base.surtirDe" eq="=surtirDe"}}
+      {{filter condition="=persona" field="persona.id" eq="=persona"}}
+    {{/find}}
+    {{join source="persona" view="contexto" as="join" id="persona.id"}}
+    {{calc field="nombre" type="expr" value="=join._name"}}
+    {{calc field="_especialidad" type="expr" value="=base._especialidad3||base._especialidad"}}
+    {{calc field="estatus" type="expr" value="@_updated&&_updated.moment||base.estatus"}}
+    {{calc field="_estatus" type="expr" value="@_updated&&_updated._moment||base._estatus"}}
+    {{calc field="icono" type="expr" value="=fn('solicitudIcono', estatus)"}}
+    {{calc field="color" type="expr" value="=fn('solicitudColor', estatus)"}}
+    {{calc field="_momentoActual" type="expr" value="=_moment[_updated.moment]._doc"}}
+    {{calc field="_readOnly" type="expr" value="=join._readOnly"}}
+    {{calc field="_flags" type="expr" value="=join._flags"}}
+  {{/view}}
+{{/define}}
+
+{{#markup}}
+  {{#template id="verSolicitud"}}
+    <div class="list-material">
+      <li class="has-action-left">
+        {{#if join.contexto.riesgoEpidemiologico.estaActivo}}
+          <div class="list-action-left"><i class="icon ion-{{join.contexto.riesgoEpidemiologico.icono}} text-{{join.contexto.riesgoEpidemiologico.color}}"></i></div>
+        {{else}}
+          <div class="list-action-left"><i class="icon ion-{{icono}} text-{{color}}"></i></div>
+        {{/if}}        
+        <div class="list-content">
+          <span class="title">{{nombre}}
+          {{#if base.esUrgente}}
+          <span class="urgent" style="font-size:12px;float:right;"><strong>&nbsp;&nbsp;Urgente&nbsp;&nbsp;</strong></span>
+          {{/if}}
+          {{#if base.esAltaPrioridad}}
+          <span class="high-priority" style="font-size:12px;float:right;"><strong>&nbsp;&nbsp;Alta Prioridad&nbsp;&nbsp;</strong></span>
+          {{/if}}
+          {{#if base.esMedianaPrioridad}}
+          <span class="medium-priority" style="font-size:12px;float:right;"><strong>&nbsp;&nbsp;Mediana Prioridad&nbsp;&nbsp;</strong></span>
+          {{/if}}
+          {{#if base.esBajaPrioridad}}
+          <span class="low-priority" style="font-size:12px;float:right;"><strong>&nbsp;&nbsp;Baja Prioridad&nbsp;&nbsp;</strong></span>
+          {{/if}}
+          </span>
+          {{#if base._central}}
+            <span style="font-size:12px;"><strong>{{base._central}} {{join.contexto._cama}}</strong></span><br>
+          {{/if}}
+          {{#if persona.clave}}
+            <span style="font-size:12px;">{{persona.clave}}</span>
+            <span style="font-size:12px;float:right;">{{persona._genero}}{{#if persona._tipoSanguineo}}, {{persona._tipoSanguineo}}{{/if}}</span>
+            <br>
+            {{#if _readOnly}}
+            <span class="read-only" style="font-size:12px;"><strong>&nbsp;&nbsp;Solo Lectura&nbsp;&nbsp;</strong></span>
+            {{/if}}          
+            {{#if join.contexto.esCasoMedicoLegal}}
+            <span class="cml" style="font-size:12px;"><strong>&nbsp;&nbsp;CML&nbsp;&nbsp;</strong></span>
+            {{/if}}
+            {{#if join.contexto.cuentaCerrada}}
+            <span class="closed-account" style="font-size:12px;"><strong>&nbsp;&nbsp;Cuenta Cerrada&nbsp;&nbsp;</strong></span>
+            {{else}}
+              {{#if join.contexto.puedeAlta}}
+              <span class="puede-alta" style="font-size:12px;"><strong>&nbsp;&nbsp;Alta&nbsp;&nbsp;</strong></span>
+              {{else}}
+                {{#if join.contexto.puedeCerrar}}
+                <span class="puede-alta" style="font-size:12px;"><strong>&nbsp;&nbsp;Alta&nbsp;&nbsp;</strong></span>
+                {{else}}
+                  {{#if join.contexto.preAlta}}
+                  <span class="pre-alta" style="font-size:12px;"><strong>&nbsp;&nbsp;Pre Alta&nbsp;&nbsp;</strong></span>
+                  {{/if}}
+                {{/if}}
+              {{/if}}
+            {{/if}}
+            {{#if join._flags}}
+              {{#with join._flags}}
+                {{#if defuncion}}
+                <span class="fondo-{{defuncion.color}}" style="font-size:12px;"><strong>&nbsp;&nbsp;{{defuncion.name}}&nbsp;&nbsp;</strong></span>
+                {{/if}}
+                {{#if cancerBucal}}
+                <span class="fondo-{{cancerBucal.color}}" style="font-size:12px;"><strong>&nbsp;&nbsp;{{cancerBucal.name}}&nbsp;&nbsp;</strong></span>
+                {{/if}}
+                {{#if creher}}
+                <span class="fondo-{{creher.color}}" style="font-size:12px;"><strong>&nbsp;&nbsp;{{creher.name}}&nbsp;&nbsp;</strong></span>
+                {{/if}}
+                {{#if hepatitis}}
+                <span class="fondo-{{hepatitis.color}}" style="font-size:12px;"><strong>&nbsp;&nbsp;{{hepatitis.name}}&nbsp;&nbsp;</strong></span>
+                {{/if}}
+                {{#if labioPaladarHendido}}
+                <span class="fondo-{{labioPaladarHendido.color}}" style="font-size:12px;"><strong>&nbsp;&nbsp;{{labioPaladarHendido.name}}&nbsp;&nbsp;</strong></span>
+                {{/if}}
+                {{#if iaas}}
+                <span class="fondo-{{iaas.color}}" style="font-size:12px;"><strong>&nbsp;&nbsp;{{iaas.name}}&nbsp;&nbsp;</strong></span>
+                {{/if}}
+                {{#if suive}}
+                <span class="fondo-{{suive.color}}" style="font-size:12px;"><strong>&nbsp;&nbsp;{{suive.name}}&nbsp;&nbsp;</strong></span>
+                {{/if}}
+                {{#if pic}}
+                <span class="fondo-{{pic.color}}" style="font-size:12px;"><strong>&nbsp;&nbsp;{{pic.name}}&nbsp;&nbsp;</strong></span>
+                {{/if}}
+                {{#if pei}}
+                <span class="fondo-{{pei.color}}" style="font-size:12px;"><strong>&nbsp;&nbsp;{{pei.name}}&nbsp;&nbsp;</strong></span>
+                {{/if}}
+                {{#if aislamiento}}
+                  {{#with aislamiento.data}}
+                    {{#if verde}}
+                    <br><span style="font-size:12px;" class="color-verde">Aislamiento Precauciones Gotas</span>
+                    {{/if}}
+                    {{#if azul}}
+                    <br><span style="font-size:12px;" class="color-azul">Aislamiento Precauciones Vía Aérea</span>
+                    {{/if}}
+                    {{#if amarillo}}
+                    <br><span style="font-size:12px;" class="color-amarillo">Aislamiento Precauciones Contacto</span>
+                    {{/if}}
+                    {{#if naranja}}
+                    <br><span style="font-size:12px;" class="color-naranja">Aislamiento Precauciones Contacto Plus</span>
+                    {{/if}}
+                    {{#if gris}}
+                    <br><span style="font-size:12px;" class="color-gris-obscuro">Aislamiento Precauciones Protección</span>
+                    {{/if}}
+                  {{/with}}                  
+                {{/if}}
+              {{/with}}
+              <br>
+            {{/if}}
+          {{/if}}
+          <span style="font-size:12px;white-space:pre-wrap;font-style:italic;">{{_name}}</span>
+          <br><span style="font-size:12px;">{{base._nota}} {{date _created.date "D/MMM h:mma"}}{{#if info.base.cama}}, {{info.base._cama}}{{/if}}</span>
+          {{#if base._solicitante}}
+          </br><span style="font-size:12px;">{{base._solicitante}} / {{_especialidad}}</span>
+          {{/if}}
+          {{#if base.fechaHoraCita}}
+          </br><span style="font-size:12px;">Cita: {{date base.fechaHoraCita "D/MMM h:mma"}}</span>
+          {{/if}}
+          {{#if _updated.reason}}
+          <span style="font-size:12px;float:right;"><strong>{{_updated._reason}}</strong></span>
+          {{/if}}
+          {{#if control.faltante}}
+          <br><span style="color:red;font-size:12px;"><strong>Faltante: {{control.faltante}}</strong></span>
+          {{/if}}
+          {{#if base.ubicacionEspecifica}}
+          </br><span class="especifico" style="font-size:12px;">Surtir de: {{base._ubicacionEspecifica}}</span>
+          {{/if}}
+          {{#if base.surtirAlmacenEspecifico}}
+          </br><span class="especifico" style="font-size:12px;">Surtir de: {{base._surtirAlmacenEspecifico}}</span>
+          {{/if}}
+          {{#if base.surtirLoteEspecifico}}
+          </br><span class="especifico" style="font-size:12px;">Surtir con Lote Específico</span>
+          {{/if}}
+          {{#if base.loteEspecifico}}
+          </br><span class="especifico" style="font-size:12px;">Lote Específico: {{base.loteEspecifico}}</span>
+          {{/if}}
+          {{#if _momentoActual}}
+          </br><span style="font-size:12px;"><strong>{{_momentoActual}}</strong></span><br>
+          {{/if}}
+          {{#if info.base.folioReferencia}}
+          <br><span style="color:green;font-size:12px;"><strong>Folio Asignado: {{info.base.folioReferencia}}</strong></span>
+          {{/if}}
+          {{#if info.base.anestesiologo}}
+          <br><span style="color:green;font-size:12px;"><strong>Anestesiólogo: {{info.base._anestesiologo}}</strong></span>
+          {{/if}}
+          {{#if info.base.candidato}}
+          <br><span style="color:green;font-size:12px;"><strong>Candidato: {{info.base._candidato}}</strong></span>
+          {{/if}}
+          {{#if join.persona.plazas}}
+          <br><span style="font-size:12px;"><strong>{{join.persona.plazas}} Plazas</strong></span>
+          {{/if}}
+          {{#if leyenda}}
+          <br><span style="font-size:12px;"><strong>{{leyenda}}</strong></span>
+          {{/if}}
+          <span style="font-size:12px;float:right;"><strong>{{_estatus}}</strong></span>
+        </div>          
+      </li>
+    </div>
+  {{/template}}    
+{{/markup}}

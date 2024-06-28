@@ -1,0 +1,16 @@
+{{#define id="notaInventarioFisico"}}
+  {{param attribute1="=_created.service"}}
+  {{param startOnOpen="lotes"}}
+  {{param addClass="w70"}}
+  {{action id="afectar" error="=base.costoUnitario?null:'Costo Unitario Incorrecto'"}}
+  {{!-- {{param removeIfEmptySection="lotes"}}
+  {{param removeIfEmptyField="cantidad"}} --}}
+
+  {{#grid id="lotes" section="lotes" allowInsert="true" allowRemove="true" allowSort="true" sortBy="vencimiento" exportToExcel="true"}}
+    {{column field="lote" label="Lote" width="200"}}
+    {{column field="vencimiento" label="Caducidad" width="150" validateDate="true"}}
+    {{column field="cantidad" label="Cantidad" width="100" type="numeric" format="#,"}}
+  {{/grid}}
+
+  {{!-- {{action id="verLotes" label="Lotes" type="viewGrid" visibleMode="close" color="cyan" grid="lotes" items="lotes"}} --}}
+{{/define}}

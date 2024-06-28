@@ -1,0 +1,51 @@
+{{#define id="notaValidacionInventario"}}
+  {{param attribute1="=_created.service"}}
+  {{param attribute2="=_created.subType"}}
+  {{param startOnOpen="articulos"}}
+
+  {{#section id="base"}}
+    {{field id="esProducto" type="expr" value="=_created.service=='ropa'||base.tipoArticulo=='material'"}}
+    {{field id="esActivoFijo" type="expr" value="=!esProducto"}}
+  {{/section}}
+
+  {{#section id="articulos"}}
+    {{field id="faltante" type="calc" value="=@cantidad-calc.number(@cantidadEncontrada)"}}
+  {{/section}}
+
+  {{#section id="fueraLugar"}}
+    {{#field id="articulo"}}
+      {{#editor display="base.codigo" view="activos"}}
+        {{param servicio="=_created.service"}}
+        {{param sinTipoActivoFijo="otroActivoFijo"}}
+      {{/editor}}
+      {{#onChange}}
+        {{set codigo="=base.codigo"}}
+        {{set descripcion="=base.descripcion"}}
+        {{set encontrado="='si'"}}
+        {{set fueraLugar="='si'"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+
+  {{#grid id="articulos" section="articulos" keyField="codigo" disableEnter="true"}}
+    {{column field="ubicacion" width="200" readOnly="true"}}
+    {{column field="codigo" width="150" readOnly="true"}}
+    {{column field="descripcion" width="400" readOnly="true"}}
+    {{column field="cantidad" width="70" type="numeric" format="#," readOnly="true"}}
+    {{column field="encontrado" width="80" required="true" hide="=base.esProducto"}}
+    {{column field="cantidadEncontrada" width="140" hide="=base.esActivoFijo"}}
+    {{column field="requiereMantenimiento" width="190" hide="=base.esProducto"}}
+    {{column field="comentarios" width="250"}}
+  {{/grid}}
+  {{#grid id="fueraLugar" section="fueraLugar" keyField="articulo" allowInsert="true" allowRemove="true"}}
+    {{column field="ubicacion" width="200" required="true"}}
+    {{column field="articulo" width="150"}}
+    {{column field="descripcion" width="280" readOnly="true"}}
+    {{!-- {{column field="cantidad" width="70" type="numeric" format="#,"}} --}}
+    {{column field="encontrado" width="80" required="true" hide="=base.esProducto"}}
+    {{column field="cantidadEncontrada" width="140" hide="=base.esActivoFijo"}}
+    {{column field="fueraLugar" width="100" readOnly="true"}}
+    {{column field="requiereMantenimiento" width="190" hide="=base.esProducto"}}
+    {{column field="comentarios" width="200"}}
+  {{/grid}}
+{{/define}}

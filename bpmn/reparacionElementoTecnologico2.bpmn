@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Definitions_0vlxyx3" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.0.0">
+  <bpmn:collaboration id="Collaboration_126gycz">
+    <bpmn:participant id="Participant_0vxrtak" processRef="solicituReparacionAMMNC" />
+  </bpmn:collaboration>
+  <bpmn:process id="solicituReparacionAMMNC" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_07c07lx">
+      <bpmn:lane id="Lane_0e3bg09" name="Inspector Fiscal / Autorización">
+        <bpmn:flowNodeRef>porAutorizarPlan</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_1raxkxy</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_0baxqst" name="Concesionaria">
+        <bpmn:flowNodeRef>Activity_076iln0</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_14t8g65</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>porElaborarPlan</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_001sgzv</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_1u2048f</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_0dn2lda</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>noFalla</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_0dma4l1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_06md4qi</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>programado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>pendiente</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>coordinandoInstalacionProvisionalPorGarantia</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>coordinandoReparacion</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>reparado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>provisionalInstalado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>coordinandoInstalacionDefinitiva</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>coordinandoInstalacionProvisionalPorReparacion</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enInstalacionProvisionalPorReparacion</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>provisionalDevuelto</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1xyyikr</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>transReparacion</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enInstalacionDefinitiva</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>porDevolverProvisional</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1bdlwem</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enInstalacionProvisionalPorGarantia</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_1sn56fx</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>coordinandoReposicionPorGarantia</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enReposicionPorGarantia</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>repuestoPorGarantia</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_16ouxfc</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_1ji397d</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enReparacionSoftware</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ejecutadoCorrectamente</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>softwareReparado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>coordinandoReparacionSoftware</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:task id="Activity_076iln0" name="Determinar Nivel de Severidad">
+      <bpmn:incoming>Flow_17mc3wq</bpmn:incoming>
+      <bpmn:outgoing>Flow_1fj227f</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_14t8g65">
+      <bpmn:incoming>Flow_0kb22by</bpmn:incoming>
+      <bpmn:outgoing>Flow_0pcogh3</bpmn:outgoing>
+      <bpmn:outgoing>Flow_07drv69</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="porElaborarPlan" name="Generando Plan de Reparación Software">
+      <bpmn:incoming>Flow_1twtvpy</bpmn:incoming>
+      <bpmn:incoming>Flow_18ch6wu</bpmn:incoming>
+      <bpmn:outgoing>Flow_0z244o7</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_001sgzv" name="Determinar tiempo máx para la definición del plan de solución">
+      <bpmn:incoming>Flow_1fj227f</bpmn:incoming>
+      <bpmn:outgoing>Flow_1twtvpy</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_1u2048f" name="¿Hardware o Software?">
+      <bpmn:incoming>Flow_0f9yo9x</bpmn:incoming>
+      <bpmn:outgoing>Flow_17mc3wq</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0kb22by</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="Gateway_0dn2lda" name="¿Requiere equipo provisional mientras llega la garantía?">
+      <bpmn:incoming>Flow_0pcogh3</bpmn:incoming>
+      <bpmn:outgoing>Flow_1hff56t</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1c28153</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="noFalla" name="No Falla">
+      <bpmn:incoming>Flow_185z6fn</bpmn:incoming>
+      <bpmn:outgoing>Flow_1fqa238</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_0dma4l1" name="¿Es una falla?">
+      <bpmn:incoming>Flow_1j09an6</bpmn:incoming>
+      <bpmn:outgoing>Flow_185z6fn</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0f9yo9x</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="Event_06md4qi">
+      <bpmn:incoming>Flow_1fqa238</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="programado" name="Por Confirmar">
+      <bpmn:incoming>Flow_06dpiuj</bpmn:incoming>
+      <bpmn:outgoing>Flow_1j09an6</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0ik9u0y</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1twtvpy" sourceRef="Activity_001sgzv" targetRef="porElaborarPlan" />
+    <bpmn:sequenceFlow id="Flow_1fj227f" sourceRef="Activity_076iln0" targetRef="Activity_001sgzv" />
+    <bpmn:sequenceFlow id="Flow_0z244o7" sourceRef="porElaborarPlan" targetRef="porAutorizarPlan" />
+    <bpmn:sequenceFlow id="Flow_1gdn0r2" sourceRef="Activity_1ji397d" targetRef="enReparacionSoftware" />
+    <bpmn:sequenceFlow id="Flow_0hcplxb" sourceRef="enReparacionSoftware" targetRef="softwareReparado" />
+    <bpmn:sequenceFlow id="Flow_0tssn48" sourceRef="porAutorizarPlan" targetRef="Gateway_1raxkxy" />
+    <bpmn:sequenceFlow id="Flow_1hm6yxh" sourceRef="porDevolverProvisional" targetRef="provisionalDevuelto" />
+    <bpmn:sequenceFlow id="Flow_1c28153" name="SI" sourceRef="Gateway_0dn2lda" targetRef="coordinandoInstalacionProvisionalPorGarantia" />
+    <bpmn:sequenceFlow id="Flow_0cwlqwo" name="SI" sourceRef="Gateway_1sn56fx" targetRef="coordinandoInstalacionProvisionalPorReparacion" />
+    <bpmn:sequenceFlow id="Flow_1vyaupr" sourceRef="transReparacion" targetRef="reparado" />
+    <bpmn:sequenceFlow id="Flow_0rzf628" sourceRef="coordinandoReparacion" targetRef="transReparacion" />
+    <bpmn:sequenceFlow id="Flow_09mlwa9" name="NO" sourceRef="Gateway_1sn56fx" targetRef="coordinandoReparacion" />
+    <bpmn:sequenceFlow id="Flow_16724bl" sourceRef="coordinandoInstalacionProvisionalPorGarantia" targetRef="enInstalacionProvisionalPorGarantia" />
+    <bpmn:sequenceFlow id="Flow_12lla8c" sourceRef="enReposicionPorGarantia" targetRef="repuestoPorGarantia" />
+    <bpmn:sequenceFlow id="Flow_19tcw5q" sourceRef="coordinandoReposicionPorGarantia" targetRef="enReposicionPorGarantia" />
+    <bpmn:sequenceFlow id="Flow_1hff56t" name="NO" sourceRef="Gateway_0dn2lda" targetRef="coordinandoReposicionPorGarantia" />
+    <bpmn:sequenceFlow id="Flow_1gzvpey" sourceRef="coordinandoInstalacionProvisionalPorReparacion" targetRef="enInstalacionProvisionalPorReparacion" />
+    <bpmn:sequenceFlow id="Flow_07drv69" name="Se debe reparar" sourceRef="Gateway_14t8g65" targetRef="Gateway_1sn56fx" />
+    <bpmn:sequenceFlow id="Flow_0pcogh3" name="Utilizar la Garantía" sourceRef="Gateway_14t8g65" targetRef="Gateway_0dn2lda" />
+    <bpmn:sequenceFlow id="Flow_0kb22by" name="Falla Hardware" sourceRef="Gateway_1u2048f" targetRef="Gateway_14t8g65" />
+    <bpmn:sequenceFlow id="Flow_1j09an6" sourceRef="programado" targetRef="Gateway_0dma4l1" />
+    <bpmn:sequenceFlow id="Flow_01f6g32" sourceRef="softwareReparado" targetRef="ejecutadoCorrectamente" />
+    <bpmn:sequenceFlow id="Flow_0xlz5al" sourceRef="coordinandoReparacionSoftware" targetRef="Activity_1ji397d" />
+    <bpmn:sequenceFlow id="Flow_1bt0o5g" name="SI" sourceRef="Gateway_1raxkxy" targetRef="coordinandoReparacionSoftware" />
+    <bpmn:sequenceFlow id="Flow_0f9yo9x" name="SI" sourceRef="Gateway_0dma4l1" targetRef="Gateway_1u2048f" />
+    <bpmn:sequenceFlow id="Flow_185z6fn" name="NO" sourceRef="Gateway_0dma4l1" targetRef="noFalla" />
+    <bpmn:sequenceFlow id="Flow_06dpiuj" sourceRef="pendiente" targetRef="programado" />
+    <bpmn:sequenceFlow id="Flow_0ik9u0y" sourceRef="StartEvent_1" targetRef="pendiente" />
+    <bpmn:sequenceFlow id="Flow_17mc3wq" name="Falla Software" sourceRef="Gateway_1u2048f" targetRef="Activity_076iln0" />
+    <bpmn:sequenceFlow id="Flow_1fqa238" sourceRef="noFalla" targetRef="Event_06md4qi" />
+    <bpmn:task id="pendiente" name="Revisión Programada de la Solicitud">
+      <bpmn:incoming>Flow_0ik9u0y</bpmn:incoming>
+      <bpmn:outgoing>Flow_06dpiuj</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="coordinandoInstalacionProvisionalPorGarantia" name="Coordinando Instalación Equipo Provisional por Garantía">
+      <bpmn:incoming>Flow_1c28153</bpmn:incoming>
+      <bpmn:outgoing>Flow_16724bl</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0smrq8u" sourceRef="coordinandoInstalacionDefinitiva" targetRef="enInstalacionDefinitiva" />
+    <bpmn:sequenceFlow id="Flow_11tir4h" sourceRef="repuestoPorGarantia" targetRef="Event_16ouxfc" />
+    <bpmn:sequenceFlow id="Flow_1c59qx2" sourceRef="enInstalacionDefinitiva" targetRef="porDevolverProvisional" />
+    <bpmn:task id="coordinandoReparacion" name="Coordinando la Reparación">
+      <bpmn:incoming>Flow_09mlwa9</bpmn:incoming>
+      <bpmn:outgoing>Flow_0rzf628</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_08j2ff2" sourceRef="enInstalacionProvisionalPorGarantia" targetRef="provisionalInstalado" />
+    <bpmn:sequenceFlow id="Flow_0401xmh" sourceRef="enInstalacionProvisionalPorReparacion" targetRef="provisionalInstalado" />
+    <bpmn:sequenceFlow id="Flow_027zi7e" sourceRef="provisionalInstalado" targetRef="coordinandoInstalacionDefinitiva" />
+    <bpmn:task id="reparado" name="Equipo Reparado">
+      <bpmn:incoming>Flow_1vyaupr</bpmn:incoming>
+      <bpmn:outgoing>Flow_0rx1p4n</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:subProcess id="transReparacion" name="En Reparación">
+      <bpmn:incoming>Flow_0rzf628</bpmn:incoming>
+      <bpmn:outgoing>Flow_1vyaupr</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:task id="provisionalInstalado" name="Equipo Provisional Instalado">
+      <bpmn:incoming>Flow_08j2ff2</bpmn:incoming>
+      <bpmn:incoming>Flow_0401xmh</bpmn:incoming>
+      <bpmn:outgoing>Flow_027zi7e</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="coordinandoInstalacionDefinitiva" name="Coordinando Instalación Definitiva">
+      <bpmn:incoming>Flow_027zi7e</bpmn:incoming>
+      <bpmn:outgoing>Flow_0smrq8u</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:subProcess id="enInstalacionDefinitiva" name="En Instalación Definitiva">
+      <bpmn:incoming>Flow_0smrq8u</bpmn:incoming>
+      <bpmn:outgoing>Flow_1c59qx2</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="porDevolverProvisional" name="Por Devolvier Equipo Provisional">
+      <bpmn:incoming>Flow_1c59qx2</bpmn:incoming>
+      <bpmn:outgoing>Flow_1hm6yxh</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:sequenceFlow id="Flow_0rx1p4n" sourceRef="reparado" targetRef="Event_1bdlwem" />
+    <bpmn:task id="coordinandoInstalacionProvisionalPorReparacion" name="Coordinando Instalación Equipo Provisional por Reparación">
+      <bpmn:incoming>Flow_0cwlqwo</bpmn:incoming>
+      <bpmn:outgoing>Flow_1gzvpey</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="enInstalacionProvisionalPorReparacion" name="En Instalación Equipo Provisional por Reparación">
+      <bpmn:incoming>Flow_1gzvpey</bpmn:incoming>
+      <bpmn:outgoing>Flow_0401xmh</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="provisionalDevuelto" name="Equipo Provisional Devuelto">
+      <bpmn:incoming>Flow_1hm6yxh</bpmn:incoming>
+      <bpmn:outgoing>Flow_0c6jhmi</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="Event_1xyyikr">
+      <bpmn:incoming>Flow_0c6jhmi</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0c6jhmi" sourceRef="provisionalDevuelto" targetRef="Event_1xyyikr" />
+    <bpmn:endEvent id="Event_1bdlwem">
+      <bpmn:incoming>Flow_0rx1p4n</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="enInstalacionProvisionalPorGarantia" name="En Instalación Equipo Provisional por Garantía">
+      <bpmn:incoming>Flow_16724bl</bpmn:incoming>
+      <bpmn:outgoing>Flow_08j2ff2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_1sn56fx" name="¿Reqiuere equipo provisional mientras se repara?">
+      <bpmn:incoming>Flow_07drv69</bpmn:incoming>
+      <bpmn:outgoing>Flow_0cwlqwo</bpmn:outgoing>
+      <bpmn:outgoing>Flow_09mlwa9</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="coordinandoReposicionPorGarantia" name="Coordinando Reposición por Garantía">
+      <bpmn:incoming>Flow_1hff56t</bpmn:incoming>
+      <bpmn:outgoing>Flow_19tcw5q</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:subProcess id="enReposicionPorGarantia" name="En Reposición por Garantía">
+      <bpmn:incoming>Flow_19tcw5q</bpmn:incoming>
+      <bpmn:outgoing>Flow_12lla8c</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:task id="repuestoPorGarantia" name="Equipo Repuesto por Garantía">
+      <bpmn:incoming>Flow_12lla8c</bpmn:incoming>
+      <bpmn:outgoing>Flow_11tir4h</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="Event_16ouxfc">
+      <bpmn:incoming>Flow_11tir4h</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="porAutorizarPlan" name="Por Autorizar Plan de Reparación Software">
+      <bpmn:incoming>Flow_0z244o7</bpmn:incoming>
+      <bpmn:outgoing>Flow_0tssn48</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_1raxkxy" name="¿Plan fue aprobado?">
+      <bpmn:incoming>Flow_0tssn48</bpmn:incoming>
+      <bpmn:outgoing>Flow_1bt0o5g</bpmn:outgoing>
+      <bpmn:outgoing>Flow_18ch6wu</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_18ch6wu" name="NO" sourceRef="Gateway_1raxkxy" targetRef="porElaborarPlan" />
+    <bpmn:task id="Activity_1ji397d" name="Programar Reparación Software">
+      <bpmn:incoming>Flow_0xlz5al</bpmn:incoming>
+      <bpmn:outgoing>Flow_1gdn0r2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:subProcess id="enReparacionSoftware" name="En Reparación Software">
+      <bpmn:incoming>Flow_1gdn0r2</bpmn:incoming>
+      <bpmn:outgoing>Flow_0hcplxb</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:endEvent id="ejecutadoCorrectamente" name="">
+      <bpmn:incoming>Flow_01f6g32</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="softwareReparado" name="Software Reparado">
+      <bpmn:incoming>Flow_0hcplxb</bpmn:incoming>
+      <bpmn:outgoing>Flow_01f6g32</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="coordinandoReparacionSoftware" name="Coordinando Reparación Software">
+      <bpmn:incoming>Flow_1bt0o5g</bpmn:incoming>
+      <bpmn:outgoing>Flow_0xlz5al</bpmn:outgoing>
+    </bpmn:task>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_126gycz">
+      <bpmndi:BPMNShape id="Participant_0vxrtak_di" bpmnElement="Participant_0vxrtak" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="1890" height="1080" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0baxqst_di" bpmnElement="Lane_0baxqst" isHorizontal="true">
+        <dc:Bounds x="190" y="80" width="1860" height="870" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0e3bg09_di" bpmnElement="Lane_0e3bg09" isHorizontal="true">
+        <dc:Bounds x="190" y="950" width="1860" height="210" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_18ch6wu_di" bpmnElement="Flow_18ch6wu">
+        <di:waypoint x="460" y="1005" />
+        <di:waypoint x="460" y="710" />
+        <di:waypoint x="340" y="710" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="431" y="993" width="17" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0c6jhmi_di" bpmnElement="Flow_0c6jhmi">
+        <di:waypoint x="1940" y="670" />
+        <di:waypoint x="1992" y="670" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rx1p4n_di" bpmnElement="Flow_0rx1p4n">
+        <di:waypoint x="1600" y="836" />
+        <di:waypoint x="1662" y="836" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_027zi7e_di" bpmnElement="Flow_027zi7e">
+        <di:waypoint x="1430" y="530" />
+        <di:waypoint x="1500" y="530" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0401xmh_di" bpmnElement="Flow_0401xmh">
+        <di:waypoint x="1380" y="630" />
+        <di:waypoint x="1380" y="570" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_08j2ff2_di" bpmnElement="Flow_08j2ff2">
+        <di:waypoint x="1380" y="440" />
+        <di:waypoint x="1380" y="490" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1c59qx2_di" bpmnElement="Flow_1c59qx2">
+        <di:waypoint x="1770" y="530" />
+        <di:waypoint x="1840" y="530" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11tir4h_di" bpmnElement="Flow_11tir4h">
+        <di:waypoint x="1600" y="180" />
+        <di:waypoint x="1662" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0smrq8u_di" bpmnElement="Flow_0smrq8u">
+        <di:waypoint x="1600" y="530" />
+        <di:waypoint x="1670" y="530" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1fqa238_di" bpmnElement="Flow_1fqa238">
+        <di:waypoint x="780" y="260" />
+        <di:waypoint x="780" y="208" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_17mc3wq_di" bpmnElement="Flow_17mc3wq">
+        <di:waypoint x="575" y="400" />
+        <di:waypoint x="340" y="400" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="434" y="382" width="71" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ik9u0y_di" bpmnElement="Flow_0ik9u0y">
+        <di:waypoint x="308" y="180" />
+        <di:waypoint x="370" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_06dpiuj_di" bpmnElement="Flow_06dpiuj">
+        <di:waypoint x="470" y="180" />
+        <di:waypoint x="550" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_185z6fn_di" bpmnElement="Flow_185z6fn">
+        <di:waypoint x="625" y="300" />
+        <di:waypoint x="730" y="300" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="631" y="273" width="17" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0f9yo9x_di" bpmnElement="Flow_0f9yo9x">
+        <di:waypoint x="600" y="325" />
+        <di:waypoint x="600" y="375" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="574" y="323" width="11" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1bt0o5g_di" bpmnElement="Flow_1bt0o5g">
+        <di:waypoint x="485" y="1030" />
+        <di:waypoint x="590" y="1030" />
+        <di:waypoint x="590" y="876" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="494" y="1003" width="11" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0xlz5al_di" bpmnElement="Flow_0xlz5al">
+        <di:waypoint x="590" y="796" />
+        <di:waypoint x="590" y="750" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_01f6g32_di" bpmnElement="Flow_01f6g32">
+        <di:waypoint x="760" y="620" />
+        <di:waypoint x="760" y="702" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1j09an6_di" bpmnElement="Flow_1j09an6">
+        <di:waypoint x="600" y="220" />
+        <di:waypoint x="600" y="275" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0kb22by_di" bpmnElement="Flow_0kb22by">
+        <di:waypoint x="625" y="400" />
+        <di:waypoint x="905" y="400" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="692" y="382" width="75" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0pcogh3_di" bpmnElement="Flow_0pcogh3">
+        <di:waypoint x="955" y="400" />
+        <di:waypoint x="1035" y="400" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="967" y="366" width="46" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_07drv69_di" bpmnElement="Flow_07drv69">
+        <di:waypoint x="930" y="425" />
+        <di:waypoint x="930" y="670" />
+        <di:waypoint x="1035" y="670" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="950" y="643" width="80" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1gzvpey_di" bpmnElement="Flow_1gzvpey">
+        <di:waypoint x="1260" y="670" />
+        <di:waypoint x="1330" y="670" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1hff56t_di" bpmnElement="Flow_1hff56t">
+        <di:waypoint x="1060" y="375" />
+        <di:waypoint x="1060" y="180" />
+        <di:waypoint x="1160" y="180" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1071" y="353" width="17" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_19tcw5q_di" bpmnElement="Flow_19tcw5q">
+        <di:waypoint x="1260" y="180" />
+        <di:waypoint x="1340" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12lla8c_di" bpmnElement="Flow_12lla8c">
+        <di:waypoint x="1440" y="180" />
+        <di:waypoint x="1500" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16724bl_di" bpmnElement="Flow_16724bl">
+        <di:waypoint x="1260" y="400" />
+        <di:waypoint x="1330" y="400" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09mlwa9_di" bpmnElement="Flow_09mlwa9">
+        <di:waypoint x="1060" y="695" />
+        <di:waypoint x="1060" y="836" />
+        <di:waypoint x="1160" y="836" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1071" y="697" width="17" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rzf628_di" bpmnElement="Flow_0rzf628">
+        <di:waypoint x="1260" y="836" />
+        <di:waypoint x="1330" y="836" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1vyaupr_di" bpmnElement="Flow_1vyaupr">
+        <di:waypoint x="1430" y="836" />
+        <di:waypoint x="1500" y="836" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0cwlqwo_di" bpmnElement="Flow_0cwlqwo">
+        <di:waypoint x="1085" y="670" />
+        <di:waypoint x="1160" y="670" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1099" y="653" width="11" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1c28153_di" bpmnElement="Flow_1c28153">
+        <di:waypoint x="1085" y="400" />
+        <di:waypoint x="1160" y="400" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1104" y="382" width="11" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1hm6yxh_di" bpmnElement="Flow_1hm6yxh">
+        <di:waypoint x="1890" y="570" />
+        <di:waypoint x="1890" y="630" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0tssn48_di" bpmnElement="Flow_0tssn48">
+        <di:waypoint x="340" y="1030" />
+        <di:waypoint x="435" y="1030" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0hcplxb_di" bpmnElement="Flow_0hcplxb">
+        <di:waypoint x="640" y="580" />
+        <di:waypoint x="710" y="580" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1gdn0r2_di" bpmnElement="Flow_1gdn0r2">
+        <di:waypoint x="590" y="670" />
+        <di:waypoint x="590" y="620" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0z244o7_di" bpmnElement="Flow_0z244o7">
+        <di:waypoint x="290" y="750" />
+        <di:waypoint x="290" y="990" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1fj227f_di" bpmnElement="Flow_1fj227f">
+        <di:waypoint x="290" y="440" />
+        <di:waypoint x="290" y="520" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1twtvpy_di" bpmnElement="Flow_1twtvpy">
+        <di:waypoint x="290" y="600" />
+        <di:waypoint x="290" y="670" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_076iln0_di" bpmnElement="Activity_076iln0">
+        <dc:Bounds x="240" y="360" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_14t8g65_di" bpmnElement="Gateway_14t8g65" isMarkerVisible="true">
+        <dc:Bounds x="905" y="375" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ntwqrr_di" bpmnElement="porElaborarPlan">
+        <dc:Bounds x="240" y="670" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_001sgzv_di" bpmnElement="Activity_001sgzv">
+        <dc:Bounds x="240" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1u2048f_di" bpmnElement="Gateway_1u2048f" isMarkerVisible="true">
+        <dc:Bounds x="575" y="375" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="568" y="437" width="64" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0dn2lda_di" bpmnElement="Gateway_0dn2lda" isMarkerVisible="true">
+        <dc:Bounds x="1035" y="375" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1021" y="433" width="88" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ifq7un_di" bpmnElement="noFalla">
+        <dc:Bounds x="730" y="260" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0dma4l1_di" bpmnElement="Gateway_0dma4l1" isMarkerVisible="true">
+        <dc:Bounds x="575" y="275" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="493.5" y="293" width="71" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_06md4qi_di" bpmnElement="Event_06md4qi">
+        <dc:Bounds x="762" y="172" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0dau45s_di" bpmnElement="programado" bioc:stroke="black" bioc:fill="white">
+        <dc:Bounds x="550" y="140" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="272" y="162" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0tjlxw2_di" bpmnElement="pendiente" bioc:stroke="black" bioc:fill="white">
+        <dc:Bounds x="370" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0idftjg_di" bpmnElement="coordinandoInstalacionProvisionalPorGarantia">
+        <dc:Bounds x="1160" y="360" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1i3vkxh_di" bpmnElement="coordinandoReparacion">
+        <dc:Bounds x="1160" y="796" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_09dbq9f_di" bpmnElement="reparado">
+        <dc:Bounds x="1500" y="796" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0346gn7_di" bpmnElement="transReparacion" bioc:stroke="black" bioc:fill="white">
+        <dc:Bounds x="1330" y="796" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_04jsh7o_di" bpmnElement="provisionalInstalado">
+        <dc:Bounds x="1330" y="490" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0gy2mq8_di" bpmnElement="coordinandoInstalacionDefinitiva">
+        <dc:Bounds x="1500" y="490" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ej71zx_di" bpmnElement="enInstalacionDefinitiva">
+        <dc:Bounds x="1670" y="490" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0uh2djw_di" bpmnElement="porDevolverProvisional">
+        <dc:Bounds x="1840" y="490" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1g9shjb_di" bpmnElement="coordinandoInstalacionProvisionalPorReparacion">
+        <dc:Bounds x="1160" y="630" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0e2rs6z_di" bpmnElement="enInstalacionProvisionalPorReparacion">
+        <dc:Bounds x="1330" y="630" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0tr6q59_di" bpmnElement="provisionalDevuelto">
+        <dc:Bounds x="1840" y="630" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1xyyikr_di" bpmnElement="Event_1xyyikr">
+        <dc:Bounds x="1992" y="652" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1bdlwem_di" bpmnElement="Event_1bdlwem">
+        <dc:Bounds x="1662" y="818" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_02j992r_di" bpmnElement="enInstalacionProvisionalPorGarantia">
+        <dc:Bounds x="1330" y="360" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1sn56fx_di" bpmnElement="Gateway_1sn56fx" isMarkerVisible="true">
+        <dc:Bounds x="1035" y="645" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1016" y="583" width="88" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0t10b5j_di" bpmnElement="coordinandoReposicionPorGarantia" bioc:stroke="black" bioc:fill="white">
+        <dc:Bounds x="1160" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ctxc01_di" bpmnElement="enReposicionPorGarantia" bioc:stroke="black" bioc:fill="white">
+        <dc:Bounds x="1340" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1lsgyof_di" bpmnElement="repuestoPorGarantia">
+        <dc:Bounds x="1500" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_16ouxfc_di" bpmnElement="Event_16ouxfc">
+        <dc:Bounds x="1662" y="162" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1kgtkaq_di" bpmnElement="porAutorizarPlan">
+        <dc:Bounds x="240" y="990" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1raxkxy_di" bpmnElement="Gateway_1raxkxy" isMarkerVisible="true">
+        <dc:Bounds x="435" y="1005" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="433.5" y="1065" width="53" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ji397d_di" bpmnElement="Activity_1ji397d">
+        <dc:Bounds x="540" y="670" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1akfidu_di" bpmnElement="enReparacionSoftware">
+        <dc:Bounds x="540" y="540" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0bu5lyw_di" bpmnElement="ejecutadoCorrectamente">
+        <dc:Bounds x="742" y="702" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="828" y="535" width="4" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0fbxfrt_di" bpmnElement="softwareReparado">
+        <dc:Bounds x="710" y="540" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ypwisy_di" bpmnElement="coordinandoReparacionSoftware">
+        <dc:Bounds x="540" y="796" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="transReparacion" />
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="enInstalacionDefinitiva" />
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="porDevolverProvisional" />
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="enReposicionPorGarantia" />
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="enReparacionSoftware" />
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,0 +1,15 @@
+{{#define id="notaAceptacionFarmacia"}}
+  {{param attribute1="farmacia"}}
+  {{param attribute2="=base.tipoSolicitud"}}
+  {{#section id="base"}}
+    {{field id="esHospitalizacion" type="expr" value="=tipoEpisodio=='hospitalizacion'"}}
+    {{#field id="central"}}
+      {{onChange clearFields="cama"}}
+    {{/field}}
+    {{#field id="cama"}}
+      {{#editor alwaysLoad="true"}}
+        {{param central="=central"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

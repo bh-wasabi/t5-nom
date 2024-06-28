@@ -1,0 +1,6 @@
+{{#define id="cartaCompromiso"}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{field id="importeEnLetra" type="expr" value="=calc.pesos(@importe)"}}
+  {{/section}}
+{{/define}}

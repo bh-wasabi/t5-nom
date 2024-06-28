@@ -1,0 +1,18 @@
+{{#define id="datosRecienNacido"}}
+  {{#section id="base"}}
+    {{#field id="recienNacidoHijo"}}
+      {{#onChange refresh="true"}}
+        {{set nombres="=persona.nombres"}}
+        {{set apellidoPaterno="=persona.apellidoPaterno"}}
+        {{set apellidoMaterno="=persona.apellidoMaterno"}}
+        {{set clave="=persona.clave"}}
+        {{set fechaNacimiento="=persona.fechaNacimiento"}}
+        {{set horaNacimiento="=persona.horaNacimiento"}}
+        {{set tipoSanguineo="=persona.tipoSanguineo"}}
+        {{set signosVitales="=detalle.signosVitales"}}
+        {{set somatometriaPediatrica="=detalle.somatometriaPediatrica"}}
+        {{set valoracionNeonatal="=detalle.valoracionNeonatal"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+{{/define}}

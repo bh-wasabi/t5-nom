@@ -1,0 +1,34 @@
+{{#define id="notaPorDevolverCeye"}}
+  {{param attribute1="=_created.service"}}
+  {{param removeIfEmptySection="articulos"}}
+  {{param removeIfEmptyField="cantidad"}}
+  {{!-- {{param startOnOpen="articulos"}} --}}
+  
+  {{#section id="articulos"}}
+    {{#field id="articulo"}}
+      {{editor display="base.codigo" view="bienes"}}
+      {{#onChange}}
+        {{set codigo="=base.codigo"}}
+        {{set descripcion="=base.descripcion"}}
+        {{set tipoArticulo="=base.tipoArticulo"}}
+        {{set unidad="=base.unidadExistencia"}}
+        {{set _unidad="=base._unidadExistencia"}}
+        {{set factor="=1"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="loteEspecifico"}}
+      {{#editor type="select" source="mov" view="loteEspecifico" alwaysLoad="true" sendSearchValue="true" value="lote" display="loteVencimiento"}}
+        {{param codigo="=codigo"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+  
+  {{#grid id="articulos" section="articulos" keyField="cantidad" allowSort="true" disableEnter="true" applyTo="cantidad" applySuggest="existencia"}}
+    {{column field="codigo" label="Código" width="150" readOnly="true"}}
+    {{column field="descripcion" label="Descripción" width="500" readOnly="true"}}
+    {{column field="tipoArticulo" label="Tipo Artículo" width="150" readOnly="true"}}
+    {{column field="existencia" label="Existencia" width="80" type="numeric" format="#," readOnly="true"}}
+    {{column field="cantidad" label="Cantidad" width="80" type="numeric" format="#,"}}
+    {{column field="loteEspecifico" label="Lote Especifico" width="150" validateDuplicate="true"}}
+  {{/grid}}
+{{/define}}

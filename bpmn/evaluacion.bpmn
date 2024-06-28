@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0kj98rm" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.6.0">
+  <bpmn:collaboration id="solicitudEvaluacion">
+    <bpmn:participant id="Participant_12j5v6j" name="Solicitud de Evaluación" processRef="Process_0hexubq" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_0hexubq" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_1dw1y7a">
+      <bpmn:lane id="Lane_1sa95g1" name="Usuario Interno">
+        <bpmn:flowNodeRef>Event_0nmybhs</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>solicitado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>entregado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1fbp0c5</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enCalificacion</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_1exdgmq" name="Usuario Externo">
+        <bpmn:flowNodeRef>porResponder</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:sequenceFlow id="Flow_0wjc15z" sourceRef="solicitado" targetRef="porResponder" />
+    <bpmn:sequenceFlow id="Flow_1ej2iac" sourceRef="Event_0nmybhs" targetRef="solicitado" />
+    <bpmn:sequenceFlow id="Flow_1hpca2q" sourceRef="entregado" targetRef="Event_1fbp0c5" />
+    <bpmn:task id="porResponder" name="Responder Evaluación">
+      <bpmn:incoming>Flow_0wjc15z</bpmn:incoming>
+      <bpmn:outgoing>Flow_0omqp8x</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:startEvent id="Event_0nmybhs">
+      <bpmn:outgoing>Flow_1ej2iac</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="solicitado" name="Solicitud Evaluación">
+      <bpmn:incoming>Flow_1ej2iac</bpmn:incoming>
+      <bpmn:outgoing>Flow_0wjc15z</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:subProcess id="enCalificacion" name="En Validación Calificación">
+      <bpmn:incoming>Flow_0omqp8x</bpmn:incoming>
+      <bpmn:outgoing>Flow_1r28jl9</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:sequenceFlow id="Flow_0omqp8x" sourceRef="porResponder" targetRef="enCalificacion" />
+    <bpmn:sequenceFlow id="Flow_1r28jl9" sourceRef="enCalificacion" targetRef="entregado" />
+    <bpmn:task id="entregado" name="Evaluación Finalizada">
+      <bpmn:incoming>Flow_1r28jl9</bpmn:incoming>
+      <bpmn:outgoing>Flow_1hpca2q</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="Event_1fbp0c5">
+      <bpmn:incoming>Flow_1hpca2q</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="solicitudEvaluacion">
+      <bpmndi:BPMNShape id="Participant_12j5v6j_di" bpmnElement="Participant_12j5v6j" isHorizontal="true">
+        <dc:Bounds x="129" y="79" width="709" height="300" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1exdgmq_di" bpmnElement="Lane_1exdgmq" isHorizontal="true">
+        <dc:Bounds x="159" y="239" width="679" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1sa95g1_di" bpmnElement="Lane_1sa95g1" isHorizontal="true">
+        <dc:Bounds x="159" y="79" width="679" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1r28jl9_di" bpmnElement="Flow_1r28jl9">
+        <di:waypoint x="550" y="154" />
+        <di:waypoint x="630" y="154" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0omqp8x_di" bpmnElement="Flow_0omqp8x">
+        <di:waypoint x="389" y="319" />
+        <di:waypoint x="500" y="319" />
+        <di:waypoint x="500" y="194" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1hpca2q_di" bpmnElement="Flow_1hpca2q">
+        <di:waypoint x="730" y="154" />
+        <di:waypoint x="782" y="154" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ej2iac_di" bpmnElement="Flow_1ej2iac">
+        <di:waypoint x="237" y="154" />
+        <di:waypoint x="289" y="154" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wjc15z_di" bpmnElement="Flow_0wjc15z">
+        <di:waypoint x="339" y="194" />
+        <di:waypoint x="339" y="279" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_17ty7d5_di" bpmnElement="porResponder">
+        <dc:Bounds x="289" y="279" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0nmybhs_di" bpmnElement="Event_0nmybhs">
+        <dc:Bounds x="201" y="136" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0efcrf6_di" bpmnElement="solicitado">
+        <dc:Bounds x="289" y="114" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1cvk203_di" bpmnElement="enCalificacion">
+        <dc:Bounds x="450" y="114" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_05xmk4x_di" bpmnElement="entregado">
+        <dc:Bounds x="630" y="114" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1fbp0c5_di" bpmnElement="Event_1fbp0c5">
+        <dc:Bounds x="782" y="136" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

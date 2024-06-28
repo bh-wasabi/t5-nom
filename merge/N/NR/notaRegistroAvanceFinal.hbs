@@ -1,0 +1,50 @@
+{{#define id="notaRegistroAvanceFinal"}}
+  {{param attribute1="=fn('avanceFinalMoment', _created.momentRequest, base.tipoSolicitud, base.subTipoSolicitud)"}}
+  {{param attribute2="=fn('avanceFinalMomentName', _created.momentRequest, base.tipoSolicitud, base.subTipoSolicitud)"}}
+	{{!-- {{param attribute1="=_created.momentRequest=='pendienteTercero'?'cerradoTercero':'ejecutado'"}}
+  {{param attribute2="=_created.momentRequest=='Pendiente Tercero'?'Cerrado Tercero':'Ejecutado'"}} --}}
+  {{param attribute3="=calc.first(fn((base.tipoAvance||'next')+'Step', base.tipoSolicitud, base.subTipoSolicitud, base.momento, base.subMomento, base.hint||base.diagnostico||base.resolucion||base.formaEntrega), base.subDiagnostico).newSubMoment"}}
+  {{param attribute4="=calc.first(fn((base.tipoAvance||'next')+'Step', base.tipoSolicitud, base.subTipoSolicitud, base.momento, base.subMomento, base.hint||base.diagnostico||base.resolucion||base.formaEntrega), base.subDiagnostico).newSubMomentName"}}
+  {{param attribute5="=calc.first(fn((base.tipoAvance||'next')+'Step', base.tipoSolicitud, base.subTipoSolicitud, base.momento, base.subMomento, base.hint||base.diagnostico||base.resolucion||base.formaEntrega), base.subDiagnostico).newValidate"}}
+  {{action id="afectar" 
+[.#if esSIC.]
+    confirm="=!base.requiereAdjuntos&&_.isEmpty(adjuntos)&&!base.cantidadAdjuntosSolicitud" confirmMessage="calc.concat('¿Esta Seguro(a) que desea',_created.name,'sin Adjuntos?')" 
+[./if.]    
+    error="=base.requiereAdjuntos&&_.isEmpty(adjuntos)?'Falta Incluir el Archivo Adjunto Correspondiente':null"}}
+  {{#section id="base"}}
+    {{field id="mensaje" type="expr" value="=calc.concatDash(base.diagnostico||base.resolucion, base.subDiagnostico)"}}
+    {{field id="_mensaje" type="expr" value="=calc.concatDash(base._diagnostico||base._resolucion, base._subDiagnostico)"}}
+    {{field id="requiereAdjuntos" type="expr" value="=calc.in(calc.cut2(_created.subType, '_'), ['terminaDesinstalacion','terminaMantenimiento'])"}}
+    {{#field id="plaza"}}
+      {{#editor}}
+        {{param codigoPuesto="=base.codigoPuesto"}}
+      {{/editor}}
+    {{/field}}  
+    {{#field id="sustituidoPor"}}
+      {{#editor}}
+        {{param notId="=solicitud.info.base.articulo"}}
+        {{param servicio="=solicitud.base.servicio"}}
+        {{param estatus="='inactivo'"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+  {{#grid id="hojaCostos" section="hojaCostos"}}
+    {{column field="articulo" width="300" readOnly="true"}}
+    {{column field="nota" width="200" readOnly="true"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="proveedor" width="150" readOnly="true"}}
+    {{column field="referenciaProveedor" width="150" readOnly="true"}}
+    {{column field="cantidad" width="100" readOnly="true"}}
+    {{column field="costoUnitario" width="100" readOnly="true"}}
+    {{column field="moneda" width="100" readOnly="true"}}
+    {{column field="tipoCambio" width="100"}}
+  {{/grid}}  
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

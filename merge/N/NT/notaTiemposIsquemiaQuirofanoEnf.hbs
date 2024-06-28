@@ -1,0 +1,8 @@
+{{#define id="notaTiemposIsquemiaQuirofanoEnf"}}
+  {{#section id="base"}}
+    {{field id="tiempoTotalIsquemiaTorniquete" type="expr" value="=fn('minutos', @iniciaColocacionTorniquete, @finalizaColocacionTorniquete)"}}
+    {{field id="tiempoTotalBomba" type="expr" value="=fn('minutos', @iniciaTiempoBomba, @finalizaTiempoBomba)"}}
+    {{field id="tiempoTotalIsquemiaPinzamiento" type="expr" value="=fn('minutos', @iniciaTiempoPinzaAortica, @finalizaTiempoPinzaAortica)"}}
+    {{field id="tiempoTotalOtroIsquemia" type="expr" value="=fn('minutos', @iniciaOtroIsquemia, @finalizaOtroIsquemia)"}}
+  {{/section}}    
+{{/define}}

@@ -1,0 +1,18 @@
+{{#define id="ejercicio"}}
+	{{action id="eliminar" hide="true"}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base.estado"}}
+    {{/find}}
+  {{/view}}
+{{/define}}
+
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}
+      <br>
+      <span style="font-size:12px;">{{base._estado}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

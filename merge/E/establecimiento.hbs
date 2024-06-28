@@ -1,0 +1,64 @@
+{{#define id="establecimiento"}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base.orden"}}
+      {{sort field="base.orden" direction="asc"}}
+      {{sort field="_name" direction="asc"}}
+      {{search field="_name"}}
+      {{search field="base.descripcion"}}
+    {{/find}}
+  {{/view}}
+  {{#section id="base"}}
+    {{#field id="establecimiento"}}
+      {{onChange clearFields="almacenGeneral,almacenFarmacia,almacenFarmaciaGratuita,almacenMateriales,almacenCeyeEsterilizado,almacenCeyeEsterilizadoQuirofanos,almacenCeyeSucio"}}
+    {{/field}}
+    {{#field id="almacenGeneral"}}
+      {{#editor}}
+        {{param establecimiento="=_id"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="almacenFarmacia"}}
+      {{#editor}}
+        {{param establecimiento="=_id"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="almacenFarmaciaGratuita"}}
+      {{#editor}}
+        {{param establecimiento="=_id"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="almacenMateriales"}}
+      {{#editor}}
+        {{param establecimiento="=_id"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="almacenCeyeEsterilizado"}}
+      {{#editor}}
+        {{param establecimiento="=_id"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="almacenCeyeEsterilizadoQuirofanos"}}
+      {{#editor}}
+        {{param establecimiento="=_id"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="almacenCeyeSucio"}}
+      {{#editor}}
+        {{param establecimiento="=_id"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+  {{#grid id="nivelesAlerta" section="nivelesAlerta" allowInsert="true" allowRemove="true"}}
+    {{column field="servicio" width="900"}}
+    {{column field="nivelAlerta" width="120"}}
+  {{/grid}}
+{{/define}} 
+
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}<br>
+      {{!-- <span style="font-size:12px;">{{base._servicio}}</span> --}}
+    </div>
+  {{/template}}
+{{/markup}}

@@ -1,0 +1,33 @@
+{{#define id="planCompra"}}
+  {{param startOnOpen="articulos"}}
+  {{param attribute1="=base.tipoPlan"}}
+  {{param attribute2="=base.subTipoPlan"}}
+  {{#section id="base"}}
+    {{field id="ubicacion" defaultValue="=_params.ubicacion"}}
+    {{field id="origen" defaultValue="=_params.origen"}}
+    {{field id="destino" defaultValue="=_params.destino"}}
+    {{field id="transito" defaultValue="=_params.transito"}}
+    {{field id="tipoPlan" defaultValue="=_params.tipoPlan"}}
+    {{field id="subTipoPlan" defaultValue="=_params.subTipoPlan"}}
+    {{field id="esSurtido" type="expr" value="=tipoPlan==='surtido'"}}
+    {{field id="esRecibo" type="expr" value="=tipoPlan==='recibido'"}}
+    {{field id="esAbastecimiento" type="expr" value="=@subTipoPlan==='abastecimiento'"}}
+    {{field id="tieneAgente" type="expr" value="=esSurtido||(esRecibo&&esAbastecimiento)"}}
+  {{/section}}
+  {{#section id="articulos"}}
+    {{field id="costoTotal" type="calc" value="=@costoUnitario*@cantidad"}}
+  {{/section}}
+  {{#grid id="articulos" section="articulos" applyTo="cantidad" applySuggest="sugerido" applySplit="true" applySplitKey="orden,ubicacion,origen,destino"}}
+    {{column field="codigo" width="130" readOnly="true"}}
+    {{column field="descripcion" width="260" readOnly="true"}}
+    {{column field="_tipoArticulo" width="100" readOnly="true"}}
+    {{column field="_origen" width="150" readOnly="true"}}
+    {{column field="_destino" width="150" readOnly="true"}}
+    {{column field="unidad" width="80" readOnly="true"}}
+    {{column field="sugerido" type="numeric" width="70" readOnly="true"}}
+    {{column field="cantidad" type="numeric" width="70"}}
+    {{column field="lote" width="70"}}
+    {{column field="vencimiento" width="90"}}
+    {{column field="costoUnitario" type="numeric" width="100"}}
+  {{/grid}}
+{{/define}}

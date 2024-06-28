@@ -1,0 +1,162 @@
+{{#define id="ubicacion"}}
+  {{action id="eliminar" hide="true"}}
+  {{action id="preliminar" hide="true"}}
+[.#if esSIC.]
+  {{action id="copiar" label="Copiar..." condition="=true" confirm="true" confirmMessage="¿Desea Copiar la Ubicación?" btnSolid="false" color="grey"}}
+  {{action id="subdoc" condition="=true" type="menu" menu="subdoc" label="Plano" color="grey" visibleMode="close"}}
+  {{#menu id="subdoc" color="grey"}}
+    {{item action="bim2" text="BIM"}}
+    {{item action="planta2" text="Planta"}}
+  {{/menu}}  
+  {{#action id="bim2" hide="true" type="bim360" label="BIM" title="=calc.concat('BIM', base.planta)" bim="=base.bim" color="grey" visibleMode="close" condition="=base.bim"}}
+    {{param ubicacion="=base.ubicacion"}}
+  {{/action}}
+  {{#action id="planta2" hide="true" type="openPreview" label="Planta" title="Planta" color="grey" visibleMode="close"  condition="=base.planta"}}
+    {{param ubicacion="=base.ubicacion"}}
+    {{link title="=calc.concat('Planta', base.planta)" href="=fn('urlPlanta', base.planta)"}}
+  {{/action}}
+  {{#action id="bim" hide="true" type="bim360" label="BIM" title="=calc.concat('BIM', _data.planta)" bim="=_data.bim" color="grey" visibleMode="close"}}
+    {{param ubicacion="=_data.ubicacion"}}
+  {{/action}}
+  {{#action id="planta" hide="true" type="openPreview" label="Planta" title="Planta" color="grey" visibleMode="close"}}
+    {{param ubicacion="=_data.ubicacion"}}
+    {{link title="=calc.concat('Planta', _data.planta)" href="=fn('urlPlanta', _data.planta)"}}
+  {{/action}}
+[./if.]  
+  {{!-- {{#action id="ver" condition="=true" type="sub-link" label="Ver Inventario" btnSolid="true" color="primary" visibleMode="close"}}
+    {{#link href="'/_invUbicacion/cubo'" name="=_name"}}
+      {{param id="_id"}}
+    {{/link}}
+  {{/action}} --}}
+  {{item newTab="true" text="Almacén General" href="/_invAlmacenGeneral/cubo?_name=Inventario&_title=Almacén General"}}
+  {{action id="menuReportesUbicaciones" type="menu" menu="menuReportesUbicaciones" label="Reportes" color="grey" isBrowserAction="true"}}
+  {{#menu id="menuReportesUbicaciones" color="grey"}}
+    {{item action="reporteListaUbicaciones" text="Lista Ubicaciones"}}
+  {{/menu}}  
+  {{action id="reporteListaUbicaciones" type="quickReport" source="ubicacion" view="listaUbicaciones"}}
+
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base.descripcion"}}
+      {{include field="base.servicio"}}
+      {{include field="base.central"}}
+      {{include field="base.tipoUbicacion"}}
+      {{sort field="_name" direction="asc"}}
+      {{filter condition="=establecimiento" field="base.establecimiento" in="=establecimiento"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=central" field="base.central" in="=central"}}
+      {{filter condition="=tipoUbicacion" field="base.tipoUbicacion" in="=tipoUbicacion"}}
+      {{search field="_name"}}
+      {{search field="base.descripcion"}}
+      {{search field="base._servicio"}}
+      {{search field="base._central"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="listaUbicaciones"}}
+    {{#find}}
+      {{include field="base"}}
+      {{sort field="_name" direction="asc"}}
+    {{/find}}
+  {{/view}}
+  {{#section id="base"}}
+[.#if esSIC.]
+    {{field id="nombre2" type="expr" value="=calc.concat(@_servicio, '-', @nombre)"}}
+[./if.]
+    {{field id="nombreCompleto" type="expr" label="Nombre" value="nombre"}}
+    {{field id="esRopaLimpia" type="expr" value="=subTipoUbicacion=='ropaLimpia'"}}
+    {{field id="esRopaSucia" type="expr" value="=subTipoUbicacion=='ropaSucia'"}}
+    {{field id="tieneMantenimiento" type="expr" value="=true"}}
+    {{#field id="acopioTemporal"}}
+      {{#editor}}
+        {{param servicio="='residuosHospitalarios'"}}          
+      {{/editor}}
+    {{/field}}
+  {{/section}}  
+  {{#transform id="copiar"}}
+    {{#update section="base"}}
+      {{set ubicacion="=_params.ubicacion"}}
+      {{set _ubicacion="=_params._ubicacion"}}
+    {{/update}}
+  {{/transform}}
+  {{#action id="recibirEnAlmacen" hide="=true" label="Recibir Inventario en Almacén" source="notaPorRecibirProveedor" transform="copiar" type="add-subdoc" visibleMode="close" onlyPost="true" color="teal"}}
+    {{param ubicacion="=_id"}}
+    {{param _ubicacion="=_name"}}
+  {{/action}}
+  {{#action id="recibirEnUbicacion" hide="=true" label="Recibir Inventario en Ubicación" source="notaPorRecibirEnPersona" transform="copiar" type="add-subdoc" visibleMode="close" onlyPost="true" color="teal"}}
+    {{param ubicacion="=_id"}}
+    {{param _ubicacion="=_name"}}
+  {{/action}}
+  {{!-- {{#browser id="ver" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions=""}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+  {{/browser}} --}}
+  {{#browser id="abastecimiento" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="recibirProveedor,recibirProveedor2,recibirEnAlmacen,recibirEnUbicacion"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#section id="mantenimiento"}}
+    {{#field id="procedimiento"}}
+      {{#editor}}
+        {{param servicio="='moi'"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="motivo"}}
+      {{#editor alwaysLoad="true"}}
+        {{param servicio="='moi'"}}
+        {{param partOf="=subTipoSolicitud"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+  {{#grid id="mantenimiento" section="mantenimiento" allowRemove="true" allowSort="true" keyField="motivo" allowInsert="true"}}
+    {{column field="subTipoSolicitud" width="150"}}
+    {{column field="procedimiento" width="150"}}
+    {{column field="motivo" width="150"}}
+    {{column field="periodicidad" width="70"}}
+    {{column field="tiempo" width="90"}}
+    {{column field="horario" width="100" validateHours="true"}}
+    {{column field="diasAtencion" width="100"}}
+    {{column field="ultimoMantenimiento" width="160" validateDate="true"}}
+    {{column field="siguienteMantenimiento" width="170" validateDate="true"}}
+    {{column field="autoAsignacion" width="150"}}
+    {{column field="comentarios" width="150"}}
+  {{/grid}}
+{{/define}} 
+{{#markup}}
+  {{#template id="verGrupo"}}
+    <div>
+      {{#if _id}}
+      <img class="auto-img-lista" src="https://his-imagenes.s3-accelerate.amazonaws.com/widgets/folder.png">
+      {{else}}
+      <span>Sin datos</span>
+      {{/if}}
+      <span class="bold">{{base._servicio}}</span><br>
+    </div>
+  {{/template}}
+  {{#template id="verDetalle"}}
+    <div class="list-material">
+      <li class="has-action-left">
+        <div class="list-action-left"><i class="icon ion-flag text-{{#if color}}{{color}}{{else}}grey{{/if}}"></i></div>
+        <div class="list-content">
+          <span class="title">{{_name}}</span>
+          <span style="font-size:12px;">{{base._central}}</span>
+          <span style="font-size:12px;float:right;">{{base._tipoUbicacion}}</span>
+        </div>
+      </li>
+    </div>
+  {{/template}}
+  {{#template id="lista"}}
+    <div class="list-material">
+      <li class="has-action-left">
+        <div class="list-action-left"><i class="icon ion-flag text-{{#if color}}{{color}}{{else}}grey{{/if}}"></i></div>
+        <div class="list-content">
+          {{#if base.codigo}}
+            <span class="title">{{base.codigo}}</span>
+            <span style="font-size:12px;white-space:pre-wrap;font-style:italic;">{{_name}}</span>
+          {{else}}
+            <span class="title">{{_name}}</span>
+          {{/if}}
+          <span style="font-size:12px;">{{base._tipoUbicacion}}{{#if base.central}} - {{base._central}}{{/if}}</span>
+          <span style="font-size:12px;float:right;">{{base._servicio}}</span>
+        </div>
+      </li>
+    </div>
+  {{/template}}
+{{/markup}}

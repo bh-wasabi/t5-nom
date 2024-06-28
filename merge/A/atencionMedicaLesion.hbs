@@ -1,0 +1,11 @@
+{{#define id="atencionMedicaLesion"}}
+  {{#section id="base"}}
+    {{field id="esOtroServicioAtencion" type="expr" value="=@servicioAtencionLesion==='otro'"}}
+    {{field id="esOtraAreaAfectada" type="expr" value="=@areaAnatomica==='otros'"}}
+    {{field id="esOtraConsecuencia" type="expr" value="=@consecuenciaLesion==='otra'"}}
+    {{!-- Tarea 2438 --}}
+    {{validator type="expr" validIf="=@tipoAtencionLesion.length<6" message="Máximo 5 Tipo Atención"}}
+    {{validator type="expr" validIf="=!@descripcionAfeccion||calc.matchIfPattern('^[A-z].{1,249}$', @descripcionAfeccion)" message="Verificar Descripción"}}
+    {{!-- Tarea 2438 --}}
+  {{/section}}
+{{/define}}

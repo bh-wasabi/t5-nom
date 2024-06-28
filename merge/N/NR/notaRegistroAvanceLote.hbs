@@ -1,0 +1,64 @@
+{{#define id="notaRegistroAvanceLote"}}
+  {{param attribute1="=calc.first(fn((base.tipoAvance||'next')+'Step', base.tipoSolicitud, base.subTipoSolicitud, base.momento, base.subMomento, base.hint||base.diagnostico||base.resolucion||base.formaEntrega, base.subDiagnostico)).newMoment"}}
+  {{param attribute2="=calc.first(fn((base.tipoAvance||'next')+'Step', base.tipoSolicitud, base.subTipoSolicitud, base.momento, base.subMomento, base.hint||base.diagnostico||base.resolucion||base.formaEntrega, base.subDiagnostico)).newMomentName"}}
+  {{param attribute3="=calc.first(fn((base.tipoAvance||'next')+'Step', base.tipoSolicitud, base.subTipoSolicitud, base.momento, base.subMomento, base.hint||base.diagnostico||base.resolucion||base.formaEntrega, base.subDiagnostico)).newSubMoment"}}
+  {{param attribute4="=calc.first(fn((base.tipoAvance||'next')+'Step', base.tipoSolicitud, base.subTipoSolicitud, base.momento, base.subMomento, base.hint||base.diagnostico||base.resolucion||base.formaEntrega, base.subDiagnostico)).newSubMomentName"}}
+  {{param attribute5="=calc.first(fn((base.tipoAvance||'next')+'Step', base.tipoSolicitud, base.subTipoSolicitud, base.momento, base.subMomento, base.hint||base.diagnostico||base.resolucion||base.formaEntrega, base.subDiagnostico)).newValidate"}}
+  {{param startOnOpen="aplicacion"}}
+  {{#section id="aplicacion"}}
+    {{!-- {{#field id="subTipoResiduo"}}
+      {{#editor}}
+        {{param partOf="=subTipoSolicitud"}}
+      {{/editor}}
+    {{/field}} --}}
+    {{#onChange}}
+      {{#update section="base"}}
+        {{set pesoTotal="=calc.sum(calc.where(aplicacion, {continuar:'si'}), 'peso')"}}
+      {{/update}}
+    {{/onChange}}
+  {{/section}}
+  
+  [.#if esRH.]
+  {{#grid id="aplicacion" disableEnter="true" applyFilter="_name,resumen" applyFilterOpen="true" applyFilterMultiple="true" section="aplicacion" applyTo="continuar" applyContinue="true"}}
+  [.else.]
+  {{#grid id="aplicacion" disableEnter="true" applyFilter="_name" applyFilterOpen="true" applyFilterMultiple="true" section="aplicacion" applyTo="continuar" applyContinue="true" requiredCondition="=calc.isTrue(continuar)"}}
+  [./if.]
+    {{column field="subTipoSolicitud" hiddenColumn="true"}}
+    {{column field="personaLink" hiddenColumn="true"}}
+    {{column field="parentLink" hiddenColumn="true"}}
+    {{column field="fecha" type="date" format="DD/MMM/YYYY h:mma" width="100" readOnly="true"}}
+    {{column field="resumen" type="text" width="300" readOnly="true" show="=base.tieneResumen" link="=personaLink"}}
+    {{column field="_name" type="text" width="350" readOnly="true" link="=parentLink"}}
+  [.#if esRH.]
+    {{column field="_datosPuesto" type="text" width="300" readOnly="true" link="=parentLink"}}
+  [./if.]
+    {{column field="_calificaciones" type="text" width="170" readOnly="true" show="=base.tieneCalificaciones"}}
+    {{column field="_ubicacion" type="text" width="100" readOnly="true" hide="=base.tieneResumen"}}
+    {{column field="referencia" type="text" width="180" readOnly="true" hide="=base.tieneResumen"}}
+    {{!-- {{column field="referencia2" type="text" width="120" readOnly="true"}} --}}
+    {{!-- {{column field="subTipoResiduo" width="120" required="true" show="=base.tieneSubTipoResiduo"}} --}}
+    {{column field="grupo" width="100" show="=base.tieneGrupo"}}
+    {{column field="contenido" width="180" show="=base.tieneContenido"}}
+    {{column field="generador" width="80" show="=base.tieneGenerador"}}
+    {{column field="peso" width="80" required="true" show="=base.tienePeso"}}
+    {{column field="continuar" width="70"}}
+  [.#if esRH.]
+    {{column field="puestoVincular" width="350" show="=base.tieneAnalisisCV"}}
+    {{column field="cubreRequisitosAcademicos" width="200" show="=base.tieneAnalisisCV"}}
+    {{column field="cubreRequisitosExperiencia" width="200" show="=base.tieneAnalisisCV"}}
+    {{column field="cubreRequisitosArea" width="220" show="=base.tieneAnalisisCV"}}
+    {{column field="experienciaEnInstitucion" width="200" show="=base.tieneAnalisisCV"}}
+    {{column field="cambiosLaboralesFrecuentes" width="200" show="=base.tieneAnalisisCV"}}
+    {{column field="analisisCurricular" width="200" show="=base.tieneAnalisisCV"}}
+    {{column field="numeroOficio" width="160" show="=base.tieneAnalisisCV"}}
+  [./if.]
+  {{/grid}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

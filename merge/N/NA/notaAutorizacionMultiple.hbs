@@ -1,0 +1,10 @@
+{{#define id="notaAutorizacionMultiple"}}
+  {{param startOnOpen="aplicacion"}}
+  {{#grid id="aplicacion" section="aplicacion" disableEnter="true"  applyFilter="_persona" applyTo="continuar" applyContinue="true"}}
+    {{column field="fecha" type="date" format="DD/MMM/YYYY" width="110" readOnly="true"}}
+    {{column field="_name" width="600" readOnly="true"}}
+    {{column field="_persona" width="180" readOnly="true"}}
+    {{column field="central" width="180" readOnly="true"}}
+    {{column field="continuar"}}
+  {{/grid}}
+{{/define}}

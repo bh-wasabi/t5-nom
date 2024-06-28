@@ -1,0 +1,19 @@
+{{#define id="inscripcionCurso"}}
+  {{#section id="base"}}
+    {{#field id="seleccionarCurso"}}
+      {{#editor alwaysLoad="true"}}
+        {{param tipoExpediente="=_mainDoc.persona.tipoExpediente"}}
+        {{#onChange}}
+          {{set nombreCurso="=base.curso.base.nombreCorto"}}
+          {{set tipoCurso="=base.curso.base.tipoCurso"}}
+          {{set tipoDuracion="=base.curso.base.tipoDuracion"}}
+          {{set duracion="=base.curso.base.duracion"}}
+          {{set desde="=base.curso.base.desde"}}
+          {{set hasta="=base.curso.base.hasta"}}
+          {{set responsableAcademico="=base.curso.base.responsableAcademico"}}
+          {{set impartidoPor="=base.curso.base.impartidoPor"}}
+        {{/onChange}}
+      {{/editor}}    
+    {{/field}}
+  {{/section}}
+{{/define}}

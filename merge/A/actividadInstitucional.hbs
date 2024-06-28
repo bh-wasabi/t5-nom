@@ -1,0 +1,6 @@
+{{#define id="actividadInstitucional"}}
+  {{action id="eliminar" hide="true"}}
+  {{#section id="base"}}
+    {{field id="nombre" type="expr" value="=calc.concat(codigo, descripcion)"}}
+  {{/section}}
+{{/define}}

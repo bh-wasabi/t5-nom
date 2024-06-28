@@ -1,0 +1,74 @@
+{{#define id="funcionario"}}
+  {{action id="eliminar" hide="true"}}
+  {{action id="ver" condition="=true" type="menu" menu="menuReportes" label="Reportes" color="grey" isBrowserAction="true"}}
+  {{action id="copiar" label="Copiar..." condition="=true" confirm="true" confirmMessage="¿Desea Copiar el Funcionario?" btnSolid="false" color="grey"}}
+  {{#menu id="menuReportes" color="grey"}}
+    {{item action="reporteListaFuncionarios" text="Lista Funcionarios"}}
+  {{/menu}}  
+  {{action id="reporteListaFuncionarios" hide="true" type="quickReport" source="funcionario" view="listaFuncionarios"}}
+  {{#view id="listaFuncionarios"}}
+    {{#find}}
+      {{include field="base"}}
+      {{include field="_created"}}
+      {{filter condition="=desde" field="base.fechaIngresoServicio" gt="=moment(desde).format('YYYY-MM-DD')"}}
+      {{filter condition="=hasta" field="base.fechaIngresoServicio" lt="=moment(hasta).add(1,'day').format('YYYY-MM-DD')"}}      
+      {{sort field="_name" direction="asc"}}
+    {{/find}}
+  {{/view}}
+
+
+  {{#section id="base"}}
+    {{field id="nombreCompleto" type="expr" label="Nombre" value="=nombre"}}
+    {{#field id="tipoFuncionario"}}
+      {{#onChange}}
+        {{set diaHabil="=fn('funcionarioDiaHabil', @tipoFuncionario)"}}
+        {{set diaInhabil="=fn('funcionarioDiaInhabil', @tipoFuncionario)"}}
+        {{set desayuno="=fn('funcionarioDesayuno', @tipoFuncionario)"}}
+        {{set almuerzo="=fn('funcionarioAlmuerzo', @tipoFuncionario)"}}
+        {{set cena="=fn('funcionarioCena', @tipoFuncionario)"}}
+        {{set colacion="=fn('funcionarioColacion', @tipoFuncionario)"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base.clave"}}
+      {{include field="base.establecimiento"}}
+      {{include field="base.tipoFuncionario"}}
+      {{sort field="_name" direction="asc"}}
+      {{search field="base.nombre"}}
+      {{search field="base.clave" directSearchIfLength="9,12,13,14,15,16,17,18"}}
+      {{search field="base._tipoFuncionario"}}
+      {{search field="base._establecimiento"}}
+    {{/find}}
+  {{/view}}
+  {{#grid id="cursos" section="cursos" allowRemove="true" allowInsert="true"}}
+    {{column field="nombre" width="300"}}
+    {{column field="referencia" width="200" items="=_.pluck(adjuntos, 'nombre')"}}
+    {{column field="desde" label="Fecha Inicio" width="120"}}
+    {{column field="hasta" label="Fecha Termino" width="120"}}
+    {{column field="activoRelacionado" width="300"}}
+    {{column field="aprobado" width="100"}}
+    {{column field="comentarios" width="300"}}
+  {{/grid}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="400"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}
+      <span style="font-size:12px;float:right;">{{base._tipoFuncionario}}</span>
+      </br>
+      <span style="font-size:12px;">{{base.clave}}</span>
+      <span style="font-size:12px;float:right;">{{base._establecimiento}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

@@ -1,0 +1,26 @@
+{{#define id="mantenimientoActivoFijo"}}  
+  {{action id="bim" type="bim360" label="BIM" title="_params._name||'BIM'" color="grey" visibleMode="close"}}
+  {{#action id="planta" type="openPreview" label="Planta" title="_params._name||'Planta'" color="grey" visibleMode="close"}}
+    {{link title="_params._name||'Planta'" href="https://his-sic.s3.amazonaws.com/sic/planos/ARQ-HDS_Test.pdf"}}
+  {{/action}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}    
+    {{#field id="tipoActivoFijo"}}
+      {{onChange clearFields="articulo"}}
+    {{/field}}
+    {{#field id="articulo"}}
+      {{#editor}}
+        {{param tipoArticulo="='activoFijo'"}}
+        {{param tipoActivoFijo="=tipoActivoFijo"}}
+        {{#onChange}}
+          {{set codigo="=base.codigo"}}
+          {{set descripcion="=base.descripcion"}}
+          {{!-- {{set subTipoActivoFijo="=base.subTipoActivoFijo"}}
+          {{set _subTipoActivoFijo="=base._subTipoActivoFijo"}} --}}
+          {{set datosActivoFijo="=base.datosActivoFijo"}}
+          {{set _datosActivoFijo="=base._datosActivoFijo"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

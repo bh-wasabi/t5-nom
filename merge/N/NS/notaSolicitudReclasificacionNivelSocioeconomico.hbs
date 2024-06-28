@@ -1,0 +1,6 @@
+{{#define id="notaSolicitudReclasificacionNivelSocioeconomico"}}
+  {{#transform id="copiar"}}
+    {{update section="persona" value="=persona"}}
+  {{/transform}}
+  {{action id="notaAutorizacionReclasificacionNivelSocioeconomico" source="notaAutorizacionReclasificacionNivelSocioeconomico" label="Autorización Reclasificación Nivel Socioeconómico" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+{{/define}}

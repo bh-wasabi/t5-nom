@@ -1,0 +1,7 @@
+{{#define id="escalaRiesgoCaidas"}}
+  {{#section id="base"}}
+    {{field id="total" type="calc" value="=calc.sumArgs(@escalaRiesgoCaidasCaidasPrevias, @escalaRiesgoCaidasMedicamentos, @escalaRiesgoCaidasDeficitSensorial, @escalaRiesgoCaidasEstadoMental, @escalaRiesgoCaidasDeambulacion)"}}
+    {{field id="nivel" type="expr" value="=fn('escalaRiesgoCaidas', total)"}}
+    {{field id="resumen" type="expr" value="=calc.concat3(calc.concat('Caídas Previas:',_escalaRiesgoCaidasCaidasPrevias),calc.concat('Nivel:',_nivel))"}}
+  {{/section}}
+{{/define}} 

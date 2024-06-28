@@ -1,0 +1,61 @@
+{{#define id="notaSolicitudAlimentacionPacientesLote"}}
+  {{!-- {{param startOnOpen="alimentacionPacientesLote"}} --}}
+  {{action id="afectar" confirm="=calc.whereNotHasValue(alimentacionPacientesLote, 'alimentacionDia').length>0" confirmMessage="='Esta dejando sin alimentación a:<br>'+calc.concatCommaDot(calc.pluck(calc.whereNotHasValue(alimentacionPacientesLote, 'alimentacionDia'), '_paciente'))+'<br><strong>¿Desea Continuar?</strong>'" confirmTitle="Precaución" confirmHeight="400" confirmWidth="500"}}
+  {{#section id="base"}}
+    {{#field id="menuDia"}}
+      {{#editor}}
+        {{param articulo="=articulo"}}
+        {{param estatus="activo"}}
+        {{#onChange}}
+          {{update section="menuDia" value="=_remoteScope.menuDia"}}
+          {{#touch section="alimentacionPacientesLote"}}
+            {{set alimentacionDia="=fn('alimentacionDia', calc.findWhere(_remoteScope.menuDia, {regimenAlimenticio, tipoPaciente}))"}}
+          {{/touch}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}  
+  {{#section id="alimentacionPacientesLote"}}
+    {{#field id="regimenAlimenticio"}}
+      {{#onChange}}
+        {{set alimentacionDia="=fn('alimentacionDia', calc.findWhere(menuDia, {regimenAlimenticio, tipoPaciente}))"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+  {{!-- {{param startOnOpen="alimentacionPacientesLote"}} --}}
+  {{#grid id="menuDia" section="menuDia"}}
+    {{column field="tipoPaciente" width="150"}}
+    {{column field="regimenAlimenticio" width="150"}}
+    {{column field="desayuno" width="150"}}
+    {{column field="colacionAM" width="150"}}
+    {{column field="almuerzo" width="150"}}
+    {{column field="colacionPM" width="150"}}
+    {{column field="cena" width="150"}}
+  {{/grid}}
+  {{#grid id="alimentacionPacientesLote" section="alimentacionPacientesLote" disableEnter="true" fixedColumnsLeft="2" allowSort="true" sortBy="ubicacion,cama,_paciente" applyFilter="_paciente,informacionPaciente,tipoPaciente,ubicacion,cama,regimenAlimenticio,alimentacionDia,todoDesechable,hidratacionDesayuno,hidratacionColacionAM,hidratacionAlmuerzo,hidratacionColacionPM,hidratacionCena,_alertaAlimentaria,comentariosNutriologo" applyFilterOpen="true" applyFilterMultiple="true"}}
+    {{column field="_paciente" width="250" readOnly="true"}}
+    {{column field="informacionPaciente" width="150" readOnly="true"}}
+    {{column field="tipoPaciente" width="110" readOnly="true"}}
+    {{column field="ubicacion" width="120"}}
+    {{column field="cama" width="50"}}
+    {{column field="regimenAlimenticio" width="140"}}
+    {{!-- {{column field="clave" width="100" readOnly="true"}} --}}
+    {{column field="alimentacionDia" width="250" readOnly="true"}}
+    {{column field="todoDesechable" width="135"}}
+    {{column field="hidratacionDesayuno" width="160"}}
+    {{column field="hidratacionColacionAM" width="190"}}
+    {{column field="hidratacionAlmuerzo" width="160"}}
+    {{column field="hidratacionColacionPM" width="180"}}
+    {{column field="hidratacionCena" width="130"}}
+    {{column field="_alertaAlimentaria" width="140" readOnly="true"}}
+    {{column field="comentariosNutriologo" width="250"}}
+  {{/grid}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

@@ -1,0 +1,48 @@
+{{#define id="notaFacturaDonativo"}}
+  {{param totalsSection="totales"}}
+  {{#view id="facturacion"}}
+    {{#find limit="-1"}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="base"}}
+      {{include field="persona"}}
+      {{include field="aplicacion"}}
+      {{include field="totales"}}
+      {{sort field="_id" direction="asc"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{filter condition="=tipoExpediente" field="persona.tipoExpediente" eq="=tipoExpediente"}}
+      {{filter condition="=desde" field="_created.date" gt="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=hasta"}}      
+    {{/find}}
+    {{unwind field="aplicacion"}}
+  {{/view}}
+  {{#view id="resumenFacturacion"}}
+    {{#find limit="-1"}}
+      {{include field="_name"}}
+      {{include field="_parent"}}
+      {{include field="_created"}}
+      {{include field="base"}}
+      {{include field="persona"}}
+      {{include field="totales"}}
+      {{sort field="_id" direction="asc"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{filter condition="=tipoExpediente" field="persona.tipoExpediente" eq="=tipoExpediente"}}
+      {{filter condition="=desde" field="_created.date" gt="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=hasta"}}      
+    {{/find}}
+  {{/view}}
+  {{action id="ver" type="openFolder" condition="=adjuntos" items="=adjuntos" label="Adjuntos" color="grey"}}
+  {{#section id="totales"}}
+    {{field id="subTotal" type="sum" section="aplicacion" value="subTotal"}}
+    {{field id="importeIva" type="sum" section="aplicacion" value="importeIva"}}
+    {{field id="importeTotal" type="sum" section="aplicacion" value="importe"}}
+    {{field id="totalEnTexto" type="expr" value="=calc.pesos(importeTotal)"}}
+  {{/section}}
+
+  {{#transform id="copiarCredito"}}
+    {{update section="persona" transform="copiarPersona2"}}
+    {{update section="aplicacion" value="aplicacion"}}
+    {{update section="base" value="base"}}
+  {{/transform}}
+  {{action id="notaCreditoDonativo" source="notaCreditoDonativo" label="Nota Crédito Donativo" transform="copiarCredito" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+{{/define}}

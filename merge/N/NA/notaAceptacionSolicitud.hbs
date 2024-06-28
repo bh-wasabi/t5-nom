@@ -1,0 +1,97 @@
+{{#define id="notaAceptacionSolicitud"}}
+  {{param attribute1="=_created.service"}}
+  {{param attribute2="=base.tipoDonadorTrasplante"}}
+  {{#section id="base"}}
+  	{{field id="requiereAnestesiologo" type="expr" value="=solicitud.base.requiereAnestesiologo=='si'"}}
+    {{field id="esDonacionTrasplanteCadaverico" type="expr" value="=_created.service=='donacionTrasplanteCadaverico'"}}
+    {{field id="esDonacionTrasplanteVivo" type="expr" value="=_created.service=='donacionTrasplanteVivo'"}}
+    {{field id="esRecepcionTrasplante" type="expr" value="=_created.service=='recepcionTrasplante'"}}
+    {{field id="esTrasplante" type="expr" value="=esDonacionTrasplanteCadaverico||esDonacionTrasplanteVivo||esRecepcionTrasplante"}}
+    {{field id="esOtro" type="expr" value="=calc.in('otro', motivo)"}}
+  {{/section}}
+  {{action id="cancelar" forceReadOnly="true"}}
+  {{action id="afectar" forceReadOnly="true"}}  
+  {{#report id="preliminar" fontSize="8" header="preliminar-encabezado" showStandarFooter="true" pageMargins="30,120,30,40" barcode="=persona.clave"}}
+    {{#stack}}
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{#record title="Aceptación Solicitud" titleStyle="title" layout="lightHorizontalLines" fontSize="7" section="base" headerStyle="field" margin="-10,0,0,10" widths="100,450"}}
+        {{row expr="=calc.format('date', _updated.date||_created.date, 'DD/MMM/YYYY h:mma')" label="Fecha Emisión"}}
+        {{row expr="=_created._service" label="Servicio"}}
+        {{row field="responsableAcademico" condition="esEstudiante" align="left"}}
+        {{row field="solicitud" align="left"}}
+        {{row field="anestesiologo" condition="requiereAnestesiologo" align="left"}}
+        {{row field="folioReferencia" condition="esTrasplante" align="left"}}
+        {{row field="tipoDonadorTrasplante" condition="esRecepcionTrasplante" align="left"}}
+        {{row field="comentarios" align="left"}}
+      {{/record}}
+    {{/stack}}
+    {{#stack}}
+      {{#columns widths="425,25,100"}}
+        {{#column}}
+          {{#record title="Firmas" titleStyle="title" layout="lightHorizontalLines" fontSize="8" section="_stamp" headerStyle="field" margin="-10,0,0,10" widths="100,325"}}
+            {{row expr="=_created._user" label="Elabora"}}
+            {{row expr="=_created._turn" label="Turno Elabora"}}
+            {{row expr="=_created._identification" label="Especialidad Elabora"}}
+            {{row expr="=''" label="Firma Elabora"}}
+            {{row condition="=!base.esEstudiante" expr="=_created._responsable" label="Responsable"}}
+            {{row condition="=!base.esEstudiante" expr="=_created._responsableId" label="Especialidad Responsable"}}
+            {{row condition="=!base.esEstudiante" expr="=''" label="Firma Responsable"}}
+            {{row condition="=base.esEstudiante" expr="=base._responsableAcademico" label="Médico Responsable"}}
+            {{row condition="=base.esEstudiante" expr="=base._identificacionResponsableAcademico" label="Especialidad Médico Responsable"}}
+            {{row condition="=base.esEstudiante" expr="=''" label="Firma Médico Responsable"}}
+            {{row condition="=calc.in(_created.service, ['inventarios','farmacia','almacen','ceye'])" expr="=''" label="Transporte / Recibe"}}
+            {{row field="text" label="Cadena Original"}}
+            {{row field="signature" label="Sello Digital"}}
+          {{/record}}
+        {{/column}}
+        {{#column}}
+          {{row}}
+        {{/column}}
+        {{#column}}
+          {{#record title="QR's" titleStyle="title" layout="lightHorizontalLines" fontSize="6" section="_stamp" headerStyle="field" margin="-10,0,0,10" widths="50,50"}}
+            {{row qr="=calc.concatHost('doc', 'persona', persona.id)" label="=fn('_tipoExpediente', persona.tipoExpediente)" qrFit="50" condition="=(persona.id)?true:false"}}
+            {{row}}
+            {{row qr="=calc.concatHost('doc', '_user', _created.user)" label="Elabora" qrFit="50"}}
+            {{row condition="=(_created.responsable&&!base.esEstudiante)?true:false"}}
+            {{row qr="=calc.concatHost('doc', '_user', _created.responsable)" label="Responsable" qrFit="50" condition="=(_created.responsable&&!base.esEstudiante)?true:false"}}
+            {{row condition="=(_created.responsableAcademico&&base.esEstudiante)?true:false"}}
+            {{row qr="=calc.concatHost('doc', '_user', _created.responsableAcademico)" label="Médico Responsable" qrFit="50" condition="=(_created.responsableAcademico&&base.esEstudiante)?true:false"}}
+            {{row condition="=(persona.id)?true:false"}}
+            {{row qr="=calc.concatHost('doc', _type, _id)" label="Nota" qrFit="50"}}
+          {{/record}}
+        {{/column}}
+      {{/columns}}
+    {{/stack}}
+    {{#stack condition="=actualizacion"}}
+      {{#row text="Actualizaciones" fontSize="10" bold="true" margin="-10,0,0,0" condition="=!_.isEmpty(actualizacion)"}}
+      {{/row}}
+      {{#table title="Actualizaciones" titleStyle="title" layout="lightHorizontalLines" fontSize="5" section="actualizacion" headerStyle="field" margin="-10,0,0,10" removeEmptyCols="true"}}
+        {{column field="nota"}}
+        {{column field="fechaHora"}}
+        {{column field="usuario"}}
+        {{column field="nombreAnterior"}}
+        {{column field="nombreNuevo"}}
+        {{column field="claveAnterior"}}
+        {{column field="claveNueva"}}
+        {{column field="fechaNacimientoAnterior"}}
+        {{column field="fechaNacimientoNueva"}}
+        {{column field="generoAnterior"}}
+        {{column field="generoNuevo"}}
+        {{column field="entidadNacimientoAnterior"}}
+        {{column field="entidadNacimientoNueva"}}
+      {{/table}}
+    {{/stack}}
+[.#unless esSIC.]
+    {{#stack condition="=base.solicitud.base.asignacionActivoFijo.base.esVehiculo"}}
+      {{row text="NOTA:" fontSize="10" bold="true"}}
+      {{row text=" "}}
+      {{row text="ES OBLIGATORIO PARA LA SALIDA DE VEHÍCULOS PRESTAR ESTE PASE DEBIDAMENTE REQUISITADO Y FIRMADO EN LA CASETA DE VIGILANCIA." fontSize="10"}}
+      {{row text=" "}}
+      {{row text="ESTE PASE ES PERSONAL E INTRANSFERIBLE." fontSize="10"}}
+    {{/stack}}
+[./unless.]   
+  {{/report}}  
+{{/define}}

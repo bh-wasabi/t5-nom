@@ -1,0 +1,44 @@
+{{#define id="tabulador"}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base"}}
+      {{search field="_name"}}
+      {{search field="base._programa"}}
+      {{search field="base._socioNegocios"}}
+    {{/find}}
+  {{/view}}
+  {{#section id="base"}}
+    {{field id="nombre" type="expr" value="=concepto"}}
+    {{field id="esSocioNegocio" type="expr" value="=@tipoDerechohabiencia!='99'"}}
+    {{#field id="tipoDerechohabiencia"}}
+      {{onChange clearFields="programa,grupo,subGrupo"}}
+    {{/field}}
+    {{#field id="programa"}}
+      {{onChange clearFields="grupo,subGrupo"}}
+      {{#editor alwaysLoad="true"}}
+        {{param partOf="=tipoDerechohabiencia"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="grupo"}}
+      {{onChange clearFields="subGrupo"}}
+      {{#editor alwaysLoad="true"}}
+        {{param partOf="=programa"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="subGrupo"}}
+      {{#editor alwaysLoad="true"}}
+        {{param partOf="=grupo"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}} 
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{base._programa}}
+      <span style="font-size:12px;float:right;">{{base._tipoDerechohabiencia}}</span></br>    
+      <span style="font-size:12px;">{{base._socioNegocios}}</span>      
+      <span style="font-size:12px;float:right;">{{base._estatus}}</span>
+    </div>    
+  {{/template}}
+{{/markup}}

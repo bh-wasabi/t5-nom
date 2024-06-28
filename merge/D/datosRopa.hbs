@@ -1,0 +1,6 @@
+{{#define id="datosRopa"}}
+  {{#section id="base"}}
+    {{field id="esComponenteKit" type="expr" value="=tipoPrenda=='componenteKit'"}}
+    {{field id="esComponenteKitReusable" type="expr" value="=esComponenteKit&&usoMaterial=='reusable'"}}
+  {{/section}}
+{{/define}}

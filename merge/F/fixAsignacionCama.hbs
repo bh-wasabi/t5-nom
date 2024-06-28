@@ -1,0 +1,14 @@
+{{#define id="fixAsignacionCama"}}
+  {{action id="afectar" confirm="=true" confirmTitle="Precaución"}}
+  {{#section id="base"}}
+    {{#field id="central"}}
+      {{onChange clearFields="cama"}}
+    {{/field}}
+    {{#field id="cama"}}
+      {{#editor alwaysLoad="true"}}
+        {{param estatus="='limpia'"}}
+        {{param central="=central"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

@@ -1,0 +1,5 @@
+{{#define id="serviciosIntradomiciliarios"}}
+  {{#section id="base"}}
+    {{field id="cantidad" type="calc" value="=calc.countArgs(@agua, @luz, @drenaje, @telefono, @gas, @cable, @internet)"}}
+  {{/section}}
+{{/define}}

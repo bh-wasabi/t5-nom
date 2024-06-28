@@ -1,0 +1,350 @@
+{{#define type="doc" id="movPoliza"}}
+
+  {{#view id="grpEstadoAnaliticoDeuda"}}
+    {{complexView type="contablesExcel" 
+      template="xlsx/test-grp5.xlsx" 
+      input="actual" inputKey="A" inputMap="D=saldoInicial&E=debe&F=haber&G=saldoFinal"
+      input2="anterior" input2Key="A" input2Map="D=saldoInicial&E=debe&F=haber&G=saldoFinal"
+      output="estadoAnaliticoDeuda"}}
+  {{/view}}    
+
+  {{#view id="grpVariacionHaciendaPublica"}}
+    {{complexView type="contablesExcel" 
+      template="xlsx/test-grp5.xlsx" 
+      input="actual" inputKey="A" inputMap="D=saldoInicial&E=debe&F=haber&G=saldoFinal"
+      input2="anterior" input2Key="A" input2Map="D=saldoInicial&E=debe&F=haber&G=saldoFinal"
+      output="variacionHaciendaPublica"}}
+  {{/view}}    
+
+  {{#view id="grpEstadoActividades"}}
+    {{complexView type="contablesExcel" 
+      template="xlsx/test-grp5.xlsx" 
+      input="actual" inputKey="A" inputMap="D=saldoInicial&E=debe&F=haber&G=saldoFinal"
+      input2="anterior" input2Key="A" input2Map="D=saldoInicial&E=debe&F=haber&G=saldoFinal"
+      output="estadoActividades"}}
+  {{/view}}    
+
+  {{#view id="grpEstadoAnaliticoActivo"}}
+    {{complexView type="contablesExcel" 
+      template="xlsx/test-grp5.xlsx" 
+      input="actual" inputKey="A" inputMap="D=saldoInicial&E=debe&F=haber&G=saldoFinal"
+      input2="anterior" input2Key="A" input2Map="D=saldoInicial&E=debe&F=haber&G=saldoFinal"
+      output="estadoAnaliticoActivo"}}
+  {{/view}}    
+
+  {{#view id="grpSituacionFinanciera"}}
+    {{complexView type="contablesExcel" 
+      template="xlsx/test-grp5.xlsx" 
+      input="actual" inputKey="A" inputMap="D=saldoInicial&E=debe&F=haber&G=saldoFinal"
+      input2="anterior" input2Key="A" input2Map="D=saldoInicial&E=debe&F=haber&G=saldoFinal"
+      output="situacionFinanciera"}}
+  {{/view}}    
+
+  {{#view id="grpCambioSituacionFinanciera"}}
+    {{complexView type="contablesExcel" 
+      template="xlsx/test-grp5.xlsx" 
+      input="actual" inputKey="A" inputMap="D=saldoInicial&E=debe&F=haber&G=saldoFinal"
+      input2="anterior" input2Key="A" input2Map="D=saldoInicial&E=debe&F=haber&G=saldoFinal"
+      output="cambioSituacionFinanciera"}}
+  {{/view}}    
+
+  {{#view id="balanzaArbol"}}
+    {{complexView type="balanzaArbol"}}
+  {{/view}}   
+
+  {{#view id="balanceGeneral"}}
+    {{complexView type="balanceGeneral"}}
+    {{reportView 
+      detail="_mayor"
+      groupBy="_subGrupo,_tipo,_subTipo" 
+      orderBy="orden,_grupo,_subGrupo,_tipo,_subTipo,_mayor"
+      names="numero,subGrupo"
+      sum="saldoInicial,debe,haber,saldoFinal" 
+      exclude="beginReport,endReport"
+    }}
+  {{/view}}
+
+  {{#view id="estadoResultados_mayor"}}
+    {{complexView type="estadoResultados"}}
+    {{reportView 
+      detail="_mayor"
+      groupBy="_tipo,_subTipo" 
+      orderBy="orden,_grupo,_subGrupo,_tipo,_subTipo,_mayor"
+      names="numero"
+      sum="saldoInicial,debe,haber,saldoFinal" 
+      exclude="beginReport"
+    }}
+  {{/view}}
+
+  {{#view id="estadoResultados_auxiliar"}}
+    {{complexView type="estadoResultados"}}
+    {{reportView 
+      detail="_cuentaAuxiliar"
+      groupBy="_tipo,_subTipo,_mayor" 
+      orderBy="orden,_grupo,_subGrupo,_tipo,_subTipo,_mayor,_cuentaAuxiliar"
+      names="numero"
+      sum="saldoInicial,debe,haber,saldoFinal" 
+      exclude="beginReport"
+    }}
+  {{/view}}
+
+  {{#view id="movsArbol"}}
+    {{#pipeline}}
+      {{filter condition="=entidad" field="entidad" in="=entidad"}}
+      {{filter condition="=aux" field="aux" in="=aux"}}
+      {{filter condition="=desde" field="fecha" gte="=moment(desde).format('YYYY-MM-DD')"}}
+      {{filter condition="=hasta" field="fecha" lt="=moment(hasta).add(1,'day').format('YYYY-MM-DD')"}}
+      {{group field="cuenta" as="cuenta"}}
+      {{group field="debe" type="sum" as="debe"}}
+      {{group field="haber" type="sum" as="haber"}}
+    {{/pipeline}}
+  {{/view}}
+  {{#view id="movs"}}
+    {{#pipeline}}
+      {{filter condition="=entidad" field="entidad" in="=entidad"}}
+      {{filter condition="=aux" field="aux" in="=aux"}}
+      {{filter condition="=desde" field="fecha" gte="=moment(desde).format('YYYY-MM-DD')"}}
+      {{filter condition="=hasta" field="fecha" lt="=moment(hasta).add(1,'day').format('YYYY-MM-DD')"}}
+      {{group field="mayor"}}
+      {{group field="detalle"}}
+      {{group field="_detalle"}}
+      {{group field="debe" type="sum" as="debe"}}
+      {{group field="haber" type="sum" as="haber"}}
+    {{/pipeline}}
+  {{/view}}
+  {{#view id="saldos"}}
+    {{#pipeline}}
+      {{filter condition="=entidad" field="entidad" in="=entidad"}}
+      {{filter condition="=aux" field="aux" in="=aux"}}
+      {{filter condition="=ejercicio" field="fecha" gte="=moment(calc.fromYearMonth(@ejercicio, @periodo)).format('YYYY-MM-DD')" required="true"}}
+      {{filter condition="=ejercicio" field="fecha" lt="=moment(calc.toYearMonth(@ejercicio, @periodo)).add(1,'day').format('YYYY-MM-DD')" required="true"}}
+      {{filter condition="=hasta" field="fecha" lt="=moment(hasta).add(1,'day').format('YYYY-MM-DD')"}}
+      {{!-- {{group field="entidad"}}
+      {{group field="_sucursal"}} --}}
+      {{group field="_centroCostos"}}
+      {{group field="mayor"}}
+      {{group field="_detalle"}}
+      {{group field="debe" type="sum" as="debe"}}
+      {{group field="haber" type="sum" as="haber"}}
+    {{/pipeline}}
+    {{join preset="app.mayor" as="join" id="mayor"}}
+    {{join source="entidad" view="lista" id="entidad" key="base.entidad" fields="_name" as="_entidad"}}
+    {{calc2 field="_entidad" value="=_entidad._name"}}
+    {{calc2 field="_mayor" value="=calc.concat(join.nombre)"}}
+    {{calc2 field="saldo" value="=debe-haber"}}
+    {{calc2 field="esAcreedora" value="=join.naturaleza=='acreedora'"}}
+    {{calc2 field="saldoDeudor" value="=(!esAcreedora)?saldo:null"}}
+    {{calc2 field="saldoAcreedor" value="=(esAcreedora)?-saldo:null"}}
+  {{/view}}
+  {{#cube id="saldos" name="Saldos" view="saldos" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{!-- {{column field="_sucursal" label="Sucursal" width="120"}}
+    {{column field="_centroCostos" label="Centro Costos" width="120"}} --}}
+    {{!-- {{row field="_entidad" label="Entidad" width="120" expanded="true"}} --}}
+    {{row field="join._grupo" label="Grupo" width="80" expanded="true" fixedOrder="Balance, Resultados, Orden"}}
+    {{row field="join._tipo" label="Tipo" width="80" expanded="true" fixedOrder="Activo, Pasivo, Patrimonio, Capital, Orden"}}
+    {{row field="join._subTipo" label="Sub Tipo" width="120" expanded="true"}}
+    {{row field="_mayor" label="Cuenta" width="250"}}
+    {{row field="_detalle" label="Detalle" width="200"}}
+    {{sum field="saldoDeudor" label="Saldo Deudor" format="currency"}}
+    {{sum field="saldoAcreedor" label="Saldo Acreedor" format="currency"}}
+    {{sum field="saldo" label="Cambio Neto" format="currency"}}
+  {{/cube}}
+  {{#view id="saldosPorPeriodo"}}
+    {{#pipeline}}
+      {{filter condition="=entidad" field="entidad" in="=entidad"}}
+      {{filter condition="=aux" field="aux" in="=aux"}}
+      {{filter condition="=ejercicio" field="fecha" gte="=moment(calc.fromYearMonth(@ejercicio, @periodo)).format('YYYY-MM-DD')" required="true"}}
+      {{filter condition="=ejercicio" field="fecha" lt="=moment(calc.toYearMonth(@ejercicio, @periodo)).add(1,'day').format('YYYY-MM-DD')" required="true"}}
+      {{filter condition="=hasta" field="fecha" lt="=moment(hasta).add(1,'day').format('YYYY-MM-DD')"}}
+      {{!-- {{group field="entidad"}}
+      {{group field="_sucursal"}} --}}
+      {{group field="fecha"}}
+      {{group field="_centroCostos"}}
+      {{group field="mayor"}}
+      {{group field="_detalle"}}
+      {{group field="debe" type="sum" as="debe"}}
+      {{group field="haber" type="sum" as="haber"}}
+    {{/pipeline}}
+    {{join preset="app.mayor" as="join" id="mayor"}}
+    {{join source="entidad" view="lista" id="entidad" key="base.entidad" fields="_name" as="_entidad"}}
+    {{calc2 field="_entidad" value="=_entidad._name"}}
+    {{calc2 field="_mayor" value="=calc.concat(join.nombre)"}}
+    {{calc2 field="saldo" value="=debe-haber"}}
+    {{calc2 field="esAcreedora" value="=join.naturaleza=='acreedora'"}}
+    {{calc2 field="saldoDeudor" value="=(!esAcreedora)?saldo:null"}}
+    {{calc2 field="saldoAcreedor" value="=(esAcreedora)?-saldo:null"}}
+  {{/view}}
+  {{#cube id="saldosPorPeriodo" name="Saldos" view="saldosPorPeriodo" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{!-- {{column field="_sucursal" label="Sucursal" width="120"}}
+    {{column field="_centroCostos" label="Centro Costos" width="120"}} --}}
+    {{!-- {{row field="_entidad" label="Entidad" width="120" expanded="true"}} --}}
+    {{column field="fecha" type="date" label="Periodo" groupInterval="month"}}
+    {{!-- {{row field="join._grupo" label="Grupo" width="80" expanded="true" fixedOrder="Balance, Resultados, Orden"}}
+    {{row field="join._tipo" label="Tipo" width="80" expanded="true" fixedOrder="Activo, Pasivo, Patrimonio, Capital, Orden"}}
+    {{row field="join._subTipo" label="Sub Tipo" width="120" expanded="true"}} --}}
+    {{row field="_mayor" label="Cuenta" width="250"}}
+    {{row field="_detalle" label="Detalle" width="200"}}
+    {{sum field="saldoDeudor" label="Saldo Deudor" format="currency"}}
+    {{sum field="saldoAcreedor" label="Saldo Acreedor" format="currency"}}
+    {{sum field="saldo" label="Cambio Neto" format="currency"}}
+  {{/cube}}
+
+  {{#view id="saldosClavePresupuestal"}}
+    {{#pipeline}}
+      {{filter condition="=aux" field="aux" in="=aux"}}
+      {{filter condition="=ejercicio" field="fecha" gte="=moment(calc.fromYearMonth(@ejercicio, @periodo)).format('YYYY-MM-DD')" required="true"}}
+      {{filter condition="=ejercicio" field="fecha" lt="=moment(calc.toYearMonth(@ejercicio, @periodo)).add(1,'day').format('YYYY-MM-DD')" required="true"}}
+      {{filter condition="=hasta" field="fecha" lt="=moment(hasta).add(1,'day').format('YYYY-MM-DD')"}}
+      {{group field="_centroCostos"}}
+      {{group field="mayor"}}
+      {{group field="detalle"}}
+      {{group field="_detalle"}}
+      {{group field="debe" type="sum" as="debe"}}
+      {{group field="haber" type="sum" as="haber"}}
+    {{/pipeline}}
+    {{join preset="app.mayor" as="join" id="mayor"}}
+    {{join source="entidad" view="lista" id="entidad" key="base.entidad" fields="_name" as="_entidad"}}
+    {{join source="clavePresupuestal" view="lista" id="detalle" key="_id" isObjectId="true" as="clavePresupuestal"}}
+    {{join2 preset="app.actividadInstitucional" as="actividadInstitucional" id="clavePresupuestal.base.actividadInstitucional"}}
+    {{join2 preset="app.programaInstitucional" as="programaInstitucional" id="clavePresupuestal.base.programaInstitucional"}}
+
+    {{calc2 field="_entidad" value="=_entidad._name"}}
+    {{calc2 field="_mayor" value="=calc.concat(join.nombre)"}}
+    {{calc2 field="saldo" value="=debe-haber"}}
+    {{calc2 field="esAcreedora" value="=join.naturaleza=='acreedora'"}}
+    {{calc2 field="saldoDeudor" value="=(!esAcreedora)?saldo:null"}}
+    {{calc2 field="saldoAcreedor" value="=(esAcreedora)?-saldo:null"}}
+    {{calc2 field="actividadInstitucional" value="=@actividadInstitucional?calc.concat(actividadInstitucional.id, actividadInstitucional.nombre):clavePresupuestal.base.actividadInstitucional"}}
+    {{calc2 field="programaInstitucional" value="=@programaInstitucional?calc.concat(programaInstitucional.id, programaInstitucional.nombre):clavePresupuestal.base.programaInstitucional"}}
+    {{calc2 field="partidaPresupuestal" value="=calc.concat(clavePresupuestal.base.partidaPresupuestal||clavePresupuestal.base.objetoGasto, clavePresupuestal.base.descripcion)"}}
+  {{/view}}
+  {{#cube id="saldosClavePresupuestal" name="Saldos" view="saldosClavePresupuestal" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="false"}}
+    {{row field="actividadInstitucional" label="Actividad Institucional" width="150"}}
+    {{row field="programaInstitucional" label="Programa Institucional" width="150"}}
+    {{row field="partidaPresupuestal" label="Partida Presupuestal" width="150"}}
+    {{!-- {{row field="join._grupo" label="Grupo" width="80" expanded="true" fixedOrder="Balance, Resultados, Orden"}}
+    {{row field="join._tipo" label="Tipo" width="80" expanded="true" fixedOrder="Activo, Pasivo, Patrimonio, Capital, Orden"}}
+    {{row field="join._subTipo" label="Sub Tipo" width="120" expanded="true"}} --}}
+    {{row field="_mayor" label="Cuenta" width="150"}}
+    {{row field="_detalle" label="Detalle" width="150"}}
+    {{sum field="saldoDeudor" label="Saldo Deudor" format="currency"}}
+    {{sum field="saldoAcreedor" label="Saldo Acreedor" format="currency"}}
+    {{sum field="saldo" label="Cambio Neto" format="currency"}}
+  {{/cube}}
+
+
+  {{#view id="saldosClavePresupuestalEjericicio"}}
+    {{#pipeline}}
+      {{filter condition="=aux" field="aux" in="=aux"}}
+      {{filter condition="=ejercicio" field="fecha" gte="=moment(calc.fromYearMonth(@ejercicio, @periodo)).format('YYYY-MM-DD')" required="true"}}
+      {{filter condition="=ejercicio" field="fecha" lt="=moment(calc.toYearMonth(@ejercicio, @periodo)).add(1,'day').format('YYYY-MM-DD')" required="true"}}
+      {{filter condition="=hasta" field="fecha" lt="=moment(hasta).add(1,'day').format('YYYY-MM-DD')"}}
+      {{group field="fecha"}}
+      {{group field="_centroCostos"}}
+      {{group field="mayor"}}
+      {{group field="detalle"}}
+      {{group field="_detalle"}}
+      {{group field="debe" type="sum" as="debe"}}
+      {{group field="haber" type="sum" as="haber"}}
+    {{/pipeline}}
+    {{join preset="app.mayor" as="join" id="mayor"}}
+    {{join source="entidad" view="lista" id="entidad" key="base.entidad" fields="_name" as="_entidad"}}
+    {{join source="clavePresupuestal" view="lista" id="detalle" key="_id" isObjectId="true" as="clavePresupuestal"}}
+    {{join2 preset="app.actividadInstitucional" as="actividadInstitucional" id="clavePresupuestal.base.actividadInstitucional"}}
+    {{join2 preset="app.programaInstitucional" as="programaInstitucional" id="clavePresupuestal.base.programaInstitucional"}}
+
+    {{calc2 field="_entidad" value="=_entidad._name"}}
+    {{calc2 field="_mayor" value="=calc.concat(join.nombre)"}}
+    {{calc2 field="saldo" value="=debe-haber"}}
+    {{calc2 field="esAcreedora" value="=join.naturaleza=='acreedora'"}}
+    {{calc2 field="saldoDeudor" value="=(!esAcreedora)?saldo:null"}}
+    {{calc2 field="saldoAcreedor" value="=(esAcreedora)?-saldo:null"}}
+    {{calc2 field="actividadInstitucional" value="=@actividadInstitucional?calc.concat(actividadInstitucional.id, actividadInstitucional.nombre):clavePresupuestal.base.actividadInstitucional"}}
+    {{calc2 field="programaInstitucional" value="=@programaInstitucional?calc.concat(programaInstitucional.id, programaInstitucional.nombre):clavePresupuestal.base.programaInstitucional"}}
+    {{calc2 field="partidaPresupuestal" value="=calc.concat(clavePresupuestal.base.partidaPresupuestal||clavePresupuestal.base.objetoGasto, clavePresupuestal.base.descripcion)"}}
+  {{/view}}
+  {{#cube id="saldosClavePresupuestalEjericicio" name="Saldos" view="saldosClavePresupuestalEjericicio" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="false"}}
+    {{column field="fecha" type="date" label="Periodo" groupInterval="month"}}
+    {{row field="actividadInstitucional" label="Actividad Institucional" width="150"}}
+    {{row field="programaInstitucional" label="Programa Institucional" width="150"}}
+    {{row field="partidaPresupuestal" label="Partida Presupuestal" width="150"}}
+    {{!-- {{row field="join._grupo" label="Grupo" width="80" expanded="true" fixedOrder="Balance, Resultados, Orden"}}
+    {{row field="join._tipo" label="Tipo" width="80" expanded="true" fixedOrder="Activo, Pasivo, Patrimonio, Capital, Orden"}}
+    {{row field="join._subTipo" label="Sub Tipo" width="120" expanded="true"}} --}}
+    {{row field="_mayor" label="Cuenta" width="150"}}
+    {{row field="_detalle" label="Detalle" width="150"}}
+    {{sum field="saldoDeudor" label="Saldo Deudor" format="currency"}}
+    {{sum field="saldoAcreedor" label="Saldo Acreedor" format="currency"}}
+    {{sum field="saldo" label="Cambio Neto" format="currency"}}
+  {{/cube}}
+
+
+  {{#view id="auxiliar"}}
+    {{#find limit="-1"}}
+      {{filter condition="=aux" field="aux" in="=aux"}}
+      {{filter condition="=desde" field="fecha" gt="=desde"}}
+      {{filter condition="=hasta" field="fecha" lt="=hasta"}}      
+    {{/find}}
+    {{join preset="app.mayor" as="join" id="mayor"}}
+    {{calc field="fecha2" value="=moment(fecha).format('DD/MMM/YYYY')"}}
+    {{calc2 field="_mayor" value="=calc.concat(join.nombre)"}}
+  {{/view}}
+  {{#action id="reporteAuxiliar" hide="true" type="quickReport" fullScreen="false" label="Auxiliar" source="movPoliza" view="auxiliar"}}
+    {{param desde="=from"}}
+    {{param hasta="=to"}}
+    {{#grid showDates="today,yesterday,last3,last7,last15,last30,last60" exportToExcel="true" allowSearch="true" allowRefresh="true" filters="true" columnChooser="true" wordWrapEnabled="true" pdfFontSize="6" pdfPageOrientation="landscape" columnAutoWidth="wordWrapEnabled"}}
+      {{column field="_tipoPoliza" label="Tipo Poliza" width="100" pdfWidth="30"}}
+      {{column field="_nota" label="Movimiento" width="320" pdfWidth="150"}}
+      {{column field="fecha2" label="Fecha" width="100" pdfWidth="40"}}
+      {{column field="_mayor" label="Cuenta" width="300" pdfWidth="150"}}
+      {{column field="_detalle" label="Detalle" width="350" pdfWidth="150"}}
+      {{column field="debe" label="Debe" format="currency" summaryType="sum" summaryFormat="fixedPoint" summaryPrecision="2" pdfWidth="50" pdfAlign="right"}}
+      {{column field="haber" label="Haber" format="currency" summaryType="sum" summaryFormat="fixedPoint" summaryPrecision="2" pdfWidth="50" pdfAlign="right"}}
+    {{/grid}}
+  {{/action}}
+
+  {{#view id="polizasPeriodo"}}
+    {{#find limit="-1"}}
+      {{filter condition="=aux" field="aux" in="=aux"}}
+      {{filter field="fecha" gte="=calc.fromYearMonth(ejercicio,periodo)" required="true"}}
+      {{filter field="fecha" lte="=calc.toYearMonth(ejercicio,periodo)" required="true"}}
+    {{/find}}
+    {{join preset="app.mayor" as="join" id="mayor"}}
+    {{calc field="fecha2" value="=moment(fecha).format('DD/MMM/YYYY')"}}
+    {{calc2 field="_mayor" value="=calc.concat(join.nombre)"}}
+  {{/view}}
+  {{#grid id="polizasPeriodo" name="Polizas" view="polizasPeriodo" pageSize="25" allowSearch="false" exportToExcel="true" columnChooser="true" filters="true" allowGrouping="true"}}
+    {{column field="_tipoPoliza" label="Tipo Poliza" width="100"}}
+    {{column field="_nota" label="Movimiento" width="300"}}
+    {{column field="fecha2" label="Fecha" width="100"}}
+    {{!-- {{column field="_entidad" label="Entidad"}}
+    {{column field="_sucursal" label="Sucursal"}}
+    {{column field="_centroCostos" label="Centro Costos"}} --}}
+    {{column field="_mayor" label="Cuenta" width="250"}}
+    {{column field="_detalle" label="Detalle" width="250"}}
+{{!--     {{column field="join._grupo" label="Grupo" width="120"}}
+    {{column field="join._tipo" label="Tipo" width="120"}}
+    {{column field="join._subTipo" label="Sub Tipo" width="120"}} --}}
+    {{column field="debe" label="Debe" format="currency" summaryType="sum" summaryFormat="fixedPoint" summaryPrecision="2"}}
+    {{column field="haber" label="Haber" format="currency" summaryType="sum" summaryFormat="fixedPoint" summaryPrecision="2"}}
+  {{/grid}}  
+  {{#view id="cierre"}}
+    {{#pipeline}}
+      {{filter condition="=desde" field="fecha" gte="=moment(desde).format('YYYY-MM-DD')" required="true"}}
+      {{filter condition="=hasta" field="fecha" lt="=moment(hasta).add(1,'day').format('YYYY-MM-DD')" required="true"}}
+      {{filter condition="=entidad" field="entidad" in="=entidad"}}
+      {{filter condition="=libro" field="aux" in="=libro"}}
+      {{filter field="mayor" in="=calc.presetIdWhere('app.mayor', {grupo:'resultados'})"}}
+      {{group field="mayor"}}
+      {{group field="_mayor"}}
+      {{group field="detalle"}}
+      {{group field="_detalle"}}
+      {{!-- {{group field="sucursal"}}
+      {{group field="_sucursal"}} --}}
+      {{group field="centroCostos"}}
+      {{group field="_centroCostos"}}          
+      {{group field="haber" type="sum" as="debe"}}
+      {{group field="debe" type="sum" as="haber"}}
+    {{/pipeline}}
+  {{/view}}
+{{/define}}

@@ -1,0 +1,56 @@
+{{#define id="notaPagoIntereses"}}
+  {{param startOnOpen="aplicacion"}}
+  {{param removeIfEmptySection="aplicacion"}}
+  {{param removeIfEmptyField="totalAPagar"}}
+
+  {{#section id="base"}}
+    {{field id="totalEfectivo" type="calc" value="=calc.sumRef(formaPago, 'base.importeEfectivo')"}}
+    {{field id="totalCheques" type="calc" value="=calc.sumRef(formaPago, 'base.importeCheque')"}}
+    {{field id="totalTarjetas" type="calc" value="=calc.sumRef(formaPago, 'base.importeTarjeta')"}}
+    {{field id="totalTransferencias" type="calc" value="=calc.sumRef(formaPago, 'base.importeTransferencia')"}}
+    {{field id="totalDepositos" type="calc" value="=calc.sumRef(formaPago, 'base.importeDeposito')"}}
+    {{field id="totalPagares" type="calc" value="=calc.sumRef(formaPago, 'base.importePagare')"}}
+    {{field id="totalPagado" type="calc" value="=totalEfectivo+totalCheques+totalTarjetas+totalTransferencias+totalDepositos+totalPagares"}}
+    {{validator validIf="=(totalPagado==totalAPagar)" type="expr" message="Importe Incorrecto"}}
+  {{/section}}
+  {{#section id="aplicacion"}}
+    {{#field id="importe"}}
+      {{onChange refreshApplyStatus="true"}}
+    {{/field}}
+    {{#onChange}}
+      {{#update section="base"}}
+        {{set intereses="=calc.round(calc.sumExpr(aplicacion, '=calc.isTrue(continuar)?intereses:0'),2)"}}
+        {{set retencionIsr="=calc.round(calc.sumExpr(aplicacion, '=calc.isTrue(continuar)?retencionIsr:0'),2)"}}
+        {{set totalAPagar="=calc.round(calc.sumExpr(aplicacion, '=calc.isTrue(continuar)?totalAPagar:0'),2)"}}
+      {{/update}}
+    {{/onChange}}
+  {{/section}}
+  {{#grid id="aplicacion" section="aplicacion" keyField="importe"}}
+    {{column field="fecha" type="date" format="DD/MMM/YYYY" width="100" readOnly="true"}}
+    {{column field="vencimiento" type="date" format="DD/MMM/YYYY" width="100" readOnly="true"}}
+    {{column field="_name" width="400" readOnly="true"}}
+    {{column field="saldo" type="numeric" width="120" format="currency" readOnly="true"}}
+    {{column field="tasa" type="numeric" width="50" format="#,.##" readOnly="true"}}
+    {{column field="devengadoDesde" type="date" format="DD/MMM/YYYY" width="100" readOnly="true"}}
+    {{column field="devengadoHasta" type="date" format="DD/MMM/YYYY" width="100" readOnly="true"}}
+    {{column field="dias" type="numeric" width="50" readOnly="true"}}
+    {{column field="intereses" type="numeric" width="100" format="currency" readOnly="true"}}
+    {{column field="retencionIsr" type="numeric" width="100" format="currency" readOnly="true"}}   
+    {{column field="totalAPagar" type="numeric" width="120" format="currency" readOnly="true"}}
+    {{column field="continuar" width="70"}}
+  {{/grid}}
+  {{#workflow id="afectar" start="afectar"}}
+    {{#step id="afectar"}}
+      {{#user}}
+        {{validate condition="=base.totalPagado!==base.totalAPagar" error="Importe Incorrecto"}}
+        {{validate condition="=!_name" error="Nombre Incorrecto"}}
+        {{#spAffect engine="node"}}
+          {{#update section="base"}}
+            {{set estatus="afectado"}}
+            {{set _estatus="Afectado"}}
+          {{/update}}
+        {{/spAffect}}
+      {{/user}}
+    {{/step}}
+  {{/workflow}}
+{{/define}}

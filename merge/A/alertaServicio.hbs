@@ -1,0 +1,52 @@
+{{#define id="alertaServicio"}}
+  {{action id="tool" type="bpmn" color="blue" label="Diagrama Flujo" title="calc.concat('Diagrama Flujo:',base._servicio, base._subTipoSolicitudServicio)" visibleMode="close" bpmn="=calc.first(fn('bpmn', base.servicio, base.subTipoSolicitud)).fileName" moments="=base.momentos" condition="=base.servicio&&base.subTipoSolicitud" btnSolid="true"}}
+  {{#view id="lista" name="Lista"}}
+    {{#find}}
+      {{include field="base"}}
+      {{sort field="_name"}}
+      {{search field="_name"}}
+      {{search field="base._servicio"}}
+      {{search field="base._subTipoSolicitudServicio"}}
+      {{search field="base._momentos"}}
+      {{search field="base._subMomento"}}
+    {{/find}}
+  {{/view}}
+  {{#section id="base"}}
+    {{field id="nombre" type="expr" value="=calc.concat(mensaje, _servicio, _subTipoSolicitudServicio)"}}
+    {{field id="porMomento" type="expr" value="=@tipoAlertaServicio=='porMomento'"}}
+    {{field id="porExcederMaximo" type="expr" value="=@tipoAlertaServicio=='porExcederMaximo'"}}
+    {{#field id="servicio"}}
+      {{onChange clearFields="subTipoSolicitudServicio,subTipoSolicitud,momentos"}}
+    {{/field}}
+    {{#field id="subTipoSolicitudServicio"}}
+      {{#onChange clearFields="momentos"}}
+        {{set subTipoSolicitud="=subTipoSolicitudServicio.substr(subTipoSolicitudServicio.indexOf('-')+1)"}}
+      {{/onChange}}
+      {{#editor}}
+        {{param partOf="=servicio"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="momentos"}}
+      {{#editor sourceFromPreset="cfg.board" pluckFromPreset="moment,subMoment"}}
+        {{param service="=servicio"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="motivo"}}
+      {{#editor}}
+        {{param servicio="=servicio"}}
+        {{param partOf="=subTipoSolicitud"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{base._subTipoSolicitudServicio}}
+      </br><span style="font-size:12px;">{{base._servicio}}</span>      
+      <span style="font-size:12px;float:right;">{{base._subMomento}}</span>
+      </br><span style="font-size:12px;">{{base._tipoAlertaServicio}}</span>      
+      <span style="font-size:12px;float:right;">{{#if base.maximo}}{{base.maximo}}{{else}}{{base._momentos}}{{/if}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

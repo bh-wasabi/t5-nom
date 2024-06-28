@@ -1,0 +1,6 @@
+{{#define id="datosEscalaBradenPediatrica"}}
+  {{#section id="base"}}
+    {{field id="total" type="calc" value="=calc.sumArgs(calc.sumCase(percepcionSensorial,'percepcionSensorialPediatrica'),calc.sumCase(actividadDeambulacion,'actividadDeambulacionPediatrica'),calc.sumCase(movilidad,'movilidadPediatrica'),calc.sumCase(exposicionHumedad,'exposicionHumedadPediatrica'),calc.sumCase(friccionCizalla,'friccionCizallaPediatrica'),calc.sumCase(nutricion,'nutricionPediatrica'),calc.sumCase(perfusionOxigenacion,'perfusionOxigenacionPediatrica'))"}}
+    {{field id="puntuacionTotal" type="expr" value="=total<16?'Alto Riesgo':total>17&&total<22?'Riesgo Moderado':total>23?'Bajo Riesgo':''"}}
+  {{/section}}
+{{/define}}

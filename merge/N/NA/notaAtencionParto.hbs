@@ -1,0 +1,20 @@
+{{#define id="notaAtencionParto"}}
+  {{#section id="base"}}
+    {{field id="otroAtendioParto" type="expr" value="=atendioParto=='otro'"}}
+  {{/section}}
+  {{#view id="totalPartosCesareas"}}
+    {{#pipeline}}
+      {{filter field="_created.date" gte="=calc.fromYearMonth(ejercicio,periodo)"}}
+      {{filter field="_created.date" lte="=calc.toYearMonth(ejercicio,periodo)"}}
+      {{filter field="base.estatus" in="afectado"}}
+      {{group field="base._tipoAtencionParto" as="_tipoAtencionParto"}}
+      {{group field="base._partoCesarea" as="_partoCesarea"}}
+      {{group field="_id" type="count" as="conteo"}}
+    {{/pipeline}}
+  {{/view}}
+  {{#grid id="totalPartosCesareas" view="totalPartosCesareas" pdfFontSize="6" filters="false" exportToExcel="true" allowRefresh="true" columnChooser="false" allowSearch="true" wordWrapEnabled="true" columnAutoWidth="wordWrapEnabled"}}
+    {{column field="_tipoAtencionParto" label="Tipo Parto"}}
+    {{column field="_partoCesarea" label="Parto o Cesárea"}}
+    {{column field="conteo" label="Conteo" summaryType="sum"}}
+  {{/grid}}  
+{{/define}}

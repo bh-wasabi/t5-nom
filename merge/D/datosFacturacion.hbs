@@ -1,0 +1,13 @@
+{{#define id="datosFacturacion"}}
+  {{#section id="base"}}
+    {{#field id="tipoPersona"}}
+      {{#onChange}}
+        {{set rfc="=fn('rfcPorOmision', @tipoPersona)"}}
+        {{set razonSocial="=fn('razonSocialPorOmision', @tipoPersona)"}}
+      {{/onChange}}
+    {{/field}}
+    {{field id="esPersonaMoral" type="expr" value="=@tipoPersona==='persona-moral'"}}
+    {{field id="esPersonaFisica" type="expr" value="=@tipoPersona==='persona-fisica'"}}
+    {{field id="tieneDireccion" type="expr" value="=esPersonaMoral||esPersonaFisica"}}
+  {{/section}}
+{{/define}} 

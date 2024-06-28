@@ -1,0 +1,6 @@
+{{#define id="notaReasignacionJefeInmediatoRH"}}
+  {{#section id="base"}}
+    {{field id="esTemporal" type="expr" value="=@tipoReasignacion=='temporal'"}}
+    {{validator type="expr" validIf="=jefeInmediatoNuevo!=jefeInmediatoActual&&jefeInmediatoNuevo!=persona.id" message="Jefe Inmediato Incorrecto"}}
+  {{/section}}  
+{{/define}}

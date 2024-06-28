@@ -1,0 +1,33 @@
+{{#define id="motivoSupervision"}}
+	{{#view id="lista" name="Lista"}}
+		{{#find}}
+			{{include field="base.servicio"}}
+			{{include field="base.tipoRegistro"}}
+			{{sort field="_name"}}
+			{{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+			{{filter condition="=tipoRegistro" field="base.tipoRegistro" eq="=tipoRegistro"}}
+			{{search field="_name"}}
+			{{search field="base._servicio"}}
+			{{search field="base._tipoRegistro"}}
+		{{/find}}
+	{{/view}}
+	{{#section id="base"}}
+		{{#field id="servicio"}}
+			{{onChange clearFields="tipoRegistro"}}
+		{{/field}}
+    {{#field id="tipoRegistro"}}
+    	{{#editor}}
+    		{{param partOf="=servicio"}}
+    	{{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}
+      </br><span style="font-size:12px;">{{base._tipoRegistro}}</span>
+      </br><span style="font-size:12px;">{{base._servicio}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

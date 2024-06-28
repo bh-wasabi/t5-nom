@@ -1,0 +1,117 @@
+{{#define id="notaPorRecibirProveedor2"}}
+  {{param attribute1="=_created.service"}}
+  {{param removeIfEmptySection="articulos"}}
+  {{param removeIfEmptyField="cantidad"}}
+
+  {{#transform id="copiarNota"}}
+    {{update section="persona" transform="copiarPersona2"}}
+  {{/transform}}
+
+  {{action id="subdoc" condition="=true" type="add-subdoc" transform="copiarNota" source="notaDatosFacturaProveedor" label="Datos Factura Proveedor" color="grey" visibleMode="close" onlyPost="true" userRole="datosFacturaProveedor"}}
+  {{#section id="base"}}
+    {{field id="esCompra" type="expr" value="=!_created.subType||_created.subType=='compra'"}}
+    {{field id="esGasto" type="expr" value="=_created.subType=='gasto'"}}
+    {{field id="esActivoFijo" type="expr" value="=_created.subType=='activoFijo'"}}
+    {{field id="tieneLote" type="expr" value="=esCompra||esActivoFijo"}}
+    {{field id="tieneVencimiento" type="expr" value="=esCompra"}}
+    {{field id="importeEnLetra" type="expr" value="=calc.pesos(importeTotal)"}}
+    {{#field id="numeroContrato"}}
+      {{editor items="=_parentData.contratos"}}
+    {{/field}}
+    {{#field id="numeroLicitacion"}}
+      {{editor items="=_parentData.licitaciones"}}
+    {{/field}}
+    {{#field id="numeroOrdenCompra"}}
+      {{editor items="=_parentData.ordenesCompra"}}
+    {{/field}}
+  {{/section}}
+  {{!-- Tiene que estar en la vista "lista" --}}
+  {{#section id="articulos"}}
+    {{#field id="articulo"}}
+      {{#editor display="base.codigo" view="lista"}}      
+        {{param proveedor="=base.proveedor"}}
+        {{param esBien="=base.esCompra"}}
+        {{param tipoArticulo="=fn('tipoArticuloReciboProveedor', _created.subType)"}}
+      {{/editor}}
+      {{#onChange getSourceDoc="true" getSourceDocAs="_articulo"}}
+        {{set codigo="=base.codigo"}}
+        {{set descripcion="=base.descripcionAlmacen||base.descripcion"}}
+        {{set tipoArticulo="=base.tipoArticulo"}}
+        {{set cuadroBasico="=base.cuadroBasico"}}
+        {{set unidadProveedor="=calc.getRef(calc.findWhereRef(_articulo.base.articuloProveedor, 'base.proveedor', _doc.base.proveedor, 'base.numeroContrato', _doc.base.numeroContrato), 'base._unidadProveedor')"}}
+        {{set numeroContrato="=calc.getRef(calc.findWhereRef(_articulo.base.articuloProveedor, 'base.proveedor', _doc.base.proveedor, 'base.numeroContrato', _doc.base.numeroContrato), 'base.numeroContrato')"}}
+        {{set iva="=_articulo.base.ivaCompra"}}
+        {{set _iva="=_articulo.base._ivaCompra"}}
+        {{set retencionIsr="=_articulo.base.retencionIsr"}}
+        {{set _retencionIsr="=_articulo.base._retencionIsr"}}
+        {{set retencionIva="=_articulo.base.retencionIva"}}
+        {{set _retencionIva="=_articulo.base._retencionIva"}}
+        {{set tipoDeducibilidad="=_articulo.base.tipoDeducibilidad"}}
+        {{set _tipoDeducibilidad="=_articulo.base._tipoDeducibilidad"}}
+        {{set porcentajeDeducibilidad="=_articulo.base.tipoDeducibilidad=='porcentaje'&&_articulo.base.porcentajeDeducibilidad"}}
+        {{set topeDeducibilidad="=_articulo.base.tipoDeducibilidad=='tope'&&_articulo.base.topeDeducibilidad"}}
+        {{set centroCostos="=_articulo.base.centroCostos"}}
+        {{set _centroCostos="=_articulo.base._centroCostos"}}
+        {{set vidaUtil="=calc.getRef(_articulo.base, 'datosActivoFijo.base.vidaUtil')"}}
+        {{set metodoDepreciacion="=calc.getRef(_articulo.base, 'datosActivoFijo.base.metodoDepreciacion')"}}
+        {{set _metodoDepreciacion="=calc.getRef(_articulo.base, 'datosActivoFijo.base._metodoDepreciacion')"}}
+[.#if esGRP.]        
+        {{set clavePresupuestal="=_articulo.base.clavePresupuestal"}}
+        {{set _clavePresupuestal="=_articulo.base._clavePresupuestal"}}
+[./if.]
+        {{set factor="=calc.getRef(calc.findWhereRef(_articulo.base.articuloProveedor, 'base.proveedor', _doc.base.proveedor, 'base.numeroContrato', _doc.base.numeroContrato), 'base.factorCompra')||1"}}
+        {{set costoUnitario="=calc.getRef(calc.findWhereRef(_articulo.base.articuloProveedor, 'base.proveedor', _doc.base.proveedor, 'base.numeroContrato', _doc.base.numeroContrato), 'base.costoProveedor')"}}
+      {{/onChange}}
+    {{/field}}
+    {{field id="costoUnitarioInventario" type="calc" value="=costoUnitario/factor"}}
+    {{field id="costoTotal" type="calc" value="=cantidad*costoUnitario"}}
+    {{#onChange}}
+      {{#update section="base"}}
+        {{set cantidadTotal="=calc.sumExpr(articulos, '=cantidad')"}}
+        {{set subTotal="=calc.round(calc.sumExpr(articulos, '=costoUnitario*cantidad'),2)"}}
+        {{set importeIva="=calc.round(calc.sumExpr(articulos, '=costoUnitario*cantidad*(calc.number(iva)/100)'),2)"}}
+        {{set importeRetencionIsr="=calc.round(calc.sumExpr(articulos, '=costoUnitario*cantidad*(calc.number(retencionIsr)/100)'),2)"}}
+        {{set importeRetencionIva="=calc.round(calc.sumExpr(articulos, '=costoUnitario*cantidad*(calc.number(retencionIva)/100)'),2)"}}
+        {{set importeTotal="=calc.round(base.subTotal-base.importeRetencionIsr-base.importeRetencionIva+base.importeIva,2)"}}
+      {{/update}}
+      [.#if esPrivado.]
+      {{!-- notaSolicitudCargoProveedor para que no genere doble cxp --}}
+      {{update section="generarNota" value="=calc.mapArray(calc.mapReduce(calc.itemsSetExpr(articulos, 'costoTotal', '=cantidad*costoUnitario'),'iva,_iva,retencionIsr,_retencionIsr,retencionIva,_retencionIva','cantidad,costoTotal'), {fechaEmision:'=base.fechaEmision',tipoNota:'=`notaSolicitudCargoProveedor`',_tipoNota:'=`Solicitud Cargo Proveedor`',tipoSolicitud:'=`cargoAcreedor`',_tipoSolicitud:'=`Cargo Acreedor`', servicio:'=`proveedores`', '_servicio':'=`Proveedores`',importe:'=costoTotal', importeIva:'=calc.tax(costoTotal,@iva,2)', importeRetencionIsr:'=calc.tax(costoTotal,@retencionIsr,2)', importeRetencionIva:'=calc.tax(costoTotal,@retencionIva,2)',importeTotal:'=calc.addTaxRetention(costoTotal,@iva,@retencionIsr,@retencionIva,2)',iva:'iva',_iva:'_iva',retencionIsr:'retencionIsr',_retencionIsr:'_retencionIsr',retencionIva:'retencionIva',_retencionIva:'_retencionIva'},null,{base})"}}
+      [./if.]
+    {{/onChange}}
+  {{/section}}
+  
+  {{#grid id="articulos" section="articulos" keyField="cantidad" allowInsert="true" allowRemove="true"}}
+    {{column field="articulo" label="Código" width="150"}}
+    {{column field="cantidad" label="Cantidad" width="80" type="numeric" format="#,"}}
+    {{column field="descripcion" label="Descripción" width="400" readOnly="true"}}
+    {{column field="unidadProveedor" label="Unidad" width="120" readOnly="true"}}
+    {{column field="numeroContrato" width="120" readOnly="true"}}
+    {{!-- {{column field="iva" label="IVA" width="100" readOnly="true"}} --}}
+    {{column field="factor" label="Factor" width="70" type="numeric" format="#,.##" readOnly="true" required="true"}}
+    [.#if esHIS.]
+    {{column field="lote" label="Lote/Serie" width="100" required="true" show="=base.tieneLote"}}
+    [.else.]
+    {{column field="lote" label="Lote/Serie" width="100" required="true"  show="=base.tieneLote" defaultValue="='C'+_created.folio"}}
+    [./if.]
+    {{column field="vencimiento" label="Vencimiento" validateDate="true" width="90" required="true" show="=base.tieneVencimiento"}}
+    {{column field="costoUnitario" label="Costo Presentación" width="130" type="numeric" format="#,.##" required="=true"}}
+  {{/grid}}
+
+  {{#workflow id="afectar" start="afectar"}}
+    {{#step id="afectar"}}
+      {{#user}}
+        [.#if esPrivado.]
+        {{validate condition="=calc.round(base.importeTotal||0,2)!=calc.round(calc.sumRef(generarNota,'importeTotal')||0,2)" error="Importe Incorrecto"}}
+        [./if.]
+        {{validate condition="=!_name" error="Nombre Incorrecto"}}
+        {{#spAffect engine="node"}}
+          {{#update section="base"}}
+            {{set estatus="afectado"}}
+            {{set _estatus="Afectado"}}
+          {{/update}}
+        {{/spAffect}}
+      {{/user}}
+    {{/step}}
+  {{/workflow}}
+{{/define}}

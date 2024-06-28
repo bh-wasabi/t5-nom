@@ -1,0 +1,5 @@
+{{#define id="pacienteUrgencias"}}
+  {{#section id="base"}}
+    {{field id="nombreCompleto" type="expr" label="Nombre" value="=calc.concat(@nombres, @apellidoPaterno, @apellidoMaterno)"}}
+  {{/section}}
+{{/define}}

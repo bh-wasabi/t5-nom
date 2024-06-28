@@ -1,0 +1,10 @@
+{{#define id="notaLlegaPacienteAtencionCama"}}
+  {{#section id="base"}}
+    {{#field id="cama"}}
+      {{#editor}}
+        {{param central="=fn('llegaPacienteAtencionCamaCentral', _created.service)"}}
+        {{param estatus="='limpia'"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}  
+{{/define}}

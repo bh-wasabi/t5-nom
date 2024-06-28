@@ -1,0 +1,12 @@
+{{#define id="materialComponente"}}
+  {{#section id="base"}}
+    {{#field id="componente"}}
+      {{#editor}}
+        {{param tipoArticulo="='material'"}}
+        {{#onChange}}
+          {{set codigo="=base.codigo"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}  
+{{/define}}

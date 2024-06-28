@@ -1,0 +1,10 @@
+{{#define id="notaFusionExpediente"}}
+	{{action id="afectar" confirm="=true" confirmMessage="='Como resultado de esta acción, el expediente origen:<br><strong>'+persona.nombreCompleto+'.</strong><br>Quedará bloqueado.<br><br>Se traspasarán las solicitudes e inventarios al expediente destino:<br><strong>'+base._paciente+'</strong><br><br><br><strong>¿Desea Continuar?</strong>'" confirmTitle="Precaución" confirmHeight="400" confirmWidth="500"}}
+  {{#section id="base"}}
+    {{#field id="paciente"}}
+      {{#editor}}
+        {{param excluirPaciente="=persona.paciente"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

@@ -1,0 +1,6 @@
+{{#define id="notaOrbitopatiaTiroidea"}}
+  {{#section id="base"}}
+    {{field id="totalOrbitopatiaTiroidea" type="calc" value="=calc.sumArgs(@edemaCaruncula, @quemosis, @hiperemiaConjuntival, @hiperemiaPalpebral, @edemaPalpebral, @dolorRetrobulbar, @dolorMovimientosOculares)"}}
+    {{field id="resultado" type="expr" value="=fn('resultadoOrbitopatiaTiroidea', totalOrbitopatiaTiroidea)"}}
+  {{/section}}
+{{/define}} 

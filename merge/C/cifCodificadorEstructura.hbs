@@ -1,0 +1,25 @@
+{{#define id="cifCodificadorEstructura"}}
+  {{#section id="base"}}
+    {{#field id="clasificacionEstructuraCifNivelUno"}}
+      {{onChange clearFields="clasificacionEstructuraCifNivelDos,clasificacionEstructuraCifNivelTres,clasificacionEstructuraCifNivelCuatro"}}
+    {{/field}}
+    {{#field id="clasificacionEstructuraCifNivelDos"}}
+      {{onChange clearFields="clasificacionEstructuraCifNivelTres,clasificacionEstructuraCifNivelCuatro"}}
+      {{#editor}}
+        {{param partOf="=clasificacionEstructuraCifNivelUno"}}
+      {{/editor}}
+    {{/field}}  
+    {{#field id="clasificacionEstructuraCifNivelTres"}}
+      {{onChange clearFields="clasificacionEstructuraCifNivelCuatro"}}
+      {{#editor}}
+        {{param partOf="=clasificacionEstructuraCifNivelDos"}}
+      {{/editor}}
+    {{/field}}  
+    {{#field id="clasificacionEstructuraCifNivelCuatro"}}
+      {{#editor}}
+        {{param partOf="=clasificacionEstructuraCifNivelTres"}}
+      {{/editor}}
+    {{/field}}  
+    {{field id="codigoCifEstructuraFinal" type="expr" value="=calc.concatPoint(clasificacionEstructuraCifNivelCuatro||clasificacionEstructuraCifNivelTres||clasificacionEstructuraCifNivelDos||clasificacionEstructuraCifNivelUno, clasificacionEstructuraCifCalificadorUno, clasificacionEstructuraCifCalificadorDos, clasificacionEstructuraCifCalificadorTres)"}}
+  {{/section}}
+{{/define}} 

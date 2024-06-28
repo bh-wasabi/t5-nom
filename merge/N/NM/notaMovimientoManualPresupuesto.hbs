@@ -1,0 +1,29 @@
+{{#define id="notaMovimientoManualPresupuesto"}}
+  {{param removeIfEmptySection="movimientoPresupuestal"}}
+  {{param removeIfEmptyField="clavePresupuestal"}}
+
+  {{#section id="movimientoPresupuestal"}}
+    {{#field id="clavePresupuestal"}}
+      {{#editor}}
+        {{param tipoPresupuesto="=base.tipoPresupuesto"}}
+        {{!-- {{param ejercicio="=base.ejercicio"}} --}}
+      {{/editor}}
+      {{#onChange}}
+        {{set clave="=base.clave"}}
+        {{set descripcion="=base.descripcion"}}
+      {{/onChange}}      
+    {{/field}}
+  {{/section}}
+  
+  {{#grid id="movimientoPresupuestal" section="movimientoPresupuestal" keyField="clavePresupuestal" allowRemove="true" allowInsert="true"}}
+    {{column field="clavePresupuestal" width="450"}}
+    {{column field="clave" hide="true" readOnly="true"}}
+    {{column field="descripcion" width="300" readOnly="true"}}
+    {{column field="referencia" width="120"}}
+    {{column field="concepto" width="120"}}
+    {{column field="comprometido" type="numeric" format="#," width="120" show="=base.tipoPresupuesto=='egresos'"}}
+    {{column field="devengado" type="numeric" format="#," width="120" show="=base.tipoPresupuesto=='egresos'"}}
+    {{column field="pagado" type="numeric" format="#," width="120" show="=base.tipoPresupuesto=='egresos'"}}
+    {{column field="recaudado" type="numeric" format="#," width="120" show="=base.tipoPresupuesto=='ingresos'"}}
+  {{/grid}}
+{{/define}}

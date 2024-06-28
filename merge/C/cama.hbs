@@ -1,0 +1,448 @@
+{{#define type="doc" id="cama"}}
+  {{#section id="base"}}
+    {{#field id="articuloCargoAutomatico"}}
+      {{#editor}}
+        {{param tipoArticulo="='procedimiento'"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+
+  {{#report id="preliminar-encabezado2"}}
+    {{#stack}}
+      {{#columns margin="20" widths="210,150,*"}}
+        {{#column}}
+          {{row image="logo" alignment="left" imageWidth="200" margin="0,-15,0,0"}}
+        {{/column}}
+        {{#column margin="0,-10,0,0"}}
+          {{row text="Hospital Regional de Alta Especialidad Ixtapaluca" alignment="left" fontSize="6" color="grey"}}
+          {{row text="Carretera Federal México Puebla Km. 34.5" alignment="left" fontSize="6" color="grey"}}
+          {{row text="Pueblo de Zoquiapan 56530, Ixtapaluca, Méx." alignment="left" fontSize="6" color="grey"}}
+          {{row text="Teléfono: 55 5972 9800, CLUES: MCSSA018786" alignment="left" fontSize="6" color="grey"}}
+        {{/column}}
+      {{/columns}}
+    {{/stack}}
+  {{/report}}
+
+  {{#transform id="copiarCamaPersona"}}
+    {{#update section="base"}}
+      {{set cama="=_id"}}
+      {{set _cama="=_name"}}
+    {{/update}}
+    {{update section="persona" value="=persona"}}
+  {{/transform}}
+
+  {{#view id="ocupacion"}}
+    {{#pipeline}}
+      {{group field="base._central" as="_central"}}
+      {{group field="base.estatus" as="estatus"}}
+      {{group field="_id" type="count" as="camas"}}
+    {{/pipeline}}
+    {{sort field="_central"}}
+    {{calc field="disponible" value="=(calc.in(estatus, ['limpia','sucia']))?camas:null"}}
+    {{calc field="mantenimiento" value="=(calc.in(estatus, ['mantenimiento']))?camas:null"}}
+    {{calc field="ocupada" value="=(!calc.in(estatus, ['limpia','sucia','mantenimiento']))?camas:null"}}
+    {{mapReduce keys="_central" values="camas,disponible,mantenimiento,ocupada"}}
+    {{calc3 field="ocupacion" value="=calc.round((ocupada/camas)*100,0)"}}
+  {{/view}}
+
+  {{#view id="resumenCamasCentral"}}
+    {{#pipeline}}
+      {{filter field="base.central" eq="=id"}}
+      {{group field="_id" type="count" as="conteo"}}
+    {{/pipeline}}  
+  {{/view}}
+
+  {{#view id="resumenCamasCentralDisponibles"}}
+    {{#pipeline}}
+      {{filter field="base.central" eq="=id"}}
+      {{filter field="base.estatus" in="limpia,sucia"}}
+      {{group field="_id" type="count" as="conteo"}}
+    {{/pipeline}}  
+  {{/view}}
+
+  {{#view id="cubo"}}
+    {{#find limit="-1"}}
+      {{include field="base"}}
+      {{include field="persona"}}
+    {{/find}}
+  {{/view}}
+  
+  {{#cube id="cubo" name="Camas" view="cubo" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{column field="base._estatus" width="150" label="Estatus"}}
+    {{column field="base._tipoCama" label="Tipo Cama"}}
+    {{row field="base._zona" width="200" label="Zona"}}
+    {{row field="base._central" width="320" label="Central"}}
+    {{!-- {{row field="persona._genero" width="100" label="Genero"}}
+    {{row field="persona.nombreCompleto" width="250" label="Paciente"}} --}}
+    {{count field="_id" label="Cantidad" format="#"}}
+  {{/cube}}
+
+  {{#view id="ocupacionCamas"}}
+    {{#find limit="-1"}}
+      {{include field="base"}}
+      {{include field="ingreso.fechaHora"}}
+      {{filter field="base.estatus" eq="='ocupada'"}}
+      {{sort field="base._central"}}
+      {{sort field="base.nombre"}}
+    {{/find}}
+    {{calc field="fechaIngreso" value="=calc.format('date', ingreso.fechaHora, 'DD/MMM/YYYY h:mma')"}}
+    {{calc field="estancia" value="=calc.fromNow(ingreso.fechaHora)"}}    
+  {{/view}}
+  
+  {{#grid id="ocupacionCamas" name="Ocupación Camas" view="ocupacionCamas" pdfFontSize="6" filters="true" exportToExcel="true" allowRefresh="true" columnChooser="false" allowSearch="true" wordWrapEnabled="true" columnAutoWidth="wordWrapEnabled"}}
+    {{column field="base._central" label="Central" width="400"}}
+    {{column field="base.nombre" label="Cama" width="400"}}
+    {{column field="base._estatus" label="Estatus" width="80"}}
+    {{column field="fechaIngreso" label="Fecha Ingreso" width="180"}}
+    {{column field="estancia" label="Estancia" width="80"}}
+  {{/grid}}
+
+  {{#view id="cuboCensoDiario"}}
+    {{#find limit="-1"}}
+      {{include field="base"}}
+      {{include field="persona"}}
+      {{include field="ingreso"}}
+      {{include field="temporal"}}
+    {{/find}}
+  {{/view}}
+
+  {{#cube id="cuboCensoDiario" name="Censo Diario" view="cuboCensoDiario" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{column field="base._tipoCama" width="150" label="Tipo Cama"}}
+    {{column field="base._estatus" label="Estatus"}}
+    {{row field="base._zona" width="200" label="Zona"}}
+    {{row field="base._central" width="320" label="Central"}}
+    {{row field="persona.nombreCompleto" width="250" label="Paciente"}}
+    {{row field="persona._genero" width="100" label="Genero"}}
+    {{row field="ingreso._cama" label="Cama Ingreso"}}
+    {{row field="ingreso._central" label="Central Ingreso"}}
+    {{row field="ingreso._diagnostico" label="Diagnóstico Ingreso"}}
+    {{row field="ingreso.fecha" label="Fecha Ingreso" type="date" format="DD/MMM/YYYY"}}
+    {{count field="_id" label="Cantidad" format="#"}}
+  {{/cube}}
+
+  {{#view id="central"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="base"}}
+      {{include field="persona"}}
+      {{include field="ingreso"}}
+      {{include field="temporal"}}
+      {{search field="_name"}}
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="base._central"}}
+      {{search field="base._estatus"}}
+      {{sort field="='_name'" direction="asc"}}
+      {{filter condition="=servicio" field="base.servicio" eq="=servicio"}}
+      {{filter condition="=central" field="base.central" eq="=central"}}
+      {{filter condition="=estatus" field="base.estatus" in="=estatus"}}
+    {{/find}}
+    {{join source="persona" view="contexto" as="join" id="persona.id"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{calc field="_readOnly" type="expr" value="=join._readOnly"}}
+    {{calc field="_flags" type="expr" value="=join._flags"}}
+    {{calc field="nombre" type="expr" value="=join._name"}}
+    {{editor display="_name"}}
+  {{/view}}
+
+  {{#view id="ver"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="base"}}
+      {{include field="persona"}}
+      {{include field="ingreso"}}
+      {{include field="temporal"}}
+      {{search field="_name"}}
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona._genero"}}
+      {{search field="persona.fechaNacimiento"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="base._central"}}
+      {{search field="base._estatus"}}
+      {{!-- {{sort field="base._estatus" direction="asc"}} --}}
+      {{sort field="base._central" direction="asc"}}
+      {{sort field="_name" direction="asc"}}
+      {{filter condition="=servicio" field="base.servicio" eq="=servicio"}}
+      {{filter condition="=central" field="base.central" eq="=central"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+    {{/find}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{calc field="nombre" type="expr" value="=persona.nombreCompleto"}}
+    {{editor display="_name"}}
+  {{/view}}
+  
+  {{#view id="lista" name="Lista"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="base"}}
+      {{include field="persona"}}
+      {{include field="ingreso"}}
+      {{include field="temporal"}}
+      {{search field="_name"}}
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona._genero"}}
+      {{search field="persona.fechaNacimiento"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="base._central"}}
+      {{search field="base._estatus"}}
+      {{sort condition="=!central" field="base._central" direction="asc"}}
+      {{sort field="_name" direction="asc"}}
+      {{filter condition="=servicio" field="base.servicio" eq="=servicio"}}
+      {{filter condition="=central" field="base.central" eq="=central"}}
+      {{filter condition="=estatus" field="base.estatus" eq="=estatus"}}
+    {{/find}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{calc field="nombre" type="expr" value="=persona.nombreCompleto"}}
+    {{editor display="_name"}}
+  {{/view}}
+
+  {{#view id="censoDiario" name="Censo Diario"}}
+    {{#find limit="-1"}}
+      {{include field="_name"}}
+      {{include field="base"}}
+      {{include field="persona"}}
+      {{include field="ingreso"}}
+      {{include field="temporal"}}
+      {{search field="_name"}}
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona._genero"}}
+      {{search field="persona.fechaNacimiento"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="base._central"}}
+      {{search field="base._estatus"}}
+      {{!-- {{sort field="base._central" direction="asc"}} --}}
+      {{sort field="base._central" direction="asc"}}
+      {{sort field="_name" direction="asc"}}
+      {{filter condition="=servicio" field="base.servicio" eq="=servicio"}}
+      {{filter condition="=central" field="base.central" eq="=central"}}
+      {{filter field="base.estatus" in="ocupada,preAlta,alta,trasladoTemporal"}}
+    {{/find}}
+    {{join source="persona" view="contexto" as="join" id="persona.id"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{calc field="nombre" type="expr" value="=join._name"}}
+    {{editor display="_name"}}
+  {{/view}}
+
+  {{#report id="censoDiario" fontSize="5" pageOrientation="landscape" header="preliminar-encabezado2" showStandarFooter="true" source="cama" view="censoDiario"}}
+    {{#stack}}
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{row text="Censo Diario" fontSize="10" bold="true"}}
+      {{#table section="_items" titleStyle="title" layout="lightHorizontalLines" headerStyle="field2" margin="-10,0,0,10" fontSize="8"}}
+        {{column expr="=base._central" label="Central"}}
+        {{column field="_name" label="Cama" total="count"}}
+        {{column expr="=base._estatus" label="Estatus Cama"}}
+        {{column expr="=persona.nombreCompleto" label="Paciente"}}
+        {{column expr="=persona._genero" label="Genero"}}
+        {{column expr="=calc.format('date', persona.fechaNacimiento, 'DD/MMM/YYYY')" label="Fecha Nacimiento"}}
+        {{column expr="=calc.fromNow(persona.fechaNacimiento)" label="Edad"}}
+        {{column expr="=join.contexto._medico" label="Médico Tratante"}}
+        {{column expr="=ingreso._seleccionarDiagnostico" label="Diagnóstico Ingreso"}}
+        {{column expr="=join.detalle._datosSeguro" label="Datos Seguro"}}
+        {{column expr="=calc.format('date', ingreso.fechaHora, 'DD/MMM/YYYY h:mma')" label="Fecha Ingreso"}}
+        {{column expr="=calc.fromNow(ingreso.fechaHora)" label="Estancia"}}
+      {{/table}}
+    {{/stack}}
+  {{/report}}
+
+  {{#view id="censoDiarioAvanzado" name="Censo Diario Avanzado"}}
+    {{#find limit="-1"}}
+      {{include field="_name"}}
+      {{include field="base"}}
+      {{include field="persona"}}
+      {{include field="ingreso"}}
+      {{include field="temporal"}}
+      {{search field="_name"}}
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona._genero"}}
+      {{search field="persona.fechaNacimiento"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="base._central"}}
+      {{search field="base._estatus"}}
+      {{!-- {{sort field="base._central" direction="asc"}} --}}
+      {{sort field="base._central" direction="asc"}}
+      {{sort field="_name" direction="asc"}}
+      {{filter condition="=servicio" field="base.servicio" eq="=servicio"}}
+      {{filter condition="=central" field="base.central" eq="=central"}}
+      {{filter field="base.estatus" in="ocupada,preAlta,alta,trasladoTemporal"}}
+    {{/find}}
+    {{join source="persona" view="detalle" as="join" id="persona.id"}}
+    {{calc field="color" value="=fn('estatusCamaColor', base.estatus)"}}
+    {{editor display="_name"}}
+  {{/view}}
+
+  {{#report id="censoDiarioAvanzado" fontSize="4" pageOrientation="landscape" header="preliminar-encabezado2" showStandarFooter="true" source="cama" view="censoDiarioAvanzado"}}
+    {{#stack}}
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{row text="Censo Diario Avanzado" fontSize="10" bold="true"}}
+      {{#table section="_items" titleStyle="title" layout="lightHorizontalLines" headerStyle="field2" margin="-10,0,0,10" fontSize="8"}}
+        {{column field="_name" label="Cama" total="count"}}
+        {{column expr="=persona.nombreCompleto" label="Paciente"}}
+        {{column expr="=join.detalle._pronostico" label="Pronóstico"}}
+        {{column expr="=join.detalle.escalaRiesgoCaidas.base.resumen" label="Riesgo Caidas"}}
+        {{column expr="=join.detalle._dieta" label="Dieta"}}
+        {{column expr="=join.detalle._alergia" label="Alergias"}}
+        {{column expr="=calc.arrayToLines(calc.pluckRef(join.detalle.aislamiento, 'base._tipoAislamiento'))" label="Aislamiento"}}
+        {{column expr="=join.detalle.recomendacionesAmbulatorias" label="Recomendaciones Ambulatorias"}}
+      {{/table}}
+    {{/stack}}
+  {{/report}}
+
+  {{#browser id="lista" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="true"}}
+  {{/browser}}
+  {{#browser id="ver" view="ver" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" showActions="reportesHospitalizacion, menuFix"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+
+{{!--   {{action id="menuProducto" hide="true" type="menu" menu="menuProducto" label="Producto" color="indigo" isBrowserAction="true"}}
+  {{#menu id="menuProducto" color="indigo" isBrowserAction="true"}}
+    {{item action="recibirAlimentos" text="Recibir Alimentos"}}
+    {{item action="recibirFarmacia" text="Recibir Farmacia" beginGroup="true"}}
+    {{item action="recibirMaterial" text="Recibir Materiales o Insumos"}}
+    {{item action="devolverFarmacia" text="Devolver Farmacia" beginGroup="true"}}
+    {{item action="devolverMaterial" text="Devolver Materiales o Insumos"}}
+    {{item action="asignarFarmacia" text="Asignar Farmacia" beginGroup="true"}}
+    {{item action="asignarMaterial" text="Asignar Materiales o Insumos"}}
+  {{/menu}}   --}}
+
+  {{action id="menuRecibir" hide="true" type="menu" menu="menuRecibir" label="Recibir" color="indigo" isBrowserAction="true"}}
+  {{#menu id="menuRecibir" color="indigo" isBrowserAction="true"}}
+    {{item action="recibirAlimentos" text="Alimentos"}}
+    {{item action="recibirFarmacia" text="Farmacia"}}
+    {{item action="recibirMaterial" text="Materiales o Insumos"}}
+    {{!-- {{item action="recibirMaterialCeye" text="Materiales CEYE"}} --}}
+  {{/menu}}  
+  {{action id="menuAsignar" hide="true" type="menu" menu="menuAsignar" label="Asignar" color="indigo" isBrowserAction="true"}}
+  {{#menu id="menuAsignar" color="indigo" isBrowserAction="true"}}
+    {{item action="asignarFarmacia" text="Farmacia"}}
+    {{item action="asignarMaterial" text="Materiales o Insumos"}}
+    {{!-- {{item action="asignarMaterialCeye" text="Materiales CEYE"}} --}}
+  {{/menu}}  
+  {{action id="menuDevolver" hide="true" type="menu" menu="menuDevolver" label="Devolver" color="indigo" isBrowserAction="true"}}
+  {{#menu id="menuDevolver" color="indigo" isBrowserAction="true"}}
+    {{item action="devolverFarmacia" text="Farmacia"}}
+    {{item action="devolverMaterial" text="Materiales o Insumos"}}
+    {{!-- {{item action="devolverMaterialCeye" text="Materiales CEYE"}} --}}
+  {{/menu}}  
+  
+  {{action id="reportesHospitalizacion" hide="true" type="menu" menu="reportesHospitalizacion" label="Reportes" color="grey" isBrowserAction="true"}}
+  {{#menu id="reportesHospitalizacion" color="grey"}}
+    {{item action="verCensoDiario" text="Censo Diario"}}
+    {{item action="verCensoDiarioAvanzado" text="Censo Diario Avanzado"}}
+  {{/menu}}
+  {{#action id="verCensoDiario" hide="true" type="report-pdf" report="censoDiario" fileName="=_name" label="Censo Diario" color="grey" visibleMode="close"}}
+    {{param central="=_params.central"}}
+  {{/action}}
+  {{#action id="verCensoDiarioAvanzado" hide="true" type="report-pdf" report="censoDiarioAvanzado" fileName="=_name" label="Censo Diario Avanzado" color="grey" visibleMode="close"}}
+    {{param central="=_params.central"}}
+  {{/action}}
+
+  {{#action id="recibirFarmacia" hide="true" type="sub-link" label="Recibir Farmacia" color="indigo" isBrowserAction="true" visibleMode="close"}}
+    {{link href="='/solicitud/farmaciaEntrega?central='+fn('centralEntrega', _params)" name="='Recibir Farmacia: '+fn('centralEntregaNombre', _params)" title="='Recibir Farmacia'"}}
+  {{/action}}  
+  {{#action id="recibirMaterial" hide="true" type="sub-link" label="Recibir Materiales o Insumos" color="indigo" isBrowserAction="true" visibleMode="close"}}
+    {{link href="='/solicitud/almacenEntrega?central='+fn('centralEntrega', _params)" name="='Recibir Materiales o Insumos: '+fn('centralEntregaNombre', _params)" title="='Recibir Materiales o Insumos'"}}
+  {{/action}}  
+  {{!-- {{#action id="recibirMaterialCeye" hide="true" type="sub-link" label="Recibir Materiales CEYE" color="indigo" isBrowserAction="true" visibleMode="close"}}
+    {{link href="='/solicitud/ceyeEntrega?central='+fn('centralEntrega', _params)" name="='Recibir Materiales CEYE: '+fn('centralEntregaNombre', _params)" title="='Recibir Materiales CEYE'"}}
+  {{/action}}   --}}
+  {{#action id="recibirAlimentos" hide="true" type="sub-link" label="Recibir Alimentos" color="indigo" isBrowserAction="true" visibleMode="close"}}
+    {{link href="='/solicitud/nutricionEntrega?central='+fn('centralEntrega', _params)" name="='Recibir Alimentos: '+fn('centralEntregaNombre', _params)" title="='Recibir Alimentos'"}}
+  {{/action}}  
+
+  {{#action id="asignarFarmacia" hide="true" type="sub-link" label="Asignar Farmacia" color="indigo" isBrowserAction="true" visibleMode="close"}}
+    {{link href="='/solicitud/farmaciaAsignacion?central='+fn('centralEntrega', _params)" name="='Asignar Farmacia: '+fn('centralEntregaNombre', _params)" title="='Asignar Farmacia'"}}
+  {{/action}}  
+  {{#action id="asignarMaterial" hide="true" type="sub-link" label="Asignar Materiales o Insumos" color="indigo" isBrowserAction="true" visibleMode="close"}}
+    {{link href="='/solicitud/almacenAsignacion?central='+fn('centralEntrega', _params)" name="='Asignar Materiales o Insumos: '+fn('centralEntregaNombre', _params)" title="='Asignar Materiales o Insumos'"}}
+  {{/action}}  
+  {{!-- {{#action id="asignarMaterialCeye" hide="true" type="sub-link" label="Asignar Materiales CEYE" color="indigo" isBrowserAction="true" visibleMode="close"}}
+    {{link href="='/solicitud/ceyeAsignacion?central='+fn('centralEntrega', _params)" name="='Asignar Materiales CEYE: '+fn('centralEntregaNombre', _params)" title="='Asignar Materiales CEYE'"}}
+  {{/action}}   --}}
+
+  {{#action id="ministracion" hide="true" type="sub-link" label="Ministración" color="indigo" isBrowserAction="true" visibleMode="close"}}
+    {{link href="='/solicitud/farmaciaPorMinistrar?central='+fn('centralEntrega', _params)" name="='Ministración: '+fn('centralEntregaNombre', _params)" title="='Ministración'"}}
+  {{/action}}  
+  {{#action id="devolverFarmacia" hide="true" type="sub-link" label="Devolver Farmacia" color="indigo" isBrowserAction="true" visibleMode="close"}}
+    {{link href="='/solicitud/farmaciaEntregado?central='+fn('centralEntrega', _params)" name="='Devolver Farmacia: '+fn('centralEntregaNombre', _params)" title="='Devolver Farmacia'"}}
+  {{/action}}  
+  {{#action id="devolverMaterial" hide="true" type="sub-link" label="Devolver Materiales o Insumos" color="indigo" isBrowserAction="true" visibleMode="close"}}
+    {{link href="='/solicitud/almacenEntregado?central='+fn('centralEntrega', _params)" name="='Devolver Materiales o Insumos: '+fn('centralEntregaNombre', _params)" title="='Devolver Materiales o Insumos'"}}
+  {{/action}}  
+  {{!-- {{#action id="devolverMaterialCeye" hide="true" type="sub-link" label="Devolver Materiales CEYE" color="indigo" isBrowserAction="true" visibleMode="close"}}
+    {{link href="='/solicitud/ceyeEntregado?central='+fn('centralEntrega', _params)" name="='Devolver Materiales CEYE: '+fn('centralEntregaNombre', _params)" title="='Devolver Materiales CEYE'"}}
+  {{/action}}   --}}
+
+  {{action id="camaOtros" hide="true" type="menu" menu="camaOtros" label="Mantenimiento" color="deep-orange"}}
+  {{#menu id="camaOtros" color="deep-orange"}}
+    {{item action="notaEstatusCamaIniciaMantenimiento" text="Inicia Mantenimiento"}}
+    {{item action="notaEstatusCamaTerminaMantenimiento" text="Termina Mantenimiento"}}
+    {{item action="notaEstatusCamaInactiva" text="Inactiva" beginGroup="true"}}
+    {{item action="notaEstatusCamaActiva" text="Activa"}}
+  {{/menu}}
+
+  {{action id="camaOcupadaSucia" source="notaEstatusCamaOcupadaSucia" label="Ocupada a Sucia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{action id="camaOcupadaLimpia" source="notaEstatusCamaOcupadaLimpia" label="Ocupada a Limpia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{action id="camaSuciaLimpia" source="notaEstatusCamaSuciaLimpia" label="Sucia a Limpia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{action id="notaEstatusCamaIniciaMantenimiento" source="notaEstatusCamaIniciaMantenimiento" label="Inicia Mantenimiento" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+  {{action id="notaEstatusCamaTerminaMantenimiento" source="notaEstatusCamaTerminaMantenimiento" label="Termina Mantenimiento" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+  {{action id="notaEstatusCamaInactiva" source="notaEstatusCamaInactiva" label="Cama Inactiva" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+  {{action id="notaEstatusCamaActiva" source="notaEstatusCamaActiva" label="Cama Activa" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+  {{action id="notaCancelacionEncame" source="notaCancelacionEncame" transform="copiarCamaPersona" label="Cancelar Encame" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{action id="menuFix" hide="true" type="menu" menu="menuFix" label="Ajustes" color="blue-grey" superUser="true"}}
+  {{#menu id="menuFix" color="blue-grey"}}
+    {{item action="fixEstatusCama" text="Estatus Cama"}}
+  {{/menu}}
+  {{action id="fixEstatusCama" source="fixEstatusCama" label="Ajuste - Estatus Cama" hide="true" type="add-subdoc" visibleMode="close" color="brown" onlyPost="true" superUser="true"}}  
+{{/define}}
+
+{{#markup}}
+  {{!-- Nota: en las centrales se usa el template de _central.hbs --}}
+  {{#template id="lista"}}
+    <div class="list-material">
+      <li class="has-action-left">
+        <div class="list-action-left"><i class="icon ion-flag text-{{#if color}}{{color}}{{else}}grey{{/if}}"></i></div>
+        <div class="list-content">
+          <span class="title">{{_name}}</span>
+          {{#if persona.id}}            
+            <span style="font-size:12px;"><strong>{{persona.nombreCompleto}}</strong></span><br>
+            <span style="font-size:12px;">{{persona.clave}}</span><br>
+          {{/if}}
+          <span style="font-size:12px;">{{base._central}}</span>
+          <span style="font-size:12px;float:right;"><strong>{{base._estatus}}{{#if temporal}} ({{temporal._central}}){{/if}}</strong></span>
+        </div>
+      </li>
+    </div>
+  {{/template}}
+  {{#template id="verCamaGrupo"}}
+    <div>
+      {{#if _id}}
+      <img class="auto-img-lista" src="https://his-imagenes.s3-accelerate.amazonaws.com/widgets/folder.png">
+      {{else}}
+      <span>Sin datos</span>
+      {{/if}}
+      <span class="bold">{{base._central}}</span><br>
+    </div>
+  {{/template}}
+  {{#template id="verCamaDetalle"}}
+    <div class="list-material">
+      <li class="has-action-left">
+        <div class="list-action-left"><i class="icon ion-flag text-{{#if color}}{{color}}{{else}}grey{{/if}}"></i></div>
+        <div class="list-content">
+          <span class="title">{{_name}}</span>
+          {{#if persona.id}}            
+            <span style="font-size:12px;"><strong>{{persona.nombreCompleto}}</strong></span><br>
+            <span style="font-size:12px;">{{persona.clave}}</span><br>
+          {{/if}}
+          <span style="font-size:12px;"><strong>{{base._estatus}}{{#if temporal}} ({{temporal._central}}){{/if}}</strong></span>
+        </div>
+      </li>
+    </div>
+  {{/template}}
+{{/markup}}

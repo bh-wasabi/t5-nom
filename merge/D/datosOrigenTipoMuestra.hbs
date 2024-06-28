@@ -1,0 +1,7 @@
+{{#define id="datosOrigenTipoMuestra"}}
+  {{#section id="base"}}
+    {{field id="especifiqueMaterial" type="expr" value="=calc.in(@origenMaterialBiologico,['otro'])"}}
+    {{field id="especifiqueMuestra" type="expr" value="=calc.in(@tipoMuestrasBiologicas,['otras'])"}}
+    {{!-- {{validator type="expr" validIf="=1==0" message="Error" log="=calc.isEmpty(@aspectosBioseguridad)"}} --}}
+  {{/section}} 
+{{/define}}

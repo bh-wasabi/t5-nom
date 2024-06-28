@@ -1,0 +1,38 @@
+{{#define type="doc" id="_servicio" name="Análisis Servicio"}}
+  {{#menu id="menu"}}
+    {{#item text="Ver" icon="bookmark"}}
+      {{item text="(vistas)" type="cube-view-names"}}
+      {{item text="Guardar vista..." icon="save" beginGroup="true" type="cube-view-save"}}
+      {{item text="Ajustes..." icon="preferences" type="cube-view-preferences"}}
+    {{/item}}
+    {{item text="Refrescar" icon="refresh" type="refresh"}}
+  {{/menu}}
+  {{dateBox id="desde" type="date" refreshWidgets="true"}}
+  {{dateBox id="hasta" type="date" refreshWidgets="true"}}
+  {{browser id="cubo" menu="menu"}}
+{{/define}}
+
+{{#markup}}
+  {{#page}}
+    {{#row}}
+      {{#col small="15%"}}
+        {{widget type="dateBox" dateBox="desde"}}
+      {{/col}}
+      {{#col small="15%"}}
+        {{widget type="dateBox" dateBox="hasta"}}
+      {{/col}}
+      {{col small="70%"}}
+    {{/row}}
+    {{#row}}
+      {{#col small="100%"}}
+        {{#row}}
+          {{#widget type="cube" source="solicitud" cube="servicio"}}
+            {{param servicio="=servicio"}}
+            {{param desde="#desde"}}
+            {{param hasta="#hasta"}}
+          {{/widget}}
+        {{/row}}
+      {{/col}}
+    {{/row}}
+  {{/page}}
+{{/markup}}

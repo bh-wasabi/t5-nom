@@ -1,0 +1,9 @@
+{{#define id="afectacionesTratadas"}}
+  {{#section id="base"}}
+    {{field id="esOtroDestino" type="expr" value="=@destinoAtencionLesion==='otro'"}}
+    {{!-- Tarea 2438 --}}
+    {{validator type="expr" validIf="=!@descripcionAfectacion||calc.matchIfPattern('^[A-z].{1,249}$', @descripcionAfectacion)" message="Verificar Descripción Afectación"}}
+    {{validator type="expr" validIf="=!@descripcionCausas||calc.matchIfPattern('^[A-z].{1,249}$', @descripcionCausas)" message="Verificar Descripción"}}
+    {{!-- Tarea 2438 --}}
+  {{/section}}
+{{/define}}

@@ -1,0 +1,17 @@
+{{#define id="notaCambioMedicoTratante"}}
+  {{#section id="base"}}
+    {{#field id="medico"}}
+      {{#onChange}}
+        {{set seleccionarEspecialidad="=prestadorServicios.especialidad"}}
+        {{set especialidad="=prestadorServicios.especialidad[0]"}}
+        {{set servicio="=prestadorServicios.especialidad[0]"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="especialidad"}}
+      {{editor sourceFromTagBox="seleccionarEspecialidad"}}
+    {{/field}}
+    {{#field id="servicio"}}
+      {{editor sourceFromTagBox="seleccionarEspecialidad"}}
+    {{/field}}
+  {{/section}}
+{{/define}}

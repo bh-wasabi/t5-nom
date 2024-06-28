@@ -1,0 +1,14 @@
+{{#define id="datosEtapaQuirurgicaLabio"}}
+  {{#section id="base"}}
+    {{field id="etapaQuirurgicoA" type="expr" value="=etapaAtencion=='etapaA'"}}
+    {{field id="etapaQuirurgicoB" type="expr" value="=etapaAtencion=='etapaB'"}}
+    {{field id="etapaQuirurgicoC" type="expr" value="=etapaAtencion=='etapaC'"}}
+    {{field id="etapaQuirurgicoD" type="expr" value="=etapaAtencion=='etapaD'"}}
+    {{field id="tieneCirugia" type="expr" value="=calc.in(@estatusCirugiaLabioPaladarHendido,['enCurso','noRequiere','noRegistro','realizado'])"}}
+    {{field id="etapaB" type="expr" value="=etapaAtencion=='etapaB'"}}
+    {{field id="etapaC" type="expr" value="=etapaAtencion=='etapaC'"}}
+    {{field id="etapaAD" type="expr" value="=calc.in(@etapaAtencion,['etapaA','etapaD'])"}}
+    {{field id="todasEtapas" type="expr" value="=calc.in(@etapaAtencion,['etapaA','etapaB','etapaC','etapaD'])"}}
+    {{set etapaAtencion="=etapaA"}}
+  {{/section}}  
+{{/define}}

@@ -1,0 +1,12 @@
+{{#define id="notaSolicitudModificacionCuota"}}
+  {{#transform id="copiar"}}
+    {{update section="persona" value="=persona"}}
+    {{#update section="base"}}
+      {{set nivelSocioeconomicoAsignado="=base.nivelSocioeconomicoPropuesto"}}
+      {{set _nivelSocioeconomicoAsignado="=base._nivelSocioeconomicoPropuesto"}}
+      {{set fechaIngreso="=base.fechaIngreso"}}
+    {{/update}}
+  {{/transform}}
+  {{action id="notaCancelacionNotaSolicitud" source="notaCancelacionNotaSolicitud" label="Cancelar" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{action id="notaAutorizacionModificacionCuota" source="notaAutorizacionModificacionCuota" label="Autorización Modificación Cuota" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+{{/define}}

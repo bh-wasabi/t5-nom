@@ -1,0 +1,13 @@
+{{#define id="notaPreAlta"}}
+  {{#section id="base"}}
+    {{#field id="central"}}
+      {{onChange clearFields="cama"}}
+    {{/field}}
+    {{#field id="cama"}}
+      {{#editor alwaysLoad="true"}}
+        {{param estatus="='ocupada'"}}
+        {{param central="=central"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

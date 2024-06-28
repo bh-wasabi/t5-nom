@@ -1,0 +1,6 @@
+{{#define id="antecedentesEmbarazosDetalle"}}
+  {{action id="afectar" confirm="=antecedentesEmbarazosDetalle.hijosSobrevivientes>=10&&antecedentesEmbarazosDetalle.hijosSobrevivientes<=25" confirmMessage="¿Hijos Sobrevivientes es correcto?.<br><strong>¿Desea Continuar?</strong>" confirmTitle="Precaución"}}
+  {{#section id="base"}}
+    {{validator type="expr" validIf="=(@hijosSobrevivientes>25||@hijosSobrevivientes<99)" message="Hijos Sobrevivientes de la Madre debe ser: 1 - 25, 99 "}}
+  {{/section}}
+{{/define}}

@@ -1,0 +1,23 @@
+{{#define id="notaAplicacionManualMaterial"}}
+  {{#section id="base"}}
+    {{field id="esAlmacen" type="expr" value="=tipoAlmacen=='almacen'"}}
+    {{field id="esUbicacion" type="expr" value="=tipoAlmacen=='ubicacion'"}}
+    {{field id="esPersona" type="expr" value="=tipoAlmacen=='persona'"}}
+    {{field id="esServicio" type="expr" value="=tipoAlmacen=='servicio'"}}
+    {{#field id="ubicacion"}}
+      {{#editor}}
+        {{param tipoExpediente="='ubicacion'"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="persona"}}
+      {{#editor}}
+        {{param tipoExpediente="='paciente'"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="servicio"}}
+      {{#editor}}
+        {{param tipoExpediente="='servicio'"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

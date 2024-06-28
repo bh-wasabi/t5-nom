@@ -1,0 +1,7 @@
+{{#define id="datosEjercicio"}}
+  {{#section id="base"}}
+    {{field id="haceEjercicio" type="expr" value="=@ejercicio&&@ejercicio!=='nunca'"}}
+    {{field id="tieneDetalles" type="expr" value="=@haceEjercicio&&Utils.isTrue(@detalles)"}}
+    {{field id="esEx" type="expr" value="=@tieneDetalles&&@ejercicio==='ex'"}}
+  {{/section}}
+{{/define}} 

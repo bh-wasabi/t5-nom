@@ -1,0 +1,68 @@
+{{#define id="notaEstadoCuentas2"}}
+  {{param startOnOpen="n/a"}}
+  {{#section id="base"}}
+    {{field id="esHospitalizacion" type="expr" value="=tipoEpisodio=='hospitalizacion'"}}
+  {{/section}}
+  
+  {{#report id="grupo" fontSize="15"}}
+    {{#stack}}
+      {{#columns margin="-10,0,0,0"}}
+        {{#box layout="noBorders" width="150"}}
+          {{row expr="=_tipoSolicitud" color="white" fillColor="#2b7b47" align="center" fontSize="10"}}
+        {{/box}}
+      {{/columns}}
+    {{/stack}}
+  {{/report}}
+  {{#report id="preliminar" fontSize="8" header="preliminar-encabezado" showStandarFooter="true" pageMargins="30,130,30,40"}}
+    {{#stack}}
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{#record title="Datos Generales" titleStyle="title" layout="lightHorizontalLines" fontSize="7" section="base" headerStyle="field" margin="-10,0,0,10" widths="100,450"}}
+        {{row expr="=calc.format('date', _updated.date||_created.date, 'DD/MMM/YYYY h:mma')" label="Fecha Emisión"}}
+        {{row expr="=_created._service" label="Servicio"}}
+        {{row field="responsableAcademico" condition="esEstudiante" align="left"}}
+        {{row field="estatus" align="left"}}
+        {{row field="nivelSocioeconomico" align="left"}}
+        {{row field="seguro" align="left"}}
+        {{row field="totalImportePublico" align="left"}}
+        {{row field="totalSubsidios" align="left"}}
+        {{row field="totalCargos" align="left"}}
+        {{row field="totalAbonos" align="left"}}
+        {{row field="saldo" align="left"}}
+        {{row field="comentarios" align="left"}}
+      {{/record}}
+    {{/stack}}
+    {{#stack}}
+      {{#table title="Movimientos" titleStyle="title" layout="lightHorizontalLines" fontSize="7" section="aplicacion" headerStyle="field" margin="-10,0,0,10" removeEmptyCols="true" groupBy="_tipoSolicitud" beginGroup="grupo"}}
+        {{column field="fecha" totalLabel="Subtotal:"}}
+        {{column field="_name" total="count"}}
+        {{column field="cantidadIndicada" total="sum"}}
+        {{column field="unidadMinima"}}
+        {{column field="importePublico" total="sum"}}
+        {{column field="subsidio" total="sum"}}
+        {{column field="cargo" total="sum"}}
+        {{column field="abono" total="sum"}}
+        {{column field="saldo" total="sum"}}
+      {{/table}}
+    {{/stack}}
+    {{#stack}}
+      {{#record title="Firmas" titleStyle="title" layout="lightHorizontalLines" fontSize="8" section="_stamp" headerStyle="field" margin="-10,0,0,10" widths="100,450"}}
+        {{row expr="=_created._user" label="Elabora"}}
+        {{row expr="=_created._turn" label="Turno Elabora"}}
+        {{row expr="=_created._identification" label="Especialidad Elabora"}}
+        {{row expr="=''" label="Firma Elabora"}}
+        {{row condition="=!base.esEstudiante" expr="=_created._responsable" label="Responsable"}}
+        {{row condition="=!base.esEstudiante" expr="=_created._responsableId" label="Especialidad Responsable"}}
+        {{row condition="=!base.esEstudiante" expr="=''" label="Firma Responsable"}}
+        {{row condition="=base.esEstudiante" expr="=base._responsableAcademico" label="Médico Responsable"}}
+        {{row condition="=base.esEstudiante" expr="=base._identificacionResponsableAcademico" label="Especialidad Médico Responsable"}}
+        {{row condition="=base.esEstudiante" expr="=''" label="Firma Médico Responsable"}}
+        {{row condition="=calc.in(_created.service, ['inventarios','farmacia','almacen','ceye'])" expr="=''" label="Transporte / Recibe"}}
+        {{row field="text" label="Cadena Original"}}
+        {{row field="signature" label="Sello Digital"}}
+      {{/record}}
+    {{/stack}}
+  {{/report}}
+{{/define}}

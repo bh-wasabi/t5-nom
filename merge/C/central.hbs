@@ -1,0 +1,37 @@
+{{#define id="central"}}
+  {{action id="eliminar" hide="true"}}
+  {{#section id="base"}}
+    {{!-- {{field id="tieneSubServicio" type="expr" value="=zona!='hospitalizacion'"}} --}}
+    {{field id="tieneSubServicio" type="expr" value="=zona=='urgencias'"}}
+    {{#field id="servicio"}}
+      {{onchange clearFields="subServicio"}}
+    {{/field}}
+    {{#field id="subServicio"}}
+      {{#editor}}
+        {{param partOf="=servicio"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base.orden"}}
+      {{include field="base.zona"}}
+      {{include field="base.establecimiento"}}
+      {{sort field="base._establecimiento" direction="asc"}}
+      {{sort field="base._zona" direction="asc"}}
+      {{sort field="base.orden" direction="asc"}}
+      {{search field="_name"}}
+      {{search field="base._zona"}}
+      {{search field="base._establecimiento"}}
+    {{/find}}
+  {{/view}}
+{{/define}}
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}</br>
+      <span style="font-size:12px;">{{base._zona}}</span></br>
+      <span style="font-size:12px;">{{base._establecimiento}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

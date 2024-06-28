@@ -1,0 +1,6 @@
+{{#define id="datosEscalaHumptyDumptyPediatrica"}}
+  {{#section id="base"}}
+    {{field id="total" type="calc" value="=calc.sumArgs(calc.sumCase(edadEscalaHumptyDumpty,'edadHumptyDumptyPediatrica'),calc.sumCase(generoEscalaHumptyDumpty,'generoEscalaHumptyDumpty'),calc.sumCase(diagnosticoEscalaHumptyDumpty,'diagnosticoHumptyDumptyPediatrica'),calc.sumCase(deterioroCognitivoEscalaHumptyDumpty,'deterioroHumptyDumptyPediatrica'),calc.sumCase(factoresAmbientalesEscalaHumptyDumpty,'factorHumptyDumptyPediatrica'),calc.sumCase(cirugiaSedacionAnestesia,'cirugiaAnestesiaPediatrica'),calc.sumCase(medicacionEscalaHumptyDumpty,'medicacionHumptyDumptyPediatrica'))"}}
+    {{field id="clasificacionRiesgo" type="expr" value="=total<7?'Bajo Riesgo':total>7&&total<11?'Mediano Riesgo':total>11?'Riesgo Alto':''"}}
+  {{/section}}
+{{/define}}

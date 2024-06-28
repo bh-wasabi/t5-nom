@@ -1,0 +1,13 @@
+{{#define id="disposicionCredito"}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{field id="concepto" type="expr" value="=calc.concat('Operación', _tipoOperacion)"}}
+    {{field id="esVenta" type="expr" value="=tipoOperacion=='venta'"}}
+    {{field id="esCompra" type="expr" value="=tipoOperacion=='compra'"}}
+    {{field id="importe" type="calc" value="=esVenta?cantidad*tipoCambioVenta:cantidad*tipoCambioCompra"}}
+    {{field id="costo" type="calc" value="=esVenta?cantidad*tipoCambioCompra:cantidad*tipoCambioVenta"}}
+    {{field id="cobertura" type="calc" value="=cantidad*tipoCambioCobertura"}}
+    {{validator type="expr" validIf="=@tipoCambioVenta>@tipoCambioCompra" message="Tipo Cambio Incorrecto (Venta/Compra)"}}
+    {{validator type="expr" validIf="=esVenta?@tipoCambioCobertura<@tipoCambioCompra:@tipoCambioCobertura>@tipoCambioVenta" message="Tipo Cambio Incorrecto (Cobertura)"}}
+  {{/section}}
+{{/define}}

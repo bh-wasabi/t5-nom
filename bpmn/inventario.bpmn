@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Definitions_0h9vfx6" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.6.0">
+  <bpmn:collaboration id="Collaboration_07ry9n8">
+    <bpmn:participant id="Participant_1rz6rna" name="Validación de Inventario" processRef="Process_14ygptx" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_14ygptx" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_00jrnpv">
+      <bpmn:lane id="Lane_0uowdwn" name="PAPS">
+        <bpmn:flowNodeRef>pendiente</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_0cs5nzv</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_1tzdl9c" name="Concesionaria">
+        <bpmn:flowNodeRef>enEjecucion</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ejecutado</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:task id="pendiente" name="Solicitud inventario">
+      <bpmn:incoming>Flow_0iq6evm</bpmn:incoming>
+      <bpmn:outgoing>Flow_1rnppq0</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:startEvent id="Event_0cs5nzv">
+      <bpmn:outgoing>Flow_0iq6evm</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="enEjecucion" name="Ejecución">
+      <bpmn:incoming>Flow_1rnppq0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1yvmlap</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0iq6evm" sourceRef="Event_0cs5nzv" targetRef="pendiente" />
+    <bpmn:sequenceFlow id="Flow_1rnppq0" sourceRef="pendiente" targetRef="enEjecucion" />
+    <bpmn:sequenceFlow id="Flow_1yvmlap" sourceRef="enEjecucion" targetRef="ejecutado" />
+    <bpmn:endEvent id="ejecutado">
+      <bpmn:incoming>Flow_1yvmlap</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_07ry9n8">
+      <bpmndi:BPMNShape id="Participant_1rz6rna_di" bpmnElement="Participant_1rz6rna" isHorizontal="true">
+        <dc:Bounds x="120" y="80" width="359" height="251" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1tzdl9c_di" bpmnElement="Lane_1tzdl9c" isHorizontal="true">
+        <dc:Bounds x="150" y="200" width="329" height="131" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0uowdwn_di" bpmnElement="Lane_0uowdwn" isHorizontal="true">
+        <dc:Bounds x="150" y="80" width="329" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1yvmlap_di" bpmnElement="Flow_1yvmlap">
+        <di:waypoint x="360" y="270" />
+        <di:waypoint x="422" y="270" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1rnppq0_di" bpmnElement="Flow_1rnppq0">
+        <di:waypoint x="310" y="180" />
+        <di:waypoint x="310" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0iq6evm_di" bpmnElement="Flow_0iq6evm">
+        <di:waypoint x="228" y="140" />
+        <di:waypoint x="260" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_1haebl0_di" bpmnElement="pendiente" bioc:stroke="black" bioc:fill="white">
+        <dc:Bounds x="260" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0cs5nzv_di" bpmnElement="Event_0cs5nzv">
+        <dc:Bounds x="192" y="122" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_18sjllb_di" bpmnElement="enEjecucion" bioc:stroke="black" bioc:fill="white">
+        <dc:Bounds x="260" y="230" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1wm35ao_di" bpmnElement="ejecutado">
+        <dc:Bounds x="422" y="252" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="629" y="485" width="82" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

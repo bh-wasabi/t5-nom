@@ -1,0 +1,32 @@
+{{#define id="academiaConsentimientoInformado"}}
+  {{#view id="lista-activo" name="Lista"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="base.estatus"}}
+      {{search field="_name"}}
+      {{sort field="_name" direction="asc"}}
+      {{filter field="base.estatus" eq="'activo'"}}
+    {{/find}}
+    {{editor display="_name"}}
+  {{/view}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base.estatus"}}
+      {{include field="base.esProcedimientoEspecifico"}}
+    {{/find}}
+    {{calc field="tipo" value="=(@base.esProcedimientoEspecifico)?'Procedimiento':'Servicio'"}}
+  {{/view}}
+  {{#section id="base"}}
+    {{field id="nombre" type="expr" value="=(@esProcedimientoEspecifico)?@_procedimientoAutorizar:@servicioAutorizar"}}
+  {{/section}}
+{{/define}}
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}
+      </br>
+      <span style="font-size:12px;">{{tipo}}</span>
+      <span style="font-size:12px;float:right;">{{base._estatus}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

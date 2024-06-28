@@ -1,0 +1,13 @@
+{{#define id="gasometria"}}
+  {{#section id="base"}}
+  	{{field id="gasometriaPhNivel" type="expr" value="=fn('gasometriaPhNivel', ph)"}}
+  	{{field id="gasometriaHco3Nivel" type="expr" value="=fn('gasometriaHco3Nivel', hco3)"}}
+  	{{field id="gasometriaPco2Nivel" type="expr" value="=fn('gasometriaPco2Nivel', pco2)"}}
+    {{field id="gasometriaConcordanteGasometrico" type="expr" value="=fn('gasometriaConcordanteGasometrico', ph, hco3, pco2)"}}
+    {{field id="gasometriaEquilibrioAcidoBase" type="expr" value="=fn('gasometriaEquilibrioAcidoBase', ph, hco3, pco2)"}}
+    {{field id="gasometriaSeveridad" type="expr" value="=(fn('gasometriaConcordanteGasometrico', ph, hco3, pco2)).indexOf('Acidosis')>=0&&fn('gasometriaSeveridad', ph, hco3, pco2)"}}
+    {{field id="gasometriaWinter" type="expr" value="=fn('gasometriaWinter', hco3)"}}
+    {{field id="gasometriaGap" type="expr" value="=fn('gasometriaGap', ph, hco3, pco2, sodio, potasio, cloro)"}}
+    {{field id="gasometriaGapNivel" type="expr" value="=fn('gasometriaGapNivel', gasometriaGap)"}}
+  {{/section}}
+{{/define}}

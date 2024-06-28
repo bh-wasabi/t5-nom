@@ -1,0 +1,5 @@
+{{#define id="ultimaMenstruacion"}}
+  {{#section id="base"}}
+    {{validator type="expr" validIf="=calc.fromNowDays(fecha)>=0" message="Ultima Menstruación Incorrecta"}}
+  {{/section}}
+{{/define}}

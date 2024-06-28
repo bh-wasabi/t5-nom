@@ -1,0 +1,11 @@
+{{#define id="datosServiciosEgreso"}}
+  {{#section id="base"}}
+    {{field id="siClaveServicio" type="expr" value="=numeroServicio=='uno'"}}
+    {{field id="siOtraProcedencia" type="expr" value="=procedenciaIngreso=='otraProcedencia'"}}
+    {{field id="referido" type="expr" value="=procedenciaIngreso=='referido'"}}
+    {{!-- Tarea 2504 --}}
+    {{field id="siServicioAdicional" type="expr" value="=(numeroServicio=='uno'||numeroServicio=='dos')&&tipoServicioOtorgado=='normal'"}}
+    {{validator type="expr" notValidIf="=procedenciaIngreso=='4'&&moment().diff(moment(fechaNacimiento), 'months')>1" message="Procedencia Ingreso Inválida"}}
+    {{!-- Tarea 2504 --}}
+  {{/section}}
+{{/define}}

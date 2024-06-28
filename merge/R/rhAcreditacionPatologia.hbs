@@ -1,0 +1,24 @@
+{{#define id="rhAcreditacionPatologia"}}
+  {{#view id="lista" name="Lista"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="base._acreditacionPrograma"}}
+      {{search field="_name"}}
+      {{search field="base._acreditacionPrograma"}}
+      {{sort field="base._acreditacionPrograma" direction="asc"}}
+      {{sort field="base.orden" direction="asc"}}
+      {{sort field="_name" direction="asc"}}
+      {{filter condition="=acreditacionPrograma" field="base.acreditacionPrograma" eq="acreditacionPrograma"}}
+    {{/find}}
+  {{/view}}
+{{/define}}
+
+
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}</br>
+      <span style="font-size:12px;">{{base._acreditacionPrograma}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

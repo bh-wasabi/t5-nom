@@ -1,0 +1,19 @@
+{{#define id="controlLiquidos"}}
+  {{#section id="base"}}
+    {{#field id="medicamento"}}
+      {{#editor}}
+        {{param tipoArticulo="='medicamento'"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="solucionBase"}}
+      {{#editor}}
+        {{param tipoArticulo="='solucion'"}}
+      {{/editor}}
+    {{/field}}
+    {{field id="esIngreso" type="expr" value="=@tipo==='ingreso'"}}
+    {{field id="esMedicamento" type="expr" value="=@tipo==='ingreso'&&@tipoLiquidoIngreso=='(medicamento)'"}}
+    {{field id="esSolucion" type="expr" value="=@tipo==='ingreso'&&calc.in(@tipoLiquidoIngreso, ['(solucion)','(mezcla)'])"}}
+    {{field id="esMezcla" type="expr" value="=@tipo==='ingreso'&&@tipoLiquidoIngreso=='(mezcla)'"}}
+    {{field id="esEgreso" type="expr" value="=@tipo==='egreso'"}}
+  {{/section}}
+{{/define}} 

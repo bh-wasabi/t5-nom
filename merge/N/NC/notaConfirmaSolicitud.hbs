@@ -1,0 +1,6 @@
+{{#define id="notaConfirmaSolicitud"}}
+  {{#section id="base"}}
+    {{field id="esIaas" type="expr" value="=_created.service=='iaas'"}}
+    {{field id="esOtroMotivo" type="expr" value="=esIaas&&calc.in('otro', motivoIaas)"}}
+  {{/section}}
+{{/define}}

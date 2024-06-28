@@ -1,0 +1,291 @@
+{{#define id="_user"}}
+  {{param name="=_params.service==='tesoreria'?'Cajero':'Usuario'"}}
+  {{action id="eliminar" hide="true"}}
+
+  {{!-- {{action id="afectarTodo" condition="=true" type="affect-all" label="Procesar Todo..." color="red" btnSolid="true" visibleMode="close" confirm="true" confirmMessage="¿Desea Procesar en Lote?" superUser="true"}} --}}
+
+  {{#action id="tool" condition="=true" label="Bandeja Entrada" type="sub-link" btnSolid="false" color="grey" visibleMode="close"}}
+    {{#link href="'/_inbox/in'" title="=calc.concat('Bandeja Entrada', _name)" name="=calc.concat('Bandeja Entrada', _name)"}}
+      {{param id="=_id"}}
+    {{/link}}
+  {{/action}}
+  {{#action id="tool2" condition="=true" label="Bandeja Salida" type="sub-link" btnSolid="false" color="grey" visibleMode="close"}}
+    {{#link href="'/_inbox/out'" title="=calc.concat('Bandeja Salida', _name)" name="=calc.concat('Bandeja Salida', _name)"}}
+      {{param id="=_id"}}
+    {{/link}}
+  {{/action}}
+  {{#action id="tool3" condition="=true" type="photo" label="Tomar Foto" color="grey" as="foto" icon="camera"}}
+    {{#update section="prestadorServicios"}}
+      {{setRef ref="foto.base.nombre" value="='Fotografía'"}}
+      {{setRef ref="foto.base.url" value="=foto.url"}}
+    {{/update}}
+  {{/action}}  
+
+  {{#action id="ver" condition="=true" label="Ver Planeación" type="view-scheduler" color="cyan"}}
+    {{scheduler type="plan" startDayHour="=prestadorServicios.horaInicioDia" endDayHour="=prestadorServicios.horaFinDia" cellDuration="30" resourceSource="planAgenda" resourceView="agendasActivas" resourceField="schedule" views="month,week,day" currentView="day"}}
+  {{/action}}
+[.#if esHRAEI.]  
+  {{#action id="ver2" condition="=true" label="Ver Agenda" type="view-scheduler" btnSolid="false" color="green"}}
+    {{scheduler type="busy" startDayHour="=prestadorServicios.horaInicioDia" endDayHour="=prestadorServicios.horaFinDia" cellDuration="30" resourceSource="planAgenda" resourceView="agendasActivas" resourceField="schedule" views="month,week,day" currentView="day"}}
+  {{/action}}
+[./if.]      
+
+  {{action id="menuReportes" hide="true" type="menu" menu="menuReportes" label="Reportes" color="grey" isBrowserAction="true"}}
+  {{#menu id="menuReportes" color="grey"}}
+    {{item action="reporteListaUsuarios" text="Lista Usuarios"}}
+  {{/menu}}  
+
+  {{action id="reporteListaUsuarios" hide="true" type="quickReport" source="_user" view="listaUsuarios"}}
+  
+  {{#action id="sugerirCurp" hide="true" type="update"}}
+    {{#update section="prestadorServicios"}}
+      {{set clave="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.genero, prestadorServicios.entidadNacimiento, prestadorServicios.fechaNacimiento)"}}
+    {{/update}}
+  {{/action}}
+
+  {{browser id="lista" showActions="menuReportes,tool,tool2,tool3,preliminar,ver,ver2,cancelar,adjuntar,abrir,afectar,afectarTodo"}}
+
+  {{#view id="listaUsuarios"}}
+    {{#find limit="-1"}}
+      {{include field="base"}}
+      {{include field="_created"}}
+      {{sort field="_name" direction="asc"}}
+    {{/find}}
+  {{/view}}
+
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="base.clave"}}
+      {{include field="base.estatus"}}
+      {{include field="base.area"}}
+      {{include field="base.correo"}}
+      {{include field="base.especialidad"}}    
+      {{sort field="_name" direction="asc"}}
+      {{search field="_name"}}
+      {{search field="base._especialidad"}}
+      {{search field="base._datosEspecialidad"}}
+      {{search field="prestadorServicios.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{filter condition="=area" field="base.area" in="=area"}}
+      {{filter condition="=citasExtraordinarias" field="prestadorServicios.citasExtraordinarias" eq="=citasExtraordinarias"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="notify"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{sort field="_name" direction="asc"}}
+      {{filter field="_access.level" neq="externo"}}
+      {{search field="_name"}}
+      {{search field="prestadorServicios.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="enfermeras"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="base.clave"}}
+      {{include field="base.estatus"}}
+      {{include field="base.area"}}
+      {{include field="base.correo"}}
+      {{include field="base.especialidad"}}    
+      {{sort field="_name" direction="asc"}}
+      {{filter field="base.rolesAcceso" in="enfermera"}}
+      {{search field="_name"}}
+      {{search field="base._especialidad"}}
+      {{search field="base._datosEspecialidad"}}
+      {{search field="prestadorServicios.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="elaboracionMezclas"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="base.clave"}}
+      {{include field="base.estatus"}}
+      {{include field="base.area"}}
+      {{include field="base.correo"}}
+      {{include field="base.especialidad"}}    
+      {{sort field="_name" direction="asc"}}
+      {{filter field="base.rolesAcceso" in="elaboracionMezclas"}}
+      {{search field="_name"}}
+      {{search field="base._especialidad"}}
+      {{search field="base._datosEspecialidad"}}
+      {{search field="prestadorServicios.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="cirujanos"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="base.clave"}}
+      {{include field="base.estatus"}}
+      {{include field="base.area"}}
+      {{include field="base.correo"}}
+      {{include field="base.especialidad"}}    
+      {{sort field="_name" direction="asc"}}
+      {{filter field="base.rolesAcceso" in="medicoCirujano"}}
+      {{search field="_name"}}
+      {{search field="base._especialidad"}}
+      {{search field="base._datosEspecialidad"}}
+      {{search field="prestadorServicios.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+    {{/find}}
+  {{/view}}
+  {{#section id="base"}}
+    {{#field id="nombres"}}
+      {{#onChange}}
+        {{set nombre="=calc.concat(@nombres, @apellidoPaterno, @apellidoMaterno)"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="apellidoPaterno"}}
+      {{#onChange}}
+        {{set nombre="=calc.concat(@nombres, @apellidoPaterno, @apellidoMaterno)"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="apellidoMaterno"}}
+      {{#onChange}}
+        {{set nombre="=calc.concat(@nombres, @apellidoPaterno, @apellidoMaterno)"}}
+      {{/onChange}}
+    {{/field}}
+    {{field id="esLocal" type="expr" value="=@metodoAcceso==='local'"}}
+    {{#field id="contrasena"}}
+      {{#onChange}}
+        {{set hash="=calc.sha1(calc.text(contrasena))"}}
+        {{set contrasena="=calc.mask(contrasena)"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="perfilAcceso"}}
+      {{#onChange clearFields="rolAcceso"}}
+        {{set nivelAcceso="=base.nivelAcceso"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="horaInicioDia"}}
+      {{editor interval="60"}}
+    {{/field}}
+    {{#field id="horaFinDia"}}
+      {{editor interval="60"}}
+    {{/field}}
+{{!--     {{#field id="establecimiento"}}
+      {{onChange clearFields="almacenGeneral,almacenFarmacia,almacenFarmaciaGratuita,almacenMateriales,almacenCeyeEsterilizado,almacenCeyeSucio"}}
+    {{/field}}
+    {{#field id="almacenGeneral"}}
+      {{#editor}}
+        {{param establecimiento="=establecimiento"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="almacenFarmacia"}}
+      {{#editor}}
+        {{param establecimiento="=establecimiento"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="almacenFarmaciaGratuita"}}
+      {{#editor}}
+        {{param establecimiento="=establecimiento"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="almacenMateriales"}}
+      {{#editor}}
+        {{param establecimiento="=establecimiento"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="almacenCeyeEsterilizado"}}
+      {{#editor}}
+        {{param establecimiento="=establecimiento"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="almacenCeyeSucio"}}
+      {{#editor}}
+        {{param establecimiento="=establecimiento"}}
+      {{/editor}}
+    {{/field}} --}}
+  {{/section}}
+  
+  {{!-- RACC Tarea #3580  --}}
+  {{#section id="puesto"}}  
+    {{field id="tieneSsa" type="expr" value="=@cluesAdscripcionNomina.search('SSA')>0"}}
+    {{#field id="cluesAdscripcionNomina"}}
+      {{#onChange}}
+        {{set tieneSsa="=@cluesAdscripcionNomina.search('SSA')>0"}}
+      {{/onChange}}
+    {{/field}}
+    {{!-- {{validator type="expr" validIf="=1==0" message="Error" log="=@cluesAdscripcionNomina.search('SSA')>0"}} --}}
+  {{/section}}
+  {{!-- RACC Tarea #3580  --}}  
+
+  {{!-- Tarea #3976 RACC --}}
+  {{#section id="prestadorServicios"}}
+    {{validator type="expr" validIf="=calc.fromNowFloat(@fechaNacimiento)>18" message="Error, Menor a 18 Años"}}
+    {{validator type="expr" validIf="=calc.fromNowFloat(@fechaNacimiento)<90" message="Error, Mayor a 90 Años"}}{{!-- cambios 2024-05-29 --}}
+  {{/section}}
+  {{!-- Tarea #3976 RACC --}}
+
+  {{#section id="adjuntos"}}
+    {{#onChange}}
+      {{#update section="prestadorServicios"}}
+        {{setRef condition="=calc.findWhere(adjuntos, {tipo:'foto'}).url" ref="foto.base.url" value="=calc.findWhere(adjuntos, {tipo:'foto'}).url"}}
+        {{setRef condition="=calc.findWhere(adjuntos, {tipo:'foto'}).url" ref="foto.base.nombre" value="=calc.findWhere(adjuntos, {tipo:'foto'}).nombre||'Foto'"}}
+      {{/update}}
+    {{/onChange}}
+  {{/section}}
+  {{#section id="_access"}}
+    {{field id="method" type="expr" value="=base.metodoAcceso"}}
+    {{field id="userId" type="expr" value="=base.correo"}}
+    {{field id="hash" type="expr" value="=base.hash"}}
+    {{field id="isActive" type="expr" value="=calc.in(base.estatus, ['activo','afectado'])&&!base.sinAcceso"}}
+    {{field id="isExternalUser"type="expr" value="=level=='externo'"}}
+    {{field id="name" type="expr" value="=base.nombre"}}
+    {{field id="profile" type="expr" value="=base.perfilAcceso"}}
+    {{field id="level" type="expr" value="=base.nivelAcceso"}}
+    {{field id="roles" type="expr" value="=base.rolesAcceso"}}
+    {{field id="branch" type="expr" value="=base.sucursal"}}
+    {{field id="_branch" type="expr" value="=base._sucursal"}}
+    {{field id="area" type="expr" value="=base.area"}}
+    {{field id="_area" type="expr" value="=base._area"}}
+    {{field id="turn" type="expr" value="=base.turno"}}
+    {{field id="_turn" type="expr" value="=base._turno"}}
+    {{field id="allowChangeEstablishment" type="expr" value="=calc.isTrue(base.cambiarEstablecimiento)"}}
+    {{field id="establishment" type="expr" value="=base.establecimiento"}}
+    {{field id="_establishment" type="expr" value="=base._establecimiento"}}
+    {{field id="subArea" type="expr" value="=base.subArea"}}
+    {{field id="subordinates" type="expr" value="=base.subordinados"}}
+    {{field id="identification" type="expr" value="=prestadorServicios.datosEspecialidad"}}
+    {{field id="_identification" type="expr" value="=prestadorServicios._datosEspecialidad"}}
+    {{field id="responsable" type="expr" value="=prestadorServicios.responsable"}}
+    {{field id="_responsable" type="expr" value="=prestadorServicios._responsable"}}
+    {{field id="academicRole" type="expr" value="=base.rolAcademico"}}
+    {{field id="_academicRole" type="expr" value="=base._rolAcademico"}}
+    {{field id="isStudent" type="expr" value="=base.rolAcademico=='estudiante'"}}
+    {{field id="autoPrint" type="expr" value="=calc.isTrue(prestadorServicios.permisos.base.autoImpresion)"}}
+    {{field id="onlyAssignedRequests" type="expr" value="=calc.getRef(prestadorServicios, 'permisos.base.verSolicitudes')=='asignadas'"}}
+    {{field id="alertLevelVidal" type="expr" value="=prestadorServicios.permisos.base.nivelAlertaVidal"}}
+    {{field id="readOnly" type="expr" value="=base.nivelAcceso=='consulta'"}}
+  {{/section}}   
+
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="400"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}  
+
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}
+      </br><span style="font-size:12px;">{{base.correo}}</span>
+      </br><span style="font-size:12px;white-space:pre-wrap;">{{base._area}}</span>
+    </div>    
+  {{/template}}
+  {{#template id="reset-password"}}
+  <!DOCTYPE html>
+  <html>
+    <div>
+      </br>
+      Estimado(a): <strong>{{base.nombres}},</strong>
+      </br>
+      </br>
+      Contraseña Temporal <strong>{{base.contrasena}}</strong>
+    </div>
+  </html>
+  {{/template}}
+{{/markup}}

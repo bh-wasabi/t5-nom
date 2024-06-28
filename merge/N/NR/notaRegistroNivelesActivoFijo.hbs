@@ -1,0 +1,9 @@
+{{#define id="notaRegistroNivelesActivoFijo"}}
+  {{param startOnOpen="niveles"}}
+  {{param addClass="w50"}}
+  
+  {{#grid id="niveles" section="niveles" disableEnter="true"}}
+    {{column field="nivel" width="300" readOnly="true"}}
+    {{column field="valor" width="100"}}
+  {{/grid}}
+{{/define}}

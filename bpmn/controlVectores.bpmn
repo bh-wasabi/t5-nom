@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0vlxyx3" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.0.0">
+  <bpmn:collaboration id="controlVectores">
+    <bpmn:participant id="Participant_1b4pxnl" name="Control Sanitario Vectores" processRef="Process_abj343d" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_abj343d" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_1y53c73">
+      <bpmn:lane id="Lane_1f87sht" name="Consesionaria">
+        <bpmn:flowNodeRef>programado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>realizado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1v3a9s1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enProceso</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_0vu92xc" name="Usuario">
+        <bpmn:flowNodeRef>Event_1lr6otx</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>pendiente</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Event_1lr6otx">
+      <bpmn:outgoing>Flow_09scn7c</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="pendiente" name="Requerimiento Control Vectores">
+      <bpmn:incoming>Flow_09scn7c</bpmn:incoming>
+      <bpmn:outgoing>Flow_10q0epp</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="programado" name="Coordinando Requerimiento Control Vectores">
+      <bpmn:incoming>Flow_10q0epp</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ebtxi1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="realizado" name="Requerimiento Realizado">
+      <bpmn:incoming>Flow_0bedsv8</bpmn:incoming>
+      <bpmn:outgoing>Flow_1n03ncl</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="Event_1v3a9s1">
+      <bpmn:incoming>Flow_1n03ncl</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:subProcess id="enProceso" name="En Proceso">
+      <bpmn:incoming>Flow_1ebtxi1</bpmn:incoming>
+      <bpmn:outgoing>Flow_0bedsv8</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:sequenceFlow id="Flow_09scn7c" sourceRef="Event_1lr6otx" targetRef="pendiente" />
+    <bpmn:sequenceFlow id="Flow_10q0epp" sourceRef="pendiente" targetRef="programado" />
+    <bpmn:sequenceFlow id="Flow_1ebtxi1" sourceRef="programado" targetRef="enProceso" />
+    <bpmn:sequenceFlow id="Flow_0bedsv8" sourceRef="enProceso" targetRef="realizado" />
+    <bpmn:sequenceFlow id="Flow_1n03ncl" sourceRef="realizado" targetRef="Event_1v3a9s1" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="controlVectores">
+      <bpmndi:BPMNShape id="Participant_1b4pxnl_di" bpmnElement="Participant_1b4pxnl" isHorizontal="true">
+        <dc:Bounds x="159" y="80" width="831" height="320" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0vu92xc_di" bpmnElement="Lane_0vu92xc" isHorizontal="true">
+        <dc:Bounds x="189" y="80" width="801" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1f87sht_di" bpmnElement="Lane_1f87sht" isHorizontal="true">
+        <dc:Bounds x="189" y="200" width="801" height="200" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1n03ncl_di" bpmnElement="Flow_1n03ncl">
+        <di:waypoint x="830" y="320" />
+        <di:waypoint x="902" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0bedsv8_di" bpmnElement="Flow_0bedsv8">
+        <di:waypoint x="630" y="320" />
+        <di:waypoint x="730" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ebtxi1_di" bpmnElement="Flow_1ebtxi1">
+        <di:waypoint x="430" y="320" />
+        <di:waypoint x="530" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10q0epp_di" bpmnElement="Flow_10q0epp">
+        <di:waypoint x="380" y="180" />
+        <di:waypoint x="380" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09scn7c_di" bpmnElement="Flow_09scn7c">
+        <di:waypoint x="268" y="140" />
+        <di:waypoint x="330" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1lr6otx_di" bpmnElement="Event_1lr6otx">
+        <dc:Bounds x="232" y="122" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1w6xj8r_di" bpmnElement="pendiente">
+        <dc:Bounds x="330" y="100" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1jfbx6t_di" bpmnElement="programado">
+        <dc:Bounds x="330" y="280" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1tm9126_di" bpmnElement="realizado">
+        <dc:Bounds x="730" y="280" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1v3a9s1_di" bpmnElement="Event_1v3a9s1">
+        <dc:Bounds x="902" y="302" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0c8now8_di" bpmnElement="enProceso">
+        <dc:Bounds x="530" y="280" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="enProceso" />
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

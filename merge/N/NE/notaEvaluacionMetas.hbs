@@ -1,0 +1,60 @@
+{{#define id="notaEvaluacionMetas"}}
+  {{param startOnOpen="n/a"}}
+  {{param removeIfEmptySection="metas"}}
+  {{param removeIfEmptyField="meta"}}
+  {{action id="cancelar" forceReadOnly="true"}}
+  {{action id="afectar" error="=base.totalPuntos?null:'Falta Especificar el Avance'" forceReadOnly="true"}}
+  
+  {{#transform id="copiarRechazo"}}
+    {{update section="persona" value="=persona"}}
+    {{#update section="base"}}
+      {{set referencia="=_name"}}
+    {{/update}}
+  {{/transform}}
+  {{#transform id="copiarRegistro" readOnly="true"}}
+    {{update section="persona" value="=persona"}}
+    {{update section="base" value="=base"}}
+    {{update section="metas" value="=metas"}}
+    {{update section="adjuntos" value="=adjuntos"}}
+  {{/transform}}
+
+  {{action id="tool4" condition="=base.estatus=='afectado'" source="notaRechazo" subType="evaluacionMetas" subTypeName="Rechazo Solicitud Evaluación Metas" label="Rechazar" transform="copiarRechazo" type="add-subdoc" visibleMode="close" color="red" icon="close" btnSolid="true" onlyPost="true"}}
+  {{action id="tool5" condition="=base.estatus=='afectado'" source="notaEvaluacionMetas" subType="final" subTypeName="Evaluación Metas" label="Autorizar Evaluación Metas" transform="copiarRegistro" type="add-subdoc" visibleMode="close" color="green" icon="checkmark" btnSolid="true" onlyPost="true"}}
+
+  {{#section id="metas"}}
+    {{#field id="avance"}}
+      {{#onChange}}
+        {{set nivelAvance="=fn('nivelAvanceEvaluacion', avance)"}}
+        {{set puntos="=ponderacion*(avance/100)"}}
+      {{/onChange}}
+    {{/field}}
+    {{#onChange}}
+      {{#update section="base"}}
+        {{set totalPuntos="=calc.round(calc.sumRef(metas, 'puntos'),2)"}}
+      {{/update}}
+    {{/onChange}}
+  {{/section}}
+
+  {{#grid id="metas" keyField="meta" section="metas" disableEnter="true" allowInsert="false" allowRemove="false" fixedColumnsLeft="3"}}
+    {{column field="ejeEstrategico" width="200" readOnly="true"}}
+    {{column field="lineaEstrategica" width="300" readOnly="true"}}
+    {{column field="meta" width="200" readOnly="true"}}
+    {{column field="ponderacion" width="70" readOnly="true" hiddenColumn="true"}}
+    {{column field="indicadorCualitativo" width="200" hide="=_created.subType!='preliminar'"}}
+    {{column field="avance" width="70"}}
+    {{column field="resultadoObtenido" width="200" hide="=_created.subType=='preliminar'"}}
+    {{column field="justificacion" width="200" hide="=_created.subType!='preliminar'"}}
+    {{column field="accionesRealizar" width="200" hide="=_created.subType!='preliminar'"}}
+    {{column field="comentarios" width="200"}}
+  {{/grid}}
+  
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="referencia" width="300" items="=_.pluck(metas, 'meta')"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

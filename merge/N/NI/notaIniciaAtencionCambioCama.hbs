@@ -1,0 +1,11 @@
+{{#define id="notaIniciaAtencionCambioCama"}}
+  {{#section id="base"}}
+    {{field id="tieneAnestesiologo" type="expr" value="=calc.in(_created.service, ['cirugia','cirugiaAmbulatoria','tococirugia','endourologia','endourologia','hemodinamia','braquiterapia'])"}}
+    {{#field id="camaDestino"}}
+      {{#editor}}
+      {{param central="=fn('iniciaAtencionCamaCentral', _created.service)"}}
+        {{param estatus="='limpia'"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}  
+{{/define}}

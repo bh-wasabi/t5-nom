@@ -1,0 +1,10 @@
+{{#define id="rhInstitucion"}}
+  {{#view id="lista" name="Lista"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{search field="_name"}}
+      {{sort field="base.orden" direction="asc"}}
+      {{sort field="_name" direction="asc"}}
+    {{/find}}
+  {{/view}}
+{{/define}}

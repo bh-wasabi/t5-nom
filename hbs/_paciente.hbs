@@ -1,0 +1,25 @@
+{{#define type="doc" id="_paciente" name="Identificación Electrónica del Paciente"}}
+  {{!-- {{#menu id="menu"}}
+    {{#item text="Ver" icon="bookmark"}}
+      {{item text="(vistas)" type="cube-view-names"}}
+      {{item text="Guardar vista..." icon="save" beginGroup="true" type="cube-view-save"}}
+      {{item text="Ajustes..." icon="preferences" type="cube-view-preferences"}}
+    {{/item}}
+    {{item text="Refrescar" icon="refresh" type="refresh"}}
+  {{/menu}} --}}
+  {{browser id="info" menu="menu"}}
+{{/define}}
+
+{{#markup}}
+  {{#page}}
+    {{#row}}
+      {{#col small="100%"}}
+        {{#row}}
+          {{#widget type="grid" source="solicitud" grid="citasDelPaciente"}}
+            {{param id="=_params.id"}}
+          {{/widget}}
+        {{/row}}
+      {{/col}}
+    {{/row}}
+  {{/page}}
+{{/markup}}

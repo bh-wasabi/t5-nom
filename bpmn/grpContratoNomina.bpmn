@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0vlxyx3" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.0.0">
+  <bpmn:collaboration id="flujo">
+    <bpmn:participant id="Participant_1b4pxnl" name="Nómina" processRef="Process_abj343d" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_abj343d" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_1y53c73">
+      <bpmn:lane id="Lane_0vu92xc" name="Recursos Humanos">
+        <bpmn:flowNodeRef>Event_1lr6otx</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>contratoNomina</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>comprobante</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_1f87sht" name="Cuentas por Pagar">
+        <bpmn:flowNodeRef>nomina</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ordenPago</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_1vueovi" name="Tesorería">
+        <bpmn:flowNodeRef>pago</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>pagoConciliado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_0dm295j</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Event_1lr6otx">
+      <bpmn:outgoing>Flow_09scn7c</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_09scn7c" sourceRef="Event_1lr6otx" targetRef="contratoNomina" />
+    <bpmn:sequenceFlow id="Flow_0k96asi" sourceRef="contratoNomina" targetRef="comprobante" />
+    <bpmn:sequenceFlow id="Flow_0382lx2" sourceRef="ordenPago" targetRef="pago" />
+    <bpmn:sequenceFlow id="Flow_01sz6r1" sourceRef="pago" targetRef="pagoConciliado" />
+    <bpmn:sequenceFlow id="Flow_1vmcg0l" sourceRef="pagoConciliado" targetRef="Event_0dm295j" />
+    <bpmn:task id="contratoNomina" name="Contrato Nómina">
+      <bpmn:incoming>Flow_09scn7c</bpmn:incoming>
+      <bpmn:outgoing>Flow_0k96asi</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0v231i1" sourceRef="nomina" targetRef="ordenPago" />
+    <bpmn:sequenceFlow id="Flow_1894sgg" sourceRef="comprobante" targetRef="nomina" />
+    <bpmn:task id="comprobante" name="Nómina">
+      <bpmn:incoming>Flow_0k96asi</bpmn:incoming>
+      <bpmn:outgoing>Flow_1894sgg</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="nomina" name="Cuentas por Pagar">
+      <bpmn:incoming>Flow_1894sgg</bpmn:incoming>
+      <bpmn:outgoing>Flow_0v231i1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="ordenPago" name="Orden de Pago">
+      <bpmn:incoming>Flow_0v231i1</bpmn:incoming>
+      <bpmn:outgoing>Flow_0382lx2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="pago" name="Pago">
+      <bpmn:incoming>Flow_0382lx2</bpmn:incoming>
+      <bpmn:outgoing>Flow_01sz6r1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="pagoConciliado" name="Pago Conciliado">
+      <bpmn:incoming>Flow_01sz6r1</bpmn:incoming>
+      <bpmn:outgoing>Flow_1vmcg0l</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="Event_0dm295j">
+      <bpmn:incoming>Flow_1vmcg0l</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="flujo">
+      <bpmndi:BPMNShape id="Participant_1b4pxnl_di" bpmnElement="Participant_1b4pxnl" isHorizontal="true">
+        <dc:Bounds x="159" y="80" width="619" height="490" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1vueovi_di" bpmnElement="Lane_1vueovi" isHorizontal="true">
+        <dc:Bounds x="189" y="440" width="589" height="130" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1f87sht_di" bpmnElement="Lane_1f87sht" isHorizontal="true">
+        <dc:Bounds x="189" y="310" width="589" height="130" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0vu92xc_di" bpmnElement="Lane_0vu92xc" isHorizontal="true">
+        <dc:Bounds x="189" y="80" width="589" height="230" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1894sgg_di" bpmnElement="Flow_1894sgg">
+        <di:waypoint x="360" y="290" />
+        <di:waypoint x="360" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0v231i1_di" bpmnElement="Flow_0v231i1">
+        <di:waypoint x="410" y="380" />
+        <di:waypoint x="450" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1vmcg0l_di" bpmnElement="Flow_1vmcg0l">
+        <di:waypoint x="690" y="510" />
+        <di:waypoint x="722" y="510" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_01sz6r1_di" bpmnElement="Flow_01sz6r1">
+        <di:waypoint x="550" y="510" />
+        <di:waypoint x="590" y="510" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0382lx2_di" bpmnElement="Flow_0382lx2">
+        <di:waypoint x="500" y="420" />
+        <di:waypoint x="500" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0k96asi_di" bpmnElement="Flow_0k96asi">
+        <di:waypoint x="360" y="180" />
+        <di:waypoint x="360" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09scn7c_di" bpmnElement="Flow_09scn7c">
+        <di:waypoint x="268" y="140" />
+        <di:waypoint x="310" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1lr6otx_di" bpmnElement="Event_1lr6otx">
+        <dc:Bounds x="232" y="122" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1w6xj8r_di" bpmnElement="contratoNomina">
+        <dc:Bounds x="310" y="100" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0kdnjip_di" bpmnElement="comprobante">
+        <dc:Bounds x="310" y="210" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0javisn_di" bpmnElement="nomina">
+        <dc:Bounds x="310" y="340" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1192cks_di" bpmnElement="ordenPago">
+        <dc:Bounds x="450" y="340" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0wlbhgk_di" bpmnElement="pago">
+        <dc:Bounds x="450" y="470" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0xz34j9_di" bpmnElement="pagoConciliado">
+        <dc:Bounds x="590" y="470" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0dm295j_di" bpmnElement="Event_0dm295j">
+        <dc:Bounds x="722" y="492" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

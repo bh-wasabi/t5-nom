@@ -1,0 +1,16 @@
+{{#define id="diagnostico"}}
+  {{#section id="base"}}
+    {{field id="tieneSubDiagnostico" type="expr" value="=calc.in(letra, ['S','T'])"}}  
+    {{#field id="diagnostico"}}
+      {{#onChange clearFields="subDiagnostico"}}
+        {{set letra="=LETRA"}}
+        {{set limiteSexo="=LSEX"}}
+        {{set limiteInferior="=LINF"}}
+        {{set limiteSuperior="=LSUP"}}
+        {{set tipoNotificacionEpidemiologica="=fn('tipoNotificacionEpidemiologica', @N_INTER,@NIN,@NINMTOBS,@NOTDIARIA,@NOTSEMANAL,@SISTEMA_ESPECIAL,@EPI_MORTA,@EPI_MORTA_M5,@EDAS_E_IRAS_EN_M5)"}}
+        {{set tipoSuive="=fn('tipoSuive', @ES_SUIVE_NOTIN,@ES_SUIVE_MORTA,@ES_SUIVE_MORB,@ES_SUIVE_EST_EPI,@ES_SUIVE_EST_BROTE)"}}
+        {{set importanciaEpidemiologica="=(tipoSuive)?'si':'no'"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+{{/define}}

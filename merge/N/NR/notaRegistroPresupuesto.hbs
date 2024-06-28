@@ -1,0 +1,46 @@
+{{#define id="notaRegistroPresupuesto"}}
+  {{!-- {{param startOnOpen="n/a"}} --}}
+  {{action id="afectar" error="=!base.ejercicio?'Ejercicio Incorrecto':null"}}
+  {{action id="importarDatos" condition="=true" type="menu" menu="importarDatos" label="Cargar" color="green"}}
+  {{#menu id="importarDatos" color="green"}}
+    {{item action="cargarExcel" text="Cargar Excel..."}}
+  {{/menu}}  
+
+  {{#action id="cargarExcel" type="openFile" label="Cargar Excel" color="green" visibleMode="close" condition="=base.estatus=='borrador'"}}
+    {{#openFile type="xlsx" as="excel" subType="=_created.subType" isRegistry="=true"}}
+      {{update section="partidas" value="=excel"}}
+    {{/openFile}}
+  {{/action}}  
+
+  {{#grid id="partidas" section="partidas"}}
+    {{column field="unidadResponsable" width="40"}}
+    {{column field="claveCartera" width="100"}}
+    {{column field="finalidad" width="40"}}
+    {{column field="funcion" width="40"}}
+    {{column field="subFuncion" width="40"}}
+    {{column field="reasignacion" width="40"}}
+    {{column field="actividadInstitucional" width="40"}}
+    {{column field="programaPresupuestario" width="60"}}
+    {{column field="programaInstitucional" width="60"}}
+    {{column field="partidaPresupuestal" width="60"}}
+    {{column field="tipoGasto" width="40"}}
+    {{column field="fuenteFinanciamiento" width="40"}}
+    {{column field="entidadFederativa" width="40"}}
+    {{column field="proyectoInversion" width="40"}}
+    {{column field="controlOperativo" width="40"}}
+    {{column field="descripcion" width="350"}}
+    {{column field="importe" width="110" type="numeric" format="#,"}}
+    {{column field="enero" width="100" type="numeric" format="#,"}}
+    {{column field="febrero" width="100" type="numeric" format="#,"}}
+    {{column field="marzo" width="100" type="numeric" format="#,"}}
+    {{column field="abril" width="100" type="numeric" format="#,"}}
+    {{column field="mayo" width="100" type="numeric" format="#,"}}
+    {{column field="junio" width="100" type="numeric" format="#,"}}
+    {{column field="julio" width="100" type="numeric" format="#,"}}
+    {{column field="agosto" width="100" type="numeric" format="#,"}}
+    {{column field="septiembre" width="100" type="numeric" format="#,"}}
+    {{column field="octubre" width="100" type="numeric" format="#,"}}
+    {{column field="noviembre" width="100" type="numeric" format="#,"}}
+    {{column field="diciembre" width="100" type="numeric" format="#,"}}
+  {{/grid}}
+{{/define}}

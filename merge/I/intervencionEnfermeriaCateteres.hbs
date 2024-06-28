@@ -1,0 +1,7 @@
+{{#define id="intervencionEnfermeriaCateteres"}}
+ 	{{#section id="base"}}
+  		{{field id="esHeparinizacion" type="expr" value="=calc.in('heparinizacion', intervencionCateteres)"}}
+  		{{field id="esMuestra" type="expr" value="=calc.in('muestra', intervencionCateteres)"}}
+  		{{field id="esInstalacion" type="expr" value="=calc.in('instalacion', intervencionCateteres)"}}
+	{{/section}}
+{{/define}}

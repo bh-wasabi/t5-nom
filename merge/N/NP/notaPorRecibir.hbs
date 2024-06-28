@@ -1,0 +1,19 @@
+{{#define id="notaPorRecibir"}}
+  {{param attribute1="=_created.service"}}
+  {{param startOnOpen="aplicacion"}}
+  {{param removeIfEmptySection="aplicacion"}}
+  {{param removeIfEmptyField="continuar"}}
+  
+  {{#grid id="aplicacion" section="aplicacion" keyField="continuar" disableEnter="true" applyTo="continuar" applyContinue="true"}}
+    {{column field="fecha" type="date" format="DD/MMM/YYYY" width="100" readOnly="true"}}
+    {{column field="solicitud" type="text" width="180" readOnly="true"}}
+    {{column field="_name" width="350" readOnly="true"}}
+    {{column field="_persona" width="180" readOnly="true"}}
+    {{column field="central" width="180" readOnly="true"}}
+    {{column field="cama" width="70" readOnly="true"}}
+    {{column field="solicitado" label="Solicitado" type="numeric" format="#," width="70" readOnly="true"}}
+    {{column field="faltante" label="Faltante" type="numeric" format="#," width="60" readOnly="true"}}
+    {{column field="neto" label="Neto" type="numeric" format="#," width="40" readOnly="true"}}
+    {{column field="continuar" width="70"}}
+  {{/grid}}
+{{/define}}

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:tns="http://xml.semture.de/bpmn20" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="P_p5" name="" targetNamespace="http://xml.semture.de/bpmn20" exporter="Camunda Modeler" exporterVersion="4.6.0" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://bpmn.sourceforge.net/schemas/BPMN20.xsd">
+  <collaboration id="COLLABORATION-P_p5">
+    <extensionElements>
+      <camunda:properties>
+        <camunda:property />
+      </camunda:properties>
+    </extensionElements>
+    <participant id="PO_p92" name="Sistema Informático de Comunicación" processRef="PROCESS-PO_p92" />
+  </collaboration>
+  <process id="PROCESS-PO_p92" processType="None" isClosed="false" isExecutable="true">
+    <laneSet id="LANESET-PO_p92">
+      <lane id="PO_p91" name="Usuario o PAPS">
+        <flowNodeRef>Event_1w723yx</flowNodeRef>
+        <flowNodeRef>pendiente</flowNodeRef>
+      </lane>
+      <lane id="PO_p87" name="Sociedad Concesionaria">
+        <flowNodeRef>porRecolectar</flowNodeRef>
+        <flowNodeRef>Gateway_0vvwq1e</flowNodeRef>
+        <flowNodeRef>porContar</flowNodeRef>
+        <flowNodeRef>recolectado</flowNodeRef>
+        <flowNodeRef>Event_1uqhnxa</flowNodeRef>
+        <flowNodeRef>Event_1rb4pdq</flowNodeRef>
+      </lane>
+    </laneSet>
+    <sequenceFlow id="Flow_06t3tqb" sourceRef="Event_1w723yx" targetRef="pendiente" />
+    <sequenceFlow id="PO_p89" sourceRef="pendiente" targetRef="porRecolectar" />
+    <startEvent id="Event_1w723yx">
+      <outgoing>Flow_06t3tqb</outgoing>
+    </startEvent>
+    <task id="pendiente" name="Solicitud Recolección Ropa Sucia">
+      <incoming>Flow_06t3tqb</incoming>
+      <outgoing>PO_p89</outgoing>
+    </task>
+    <task id="porRecolectar" name="Recolección Ropa">
+      <incoming>PO_p89</incoming>
+      <outgoing>Flow_1pzv9lv</outgoing>
+    </task>
+    <sequenceFlow id="Flow_1pzv9lv" sourceRef="porRecolectar" targetRef="Gateway_0vvwq1e" />
+    <parallelGateway id="Gateway_0vvwq1e">
+      <incoming>Flow_1pzv9lv</incoming>
+      <outgoing>Flow_029ph9i</outgoing>
+      <outgoing>Flow_1evkwmm</outgoing>
+    </parallelGateway>
+    <sequenceFlow id="Flow_029ph9i" sourceRef="Gateway_0vvwq1e" targetRef="porContar" />
+    <sequenceFlow id="Flow_1evkwmm" sourceRef="Gateway_0vvwq1e" targetRef="recolectado" />
+    <sequenceFlow id="Flow_0axb65m" sourceRef="recolectado" targetRef="Event_1uqhnxa" />
+    <subProcess id="porContar" name="Conteo Ropa">
+      <incoming>Flow_029ph9i</incoming>
+      <outgoing>Flow_146m9hr</outgoing>
+    </subProcess>
+    <task id="recolectado" name="Recolectado">
+      <incoming>Flow_1evkwmm</incoming>
+      <outgoing>Flow_0axb65m</outgoing>
+    </task>
+    <endEvent id="Event_1uqhnxa">
+      <incoming>Flow_0axb65m</incoming>
+    </endEvent>
+    <sequenceFlow id="Flow_146m9hr" sourceRef="porContar" targetRef="Event_1rb4pdq" />
+    <endEvent id="Event_1rb4pdq">
+      <incoming>Flow_146m9hr</incoming>
+    </endEvent>
+  </process>
+  <bpmndi:BPMNDiagram id="CollaborationP_p5" name="Colaboración">
+    <bpmndi:BPMNPlane id="PLANE-P_p5" bpmnElement="COLLABORATION-P_p5">
+      <bpmndi:BPMNShape id="PoolPO_p92" bpmnElement="PO_p92" isHorizontal="true" isExpanded="true">
+        <dc:Bounds x="143" y="112" width="545" height="538" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SwimlanePO_p87" bpmnElement="PO_p87" isHorizontal="true" isExpanded="true">
+        <dc:Bounds x="174" y="282" width="513" height="368" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SwimlanePO_p91" bpmnElement="PO_p91" isHorizontal="true" isExpanded="true">
+        <dc:Bounds x="174" y="113" width="513" height="169" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0axb65m_di" bpmnElement="Flow_0axb65m">
+        <di:waypoint x="410" y="590" />
+        <di:waypoint x="482" y="590" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1evkwmm_di" bpmnElement="Flow_1evkwmm">
+        <di:waypoint x="360" y="495" />
+        <di:waypoint x="360" y="550" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_029ph9i_di" bpmnElement="Flow_029ph9i">
+        <di:waypoint x="385" y="470" />
+        <di:waypoint x="450" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1pzv9lv_di" bpmnElement="Flow_1pzv9lv">
+        <di:waypoint x="360" y="395" />
+        <di:waypoint x="360" y="445" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlowPO_p89" bpmnElement="PO_p89" sourceElement="Activity_0j0u0oj_di" targetElement="Activity_1v75mnt_di">
+        <di:waypoint x="360" y="235" />
+        <di:waypoint x="360" y="315" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_06t3tqb_di" bpmnElement="Flow_06t3tqb">
+        <di:waypoint x="238" y="180" />
+        <di:waypoint x="310" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_146m9hr_di" bpmnElement="Flow_146m9hr">
+        <di:waypoint x="550" y="470" />
+        <di:waypoint x="602" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1w723yx_di" bpmnElement="Event_1w723yx">
+        <dc:Bounds x="202" y="162" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0j0u0oj_di" bpmnElement="pendiente">
+        <dc:Bounds x="310" y="155" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1v75mnt_di" bpmnElement="porRecolectar">
+        <dc:Bounds x="310" y="315" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0zxhjpq_di" bpmnElement="Gateway_0vvwq1e">
+        <dc:Bounds x="335" y="445" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1rb4pdq_di" bpmnElement="Event_1rb4pdq">
+        <dc:Bounds x="602" y="452" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0dx4nri_di" bpmnElement="porContar">
+        <dc:Bounds x="450" y="430" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1lti6fh_di" bpmnElement="recolectado">
+        <dc:Bounds x="310" y="550" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1uqhnxa_di" bpmnElement="Event_1uqhnxa">
+        <dc:Bounds x="482" y="572" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

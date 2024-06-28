@@ -1,0 +1,17 @@
+{{#define id="notaRegistroEvento"}}
+  {{action id="afectar" error="=fn('errorChecarReferenciaAdjuntos', base, @adjuntos)"}}
+  {{!-- {{#section id="base"}}
+    {{#field id="referencia"}}
+      {{editor items="=calc.itemsToIdName(referencias)"}}
+    {{/field}}
+  {{/section}} --}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="referencia" width="200" items="=base.referencias"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

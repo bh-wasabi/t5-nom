@@ -1,0 +1,5 @@
+{{#define id="tiemposIsquemiaCirculacion"}}
+  {{#section id="base"}}
+    {{field id="duracion" type="expr" value="=fn('minutos', @iniciaIsquemiaCirculacion, @finalizaIsquemiaCirculacion)"}}
+  {{/section}}
+{{/define}} 

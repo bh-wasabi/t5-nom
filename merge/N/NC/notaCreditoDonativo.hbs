@@ -1,0 +1,11 @@
+{{#define id="notaCreditoDonativo"}}
+  {{param startOnOpen="n/a"}}
+  {{param totalsSection="totales"}}
+  {{action id="ver" type="openFolder" condition="=adjuntos" items="=adjuntos" label="Adjuntos" color="grey"}}
+  {{#section id="totales"}}
+    {{field id="subTotal" type="sum" section="aplicacion" value="subTotal"}}
+    {{field id="importeIva" type="sum" section="aplicacion" value="importeIva"}}
+    {{field id="importeTotal" type="sum" section="aplicacion" value="importe"}}
+    {{field id="totalEnTexto" type="expr" value="=calc.pesos(importeTotal)"}}
+  {{/section}}
+{{/define}}

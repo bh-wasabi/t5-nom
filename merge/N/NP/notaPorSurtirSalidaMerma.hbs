@@ -1,0 +1,9 @@
+{{#define id="notaPorSurtirSalidaMerma"}}
+  {{#grid id="articulos" section="articulos"}}
+    {{column field="codigo" readOnly="true" label="Código" width="150"}}
+    {{column field="descripcion" readOnly="true" label="Descripción" width="350"}}
+    {{column field="cantidad" readOnly="true" label="Cantidad" width="100" type="numeric" format="#,"}}
+    {{column field="fechaApertura" readOnly="true" label="Fecha Apertura" width="150"}}
+    {{column field="continuar" label="Continuar" width="70"}}
+  {{/grid}}
+{{/define}}

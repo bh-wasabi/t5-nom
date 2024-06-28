@@ -1,0 +1,13 @@
+{{#define id="indicacion"}}
+  {{#section id="base"}}
+    {{#field id="wizardPlan"}}
+      {{#onChange}}
+        {{push laboratorio="=fn('laboratorio', base._extra.laboratorio, base)"}}
+        {{push imagenologia="=fn('imagenologia', base._extra.imagenologia, base)"}}
+        {{push patologia="=fn('patologia', base._extra.patologia, base)"}}
+        {{push procedimiento="=fn('procedimiento', base._extra.procedimiento, base)"}}
+        {{set wizardPlan="={}"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+{{/define}}

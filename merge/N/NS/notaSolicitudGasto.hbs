@@ -1,0 +1,48 @@
+{{#define id="notaSolicitudGasto"}}
+  {{param attribute1="=_created.service"}}
+  {{param removeIfEmptySection="articulos"}}
+  {{param removeIfEmptyField="cantidad"}}
+
+  {{#section id="articulos"}}
+    {{#field id="articulo"}}
+      {{editor display="base.descripcion" view="conceptosGasto"}}      
+      {{#onChange getSourceDoc="true" getSourceDocAs="_articulo"}}
+        {{set codigo="=base.codigo"}}
+        {{set descripcion="=base.descripcion"}}
+        {{set tipoArticulo="=base.tipoArticulo"}}
+        {{set _tipoArticulo="=base._tipoArticulo"}}
+        {{set iva="=_articulo.base.ivaCompra"}}
+        {{set _iva="=_articulo.base._ivaCompra"}}
+        {{set retencionIsr="=_articulo.base.retencionIsr"}}
+        {{set _retencionIsr="=_articulo.base._retencionIsr"}}
+        {{set retencionIva="=_articulo.base.retencionIva"}}
+        {{set _retencionIva="=_articulo.base._retencionIva"}}
+        {{set tipoDeducibilidad="=_articulo.base.tipoDeducibilidad"}}
+        {{set _tipoDeducibilidad="=_articulo.base._tipoDeducibilidad"}}
+        {{set porcentajeDeducibilidad="=_articulo.base.tipoDeducibilidad=='porcentaje'&&_articulo.base.porcentajeDeducibilidad"}}
+        {{set topeDeducibilidad="=_articulo.base.tipoDeducibilidad=='tope'&&_articulo.base.topeDeducibilidad"}}
+        {{set centroCostos="=_articulo.base.centroCostos"}}
+        {{set _centroCostos="=_articulo.base._centroCostos"}}
+      {{/onChange}}
+    {{/field}}
+    {{field id="costoTotal" type="calc" value="=cantidad*costoUnitario"}}
+    {{#onChange}}
+      {{#update section="base"}}
+        {{set cantidadTotal="=calc.sumExpr(articulos, '=cantidad')"}}
+        {{set subTotal="=calc.round(calc.sumExpr(articulos, '=costoUnitario*cantidad'),2)"}}
+        {{set importeIva="=calc.round(calc.sumExpr(articulos, '=costoUnitario*cantidad*(calc.number(iva)/100)'),2)"}}
+        {{set importeRetencionIsr="=calc.round(calc.sumExpr(articulos, '=costoUnitario*cantidad*(calc.number(retencionIsr)/100)'),2)"}}
+        {{set importeRetencionIva="=calc.round(calc.sumExpr(articulos, '=costoUnitario*cantidad*(calc.number(retencionIva)/100)'),2)"}}
+        {{set importeTotal="=calc.round(base.subTotal-base.importeRetencionIsr-base.importeRetencionIva+base.importeIva,2)"}}
+      {{/update}}
+    {{/onChange}}
+  {{/section}}
+  
+  {{#grid id="articulos" section="articulos" keyField="cantidad" allowInsert="true" allowRemove="true"}}
+    {{column field="articulo" label="Concepto" width="500"}}
+    {{column field="codigo" hide="true" readOnly="true"}}
+    {{column field="descripcion" hide="true" readOnly="true"}}
+    {{column field="cantidad" label="Cantidad" width="100" type="numeric" format="#," defaultValue="1"}}
+    {{column field="costoUnitario" label="Costo Unitario" width="150" type="numeric" format="#,.##" required="=true"}}
+  {{/grid}}
+{{/define}}

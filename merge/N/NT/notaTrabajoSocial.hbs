@@ -1,0 +1,11 @@
+{{#define id="notaTrabajoSocial"}}
+  {{#section id="base"}}
+    {{field id="esDiagnostico" type="expr" value="=tipoNotaTrabajoSocial==='diagnostico'"}}
+    {{field id="esTraslado" type="expr" value="=tipoNotaTrabajoSocial==='traslado'"}}
+    {{field id="esDefuncion" type="expr" value="=tipoNotaTrabajoSocial==='defuncion'"}}
+    {{field id="esGestion" type="expr" value="=tipoNotaTrabajoSocial==='gestion'"}}
+    {{field id="esSeguimiento" type="expr" value="=tipoNotaTrabajoSocial==='seguimiento'"}}
+    {{field id="esLegal" type="expr" value="=tipoNotaTrabajoSocial==='legal'"}}
+    {{field id="esDesconocido" type="expr" value="=tipoNotaTrabajoSocial==='desconocido'"}}
+  {{/section}}
+{{/define}} 

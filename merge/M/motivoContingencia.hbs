@@ -1,0 +1,19 @@
+{{#define id="motivoContingencia"}}
+	{{#view id="lista" name="Lista"}}
+		{{#find}}
+			{{include field="base.servicio"}}
+			{{sort field="_name"}}
+			{{filter condition="=servicio" field="base.servicio" eq="=servicio"}}
+			{{search field="_name"}}
+			{{search field="base._servicio"}}
+		{{/find}}
+	{{/view}}
+{{/define}}	
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}
+      </br><span style="font-size:12px;">{{base._servicio}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

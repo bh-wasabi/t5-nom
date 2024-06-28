@@ -1,0 +1,16 @@
+{{#define id="notaSolicitudSeguridad"}}
+  {{#action id="afectar" error="=base.seguridad.base.requiereAdjuntos&&_.isEmpty(adjuntos)?'Falta Incluir el Archivo Adjunto Correspondiente':null"}}
+    {{#update section="base"}}
+      {{setRef ref="seguridad.base.vencimiento" value="=calc.dueDate(seguridad.base.vencimiento, 'atencion', calc.dueTimes('seguridad', seguridad.base.subTipoSolicitud, seguridad.base.motivo, seguridad.base.momentoDieta, seguridad.base.criticidadZona, seguridad.base.tiempos))"}}
+      {{setRef ref="seguridad.base.alerta"      value="=calc.alertDate(seguridad.base.vencimiento, 'atencion', calc.dueTimes('seguridad', seguridad.base.subTipoSolicitud, seguridad.base.motivo, seguridad.base.momentoDieta, seguridad.base.criticidadZona, seguridad.base.tiempos))"}}
+    {{/update}}
+  {{/action}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

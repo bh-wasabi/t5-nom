@@ -1,0 +1,58 @@
+{{#define type="doc" id="_planFarmacia" name="Planeador Farmacia"}}
+  {{#menu id="menu"}}
+    {{#item text="Solicitud Abastecimiento" icon="doc" source="planInventario" type="add-subdoc" onlyPost="true" onlyRefresh="true" fromSource="ver" fromView="planInventario" toSection="articulos"}}
+      {{param ubicacion="farmacia"}}
+      {{param tipoPlan="orden"}}
+      {{param subTipoPlan="abastecimiento"}}
+      {{param origen="almacenGeneral"}}
+      {{param tipoUnidad="traspaso"}}
+    {{/item}}
+    {{#item text="Recibo Abastecimiento" icon="add" source="planInventario" type="add-subdoc" onlyPost="true" onlyRefresh="true" fromSource="ver" fromView="planInventario" toSection="articulos"}} {{!-- stockView="transito"  --}}
+      {{param ubicacion="farmacia"}}
+      {{param tipoPlan="recibo"}}
+      {{param subTipoPlan="abastecimiento"}}
+      {{param origen="almacenGeneral"}}
+      {{param transito="repartoAlmacenGeneral"}}
+      {{param tipoUnidad="traspaso"}}
+    {{/item}}
+    {{#item text="Recolección" icon="cart" source="planInventario" type="add-subdoc" onlyPost="true" onlyRefresh="true" fromSource="ver" fromView="planInventario" toSection="articulos"}}  {{!-- stockView="existencia"  --}}
+      {{param ubicacion="farmacia"}}
+      {{param tipoPlan="recoleccion"}}
+      {{param tipoUnidad="traspaso"}}
+    {{/item}}
+    {{#item text="Empaque" icon="gift" source="planInventario" type="add-subdoc" onlyPost="true" onlyRefresh="true" fromSource="ver" fromView="planInventario" stockView="recolectado" toSection="articulos"}}
+      {{param ubicacion="farmacia"}}
+      {{param tipoPlan="empaque"}}
+      {{param tipoUnidad="consumo"}}
+    {{/item}}
+    {{#item text="Entrega" icon="export" source="planInventario" type="add-subdoc" onlyPost="true" onlyRefresh="true" fromSource="ver" fromView="planInventario" stockView="empacado" toSection="articulos"}}      
+      {{param ubicacion="farmacia"}}
+      {{param tipoPlan="entrega"}}
+      {{param tipoUnidad="consumo"}}
+    {{/item}}
+    {{#item text="Ver" icon="bookmark"}}
+      {{item text="(vistas)" type="cube-view-names"}}
+      {{item text="Guardar vista..." icon="save" beginGroup="true" type="cube-view-save"}}
+      {{item text="Ajustes..." icon="preferences" type="cube-view-preferences"}}
+    {{/item}}
+    {{item text="Refrescar" icon="refresh" type="refresh"}}
+  {{/menu}}
+  {{browser id="cubo" menu="menu"}}
+{{/define}}
+
+{{#markup}}
+  {{#page}}
+    {{#row}}
+      {{#col small="100%"}}
+        {{#row}}
+          {{#widget type="cube" source="ver" cube="planDistribucion"}}
+            {{param ubicacion="farmacia"}}
+            {{param tipoPlan="consulta"}}
+            {{param tipoUnidad="traspaso"}}
+            {{param origen="almacenGeneral"}}
+          {{/widget}}
+        {{/row}}
+      {{/col}}
+    {{/row}}
+  {{/page}}
+{{/markup}}

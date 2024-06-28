@@ -1,0 +1,131 @@
+{{#define id="notaCierreCuenta"}}
+  {{param startOnOpen="n/a"}}
+  {{param totalsSection="totales"}}
+  {{#transform id="copiarCancelacion"}}
+    {{update section="persona" value="persona"}}
+    {{update section="contexto" value="contexto"}}
+    {{update section="base" value="base"}}
+    {{update section="aplicacion" value="aplicacion"}}
+    {{update section="anticiposPorAplicar" value="anticiposPorAplicar"}}
+    {{update section="totales" value="totales"}}
+    {{#update section="base"}}
+       {{set nota="=_id"}}
+       {{set _nota="=_name"}}
+    {{/update}}
+  {{/transform}}  
+  {{#section id="base"}}
+    {{field id="esHospitalizacion" type="expr" value="=tipoEpisodio=='hospitalizacion'"}}
+    {{#field id="tabulador"}}
+      {{#onChange}}
+        {{set socioNegocios="=base.socioNegocios"}}
+        {{set listaPrecios="=base.listaPrecios"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+  {{#section id="totales"}}
+    {{field id="totalCobertura" type="sum" section="aplicacion" value="montoCoberturaContinuar"}}
+    {{!-- {{field id="totalGratuidad" type="sum" section="aplicacion" value="gratuidadContinuar"}} --}}
+    {{field id="totalPaciente" type="sum" section="aplicacion" value="montoPacienteContinuar"}}
+    {{field id="anticiposPorAplicar" type="sum" section="anticiposPorAplicar" value="importe"}}
+    {{field id="nuevoSaldoPaciente" value="=calc.round(totalPaciente-anticiposPorAplicar,2)"}}
+  {{/section}}
+  {{#section id="aplicacion"}}
+    {{#field id="tieneCobertura"}}
+      {{#onChange}}
+        {{join source="precios" as="precios" id="codigo"}}
+        {{set montoCobertura="=calc.isTrue(@tieneCobertura)?_join.precios[_doc.base.listaPrecios]:null"}}
+        {{!-- {{set gratuidad="=!calc.isTrue(@tieneCobertura)&&calc.isTrue(@gratis)?importe:null"}} --}}
+        {{set montoPaciente="=!calc.isTrue(@tieneCobertura)&&!calc.isTrue(@gratis)?importe:null"}}
+      {{/onChange}}
+    {{/field}}
+    {{field id="montoCoberturaContinuar" type="expr" value="=calc.isTrue(continuar)?montoCobertura:0"}}
+    {{!-- {{field id="gratuidadContinuar" type="expr" value="=calc.isTrue(continuar)?gratuidad:0"}} --}}
+    {{field id="montoPacienteContinuar" type="expr" value="=calc.isTrue(continuar)?montoPaciente:0"}}
+  {{/section}}
+  {{#grid id="aplicacion" section="aplicacion" disableEnter="true"}}
+    {{column field="fecha" type="date" format="DD/MMM/YYYY" width="100" readOnly="true"}}
+    {{column field="_name" width="550" readOnly="true"}}
+    {{column field="codigo" width="120" readOnly="true"}}
+    {{column field="importe" width="110" readOnly="true"}}
+    {{column field="montoCobertura" width="115" readOnly="true"}}
+    {{!-- {{column field="gratis" width="60" readOnly="true"}} --}}
+    {{!-- {{column field="gratuidad" width="110" readOnly="true"}} --}}
+    {{column field="montoPaciente" width="110" readOnly="true"}}
+    {{column field="continuar" width="75"}}
+  {{/grid}}
+  {{#grid id="anticiposPorAplicar" section="anticiposPorAplicar" disableEnter="true" applyBaseColumn="saldo" applyTo="importe" applySuggest="saldo" applyMax="saldo" applyValidate="true"}}
+    {{column field="fecha" type="date" format="DD/MMM/YYYY" width="100" readOnly="true"}}
+    {{column field="referencia" width="550" readOnly="true"}}
+    {{column field="saldo" width="110" readOnly="true" format="currency"}}
+    {{column field="importe" width="110" format="currency"}}
+  {{/grid}}
+  {{action id="notaCancelacionCierreCuenta" source="notaCancelacionCierreCuenta" label="Cancelación Cierre Cuenta" transform="copiarCancelacion" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+  {{action id="preliminar2" type="report-pdf" label="Anticipos Aplicados" report="preliminar2" title="=_name" fileName="=_name" visibleMode="close" color="grey" condition="=base.estatus=='afectado'&&!_.isEmpty(anticiposPorAplicar)"}}
+  {{#report id="preliminar2" fontSize="8" header="preliminar-encabezado" showStandarFooter="true" pageMargins="30,120,30,40" barcode="=persona.clave"}}
+    {{#stack}}
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{#record title="Datos Generales" titleStyle="title" layout="lightHorizontalLines" fontSize="7" section="base" headerStyle="field" margin="-10,0,0,10" widths="100,450"}}
+        {{row expr="=calc.format('date', _updated.date||_created.date, 'DD/MMM/YYYY h:mma')" label="Fecha Emisión"}}
+        {{row expr="=_created._service" label="Servicio"}}
+        {{row field="responsableAcademico" condition="esEstudiante" align="left"}}
+        {{row field="estatus" align="left"}}
+        {{row field="tipoEpisodio" align="left"}}
+        {{row field="hospitalizacionDesde" condition="esHospitalizacion" align="left"}}
+        {{row field="tabulador" align="left"}}
+        {{row field="socioNegocios" align="left"}}
+        {{row field="listaPrecios" align="left"}}
+        {{row field="comentarios" align="left"}}
+      {{/record}}
+    {{/stack}}
+    {{#stack}}
+      {{#row text="Anticipos Aplicados" fontSize="10" bold="true" margin="-10,0,0,0" condition="=!_.isEmpty(anticiposPorAplicar)"}}
+      {{/row}}
+      {{#table title="Anticipos Aplicados" titleStyle="title" layout="lightHorizontalLines" fontSize="7" section="anticiposPorAplicar" headerStyle="field" margin="-10,0,0,10" removeEmptyCols="true"}}
+        {{column field="fecha"}}
+        {{column field="referencia"}}
+        {{column field="saldo"}}
+        {{column field="importe"}}
+      {{/table}}
+    {{/stack}}
+    {{#stack}}
+      {{#columns widths="425,25,100"}}
+        {{#column}}
+          {{#record title="Firmas" titleStyle="title" layout="lightHorizontalLines" fontSize="8" section="_stamp" headerStyle="field" margin="-10,0,0,10" widths="100,325"}}
+            {{row expr="=_created._user" label="Elabora"}}
+            {{row expr="=_created._turn" label="Turno Elabora"}}
+            {{row expr="=_created._identification" label="Especialidad Elabora"}}
+            {{row expr="=''" label="Firma Elabora"}}
+            {{row condition="=!base.esEstudiante" expr="=_created._responsable" label="Responsable"}}
+            {{row condition="=!base.esEstudiante" expr="=_created._responsableId" label="Especialidad Responsable"}}
+            {{row condition="=!base.esEstudiante" expr="=''" label="Firma Responsable"}}
+            {{row condition="=base.esEstudiante" expr="=base._responsableAcademico" label="Médico Responsable"}}
+            {{row condition="=base.esEstudiante" expr="=base._identificacionResponsableAcademico" label="Especialidad Médico Responsable"}}
+            {{row condition="=base.esEstudiante" expr="=''" label="Firma Médico Responsable"}}
+            {{row condition="=calc.in(_created.service, ['inventarios','farmacia','almacen','ceye'])" expr="=''" label="Transporte / Recibe"}}
+            {{row field="text" label="Cadena Original"}}
+            {{row field="signature" label="Sello Digital"}}
+          {{/record}}
+        {{/column}}
+        {{#column}}
+          {{row}}
+        {{/column}}
+        {{#column}}
+          {{#record title="QR's" titleStyle="title" layout="lightHorizontalLines" fontSize="6" section="_stamp" headerStyle="field" margin="-10,0,0,10" widths="50,50"}}
+            {{row qr="=calc.concatHost('doc', 'persona', persona.id)" label="=fn('_tipoExpediente', persona.tipoExpediente)" qrFit="50" condition="=(persona.id)?true:false"}}
+            {{row}}
+            {{row qr="=calc.concatHost('doc', '_user', _created.user)" label="Elabora" qrFit="50"}}
+            {{row condition="=(_created.responsable&&!base.esEstudiante)?true:false"}}
+            {{row qr="=calc.concatHost('doc', '_user', _created.responsable)" label="Responsable" qrFit="50" condition="=(_created.responsable&&!base.esEstudiante)?true:false"}}
+            {{row condition="=(_created.responsableAcademico&&base.esEstudiante)?true:false"}}
+            {{row qr="=calc.concatHost('doc', '_user', _created.responsableAcademico)" label="Médico Responsable" qrFit="50" condition="=(_created.responsableAcademico&&base.esEstudiante)?true:false"}}
+            {{row condition="=(persona.id)?true:false"}}
+            {{row qr="=calc.concatHost('doc', _type, _id)" label="Nota" qrFit="50"}}
+          {{/record}}
+        {{/column}}
+      {{/columns}}
+    {{/stack}}
+  {{/report}}
+{{/define}}

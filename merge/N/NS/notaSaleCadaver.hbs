@@ -1,0 +1,8 @@
+{{#define id="notaSaleCadaver"}}
+  {{param name="=fn('folioServiceName', fn('finalizaAtencion', @_created.service), @_created)"}}
+  {{#section id="base"}}
+    {{field id="nombre" value="=fn('folioServiceName', fn('finalizaAtencion', @_created.service), @_created)"}}
+    {{field id="esMP" type="expr" value="=@institucionEntrega=='mp'"}}
+    {{field id="esFuneraria" type="expr" value="=@institucionEntrega=='funeraria'"}}
+  {{/section}} 
+{{/define}}

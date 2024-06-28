@@ -1,0 +1,6 @@
+{{#define id="escalaPippDolorNeonatos"}}
+  {{#section id="base"}}
+    {{field id="totalEscalaDolorNeonatos" type="calc" value="=calc.sumArgs(@escalaDolorNeonatos15SegundosEdadGestacional,@escalaDolorNeonatos15SegundosComportamiento,@escalaDolorNeonatos30SegundosFcMax,@escalaDolorNeonatos30SegundosatO2,@escalaDolorNeonatos30SegundoentrecejoFruncido,@escalaDolorNeonatos30SegundoOjosApretados,@escalaDolorNeonatos30SegundoSurcoNasolabial)"}}
+    {{field id="nivelEscalaDolorNeonatos" type="expr" value="=fn('nivelEscalaDolorNeonatos', totalEscalaDolorNeonatos)"}}
+  {{/section}}
+{{/define}} 

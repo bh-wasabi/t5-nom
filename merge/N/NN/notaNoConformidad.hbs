@@ -1,0 +1,31 @@
+{{#define id="notaNoConformidad"}}
+  {{param attribute1="base.vigente"}}
+  {{#section id="base"}}
+    {{#field id="motivo"}}
+      {{#editor}}
+        {{param servicio="=solicitud.base.servicio"}}
+        {{param partOf="=solicitud.base.subTipoSolicitud"}}
+        {{#onChange}}
+          {{set tipoIncumplimiento="=base.tipoIncumplimiento"}}
+          {{set _tipoIncumplimiento="=base._tipoIncumplimiento"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+{{!--     {{#field id="tipoIncumplimiento"}}
+      {{#editor}}
+        {{param servicio="=servicio"}}
+        {{#onChange}}
+          {{set codigo="=base.codigo"}}
+          {{set puntos="=fn('puntosIncumplimiento', solicitud.base.criticidadZona, _remoteScope.base)"}}
+          {{set vencimiento="=moment().add(fn('tiempoIncumplimiento', solicitud.base.criticidadZona, _remoteScope.base), 'minute').format()"}}
+          {{set alerta="=moment().add(fn('tiempoIncumplimiento', solicitud.base.criticidadZona, _remoteScope.base), 'minute').format()"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}     --}}
+    {{!-- {{#onChange}}
+      {{#update section="base"}}
+        {{set incidencia="=fn('nuevaIncidencia', base)"}}
+      {{/update}}
+    {{/onChange}}     --}}
+  {{/section}}
+{{/define}}

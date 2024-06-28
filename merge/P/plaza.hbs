@@ -1,0 +1,155 @@
+{{#define id="plaza"}}
+  {{action id="eliminar" hide="true"}}
+  {{#view id="resumenVacantes"}}
+    {{#pipeline}}
+      {{!-- {{filter field="base.tipoContratacion" eq="='pendiente'"}} --}}
+      {{filter field="base.estatus" eq="='vacante'"}}
+      {{group field="_id" type="count" as="count"}}
+    {{/pipeline}}  
+  {{/view}}
+  {{#view id="resumenVacantesBolsaTalentos"}}
+    {{#pipeline}}
+      {{filter field="base.tipoContratacion" eq="='bolsaTalentos'"}}
+      {{filter field="base.estatus" eq="='vacante'"}}
+      {{group field="_id" type="count" as="count"}}
+    {{/pipeline}}  
+  {{/view}}
+  {{#view id="vacantesPublicas" onlyMapped2="true"}}
+    {{#pipeline}}
+      {{filter field="base.estatus" eq="='vacante'"}}
+      {{filter field="base.tipoContratacion" eq="='bolsaTalentos'"}}
+      {{group field="puesto.codigo" as="codigo"}}
+      {{group field="puesto.descripcion" as="descripcion"}}
+      {{group field="puesto.sueldo" as="sueldo"}}
+      {{group field="_id" type="count" as="plazasVacantes"}}
+    {{/pipeline}}
+    {{join source="puesto" view="vacantesPublicas" id="codigo" key="base.codigo" as="join" fields="base._formacionAcademicaPuesto,base._experienciaLaboralPuesto"}}
+    {{map field="codigoPuesto" value="=codigo"}}
+    {{map field="descripcionPuesto" value="=descripcion"}}
+    {{map field="sueldo" value="=sueldo"}}
+    {{map field="formacionAcademica" value="=join.base._formacionAcademicaPuesto"}}
+    {{map field="experienciaLaboral" value="=join.base._experienciaLaboralPuesto"}}
+    {{map field="plazasVacantes" value="=plazasVacantes"}}
+  {{/view}}
+  {{#view id="conVacantes"}}
+    {{#find}}
+      {{!-- {{filter field="base.estatus" eq="='vacante'"}}
+      {{filter field="base.tipoContratacion" eq="='bolsaTalentos'"}} --}}
+      {{include field="puesto.codigo"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="adscripcion"}}
+    {{#find limit="1"}}
+      {{include field="adscripcion.descripcion"}}
+      {{filter field="base.codigo" eq="codigo"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="unicas"}}
+    {{#find limit="100"}}
+      {{include field="_name"}}
+      {{search field="_name"}}
+      {{filter condition="=estatus" field="base.estatus" eq="estatus"}}
+      {{filter condition="=tipoContratacion" field="base.tipoContratacion" in="tipoContratacion"}}
+    {{/find}}
+    {{sort field="_name" distinct="_name"}}
+  {{/view}}
+  {{#view id="plazasVacantesDelPuesto"}}
+    {{#find limit="100"}}
+      {{include field="_name"}}
+      {{include field="base.codigo"}}
+      {{search field="_name"}}
+      {{search field="base.codigo"}}
+      {{filter field="base.estatus" eq="='vacante'"}}
+      {{filter field="base.tipoContratacion" eq="='bolsaTalentos'"}}
+      {{filter condition="=codigoPuesto" field="puesto.codigo" eq="codigoPuesto"}}
+    {{/find}}
+    {{calc field="nombre" value="=calc.concatDash(base.codigo, _name)"}}
+    {{editor display="nombre"}}
+  {{/view}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="base.descripcion"}}
+      {{include field="base.codigo"}}
+      {{include field="base.numero"}}
+      {{include field="base._tipoContratacion"}}
+      {{include field="base._estatus"}}
+      {{include field="puesto.codigo"}}
+      {{include field="puesto.descripcion"}}
+      {{include field="puesto.sueldo"}}
+      {{include field="adscripcion.codigo"}}
+      {{include field="adscripcion.descripcion"}}
+      {{include field="estructuraProgramatica.codigo"}}
+      {{include field="estructuraProgramatica.descripcion"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{search field="_name"}}
+      {{search field="base.codigo"}}
+      {{search field="puesto.codigo"}}
+      {{search field="puesto.descripcion"}}
+      {{search field="base._estatus"}}
+      {{search field="base._tipoContratacion"}}
+      {{search field="base._tipoPlaza"}}
+      {{filter condition="=puesto" field="puesto.codigo" eq="puesto"}}
+      {{filter condition="=estatus" field="base.estatus" eq="estatus"}}
+      {{filter condition="=tipoContratacion" field="base.tipoContratacion" in="tipoContratacion"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="cubo"}}
+    {{#find limit="-1"}}
+      {{include field="base._estatus"}}
+      {{include field="base._subEstatus"}}
+      {{include field="base._tipoContratacion"}}
+      {{include field="base._tipoPlaza"}}
+      {{include field="empleado.horario"}}
+      {{include field="tipoPlaza.descripcion"}}
+      {{include field="adscripcion.descripcion"}}
+      {{include field="empleado.numero"}}
+      {{include field="empleado.nombre"}}
+      {{include field="empleado.apellidoPaterno"}}
+      {{include field="empleado.apellidoMaterno"}}
+      {{include field="puesto.codigo"}}
+      {{include field="puesto.descripcion"}}
+    {{/find}}    
+    {{calc field="_empleado" value="=calc.concatDash(empleado.numero, calc.concat(empleado.nombre, empleado.apellidoPaterno, empleado.apellidoMaterno))"}}
+  {{/view}}
+  {{#cube id="cubo" name="Plazas" view="cubo" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{column field="base._estatus" label="Estatus" width="150"}}
+    {{column field="base._subEstatus" label="Sub Estatus" width="150"}}
+    {{column field="base._tipoContratacion" label="Tipo Contratación" width="150"}}
+    {{row field="tipoPlaza.descripcion" label="Tipo Plaza" width="150"}}
+    {{row field="adscripcion.descripcion" label="Adscripción" width="200"}}
+    {{row field="puesto.codigo" label="Código Puesto" width="100"}}
+    {{row field="puesto.descripcion" label="Descripción Puesto" width="200"}}
+    {{row field="_empleado" label="Empleado" width="250"}}
+    {{row field="empleado.horario" label="Horario" width="100"}}
+    {{count field="_id" label="Conteo" format="#,"}}
+  {{/cube}}
+  {{#browser id="verPromocion" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="pendientes" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true"}}
+    {{param estatus="vacante"}}
+    {{!-- {{param tipoContratacion="pendiente"}} --}}
+  {{/browser}}
+  {{#browser id="pendientesBolsaTalentos" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%"}}
+    {{list itemTemplate="lista" allowSearch="true" allowRefresh="true" allowEdit="true"}}
+    {{param estatus="vacante"}}
+    {{param tipoContratacion="bolsaTalentos"}}
+  {{/browser}}
+  {{#section id="base"}}
+    {{field id="nombre" type="expr" value="=calc.concatValueKey(puesto.descripcion, puesto.codigo)"}}
+  {{/section}}
+{{/define}}
+
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{base.codigo}}
+      <span style="font-size:12px;float:right">{{base._tipoContratacion}}</span>
+      {{!-- <br><span style="font-size:12px;">{{base.descripcion}}</span> --}}
+      <br><span style="font-size:12px;">{{puesto.descripcion}} ({{puesto.codigo}})</span>
+      <span style="font-size:12px;float:right">{{base._estatus}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

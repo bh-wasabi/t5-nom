@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0vlxyx3" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.0.0">
+  <bpmn:collaboration id="flujo">
+    <bpmn:participant id="Participant_1b4pxnl" name="Orden Compra Directa" processRef="Process_abj343d" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_abj343d" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_1y53c73">
+      <bpmn:lane id="Lane_0vu92xc" name="Recursos Materiales">
+        <bpmn:flowNodeRef>ordenCompraDirecta</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>reciboCompra</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1lr6otx</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_1vueovi" name="Tesorería">
+        <bpmn:flowNodeRef>pago</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>pagoConciliado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_0dm295j</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_1f87sht" name="Cuentas por Pagar">
+        <bpmn:flowNodeRef>facturaPorRecibir</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>facturaCompra</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ordenPago</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:sequenceFlow id="Flow_09scn7c" sourceRef="Event_1lr6otx" targetRef="ordenCompraDirecta" />
+    <bpmn:sequenceFlow id="Flow_0382lx2" sourceRef="ordenPago" targetRef="pago" />
+    <bpmn:sequenceFlow id="Flow_01sz6r1" sourceRef="pago" targetRef="pagoConciliado" />
+    <bpmn:sequenceFlow id="Flow_1vmcg0l" sourceRef="pagoConciliado" targetRef="Event_0dm295j" />
+    <bpmn:sequenceFlow id="Flow_127tnla" sourceRef="facturaPorRecibir" targetRef="facturaCompra" />
+    <bpmn:sequenceFlow id="Flow_0v231i1" sourceRef="facturaCompra" targetRef="ordenPago" />
+    <bpmn:sequenceFlow id="Flow_01kjrg6" sourceRef="ordenCompraDirecta" targetRef="facturaPorRecibir" />
+    <bpmn:sequenceFlow id="Flow_0px3cl3" sourceRef="ordenCompraDirecta" targetRef="reciboCompra" />
+    <bpmn:sequenceFlow id="Flow_10vrd7i" sourceRef="reciboCompra" targetRef="ordenCompraDirecta" />
+    <bpmn:task id="ordenCompraDirecta" name="Orden Compra Directa">
+      <bpmn:incoming>Flow_10vrd7i</bpmn:incoming>
+      <bpmn:incoming>Flow_09scn7c</bpmn:incoming>
+      <bpmn:outgoing>Flow_01kjrg6</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0px3cl3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="facturaPorRecibir" name="Factura por Recibir">
+      <bpmn:incoming>Flow_01kjrg6</bpmn:incoming>
+      <bpmn:outgoing>Flow_127tnla</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="facturaCompra" name="Cuentas por Pagar">
+      <bpmn:incoming>Flow_127tnla</bpmn:incoming>
+      <bpmn:outgoing>Flow_0v231i1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="ordenPago" name="Orden de Pago">
+      <bpmn:incoming>Flow_0v231i1</bpmn:incoming>
+      <bpmn:outgoing>Flow_0382lx2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="pago" name="Pago">
+      <bpmn:incoming>Flow_0382lx2</bpmn:incoming>
+      <bpmn:outgoing>Flow_01sz6r1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="pagoConciliado" name="Pago Conciliado">
+      <bpmn:incoming>Flow_01sz6r1</bpmn:incoming>
+      <bpmn:outgoing>Flow_1vmcg0l</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="Event_0dm295j">
+      <bpmn:incoming>Flow_1vmcg0l</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="reciboCompra" name="Recibo Compra">
+      <bpmn:incoming>Flow_0px3cl3</bpmn:incoming>
+      <bpmn:outgoing>Flow_10vrd7i</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:startEvent id="Event_1lr6otx">
+      <bpmn:outgoing>Flow_09scn7c</bpmn:outgoing>
+    </bpmn:startEvent>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="flujo">
+      <bpmndi:BPMNShape id="Participant_1b4pxnl_di" bpmnElement="Participant_1b4pxnl" isHorizontal="true">
+        <dc:Bounds x="159" y="80" width="619" height="530" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1f87sht_di" bpmnElement="Lane_1f87sht" isHorizontal="true">
+        <dc:Bounds x="189" y="240" width="589" height="240" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1vueovi_di" bpmnElement="Lane_1vueovi" isHorizontal="true">
+        <dc:Bounds x="189" y="480" width="589" height="130" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0vu92xc_di" bpmnElement="Lane_0vu92xc" isHorizontal="true">
+        <dc:Bounds x="189" y="80" width="589" height="160" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_10vrd7i_di" bpmnElement="Flow_10vrd7i">
+        <di:waypoint x="500" y="130" />
+        <di:waypoint x="500" y="100" />
+        <di:waypoint x="360" y="100" />
+        <di:waypoint x="360" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0px3cl3_di" bpmnElement="Flow_0px3cl3">
+        <di:waypoint x="410" y="170" />
+        <di:waypoint x="450" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_01kjrg6_di" bpmnElement="Flow_01kjrg6">
+        <di:waypoint x="360" y="210" />
+        <di:waypoint x="360" y="270" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0v231i1_di" bpmnElement="Flow_0v231i1">
+        <di:waypoint x="410" y="420" />
+        <di:waypoint x="450" y="420" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_127tnla_di" bpmnElement="Flow_127tnla">
+        <di:waypoint x="360" y="350" />
+        <di:waypoint x="360" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1vmcg0l_di" bpmnElement="Flow_1vmcg0l">
+        <di:waypoint x="690" y="550" />
+        <di:waypoint x="722" y="550" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_01sz6r1_di" bpmnElement="Flow_01sz6r1">
+        <di:waypoint x="550" y="550" />
+        <di:waypoint x="590" y="550" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0382lx2_di" bpmnElement="Flow_0382lx2">
+        <di:waypoint x="500" y="460" />
+        <di:waypoint x="500" y="510" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09scn7c_di" bpmnElement="Flow_09scn7c">
+        <di:waypoint x="268" y="170" />
+        <di:waypoint x="310" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_0kdnjip_di" bpmnElement="ordenCompraDirecta">
+        <dc:Bounds x="310" y="130" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1uq90r3_di" bpmnElement="facturaPorRecibir">
+        <dc:Bounds x="310" y="270" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0javisn_di" bpmnElement="facturaCompra">
+        <dc:Bounds x="310" y="380" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1192cks_di" bpmnElement="ordenPago">
+        <dc:Bounds x="450" y="380" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0wlbhgk_di" bpmnElement="pago">
+        <dc:Bounds x="450" y="510" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0xz34j9_di" bpmnElement="pagoConciliado">
+        <dc:Bounds x="590" y="510" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0dm295j_di" bpmnElement="Event_0dm295j">
+        <dc:Bounds x="722" y="532" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0l3mtfy_di" bpmnElement="reciboCompra">
+        <dc:Bounds x="450" y="130" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1lr6otx_di" bpmnElement="Event_1lr6otx">
+        <dc:Bounds x="232" y="152" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

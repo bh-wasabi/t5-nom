@@ -1,0 +1,32 @@
+{{#define type="doc" id="_condicion" name="Estadísticas Diagnósticos"}}
+  {{#menu id="menu"}}
+    {{#item text="Ver" icon="bookmark"}}
+      {{item text="(vistas)" type="cube-view-names"}}
+      {{item text="Guardar vista..." icon="save" beginGroup="true" type="cube-view-save"}}
+      {{item text="Ajustes..." icon="preferences" type="cube-view-preferences"}}
+    {{/item}}
+    {{item text="Refrescar" icon="refresh" type="refresh"}}
+  {{/menu}}
+  {{browser id="cubo" menu="menu"}}
+  {{textBox id="codigo" mode="search" showClearButton="true" placeHolder="Código Específico"}}
+{{/define}}
+
+{{#markup}}
+  {{#page}}
+    {{#row}}
+      {{#col small="20%"}}
+        {{widget type="textBox" textBox="codigo"}}
+      {{/col}}
+      {{col small="80%"}}
+    {{/row}}  
+    {{#row}}
+      {{#col small="100%"}}
+        {{#row}}
+          {{#widget type="cube" source="condicion" cube="cubo"}}
+            {{param codigo="#codigo"}}
+          {{/widget}}
+        {{/row}}
+      {{/col}}
+    {{/row}}
+  {{/page}}
+{{/markup}}

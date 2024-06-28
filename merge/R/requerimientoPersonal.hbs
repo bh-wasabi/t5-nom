@@ -1,0 +1,31 @@
+{{#define id="requerimientoPersonal"}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{field id="tieneLicencia" type="expr" value="=@subTipoSolicitud=='licencia'"}}
+    {{field id="tieneLicenciaConGoceSueldo" type="expr" value="=@subTipoSolicitud=='licenciaConGoceSueldo'"}}
+    {{field id="tieneLicenciaSinGoceSueldo" type="expr" value="=@subTipoSolicitud=='licenciaSinGoceSueldo'"}}
+    {{field id="tienePagoRiesgos" type="expr" value="=@subTipoSolicitud=='pagoRiesgos'"}}
+    {{field id="tienePrestacionEconomica" type="expr" value="=@subTipoSolicitud=='prestacionEconomica'"}}
+    {{field id="tieneHorarioRequerido" type="expr" value="=calc.in(@subTipoSolicitud, ['guarderia','lactancia'])"}}
+    {{field id="tieneRegistroHijos" type="expr" value="=calc.in(@subTipoSolicitud, ['guarderia','lactancia'])"}}
+    {{field id="tieneCambioJornada" type="expr" value="=calc.in(@subTipoSolicitud, ['ampliacionHorario','reduccionHorario'])"}}
+    {{field id="tieneCambioAdscripcion" type="expr" value="=@subTipoSolicitud=='cambioAdscripcion'"}}
+    {{field id="esBecaTiempo" type="expr" value="=@subTipoSolicitud=='becaTiempo'"}}
+    {{field id="esCedulaPromocion" type="expr" value="=@subTipoSolicitud=='cedulaPromocion'"}}
+    
+    {{#field id="servicio"}}
+      {{onChange clearFields="subTipoSolicitud"}}
+    {{/field}}
+    {{#field id="subTipoSolicitud"}}
+      {{#editor}}
+        {{param partOf="=servicio"}}
+     {{/editor}}
+    {{/field}}
+    {{#field id="motivo"}}
+      {{#editor}}
+        {{param servicio="=servicio"}}
+        {{param partOf="=subTipoSolicitud"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

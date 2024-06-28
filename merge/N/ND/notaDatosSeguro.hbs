@@ -1,0 +1,17 @@
+{{#define id="notaDatosSeguro"}}
+  {{action id="afectar" error="=calc.getRef(base, 'seguro.base.tipoPrograma')=='insabi'&&!calc.hasRole('cuentaPacienteGestion')?'No Tiene Acceso a Establecer un Programa INSABI':null" errorType="warning"}}  
+
+  {{#view id="reporteDerechohabienciaPorFecha"}}
+    {{#find limit="-1"}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="base"}}
+      {{include field="persona"}}
+      {{sort field="_created.date" direction="asc"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{filter condition="=desde" field="_created.date" gt="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=hasta"}}      
+    {{/find}}
+    {{calc field="edadActual" value="=Math.trunc(calc.fromNowFloat(persona.fechaNacimiento))"}}
+  {{/view}}
+{{/define}}

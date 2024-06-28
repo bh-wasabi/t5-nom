@@ -1,0 +1,240 @@
+{{#define type="doc" id="_central" name="Central Enfermeras"}}
+  {{#browser id="auxiliarAdmisionPreAlta" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="hospitalizacionProcedimientosUrgentes" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="hospitalizacionProcedimientosUrgentes"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="hospitalizacionObstetricos1erPiso" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="hospitalizacionObstetricos1erPiso"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="hospitalizacionCrecimientoDesarrollo" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="hospitalizacionCrecimientoDesarrollo"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="hospitalizacionClinicosAdultos1erPiso" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="hospitalizacionClinicosAdultos1erPiso"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="hospitalizacionClinicosPediatria1erPiso" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="hospitalizacionClinicosPediatria1erPiso"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="hospitalizacionClinicosLactantes1erPiso" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="hospitalizacionClinicosLactantes1erPiso"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="hospitalizacionQuirurgicosPediatria1erPiso" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="hospitalizacionQuirurgicosPediatria1erPiso"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="hospitalizacionQuirurgicosAdultos2oPiso" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="hospitalizacionQuirurgicosAdultos2oPiso"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="hospitalizacionClinicosAdultos4oPiso" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="hospitalizacionClinicosAdultos4oPiso"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="hospitalizacionClinicosAdultos5oPiso" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="hospitalizacionClinicosAdultos5oPiso"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="hospitalizacion3erPiso" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="hospitalizacion3erPiso"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="hospitalizacionUCIA" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="hospitalizacionUCIA"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="hospitalizacionUCIA2" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="hospitalizacionUCIA2"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="hospitalizacionUCIA3" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="hospitalizacionUCIA3"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="hospitalizacionUCIA4" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="hospitalizacionUCIA4"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="hospitalizacionUCIA5" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="hospitalizacionUCIA5"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="hospitalizacionUTIA" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="hospitalizacionUTIA"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="hospitalizacionUTIP" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="hospitalizacionUTIP"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="hospitalizacionUCIP" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="hospitalizacionUCIP"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="hospitalizacionUCIP2" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="hospitalizacionUCIP2"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="hospitalizacionUCIN" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="hospitalizacionUCIN"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="hospitalizacionUTIN" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="hospitalizacionUTIN"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="hospitalizacionUTPH" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="hospitalizacionUTPH"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="cirugiaPost" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="cirugia"}}
+    {{param momentRequest="='post'"}}
+    {{param _momentRequest="='Post'"}}
+    {{param requestRef="='join.contexto.cirugia.info.solicitud'"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="cirugiaAmbulatoriaPost" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="cirugiaAmbulatoria"}}
+    {{param momentRequest="='post'"}}
+    {{param _momentRequest="='Post'"}}
+    {{param requestRef="='join.contexto.cirugiaAmbulatoria.info.solicitud'"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="tococirugiaPost" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="tococirugia"}}
+    {{param momentRequest="='post'"}}
+    {{param _momentRequest="='Post'"}}
+    {{param requestRef="='join.contexto.tococirugia.info.solicitud'"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="endourologiaPost" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="endourologia"}}
+    {{param momentRequest="='post'"}}
+    {{param _momentRequest="='Post'"}}
+    {{param requestRef="='join.contexto.endourologia.info.solicitud'"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="hemodinamiaPost" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="hemodinamia"}}
+    {{param momentRequest="='post'"}}
+    {{param _momentRequest="='Post'"}}
+    {{param requestRef="='join.contexto.hemodinamia.info.solicitud'"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="braquiterapiaPost" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="braquiterapia"}}
+    {{param momentRequest="='post'"}}
+    {{param _momentRequest="='Post'"}}
+    {{param requestRef="='join.contexto.braquiterapia.info.solicitud'"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="patologia" source="cama" view="central" showDoc="true" docOrientation="vertical" docPosition="75%" docId="=(@persona&&@persona.id)||@_id" docType="=(@persona&&@persona.id)?'persona':'cama'" color="teal"}}
+    {{param central="patologia"}}
+    {{list itemTemplate="central" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+{{/define}}
+
+{{#markup}}
+  {{#template id="central"}}
+    <div class="list-material">
+      <li class="has-action-left">
+        <div class="list-action-left"><i class="icon ion-flag text-{{#if color}}{{color}}{{else}}grey{{/if}}"></i></div>
+        <div class="list-content">
+          <span class="title">{{_name}}</span>
+          {{#if persona}}
+            <span style="font-size:12px;"><strong>{{nombre}}</strong></span><br>
+            <span style="font-size:12px;">{{persona.clave}}</span><br>
+            {{#if _readOnly}}
+            <span class="read-only" style="font-size:12px;"><strong>&nbsp;&nbsp;Solo Lectura&nbsp;&nbsp;</strong></span>
+            {{/if}}          
+            {{#if join.contexto.esCasoMedicoLegal}}
+            <span class="cml" style="font-size:12px;"><strong>&nbsp;&nbsp;CML&nbsp;&nbsp;</strong></span>
+            {{/if}}
+            {{#if join.contexto.cuentaCerrada}}
+            <span class="closed-account" style="font-size:12px;"><strong>&nbsp;&nbsp;Cuenta Cerrada&nbsp;&nbsp;</strong></span>
+            {{else}}
+              {{#if join.contexto.puedeAlta}}
+              <span class="puede-alta" style="font-size:12px;"><strong>&nbsp;&nbsp;Alta&nbsp;&nbsp;</strong></span>
+              {{else}}
+                {{#if join.contexto.puedeCerrar}}
+                <span class="puede-alta" style="font-size:12px;"><strong>&nbsp;&nbsp;Alta&nbsp;&nbsp;</strong></span>
+                {{else}}
+                  {{#if join.contexto.preAlta}}
+                  <span class="pre-alta" style="font-size:12px;"><strong>&nbsp;&nbsp;Pre Alta&nbsp;&nbsp;</strong></span>
+                  {{/if}}
+                {{/if}}
+              {{/if}}
+            {{/if}}
+            {{#if join._flags}}
+              {{#with join._flags}}
+                {{#if defuncion}}
+                <span class="fondo-{{defuncion.color}}" style="font-size:12px;"><strong>&nbsp;&nbsp;{{defuncion.name}}&nbsp;&nbsp;</strong></span>
+                {{/if}}
+                {{#if cancerBucal}}
+                <span class="fondo-{{cancerBucal.color}}" style="font-size:12px;"><strong>&nbsp;&nbsp;{{cancerBucal.name}}&nbsp;&nbsp;</strong></span>
+                {{/if}}
+                {{#if creher}}
+                <span class="fondo-{{creher.color}}" style="font-size:12px;"><strong>&nbsp;&nbsp;{{creher.name}}&nbsp;&nbsp;</strong></span>
+                {{/if}}
+                {{#if hepatitis}}
+                <span class="fondo-{{hepatitis.color}}" style="font-size:12px;"><strong>&nbsp;&nbsp;{{hepatitis.name}}&nbsp;&nbsp;</strong></span>
+                {{/if}}
+                {{#if labioPaladarHendido}}
+                <span class="fondo-{{labioPaladarHendido.color}}" style="font-size:12px;"><strong>&nbsp;&nbsp;{{labioPaladarHendido.name}}&nbsp;&nbsp;</strong></span>
+                {{/if}}
+                {{#if iaas}}
+                <span class="fondo-{{iaas.color}}" style="font-size:12px;"><strong>&nbsp;&nbsp;{{iaas.name}}&nbsp;&nbsp;</strong></span>
+                {{/if}}
+                {{#if suive}}
+                <span class="fondo-{{suive.color}}" style="font-size:12px;"><strong>&nbsp;&nbsp;{{suive.name}}&nbsp;&nbsp;</strong></span>
+                {{/if}}
+                {{#if pic}}
+                <span class="fondo-{{pic.color}}" style="font-size:12px;"><strong>&nbsp;&nbsp;{{pic.name}}&nbsp;&nbsp;</strong></span>
+                {{/if}}
+                {{#if pei}}
+                <span class="fondo-{{pei.color}}" style="font-size:12px;"><strong>&nbsp;&nbsp;{{pei.name}}&nbsp;&nbsp;</strong></span>
+                {{/if}}
+                {{#if aislamiento}}
+                  {{#with aislamiento.data}}
+                    {{#if verde}}
+                    <br><span style="font-size:12px;" class="color-verde">Aislamiento Precauciones Gotas</span>
+                    {{/if}}
+                    {{#if azul}}
+                    <br><span style="font-size:12px;" class="color-azul">Aislamiento Precauciones Vía Aérea</span>
+                    {{/if}}
+                    {{#if amarillo}}
+                    <br><span style="font-size:12px;" class="color-amarillo">Aislamiento Precauciones Contacto</span>
+                    {{/if}}
+                    {{#if naranja}}
+                    <br><span style="font-size:12px;" class="color-naranja">Aislamiento Precauciones Contacto Plus</span>
+                    {{/if}}
+                    {{#if gris}}
+                    <br><span style="font-size:12px;" class="color-gris-obscuro">Aislamiento Precauciones Protección</span>
+                    {{/if}}
+                  {{/with}}
+                {{/if}}
+              {{/with}}
+              <br>
+            {{/if}}
+            {{#if ingreso.servicio}}
+            <span style="font-size:12px;">{{ingreso._servicio}}</span><br>
+            {{/if}}
+          {{/if}}
+          <span style="font-size:12px;">{{base._central}}</span>
+          <span style="font-size:12px;float:right;"><strong>{{base._estatus}}{{#if temporal}} ({{temporal._central}}){{/if}}</strong></span>
+          {{#if join.detalle.notaAsignacionEnfermeraPaciente.base._enfermeraResponsable}}
+          <br><span style="color:green;font-size:12px;"><strong>Enfermero(a): {{join.detalle.notaAsignacionEnfermeraPaciente.base._enfermeraResponsable}}</strong></span>
+          {{/if}}
+        </div>
+      </li>
+    </div>
+  {{/template}}
+{{/markup}}

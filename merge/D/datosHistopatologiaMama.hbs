@@ -1,0 +1,10 @@
+{{#define id="datosHistopatologiaMama"}}
+  {{#section id="base"}}
+    {{field id="esDerecha" type="expr" value="=mama=='mamaDerecha'"}}
+    {{field id="esIzquierda" type="expr" value="=mama=='mamaIzquierda'"}}
+    {{field id="esRegionDerecha" type="expr" value="=mama=='regionDerecha'"}}
+    {{field id="esRegionIzquierda" type="expr" value="=mama=='regionIzquierda'"}}
+    {{field id="tieneEscalaMid" type="expr" value="=calc.in(mama,['mamaDerecha','mamaIzquierda','regionDerecha','regionIzquierda','biopsia'])"}}+
+    {{field id="esBiopsia" type="expr" value="=calc.in(mama,['biopsia'])"}}
+  {{/section}}
+{{/define}}

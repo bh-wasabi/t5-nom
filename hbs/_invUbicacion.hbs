@@ -1,0 +1,240 @@
+{{#define type="doc" id="_invUbicacion" name="Inventario"}}
+
+  {{#action id="lotesProximosVencer" type="sub-link" label="Lotes Próximos a Vencer" color="green" visibleMode="close" userRole="verInventarioLotesProximosVencer" }}
+    {{#link href="'/_invLotesProximosVencer/lista'" name="='Lotes Próximos a Vencer - '+_params._name" title="='Lotes Próximos a Vencer - '+_params._name"}}
+      {{param ubicacion="=_params.id"}}
+    {{/link}}
+  {{/action}}  
+  {{#action id="historialUbicacion" type="sub-link" label="Historial" color="green" visibleMode="close"}}
+    {{#link href="'/nota/lista'" name="='Historial - '+_params._name" title="='Historial - '+_params._name"}}
+      {{param ubicacion="=_params.id"}}
+    {{/link}}
+  {{/action}}  
+
+  {{action id="menuReportesAlmacen" type="menu" menu="menuReportesAlmacen" label="Reportes" color="blue-grey" visibleMode="close"}}
+  {{#menu id="menuReportesAlmacen" color="blue-grey"}}
+    {{item action="verKardex" text="Kardex" userRole="costosInventario"}}
+    {{item action="verCostoPromedio" text="Valuación Inventario" userRole="costosInventario"}}
+    {{item action="verEntradas" text="Entradas"}}
+    {{item action="verSalidas" text="Salidas"}}
+    {{item action="verMinimosMaximos" text="Mínimos y Máximos" beginGroup="true"}}
+  {{/menu}}  
+
+  {{#menu id="menu"}}
+    {{#item text="Ver" icon="bookmark"}}
+      {{item text="(vistas)" type="cube-view-names"}}
+      {{item text="Guardar vista..." icon="save" beginGroup="true" type="cube-view-save"}}
+      {{item text="Ajustes..." icon="preferences" type="cube-view-preferences"}}
+    {{/item}}
+    {{item text="Refrescar" icon="refresh" type="refresh"}}
+  {{/menu}}
+  {{browser id="cubo" menu="menu"}}
+  {{#report id="kardex" pageOrientation="landscape" fontSize="8" header="preliminar-encabezado" showStandarFooter="true" source="mov" view="kardexAlmacen"}}
+    {{#stack}}
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{row expr="=calc.concat('Movimientos -', _query._almacen)" fontSize="10" bold="true" margin="-10,0,0,0"}}
+      {{row expr="=calc.concat('Desde:', moment(_query.desde).format('DD/MMM/YYYY'), '- Hasta:', moment(_query.hasta).format('DD/MMM/YYYY'))" fontSize="8" bold="true" margin="-10,0,0,0"}}
+      {{#table section="_items" fontSize="6" titleStyle="title" layout="lightHorizontalLines" headerStyle="field2" margin="-10,0,0,10" fontSize="8" widths="50,40,35,35,35,35,35,30,30,30,35,35,35,35,35"}}
+        {{column field="codigo" label="Código" type="text" total="count"}}
+        {{column field="descripcion" label="Descripción" type="text"}}
+        {{column field="movimiento" label="Movimiento"}}
+        {{column field="_origen" label="Origen"}}
+        {{column field="_destino" label="Destino"}}
+        {{column field="_usuarioSolicitante" label="Usuario/Solicitante"}}
+        {{column field="fecha" label="Fecha/Hora" type="date" format="DD/MMM/YYYY h:mma"}}
+        {{column field="cantidadFactor" label="Cantidad" type="number" format="#," align="right" total="sum"}}
+        {{!-- {{column field="entrada" label="Entrada" type="number" format="#," align="right" total="sum"}}
+        {{column field="salida" label="Salida" type="number" format="#," align="right" total="sum"}} --}}
+        {{column field="existencia" label="Existencia" type="number" format="#," align="right"}}
+        {{column field="_unidadExistencia"  label="Unidad Medida"}}
+        {{column field="_lote" label="Lote/Caducidad"}}
+        {{column field="costoUnitario" label="Costo Unitario" type="number" align="right" format="currency"}}
+        {{column field="costoPromedio" label="Costo Promedio" type="number" align="right" format="currency"}}
+        {{column field="costoTotal" label="Costo Total Movimiento" type="number" align="right" total="sum" format="currency"}}
+        {{column field="costoAcum" label="Valor Inventario" type="number" align="right" format="currency"}}
+      {{/table}}
+    {{/stack}}
+  {{/report}}
+
+  {{#report id="costoPromedio" pageOrientation="landscape" fontSize="8" header="preliminar-encabezado" showStandarFooter="true" source="mov" view="costoPromedio"}}
+    {{#stack}}
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{row expr="=calc.concat('Valuación Inventario -', _query._almacen)" fontSize="10" bold="true" margin="-10,0,0,0"}}
+      {{#table section="_items" fontSize="6" titleStyle="title" layout="lightHorizontalLines" headerStyle="field2" margin="-10,0,0,10" fontSize="8" widths="55,270,45,45,45,45"}}
+        {{column field="codigo" label="Código" type="text" total="count"}}
+        {{column expr="=descripcion" label="Descripción" type="text"}}
+        {{column field="cantidad" label="Existencia" type="number" total="sum" format="#," align="right"}}
+        {{column expr="=_unidadExistencia" label="Unidad Medida"}}
+        {{column field="costoPromedio" label="Costo Promedio" type="number" align="right" format="currency"}}
+        {{column field="importe" label="Costo Total" type="number" align="right" total="sum" format="currency"}}
+      {{/table}}
+    {{/stack}}
+  {{/report}}
+  {{#action id="verCostoPromedio" type="report-pdf" hide="true" report="costoPromedio" fileName="='valuacionInventario-'+_params._name" label="Valuación Inventario" color="blue-grey" visibleMode="close"}}
+    {{param almacen="=_params.id"}}
+    {{param _almacen="=_params._name"}}
+    {{ask field="_export" type="select" label="Formato" keys="pdf,xlsx,csv" names="PDF,Excel,CSV" value="pdf"}}
+  {{/action}}
+
+  {{#action id="verKardex" type="report-pdf" hide="true" report="kardex" fileName="='kardex-'+_params._name" label="Kardex" color="blue-grey" visibleMode="close"}}
+    {{param almacen="=_params.id"}}
+    {{param _almacen="=_params._name"}}
+    {{ask field="codigo" type="text" case="upper" label="Código Específico"}}
+    {{ask field="desde" type="date" label="Desde"}}
+    {{ask field="hasta" type="date" label="Hasta"}}
+    {{ask field="_export" type="select" label="Formato" keys="pdf,xlsx,csv" names="PDF,Excel,CSV" value="pdf"}}
+  {{/action}}
+  {{#report id="entradas" pageOrientation="landscape" fontSize="8" header="preliminar-encabezado" showStandarFooter="true" source="mov" view="entradasAlmacen"}}
+    {{#stack}}
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{row expr="=calc.concat('Entradas -', _query._almacen)" fontSize="10" bold="true" margin="-10,0,0,0"}}
+      {{row expr="=calc.concat('Desde:', moment(_query.desde).format('DD/MMM/YYYY'), '- Hasta:', moment(_query.hasta).format('DD/MMM/YYYY'))" fontSize="8" bold="true" margin="-10,0,0,0"}}
+      {{#table section="_items" fontSize="6" titleStyle="title" layout="lightHorizontalLines" headerStyle="field2" margin="-10,0,0,10" fontSize="8" widths="55,170,70,50,70,22,40,45,40,45"}}
+        {{column field="codigo" label="Código" type="text" total="count"}}
+        {{column field="descripcion" label="Descripción" type="text"}}
+        {{column field="movimiento" label="Movimiento"}}
+        {{column field="_origen" label="Origen"}}
+        {{column field="fecha" label="Fecha/Hora" type="date" format="DD/MMM/YYYY h:mma"}}
+        {{column field="entrada" label="Entrada" type="number" format="#," align="right" total="sum"}}
+        {{column field="_unidadExistencia"  label="Unidad Medida"}}
+        {{column field="_lote" label="Lote/Caducidad"}}
+        {{column field="costoUnitario" label="Costo Unitario" type="number" align="right" format="currency"}}
+        {{column field="costoTotal" label="Costo Total" type="number" align="right" total="sum" format="currency"}}
+      {{/table}}
+    {{/stack}}
+  {{/report}}
+  {{#action id="verEntradas" type="report-pdf" hide="true" report="entradas" fileName="='entradas-'+_params._name" label="Entradas" color="blue-grey" visibleMode="close"}}
+    {{param almacen="=_params.id"}}
+    {{param _almacen="=_params._name"}}
+    {{ask field="codigo" type="text" case="upper" label="Código Específico"}}
+    {{ask field="desde" type="date" label="Desde"}}
+    {{ask field="hasta" type="date" label="Hasta"}}
+    {{ask field="_export" type="select" label="Formato" keys="pdf,xlsx,csv" names="PDF,Excel,CSV" value="pdf"}}
+  {{/action}}
+  {{#report id="salidas" pageOrientation="landscape" fontSize="8" header="preliminar-encabezado" showStandarFooter="true" source="mov" view="salidasAlmacen"}}
+    {{#stack}}
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{row expr="=calc.concat('Salidas -', _query._almacen)" fontSize="10" bold="true" margin="-10,0,0,0"}}
+      {{row expr="=calc.concat('Desde:', moment(_query.desde).format('DD/MMM/YYYY'), '- Hasta:', moment(_query.hasta).format('DD/MMM/YYYY'))" fontSize="8" bold="true" margin="-10,0,0,0"}}
+      {{#table section="_items" fontSize="6" titleStyle="title" layout="lightHorizontalLines" headerStyle="field2" margin="-10,0,0,10" fontSize="8" widths="55,110,45,45,45,45,40,22,40,45,40,45"}}
+        {{column field="codigo" label="Código" type="text" total="count"}}
+        {{column field="descripcion" label="Descripción" type="text"}}
+        {{column field="movimiento" label="Movimiento"}}
+        {{column field="_destino" label="Destino"}}
+        {{column field="_centralDestino" label="Central/Destino"}}
+        {{column field="_usuarioSolicitante" label="Usuario/Solicitante"}}
+        {{column field="fecha" label="Fecha/Hora" type="date" format="DD/MMM/YYYY h:mma"}}
+        {{column field="salida" label="Salida" type="number" format="#," align="right" total="sum"}}
+        {{column field="_unidadExistencia"  label="Unidad Medida"}}
+        {{column field="_lote" label="Lote/Caducidad"}}
+        {{column field="costoUnitario" label="Costo Unitario" type="number" align="right" format="currency"}}
+        {{column field="costoTotal" label="Costo Total" type="number" align="right" total="sum" format="currency"}}
+      {{/table}}
+    {{/stack}}
+  {{/report}} 
+  {{#action id="verSalidas" type="report-pdf" hide="true" report="salidas" fileName="='salidas-'+_params._name" label="Salidas" color="blue-grey" visibleMode="close"}}
+    {{param almacen="=_params.id"}}
+    {{param _almacen="=_params._name"}}
+    {{ask field="codigo" type="text" case="upper" label="Código Específico"}}
+    {{ask field="desde" type="date" label="Desde"}}
+    {{ask field="hasta" type="date" label="Hasta"}}
+    {{ask field="_export" type="select" label="Formato" keys="pdf,xlsx,csv" names="PDF,Excel,CSV" value="pdf"}}
+  {{/action}}
+  {{#report id="minimosMaximos" pageOrientation="landscape" fontSize="8" header="preliminar-encabezado" showStandarFooter="true" source="articulo" view="minimosMaximos"}}
+    {{#stack}}
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{#row expr="=_query._almacen" style="fieldCenter" fontSize="12" bold="true" color="#2b7b47"}}
+      {{/row}}
+    {{/stack}}
+    {{#stack}}
+      {{row text="Mínimos y Máximos" fontSize="10" bold="true" margin="-10,0,0,10"}}
+      {{#table widths="60,300,70,30,30" section="_items" fontSize="6" titleStyle="title" layout="lightHorizontalLines" headerStyle="field2" margin="-10,0,0,10" fontSize="8"}}
+        {{column expr="base.codigo" label="Código" type="text"}}
+        {{column expr="base.descripcion" label="Descripción" type="text"}}
+        {{column expr="base._tipoArticulo" label="Tipo Artículo" type="text"}}
+        {{column expr="base.articuloUbicacion.base.minimo" label="Mínimo" type="number" align="right" format="#,"}}
+        {{column expr="base.articuloUbicacion.base.maximo" label="Máximo" type="number" align="right" format="#,"}}
+      {{/table}}
+    {{/stack}}
+  {{/report}}
+  {{#action id="verMinimosMaximos" type="report-pdf" hide="true" report="minimosMaximos" fileName="='minimosMaximos-'+_params._name" label="Mínimos y Máximos" color="blue-grey" visibleMode="close"}}
+    {{param ubicacion="=_params.id"}}
+  {{/action}}
+
+  {{#report id="abajoDelMinimo" pageOrientation="landscape" fontSize="8" header="preliminar-encabezado" showStandarFooter="true" source="articulo" view="abajoDelMinimo"}}
+    {{#stack}}
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{#row expr="=_query._almacen" style="fieldCenter" fontSize="12" bold="true" color="#2b7b47"}}
+      {{/row}}
+    {{/stack}}
+    {{#stack}}
+      {{row text="Abajo del Mínimo" fontSize="10" bold="true" margin="-10,0,0,10"}}
+      {{#table widths="60,300,70,30,30" section="_items" fontSize="6" titleStyle="title" layout="lightHorizontalLines" headerStyle="field2" margin="-10,0,0,10" fontSize="8"}}
+        {{column expr="base.codigo" label="Código" type="text"}}
+        {{column expr="base.descripcion" label="Descripción" type="text"}}
+        {{column expr="base._tipoArticulo" label="Tipo Artículo" type="text"}}
+        {{column expr="base.articuloUbicacion.base.minimo" label="Mínimo" type="number" align="right" format="#,"}}
+        {{column expr="existencia" label="Existencia" type="number" align="right" format="#,"}}
+      {{/table}}
+    {{/stack}}
+  {{/report}}
+  {{#action id="verAbajoDelMinimo" type="report-pdf" hide="true" report="abajoDelMinimo" fileName="='abajoDelMinimo-almacenGeneral'" label="Abajo del Mínimo" color="blue-grey" visibleMode="close"}}
+    {{param ubicacion="=_params.id"}}
+  {{/action}}
+
+  {{#report id="arribaDelMaximo" pageOrientation="landscape" fontSize="8" header="preliminar-encabezado" showStandarFooter="true" source="articulo" view="arribaDelMaximo"}}
+    {{#stack}}
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{#row expr="=_query._almacen" style="fieldCenter" fontSize="12" bold="true" color="#2b7b47"}}
+      {{/row}}
+    {{/stack}}
+    {{#stack}}
+      {{row text="Arriba del Máximo" fontSize="10" bold="true" margin="-10,0,0,10"}}
+      {{#table widths="60,300,70,30,30" section="_items" fontSize="6" titleStyle="title" layout="lightHorizontalLines" headerStyle="field2" margin="-10,0,0,10" fontSize="8"}}
+        {{column expr="base.codigo" label="Código" type="text"}}
+        {{column expr="base.descripcion" label="Descripción" type="text"}}
+        {{column expr="base._tipoArticulo" label="Tipo Artículo" type="text"}}
+        {{column expr="base.articuloUbicacion.base.maximo" label="Máximo" type="number" align="right" format="#,"}}
+        {{column expr="existencia" label="Existencia" type="number" align="right" format="#,"}}
+      {{/table}}
+    {{/stack}}
+  {{/report}}
+  {{#action id="verArribaDelMaximo" type="report-pdf" hide="true" report="arribaDelMaximo" fileName="='arribaDelMaximo-almacenGeneral'" label="Arriba del Máximo" color="blue-grey" visibleMode="close"}}
+    {{param ubicacion="=_params.id"}}
+  {{/action}}
+{{/define}}
+
+{{#markup}}
+  {{#page}}
+    {{#row}}
+      {{#col small="100%"}}
+        {{#row}}
+          {{#widget type="cube" source="mov" cube="inv"}}
+            {{param id="=id"}}
+          {{/widget}}
+        {{/row}}
+      {{/col}}
+    {{/row}}
+  {{/page}}
+{{/markup}}

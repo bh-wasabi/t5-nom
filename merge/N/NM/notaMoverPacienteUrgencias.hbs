@@ -1,0 +1,29 @@
+{{#define id="notaMoverPacienteUrgencias"}}
+  {{param attribute1="=base.destinoEnUrgencias"}}
+  {{param attribute2="=base.tipoPaciente"}}
+  {{#section id="base"}}
+    {{field id="tipoPaciente" type="expr" value="=calc.getRef(base, 'solicitud._attributes.2')"}}
+    {{field id="tieneCama" type="expr" value="=@destinoEnUrgencias!='casa'"}}
+    {{#field id="destinoEnUrgencias"}}
+      {{onChange clearFields="central,cama"}}
+    {{/field}}
+    {{#field id="central"}}
+      {{onChange clearFields="cama"}}
+      {{#editor}}
+        {{param servicio="='urgencias'"}}
+        {{param subServicio="=destinoEnUrgencias"}}
+      {{/editor}}
+    {{/field}}  
+    {{#field id="cama"}}
+      {{#editor alwaysLoad="true"}}
+[.#if esMulti.]
+        {{param servicio="='urgencias'"}}
+        {{param central="=@central||'(null)'"}}
+[.else.]            
+        {{param central="=fn('centralUrgencias', @tipoPaciente, @destinoEnUrgencias)"}}
+[./if.]        
+        {{param estatus="='limpia'"}}
+      {{/editor}}
+    {{/field}}  
+  {{/section}}
+{{/define}}

@@ -1,0 +1,23 @@
+{{#define id="prestadorServicios"}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base.estatus"}}
+      {{sort field="_name" direction="asc"}}
+      {{search field="_name"}}
+    {{/find}}
+  {{/view}}
+  {{action id="eliminar" hide="true"}}
+  {{#section id="base"}}
+    {{field id="nombreCompleto" type="expr" label="Nombre" value="nombre"}}
+    {{field id="esPersonaMoral" type="expr" value="=@tipoPersona=='persona-moral'"}}
+    {{field id="esPersonaFisica" type="expr" value="=@tipoPersona=='persona-fisica'"}}
+  {{/section}}  
+{{/define}} 
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}</br>
+      <span style="font-size:12px;">{{base._estatus}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

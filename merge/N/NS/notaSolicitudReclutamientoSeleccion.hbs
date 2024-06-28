@@ -1,0 +1,14 @@
+{{#define id="notaSolicitudReclutamientoSeleccion"}}  
+  {{#action id="afectar" error="=calc.hasValue(calc.getRef(base.reclutamientoSeleccion, 'base.codigo'))?null:'Falta Indicar el Puesto'" success="Su Solicitud de Empleo<br>Fue Enviada con Éxito."}} {{!-- title="Solicitud Enviada con Éxito" message="Para que su solicitud de empleo sea considerada deberá adjuntar la documentación pendiente que se muestra en su escritorio como <strong>Documentación Pendiente</strong>" --}}
+    {{#update section="base"}}
+      {{setRef ref="reclutamientoSeleccion.base.vencimiento" value="=calc.dueDate(reclutamientoSeleccion.base.vencimiento, 'atencion', calc.dueTimes('reclutamientoSeleccion', reclutamientoSeleccion.base.subTipoSolicitud, reclutamientoSeleccion.base.motivo, reclutamientoSeleccion.base.momentoDieta, reclutamientoSeleccion.base.criticidadZona, reclutamientoSeleccion.base.tiempos))"}}
+      {{setRef ref="reclutamientoSeleccion.base.alerta"      value="=calc.alertDate(reclutamientoSeleccion.base.vencimiento, 'atencion', calc.dueTimes('reclutamientoSeleccion', reclutamientoSeleccion.base.subTipoSolicitud, reclutamientoSeleccion.base.motivo, reclutamientoSeleccion.base.momentoDieta, reclutamientoSeleccion.base.criticidadZona, reclutamientoSeleccion.base.tiempos))"}}
+    {{/update}}
+  {{/action}}
+  {{#section id="base"}}
+    {{field id="manifiesto" type="expr" value="=calc.concat('Manifiesto que',base._familiaresLaborando,'tengo familiares laborando en esta institución. Autorizo al Hospital Regional de Alta Especialidad de Ixtapaluca, el envío de información referente a cuestiones institucionales, así como información que compete a mis documentos personales, al siguiente correo electrónico y proporciono el siguiente teléfono para los mismo fines.')"}}
+    {{field id="autorizacion" type="expr" value="=calc.concat('Autorizo',base._autorizoUsoDatosPersonales,'consiento y autorizo expresamente al Hospital Regional de Alta Especialidad de Ixtapaluca, que mis datos personales sean tratados y transmitidos por medio impreso a empresas e instituciones del mismo grupo de interés, para ser considerado como posible candidato en alguna oferta laboral distinta a la solicitada en está institución, conforme a los términos y condiciones señaladas en los artículos 97, 98, Fracción II de la Ley Federal de Transparencia y Acceso a la Información Pública, no teniendo ni reservando ninguna acción o derecho contra del Hospital Regional de Alta Especialidad de Ixtapaluca.')"}}
+    {{validator type="expr" validIf="=calc.hasValue(calc.getRef(@reclutamientoSeleccion, 'base.codigo'))" message="Falta Indicar el Puesto"}}
+    {{validator type="expr" validIf="=calc.isTrue(@autorizoUsoDatosPersonales)" message="Es Necesario Autorizar el Uso Datos Personales para Continuar"}}
+  {{/section}}
+{{/define}}

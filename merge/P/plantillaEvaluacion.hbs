@@ -1,0 +1,165 @@
+{{#define id="plantillaEvaluacion"}}
+  {{param name="=_params._tipo||'Plantilla'"}}
+  {{action id="eliminar" userRole="eliminarPlantillasEvaluacion"}}
+  {{#action id="afectar" error="=calc.findWhere(adjuntos,{referencia:'Instrucciones'})&&calc.findWhere(adjuntos,{referencia:'Bibliografía'})?null:'Falta Adjuntar Instrucciones o Bibliografía'"}}
+    {{#update section="base"}}
+      {{set instrucciones="=calc.findWhere(adjuntos,{referencia:'Instrucciones'}).url"}}
+      {{set bibliografia="=calc.findWhere(adjuntos,{referencia:'Bibliografía'}).url"}}
+    {{/update}}
+  {{/action}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base"}}
+      {{filter condition="=tipo" field="base.tipo" eq="=tipo"}}
+      {{filter condition="=momentoEvaluacion" field="base.momentoEvaluacion" in="=momentoEvaluacion"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{sort field="_name" direction="asc"}}
+      {{search field="_name"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="plantillasEvaluacion"}}
+    {{#find}}
+      {{include field="base"}}
+      {{filter field="base.tipo" eq="='plantillaEvaluacion'"}}
+      {{filter condition="=momentoEvaluacion" field="base.momentoEvaluacion" in="=momentoEvaluacion"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{sort field="_name" direction="asc"}}
+      {{search field="_name"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="plantillasCapacitacionImpacto"}}
+    {{#find}}
+      {{include field="base"}}
+      {{filter field="base.tipo" eq="='plantillaCapacitacion'"}}
+      {{filter field="base.tipoCuestionario" eq="='impacto'"}}
+      {{filter condition="=momentoEvaluacion" field="base.momentoEvaluacion" in="=momentoEvaluacion"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{sort field="_name" direction="asc"}}
+      {{search field="_name"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="plantillasCapacitacionReaccion"}}
+    {{#find}}
+      {{include field="base"}}
+      {{filter field="base.tipo" eq="='plantillaCapacitacion'"}}
+      {{filter field="base.tipoCuestionario" eq="='reaccion'"}}
+      {{filter condition="=momentoEvaluacion" field="base.momentoEvaluacion" in="=momentoEvaluacion"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{sort field="_name" direction="asc"}}
+      {{search field="_name"}}
+    {{/find}}
+  {{/view}}
+  {{#section id="base"}}
+    {{field id="tipo" defaultValue="=_params.tipo" readOnly="true"}}
+    {{field id="esPlantillaEvaluacion" type="expr" value="=@tipo==='plantillaEvaluacion'"}}
+    {{field id="esPlantillaCapacitacion" type="expr" value="=@tipo==='plantillaCapacitacion'"}}
+    {{field id="esCompetenciaEspecifica" type="expr" value="=@tipoCompetencia==='competenciasEspecificas'"}}
+    {{#field id="direccion"}}
+      {{onChange clearFields="subDireccion,unidadDireccion,servicios"}}
+    {{/field}}
+    {{#field id="subDireccion"}}
+      {{#editor}}
+        {{onChange clearFields="unidadDireccion,servicios"}}
+        {{param direccion="=direccion"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="unidadDireccion"}}
+      {{#editor}}
+        {{onChange clearFields="servicios"}}
+        {{param direccion="=direccion"}}
+        {{param subDireccion="=subDireccion"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="servicios"}}
+      {{#editor}}
+        {{param direccion="=direccion"}}
+        {{param subDireccion="=subDireccion"}}
+        {{param unidadDireccion="=unidadDireccion"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="tipoCompetencia"}}
+      {{#editor}}
+        {{onChange clearFields="subTipoCompetencia,competencia"}}
+      {{/editor}}      
+    {{/field}}
+    {{#field id="subTipoCompetencia"}}
+      {{#editor}}
+        {{onChange clearFields="competencia"}}
+        {{param partOf="=tipoCompetencia"}}
+      {{/editor}}      
+    {{/field}}
+    {{#field id="competencia"}}
+      {{#editor}}
+        {{param tipoCompetencia="=tipoCompetencia"}}
+        {{param subTipoCompetencia="=subTipoCompetencia"}}
+        {{#onChange}}
+          {{set descripcionCompetencia="=base.descripcion"}}
+        {{/onChange}}
+      {{/editor}}      
+    {{/field}}    
+  {{/section}}
+  {{#section id="temas"}}
+    {{#field id="direccion"}}
+      {{#editor}}
+        {{onChange clearFields="subDireccion,unidadDireccion,servicio"}}
+      {{/editor}}      
+    {{/field}}
+    {{#field id="subDireccion"}}
+      {{#editor}}
+        {{onChange clearFields="unidadDireccion,servicio"}}
+        {{param direccion="=direccion"}}
+      {{/editor}}      
+    {{/field}}
+    {{#field id="unidadDireccion"}}
+      {{#editor}}
+        {{onChange clearFields="servicio"}}
+        {{param direccion="=direccion"}}
+        {{param subDireccion="=subDireccion"}}
+      {{/editor}}      
+    {{/field}}
+    {{#field id="servicio"}}
+      {{#editor}}
+        {{param direccion="=direccion"}}
+        {{param subDireccion="=subDireccion"}}
+        {{param unidadDireccion="=unidadDireccion"}}
+      {{/editor}}      
+    {{/field}}
+  {{/section}}
+  {{#grid id="temas" section="temas" allowRemove="true" allowInsert="true" keyField="tema"}}
+    {{column field="direccion" width="150"}} 
+    {{column field="subDireccion" width="150"}} 
+    {{column field="unidadDireccion" width="150"}} 
+    {{column field="servicio" width="150"}} 
+    {{column field="tema" width="200"}}
+    {{column field="introduccion" width="600"}}
+    {{column field="preguntasAzar" width="120"}}
+  {{/grid}}
+  {{#grid id="preguntas" section="preguntas" disableEnter="true" allowRemove="true" allowInsert="true" keyField="pregunta"}}
+    {{column field="tema" width="200" items="=_.pluck(temas, 'tema')"}}
+    {{column field="imagen" width="300" items="=_.pluck(adjuntos, 'nombre')"}}
+    {{column field="pregunta" width="300"}}
+    {{column field="tipoRespuesta" width="110"}}
+    {{column field="opcionesRespuesta" width="200"}}
+    {{column field="respuestaCorrecta" width="130"}}
+    {{column field="puntos" width="60"}}
+    {{column field="nivelCompetencia" width="80"}}
+    {{!-- {{column field="orden" width="60"}} --}}
+  {{/grid}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="400"}}
+    {{column field="referencia" width="200" items="=['Instrucciones','Bibliografía']"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}</br>
+      {{!-- <span style="font-size:12px;">{{base._momentoEvaluacion}}</span> --}}
+    </div>    
+  {{/template}}
+{{/markup}} 

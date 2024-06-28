@@ -1,0 +1,19 @@
+{{#define id="notaSolicitudEquipoMedico"}}
+  {{#action id="afectar" error="=base.requiereAdjuntos&&_.isEmpty(adjuntos)?'Falta Incluir el Archivo Adjunto Correspondiente':calc.getRef(base,'equipoMedico.base.ubicacion')?null:'Solicitud Incorrecta'"}}
+    {{#update section="base"}}
+      {{setRef ref="equipoMedico.base.vencimiento" value="=calc.dueDate(equipoMedico.base.vencimiento, 'atencion', calc.dueTimes('equipoMedico', equipoMedico.base.subTipoSolicitud, equipoMedico.base.motivo, equipoMedico.base.momentoDieta, equipoMedico.base.criticidadZona, equipoMedico.base.tiempos))"}}
+      {{setRef ref="equipoMedico.base.alerta"      value="=calc.alertDate(equipoMedico.base.vencimiento, 'atencion', calc.dueTimes('equipoMedico', equipoMedico.base.subTipoSolicitud, equipoMedico.base.motivo, equipoMedico.base.momentoDieta, equipoMedico.base.criticidadZona, equipoMedico.base.tiempos))"}}
+    {{/update}}
+  {{/action}}
+  {{#section id="base"}}
+    {{field id="requiereAdjuntos" type="expr" value="=equipoMedico.base.subTipoSolicitud=='mantenimientoTecnicoLegal'"}}  
+  {{/section}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

@@ -1,0 +1,13 @@
+{{#define id="notaLlegaPacienteMultipleTrans"}}
+  {{param name="=fn('folioServiceName', fn('llegaPaciente', @_created.service), @_created)"}}
+  {{param startOnOpen="aplicacion"}}
+  {{#section id="base"}}
+    {{field id="nombre" value="=fn('folioServiceName', fn('llegaPaciente', @_created.service), @_created)"}}
+  {{/section}}
+  {{#grid id="aplicacion" section="aplicacion" disableEnter="true" applyTo="continuar" applyContinue="true"}}
+    {{column field="fecha" type="date" format="DD/MMM/YYYY" width="110" readOnly="true"}}
+    {{!-- {{column field="_tipoSolicitud" width="200" readOnly="true"}} --}}
+    {{column field="_name" width="800" readOnly="true"}}
+    {{column field="continuar"}}
+  {{/grid}}
+{{/define}}

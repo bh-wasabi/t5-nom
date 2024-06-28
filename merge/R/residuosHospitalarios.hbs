@@ -1,0 +1,33 @@
+{{#define id="residuosHospitalarios"}}  
+  {{#action id="bim" hide="true" type="bim360" label="BIM" title="=calc.concat('BIM', _items[0].persona.planta)" bim="=_items[0].persona.bim" color="grey" visibleMode="close" fromSource="persona" fromView="datosUbicacion"}}
+    {{param ubicacion="=_data.ubicacion"}}
+  {{/action}}
+  {{#action id="planta" hide="true" type="openPreview" label="Planta" title="Planta" color="grey" visibleMode="close" fromSource="persona" fromView="datosUbicacion"}}
+    {{param ubicacion="=_data.ubicacion"}}
+    {{link title="=calc.concat('Planta', _items[0].persona.planta)" href="=fn('urlPlanta', _items[0].persona.planta)"}}
+  {{/action}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{#field id="ubicacion"}}
+      {{#editor}}
+        {{#onChange}}
+          {{set area="=persona.area"}}
+          {{set criticidadZona="=persona.criticidadZona"}}
+          {{set vencimiento="=fn('vencimientoZona', persona.criticidadZona)"}}
+          {{set ubicacionDestino="=persona.acopioTemporal"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="ubicacionDestino"}}
+      {{#editor}}
+        {{param servicio="='residuosHospitalarios'"}}          
+      {{/editor}}
+    {{/field}}
+    {{#field id="motivo"}}
+      {{#editor}}
+        {{param servicio="='residuosHospitalarios'"}}
+        {{param partOf="=subTipoSolicitud"}}
+      {{/editor}}
+    {{/field}}   
+  {{/section}}
+{{/define}}

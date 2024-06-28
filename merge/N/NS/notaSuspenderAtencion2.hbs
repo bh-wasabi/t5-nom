@@ -1,0 +1,7 @@
+{{#define id="notaSuspenderAtencion2"}}
+  {{#section id="base"}}
+    {{field id="esOtroMotivoSuspension" type="expr" value="=calc.in('otro', motivoSuspension)"}}
+    {{field id="esRecursoFaltante" type="expr" value="=calc.in('falta-recurso', motivoSuspension)"}}
+    {{field id="esOtroRecursoFaltante" type="expr" value="=calc.in('otro', recursoFaltante)"}}
+  {{/section}}
+{{/define}}

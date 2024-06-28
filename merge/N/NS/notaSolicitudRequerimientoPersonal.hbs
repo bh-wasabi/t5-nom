@@ -1,0 +1,39 @@
+{{#define id="notaSolicitudRequerimientoPersonal"}}
+  {{action id="afectar" error="=base.requiereAdjuntos&&_.isEmpty(adjuntos)?'Falta Incluir el Archivo Adjunto Correspondiente':null"}}
+  {{#section id="base"}}
+    {{field id="esBecaTiempo" type="expr" value="=requerimientoPersonal.base.subTipoSolicitud=='becaTiempo'"}}
+    {{field id="esCedulaPromocion" type="expr" value="=requerimientoPersonal.base.subTipoSolicitud=='cedulaPromocion'"}}
+    {{field id="requiereAdjuntos" type="expr" value="=requerimientoPersonal.base.servicio=='capacitacion'"}}
+    {{field id="documentacionRequerida" type="expr" value="=esBecaTiempo?'oficiosCapacitacionPermisosAdministrativo':null"}}
+  {{/section}}
+  {{#section id="compatibilidadEmpleo"}}
+    {{#field id="puestoPromocion"}}
+      {{#onChange}}
+        {{set codigoPuestoPromocion="=base.codigo"}}
+        {{set sueldoPromocion="=base.sueldo"}}
+        {{set adscripcionPromocion="=base.adscripcion"}}
+        {{set _adscripcionPromocion="=base._adscripcion"}}
+        {{set tipoPersonalPromocion="=base.tipoPersonal"}}
+        {{set _tipoPersonalPromocion="=base._tipoPersonal"}}
+        {{set funcionPuestoPromocion="=base.funcionPuesto"}}
+        {{set _funcionPuestoPromocion="=base._funcionPuesto"}}
+        {{set formacionAcademicaPuestoPromocion="=base.formacionAcademicaPuesto"}}
+        {{set _formacionAcademicaPuestoPromocion="=base._formacionAcademicaPuesto"}}
+        {{set experienciaLaboralPuestoPromocion="=base.experienciaLaboralPuesto"}}
+        {{set _experienciaLaboralPuestoPromocion="=base._experienciaLaboralPuesto"}}
+        {{set condicionEspecificaPuestoPromocion="=base.condicionEspecificaPuesto"}}
+        {{set _condicionEspecificaPuestoPromocion="=base._condicionEspecificaPuesto"}}
+        {{set riesgoPuestoPromocion="=base.riesgoPuesto"}}
+        {{set _riesgoPuestoPromocion="=base._riesgoPuesto"}}
+      {{/onChange}}
+    {{/field}}    
+  {{/section}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

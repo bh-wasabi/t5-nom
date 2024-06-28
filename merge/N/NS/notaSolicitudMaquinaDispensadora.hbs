@@ -1,0 +1,16 @@
+{{#define id="notaSolicitudMaquinaDispensadora"}}
+  {{#action id="afectar"}}
+    {{#update section="base"}}
+      {{setRef ref="maquinaDispensadora.base.vencimiento" value="=calc.dueDate(maquinaDispensadora.base.vencimiento, 'atencion', calc.dueTimes('maquinaDispensadora', maquinaDispensadora.base.subTipoSolicitud, maquinaDispensadora.base.motivo, maquinaDispensadora.base.momentoDieta, maquinaDispensadora.base.criticidadZona, maquinaDispensadora.base.tiempos))"}}
+      {{setRef ref="maquinaDispensadora.base.alerta"      value="=calc.alertDate(maquinaDispensadora.base.vencimiento, 'atencion', calc.dueTimes('maquinaDispensadora', maquinaDispensadora.base.subTipoSolicitud, maquinaDispensadora.base.motivo, maquinaDispensadora.base.momentoDieta, maquinaDispensadora.base.criticidadZona, maquinaDispensadora.base.tiempos))"}}
+    {{/update}}
+  {{/action}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

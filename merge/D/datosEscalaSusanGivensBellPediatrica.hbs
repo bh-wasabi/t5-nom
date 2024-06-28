@@ -1,0 +1,6 @@
+{{#define id="datosEscalaSusanGivensBellPediatrica"}}
+  {{#section id="base"}}
+    {{field id="total" type="calc" value="=calc.sumArgs(calc.sumCase(duermeHoraPrecedente,'duermePrecedentePediatrica'),calc.sumCase(presionArterialSistolicaSusanBell,'presionArterialSistolicaSusanBellPediatrica'),calc.sumCase(actividadMotoraEspontanea,'actividadMotoraEspontaneaPediatrica'),calc.sumCase(tonoGlobal,'tonoGlobal'),calc.sumCase(consuelo,'consueloPediatrica'),calc.sumCase(llanto,'llantoPediatrica'),calc.sumCase(frecuenciaCardiacaSusanBell,'frecuenciaSusanBellPediatrica'),calc.sumCase(expresionFacialDolor,'expresionFacialDolorPediatrica'),calc.sumCase(frecuenciaRespiratoriaCualidades,'frecuenciaCualidadesPediatrica'),calc.sumCase(saturacionOxigeno,'saturacionOxigenoPediatrica'))"}}
+    {{field id="resultadoSusan" type="expr" value="=total<4?'Sin Dolor':total>5&&total<8?'Dolor Moderado':total>9?'Dolor Intenso':''"}}
+  {{/section}}
+{{/define}}

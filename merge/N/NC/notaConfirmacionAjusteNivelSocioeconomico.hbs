@@ -1,0 +1,9 @@
+{{#define id="notaConfirmacionAjusteNivelSocioeconomico"}}
+  {{!-- {{param startOnOpen="aplicacion"}} --}}
+  {{#grid id="aplicacion" section="aplicacion" applyBaseColumn="saldo" disableEnter="true"}}
+    {{column field="fecha" type="date" format="DD/MMM/YYYY" width="100" readOnly="true"}}
+    {{column field="vencimiento" type="date" format="DD/MMM/YYYY" width="100" readOnly="true"}}
+    {{column field="_name" width="800" readOnly="true"}}
+    {{column field="continuar"}}
+  {{/grid}}
+{{/define}}

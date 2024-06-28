@@ -1,0 +1,20 @@
+{{#define id="notaPorPresupuestar"}}
+  {{param attribute1="=_created.service"}}
+  {{param startOnOpen="articulos"}}
+  {{param removeIfEmptySection="articulos"}}
+  {{param removeIfEmptyField="cantidad"}}
+
+  {{#section id="articulos"}}
+    {{field id="importe" type="calc" value="=precioUnitario*cantidad"}}
+  {{/section}}
+
+  {{#grid id="articulos" section="articulos" keyField="cantidad" allowInsert="false" allowRemove="false" disableEnter="true"}}
+    {{column field="codigo" label="Código" width="150"}}
+    {{column field="descripcion" label="Descripción" width="350"}}
+    {{column field="tipoArticulo" label="Tipo Artículo" width="150"}}
+    {{column field="unidad" label="Unidad" width="110"}}
+    {{column field="factor" label="Factor" width="100" type="numeric" format="#,.##"}}
+    {{column field="precioUnitario" label="Precio Unitario" width="110" type="numeric" format="#,.##"}}
+    {{column field="cantidad" label="Cantidad" width="100" type="numeric" format="#,"}}
+  {{/grid}}
+{{/define}}

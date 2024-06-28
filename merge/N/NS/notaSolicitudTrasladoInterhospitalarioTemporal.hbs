@@ -1,0 +1,13 @@
+{{#define id="notaSolicitudTrasladoInterhospitalarioTemporal"}}
+  {{#section id="base"}}
+    {{#field id="centralTemporal"}}
+      {{#editor}}
+[.#if esMulti.]      
+        {{param zona="hospitalizacion"}}
+[.else.]        
+        {{param partOf="='hospitalizacion'"}}
+[./if.]        
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

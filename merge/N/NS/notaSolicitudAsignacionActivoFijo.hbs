@@ -1,0 +1,90 @@
+{{#define id="notaSolicitudAsignacionActivoFijo"}}
+	{{#report id="preliminar" fontSize="8" header="preliminar-encabezado" showStandarFooter="true" pageMargins="30,120,30,40" barcode="=persona.clave"}}
+		{{#stack}}
+			{{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+			{{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+		{{/stack}}
+		{{#stack}}
+			{{#record title="Solicitud Asignación Activos Fijos" titleStyle="title" layout="lightHorizontalLines" fontSize="7" section="base" headerStyle="field" margin="-10,0,0,10" widths="100,450"}}
+				{{row expr="=calc.format('date', _updated.date||_created.date, 'DD/MMM/YYYY h:mma')" label="Fecha Emisión"}}
+				{{row expr="=_created._service" label="Servicio"}}
+				{{row field="responsableAcademico" condition="esEstudiante" align="left"}}
+				{{row field="prioridad" align="left"}}
+				{{row field="asignacionActivoFijo" align="left"}}
+			{{/record}}
+		{{/stack}}
+		{{#stack}}
+			{{#columns widths="425,25,100"}}
+				{{#column}}
+					{{#record title="Firmas" titleStyle="title" layout="lightHorizontalLines" fontSize="8" section="_stamp" headerStyle="field" margin="-10,0,0,10" widths="100,325"}}
+						{{row expr="=_created._user" label="Elabora"}}
+						{{row expr="=_created._turn" label="Turno Elabora"}}
+						{{row expr="=_created._identification" label="Especialidad Elabora"}}
+						{{row expr="=''" label="Firma Elabora"}}
+						{{row condition="=!base.esEstudiante" expr="=_created._responsable" label="Responsable"}}
+						{{row condition="=!base.esEstudiante" expr="=_created._responsableId" label="Especialidad Responsable"}}
+						{{row condition="=!base.esEstudiante" expr="=''" label="Firma Responsable"}}
+						{{row condition="=base.esEstudiante" expr="=base._responsableAcademico" label="Médico Responsable"}}
+						{{row condition="=base.esEstudiante" expr="=base._identificacionResponsableAcademico" label="Especialidad Médico Responsable"}}
+						{{row condition="=base.esEstudiante" expr="=''" label="Firma Médico Responsable"}}
+						{{row condition="=calc.in(_created.service, ['inventarios','farmacia','almacen','ceye'])" expr="=''" label="Transporte / Recibe"}}
+						{{row field="text" label="Cadena Original"}}
+						{{row field="signature" label="Sello Digital"}}
+					{{/record}}
+				{{/column}}
+				{{#column}}
+					{{row}}
+				{{/column}}
+				{{#column}}
+					{{#record title="QR's" titleStyle="title" layout="lightHorizontalLines" fontSize="6" section="_stamp" headerStyle="field" margin="-10,0,0,10" widths="50,50"}}
+						{{row qr="=calc.concatHost('doc', 'persona', persona.id)" label="=fn('_tipoExpediente', persona.tipoExpediente)" qrFit="50" condition="=(persona.id)?true:false"}}
+						{{row}}
+						{{row qr="=calc.concatHost('doc', '_user', _created.user)" label="Elabora" qrFit="50"}}
+						{{row condition="=(_created.responsable&&!base.esEstudiante)?true:false"}}
+						{{row qr="=calc.concatHost('doc', '_user', _created.responsable)" label="Responsable" qrFit="50" condition="=(_created.responsable&&!base.esEstudiante)?true:false"}}
+						{{row condition="=(_created.responsableAcademico&&base.esEstudiante)?true:false"}}
+						{{row qr="=calc.concatHost('doc', '_user', _created.responsableAcademico)" label="Médico Responsable" qrFit="50" condition="=(_created.responsableAcademico&&base.esEstudiante)?true:false"}}
+						{{row condition="=(persona.id)?true:false"}}
+						{{row qr="=calc.concatHost('doc', _type, _id)" label="Nota" qrFit="50"}}
+					{{/record}}
+				{{/column}}
+			{{/columns}}
+		{{/stack}}
+		{{#stack condition="=actualizacion"}}
+			{{#row text="Actualizaciones" fontSize="10" bold="true" margin="-10,0,0,0" condition="=!_.isEmpty(actualizacion)"}}
+			{{/row}}
+			{{#table title="Actualizaciones" titleStyle="title" layout="lightHorizontalLines" fontSize="5" section="actualizacion" headerStyle="field" margin="-10,0,0,10" removeEmptyCols="true"}}
+				{{column field="nota"}}
+				{{column field="fechaHora"}}
+				{{column field="usuario"}}
+				{{column field="nombreAnterior"}}
+				{{column field="nombreNuevo"}}
+				{{column field="claveAnterior"}}
+				{{column field="claveNueva"}}
+				{{column field="fechaNacimientoAnterior"}}
+				{{column field="fechaNacimientoNueva"}}
+				{{column field="generoAnterior"}}
+				{{column field="generoNuevo"}}
+				{{column field="entidadNacimientoAnterior"}}
+				{{column field="entidadNacimientoNueva"}}
+			{{/table}}
+		{{/stack}}
+[.#if esHRAEI.]		
+		{{#stack}}
+			{{row text="TÉRMINOS Y CONDICIONES DE USO" fontSize="10" bold="true"}}
+			{{row text=" "}}
+			{{row text="LINEAMIENTOS DE PRÉSTAMO DE VEHÍCULOS OFICIALES DEL HRAEI" fontSize="10"}}
+			{{row text=" "}}
+			{{row text="1.- EL PRÉSTAMO DE VEHÍCULOS ES ÚNICAMENTE PARA EMPLEADOS DEL HRAEI Y EXCLUSIVAMENTE PARA COMISIONES OFICIALES." fontSize="10"}}
+			{{row text=" "}}
+			{{row text="2.- EL JEFE DIRECTO DE CADA ÁREA DEBERÁ HACER LA SOLICITUD DEL VEHÍCULO, AL CORREO ELECTRÓNICO: rjuarez@hraei.gob.mx LA CUAL SERÁ VALORADA EN LA DISPONIBILIDAD DE LOS MISMOS POR LA SUBDIRECCIÓN DE CONSERVACIÓN, MANTENIMIENTO Y SERVICIOS GENERALES" fontSize="10"}}
+			{{row text=" "}}
+			{{row text="3.- SE RECOMIENDA AL SERVIDOR PÚBLICO QUE ANTES DE RECIBIR EL VEHÍCULO REVISE LAS CONDICIONES GENERALES DE LA UNIDAD, YA QUE SERÁ EL ÚNICO DE SU MANEJO Y POR DEVOLVERLO EN LAS MISMAS CONDICIONES." fontSize="10"}}
+			{{row text=" "}}
+			{{row text="4.- ES OBLIGATORIO MANTENER LOS INTERIORES, LIMPIOS, ESTA ESTRICTAMENTE PROHIBIDO FUMAR DENTRO DE LA UNIDAD." fontSize="10"}}
+			{{row text=" "}}
+			{{row text="5.- EL HRAEI Y LA SCMySG NO SE HARÁN RESPONSABLES POR OBJETOS, DOCUMENTOS Y/O VALORES EN EL INTERIOR DE LA UNIDAD." fontSize="10"}}
+		{{/stack}}
+[./if.]		
+	{{/report}}
+{{/define}}

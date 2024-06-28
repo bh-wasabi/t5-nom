@@ -1,0 +1,12 @@
+{{#define id="rhHorarioRequerido"}}
+
+  {{#section id="base"}}
+    {{validator type="expr" validIf="=calc.number(@entradaLunes)+calc.number(@salidaLunes)<=60"         message="No Puede Exceder a 60 minutos por Día (Lunes)"}}
+    {{validator type="expr" validIf="=calc.number(@entradaMartes)+calc.number(@salidaMartes)<=60"       message="No Puede Exceder a 60 minutos por Día (Martes)"}}
+    {{validator type="expr" validIf="=calc.number(@entradaMiercoles)+calc.number(@salidaMiercoles)<=60" message="No Puede Exceder a 60 minutos por Día (Míercoles)"}}
+    {{validator type="expr" validIf="=calc.number(@entradaJueves)+calc.number(@salidaJueves)<=60"       message="No Puede Exceder a 60 minutos por Día (Jueves)"}}
+    {{validator type="expr" validIf="=calc.number(@entradaViernes)+calc.number(@salidaViernes)<=60"     message="No Puede Exceder a 60 minutos por Día (Viernes)"}}
+    {{validator type="expr" validIf="=calc.number(@entradaSabado)+calc.number(@salidaSabado)<=60"       message="No Puede Exceder a 60 minutos por Día (Sábado)"}}
+    {{validator type="expr" validIf="=calc.number(@entradaDomingo)+calc.number(@salidaDomingo)<=60"     message="No Puede Exceder a 60 minutos por Día (Domingo)"}}
+  {{/section}}
+{{/define}}

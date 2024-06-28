@@ -1,0 +1,22 @@
+{{#define id="notaRegistroCuentasAuxiliares"}}
+  {{param startOnOpen="n/a"}}
+  {{action id="importarDatos" condition="=true" type="menu" menu="importarDatos" label="Cargar" color="green"}}
+  {{#menu id="importarDatos" color="green"}}
+    {{item action="cargarExcel" text="Cargar Excel..."}}
+  {{/menu}}  
+  {{#action id="cargarExcel" type="openFile" label="Cargar Excel" color="green" visibleMode="close" condition="=base.estatus=='borrador'"}}
+    {{#openFile type="xlsx" as="excel" subType="registroCuentasAuxiliares" isRegistry="=true"}}
+      {{update section="cuentasAuxiliares" value="=excel"}}
+    {{/openFile}}
+  {{/action}}  
+
+  {{#grid id="cuentasAuxiliares" section="cuentasAuxiliares" keyField="cuenta" allowInsert="true" allowRemove="true"}}
+    {{column field="cuenta" width="250"}}
+    {{column field="descripcion" width="450"}}
+    {{column field="contId" width="120"}}
+    {{column field="mayor" width="120"}}
+    {{!-- {{column field="mercado" width="120"}}
+    {{column field="tipoValor" width="120"}}
+    {{column field="instrumento" width="120"}} --}}
+  {{/grid}}
+{{/define}}

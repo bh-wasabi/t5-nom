@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_03c6ygg" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.0.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.0.0">
+  <bpmn:collaboration id="Collaboration_063rzyl">
+    <bpmn:participant id="Participant_0mb1hud" name="Adjudicación Directa" processRef="Process_0bn90q9" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_0bn90q9" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_08qov9q">
+      <bpmn:lane id="Lane_1pxz1vq" name="CAAS Titular de la dependencia o entidad o aquel servidor público en quien se delegue dicha función.">
+        <bpmn:flowNodeRef>mga4.2.4.1.2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>mga4.2.4.1.2c</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>mga4.2.4.1.2d</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>mga4.2.4.1.2b</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_1ip84j4" name="Área Contratante">
+        <bpmn:flowNodeRef>mga4.2.4.1.1b</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>mga4.2.4.1.1d</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>mga4.2.4.1.3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_0689esb</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>mga4.2.4.1.1c</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>descartado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>mga4.2.6</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>mga4.2.4</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>mga4.2.4.1.1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_13wxhlb</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:exclusiveGateway id="mga4.2.4.1.1b" name="¿Sustentado en&#10;Art. 41 de Ley?">
+      <bpmn:incoming>Flow_011hqkd</bpmn:incoming>
+      <bpmn:outgoing>Flow_16n0k3o</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0xoqjsq</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="mga4.2.4.1.1d" name="¿Requiere&#10;Dictamen del CAAS?">
+      <bpmn:incoming>Flow_16n0k3o</bpmn:incoming>
+      <bpmn:outgoing>Flow_0wus4s7</bpmn:outgoing>
+      <bpmn:outgoing>Flow_08ah6k1</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="mga4.2.4.1.3" name="3. Solicitar&#10;documentación al proveedor adjudicado">
+      <bpmn:incoming>Flow_0uf9qa6</bpmn:incoming>
+      <bpmn:incoming>Flow_0ws6gyi</bpmn:incoming>
+      <bpmn:incoming>Flow_08ah6k1</bpmn:incoming>
+      <bpmn:outgoing>Flow_1a3o29a</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="Event_0689esb" name="Productos">
+      <bpmn:incoming>Flow_17tbkb6</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="mga4.2.4.1.1c" name="¿Sustentado en Art. 42 de Ley?">
+      <bpmn:incoming>Flow_0xoqjsq</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ws6gyi</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1irsaa2</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="descartado">
+      <bpmn:incoming>Flow_1irsaa2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="mga4.2.4.1.2" name="2. Dictaminar&#10;procedencia de excepción">
+      <bpmn:incoming>Flow_0wus4s7</bpmn:incoming>
+      <bpmn:outgoing>Flow_0pg4odw</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1g3me3v</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="mga4.2.4.1.2c" name="¿Procede el&#10;dictamen?">
+      <bpmn:incoming>Flow_1g3me3v</bpmn:incoming>
+      <bpmn:outgoing>Flow_0wc7421</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0uf9qa6</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="mga4.2.4.1.2d">
+      <bpmn:incoming>Flow_0wc7421</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:subProcess id="mga4.2.6" name="4.2.6 Suscripción&#10;de Contratos">
+      <bpmn:incoming>Flow_1a3o29a</bpmn:incoming>
+      <bpmn:outgoing>Flow_17tbkb6</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="mga4.2.4.1.2b" name="Apartado de&#10;Comités">
+      <bpmn:incoming>Flow_0pg4odw</bpmn:incoming>
+    </bpmn:subProcess>
+    <bpmn:sequenceFlow id="Flow_0uf9qa6" name="SI" sourceRef="mga4.2.4.1.2c" targetRef="mga4.2.4.1.3" />
+    <bpmn:sequenceFlow id="Flow_17tbkb6" sourceRef="mga4.2.6" targetRef="Event_0689esb" />
+    <bpmn:sequenceFlow id="Flow_1a3o29a" sourceRef="mga4.2.4.1.3" targetRef="mga4.2.6" />
+    <bpmn:sequenceFlow id="Flow_0wus4s7" name="SI" sourceRef="mga4.2.4.1.1d" targetRef="mga4.2.4.1.2" />
+    <bpmn:sequenceFlow id="Flow_0xoqjsq" name="NO" sourceRef="mga4.2.4.1.1b" targetRef="mga4.2.4.1.1c" />
+    <bpmn:sequenceFlow id="Flow_16n0k3o" name="SI" sourceRef="mga4.2.4.1.1b" targetRef="mga4.2.4.1.1d" />
+    <bpmn:sequenceFlow id="Flow_011hqkd" sourceRef="mga4.2.4.1.1" targetRef="mga4.2.4.1.1b" />
+    <bpmn:sequenceFlow id="Flow_0ws6gyi" name="SI" sourceRef="mga4.2.4.1.1c" targetRef="mga4.2.4.1.3" />
+    <bpmn:sequenceFlow id="Flow_1irsaa2" name="NO" sourceRef="mga4.2.4.1.1c" targetRef="descartado" />
+    <bpmn:sequenceFlow id="Flow_08ah6k1" name="NO" sourceRef="mga4.2.4.1.1d" targetRef="mga4.2.4.1.3" />
+    <bpmn:sequenceFlow id="Flow_0pg4odw" sourceRef="mga4.2.4.1.2" targetRef="mga4.2.4.1.2b" />
+    <bpmn:sequenceFlow id="Flow_1g3me3v" sourceRef="mga4.2.4.1.2" targetRef="mga4.2.4.1.2c" />
+    <bpmn:sequenceFlow id="Flow_0wc7421" name="NO" sourceRef="mga4.2.4.1.2c" targetRef="mga4.2.4.1.2d" />
+    <bpmn:sequenceFlow id="Flow_1398k1z" sourceRef="Event_13wxhlb" targetRef="mga4.2.4" />
+    <bpmn:sequenceFlow id="Flow_0y7yo78" sourceRef="mga4.2.4" targetRef="mga4.2.4.1.1" />
+    <bpmn:task id="mga4.2.4" name="Adjudicación Directa">
+      <bpmn:incoming>Flow_1398k1z</bpmn:incoming>
+      <bpmn:outgoing>Flow_0y7yo78</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="mga4.2.4.1.1" name="1.Verificar&#10;acreditamiento de excepción">
+      <bpmn:incoming>Flow_0y7yo78</bpmn:incoming>
+      <bpmn:outgoing>Flow_011hqkd</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:startEvent id="Event_13wxhlb">
+      <bpmn:outgoing>Flow_1398k1z</bpmn:outgoing>
+    </bpmn:startEvent>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_063rzyl">
+      <bpmndi:BPMNShape id="Participant_0mb1hud_di" bpmnElement="Participant_0mb1hud" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="1410" height="760" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1ip84j4_di" bpmnElement="Lane_1ip84j4" isHorizontal="true">
+        <dc:Bounds x="190" y="80" width="1380" height="440" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1pxz1vq_di" bpmnElement="Lane_1pxz1vq" isHorizontal="true">
+        <dc:Bounds x="190" y="520" width="1380" height="320" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0y7yo78_di" bpmnElement="Flow_0y7yo78">
+        <di:waypoint x="421" y="380" />
+        <di:waypoint x="512" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1398k1z_di" bpmnElement="Flow_1398k1z">
+        <di:waypoint x="268" y="380" />
+        <di:waypoint x="321" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wc7421_di" bpmnElement="Flow_0wc7421">
+        <di:waypoint x="1060" y="615" />
+        <di:waypoint x="1060" y="672" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1067" y="641" width="17" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1g3me3v_di" bpmnElement="Flow_1g3me3v">
+        <di:waypoint x="990" y="590" />
+        <di:waypoint x="1035" y="590" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0pg4odw_di" bpmnElement="Flow_0pg4odw">
+        <di:waypoint x="940" y="630" />
+        <di:waypoint x="940" y="670" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_08ah6k1_di" bpmnElement="Flow_08ah6k1">
+        <di:waypoint x="820" y="355" />
+        <di:waypoint x="820" y="290" />
+        <di:waypoint x="1190" y="290" />
+        <di:waypoint x="1190" y="340" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="831" y="323" width="17" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1irsaa2_di" bpmnElement="Flow_1irsaa2">
+        <di:waypoint x="700" y="195" />
+        <di:waypoint x="700" y="138" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="707" y="164" width="17" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ws6gyi_di" bpmnElement="Flow_0ws6gyi">
+        <di:waypoint x="725" y="220" />
+        <di:waypoint x="820" y="220" />
+        <di:waypoint x="820" y="290" />
+        <di:waypoint x="1190" y="290" />
+        <di:waypoint x="1190" y="340" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="733" y="223" width="11" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_011hqkd_di" bpmnElement="Flow_011hqkd">
+        <di:waypoint x="612" y="380" />
+        <di:waypoint x="675" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16n0k3o_di" bpmnElement="Flow_16n0k3o">
+        <di:waypoint x="725" y="380" />
+        <di:waypoint x="795" y="380" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="755" y="362" width="11" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0xoqjsq_di" bpmnElement="Flow_0xoqjsq">
+        <di:waypoint x="700" y="355" />
+        <di:waypoint x="700" y="245" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="676" y="288" width="17" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wus4s7_di" bpmnElement="Flow_0wus4s7">
+        <di:waypoint x="845" y="380" />
+        <di:waypoint x="940" y="380" />
+        <di:waypoint x="940" y="550" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="924" y="423" width="11" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1a3o29a_di" bpmnElement="Flow_1a3o29a">
+        <di:waypoint x="1240" y="380" />
+        <di:waypoint x="1310" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_17tbkb6_di" bpmnElement="Flow_17tbkb6">
+        <di:waypoint x="1410" y="380" />
+        <di:waypoint x="1482" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0uf9qa6_di" bpmnElement="Flow_0uf9qa6">
+        <di:waypoint x="1085" y="590" />
+        <di:waypoint x="1190" y="590" />
+        <di:waypoint x="1190" y="420" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1132" y="497" width="11" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Gateway_12skoph_di" bpmnElement="mga4.2.4.1.1b" isMarkerVisible="true">
+        <dc:Bounds x="675" y="355" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="661" y="415" width="78" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0cmcluy_di" bpmnElement="mga4.2.4.1.1d" isMarkerVisible="true">
+        <dc:Bounds x="795" y="355" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="786" y="415" width="68" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ro07tj_di" bpmnElement="mga4.2.4.1.3">
+        <dc:Bounds x="1140" y="340" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0689esb_di" bpmnElement="Event_0689esb">
+        <dc:Bounds x="1482" y="362" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1475" y="405" width="51" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1b14z0h_di" bpmnElement="mga4.2.4.1.1c" isMarkerVisible="true">
+        <dc:Bounds x="675" y="195" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="611" y="236" width="78" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1gcj3w6_di" bpmnElement="descartado">
+        <dc:Bounds x="682" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0yw8rxh_di" bpmnElement="mga4.2.4.1.2">
+        <dc:Bounds x="890" y="550" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0xrz0ye_di" bpmnElement="mga4.2.4.1.2c" isMarkerVisible="true">
+        <dc:Bounds x="1035" y="565" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1030" y="528" width="60" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1douxm6_di" bpmnElement="mga4.2.4.1.2d">
+        <dc:Bounds x="1042" y="672" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1m8qy58_di" bpmnElement="mga4.2.6">
+        <dc:Bounds x="1310" y="340" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0kbb7gi_di" bpmnElement="mga4.2.4.1.2b">
+        <dc:Bounds x="890" y="670" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0wf03nw_di" bpmnElement="mga4.2.4">
+        <dc:Bounds x="321" y="340" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_17u61li_di" bpmnElement="mga4.2.4.1.1">
+        <dc:Bounds x="512" y="340" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_13wxhlb_di" bpmnElement="Event_13wxhlb">
+        <dc:Bounds x="232" y="362" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_069g7bs">
+    <bpmndi:BPMNPlane id="BPMNPlane_01kaxa4" bpmnElement="mga4.2.6" />
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_0byvijl">
+    <bpmndi:BPMNPlane id="BPMNPlane_0hk92ea" bpmnElement="mga4.2.4.1.2b" />
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

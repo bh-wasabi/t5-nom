@@ -1,0 +1,7 @@
+{{#define id="datosDrogadiccion"}}
+  {{#section id="base"}}
+    {{field id="tieneDrogadiccion" type="expr" value="=@drogadiccion&&@drogadiccion!=='nunca'"}}
+    {{field id="tieneDetalles" type="expr" value="=@tieneDrogadiccion&&Utils.isTrue(@detalles)"}}
+    {{field id="esEx" type="expr" value="=@tieneDetalles&&@drogadiccion==='ex'"}}    
+  {{/section}}
+{{/define}} 

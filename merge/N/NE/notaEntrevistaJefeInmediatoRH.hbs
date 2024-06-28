@@ -1,0 +1,14 @@
+{{#define id="notaEntrevistaJefeInmediatoRH"}}
+  {{param attribute1="=base.aceptadoRechazado"}}
+  {{#action id="verPuesto" hide="true" type="sub-link"}}
+    {{#link href="='/puesto/ver'" name="=base.solicitud.info.base._puesto" title="='Ver Puesto'"}}
+      {{param puestoId="=base.solicitud.info.base.puesto"}}
+    {{/link}}
+  {{/action}}
+  {{#action id="verEvaluaciones" hide="true" type="sub-link"}}
+    {{#link href="='/nota/lista'" name="=calc.concat('Evaluaciones', persona.nombreCompleto)" title="='Evaluaciones'"}}
+      {{param id="=persona.id"}}
+      {{param tipo="='notaEvaluacion'"}}
+    {{/link}}
+  {{/action}}
+{{/define}}

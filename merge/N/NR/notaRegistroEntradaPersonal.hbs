@@ -1,0 +1,16 @@
+{{#define id="notaRegistroEntradaPersonal"}}
+  {{#view id="dotacion"}}
+    {{#pipeline}}
+      {{filter field="persona.servicio" eq="=servicio"}}
+      {{filter field="base.estatus" eq="afectado"}}
+      {{filter condition="=fecha" field="_created.date" gt="=moment(fecha).format()"}}
+      {{filter condition="=fecha" field="_created.date" lt="=moment(fecha).add(1,'day').format()"}}
+      {{group field="persona.id" as="persona"}}
+      {{group field="persona.nombreCompleto" as="_persona"}}
+      {{group field="persona.clave" as="clave"}}
+      {{group field="_created.date" as="ultimaEntrada"}}
+    {{/pipeline}}  
+    {{join source="persona" view="perfil" as="join" id="persona"}}
+    {{calc2 field="cargo" type="expr" value="=join.persona.cargo"}}
+  {{/view}}
+{{/define}}

@@ -1,0 +1,52 @@
+{{#define id="notaRegistroSeleccionProveedor"}}
+  {{param removeIfEmptySection="articulos"}}
+  {{param removeIfEmptyField="cantidad"}}
+  {{action id="afectar" error="=!calc.sumRef(articulos, 'cantidad')?'Faltan Indicar los Artículos':null"}}
+
+  {{#view id="proveedores"}}
+    {{#find limit="-1" flatten="true"}}
+      {{include field="articulos.nombreProveedor" as="nombreProveedor"}}
+      {{filter field="_id" eq="=id" isObjectId="true"}}
+    {{/find}}
+    {{unwind field="articulos"}}
+  {{/view}}
+
+  {{#view id="articulos"}}
+    {{#find limit="-1"}}
+      {{include field="articulos"}}
+      {{filter field="_id" eq="=id" isObjectId="true"}}
+    {{/find}}
+  {{/view}}
+
+  {{#section id="articulos"}}
+    {{#field id="codigo"}}
+      {{#onChange}}
+        {{#join source="articulo" view="listaArticulos" as="articulo"}}
+          {{param codigo="=codigo"}}
+        {{/join}}
+        {{set descripcion="=articulo.base.descripcion"}}
+        {{set tipoArticulo="=articulo.base.tipoArticulo"}}
+      {{/onChange}}
+    {{/field}}
+    {{field id="costoTotal" type="calc" value="=cantidad*costoUnitario"}}
+  {{/section}}
+
+  {{#grid id="articulos" section="articulos" keyField="cantidad" allowInsert="true" allowRemove="true"}}
+    {{column field="codigo" label="Código" width="200" items="=base.referencias"}}
+    {{column field="descripcion" label="Descripción" width="450" readOnly="true"}}
+    {{column field="tipoArticulo" label="Tipo Artículo" width="150" readOnly="true"}}
+    {{column field="nombreProveedor" label="Proveedor" width="200" items="=base.proveedores"}}
+    {{column field="cantidad" label="Cantidad" width="100" type="numeric" format="#,"}}
+    {{column field="costoUnitario" label="Costo Unitario" width="120" type="numeric" format="#,"}}
+  {{/grid}}
+
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="referencia" width="200" items="=_.uniq(_.pluck(articulos, 'nombreProveedor'))"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

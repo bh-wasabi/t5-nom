@@ -1,0 +1,49 @@
+{{#define id="cafeteria"}}  
+  {{#action id="bim" hide="true" type="bim360" label="BIM" title="=calc.concat('BIM', _items[0].persona.planta)" bim="=_items[0].persona.bim" color="grey" visibleMode="close" fromSource="persona" fromView="datosUbicacion"}}
+    {{param ubicacion="=_data.ubicacion"}}
+  {{/action}}
+  {{#action id="planta" hide="true" type="openPreview" label="Planta" title="Planta" color="grey" visibleMode="close" fromSource="persona" fromView="datosUbicacion"}}
+    {{param ubicacion="=_data.ubicacion"}}
+    {{link title="=calc.concat('Planta', _items[0].persona.planta)" href="=fn('urlPlanta', _items[0].persona.planta)"}}
+  {{/action}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{#field id="ubicacion"}}
+      {{#editor}}
+        {{#onChange}}
+          {{set area="=persona.area"}}
+          {{set criticidadZona="=persona.criticidadZona"}}
+          {{set vencimiento="=fn('vencimientoZona', persona.criticidadZona)"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="articulo"}}
+      {{#editor alwaysLoad="true"}}
+        {{param ubicacion="=ubicacion"}}
+        {{param servicio="='cafeteria'"}}
+        {{param estatus="=calc.in(subTipoSolicitud, ['instalacion','baja'])?'inactivo':'activo'"}}
+        {{param noBaja="=true"}}
+        {{#onChange}}
+          {{join source="persona" as="ubicacion" id="base.ubicacion"}}
+          {{set codigo="=base.codigo"}}
+          {{set descripcion="=base.descripcion"}}
+          {{set descripcionLarga="=base.descripcionLarga"}}
+          {{set datosActivoFijo="=base.datosActivoFijo"}}
+          {{set _datosActivoFijo="=base._datosActivoFijo"}}
+          {{set ubicacion="=base.ubicacion"}}
+          {{set ubicacionArticulo="=base.ubicacion"}}
+          {{set area="=ubicacion.persona.area"}}
+          {{set criticidadZona="=ubicacion.persona.criticidadZona"}}
+          {{set vencimiento="=fn('vencimientoZona', ubicacion.persona.criticidadZona)"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="motivo"}}
+      {{#editor}}
+        {{param servicio="='cafeteria'"}}
+        {{param partOf="=subTipoSolicitud"}}
+      {{/editor}}
+    {{/field}}
+    {{validator type="expr" validIf="=@ubicacion&&@ubicacion!=@nuevaUbicacion&&ubicacion==ubicacionArticulo" message="Ubicación Incorrecta"}}
+  {{/section}}
+{{/define}}

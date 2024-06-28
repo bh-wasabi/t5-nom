@@ -1,0 +1,31 @@
+{{#define id="reclamo"}}  
+  {{#action id="bim" hide="true" type="bim360" label="BIM" title="=calc.concat('BIM', _items[0].persona.planta)" bim="=_items[0].persona.bim" color="grey" visibleMode="close" fromSource="persona" fromView="datosUbicacion"}}
+    {{param ubicacion="=_data.ubicacion"}}
+  {{/action}}
+  {{#action id="planta" hide="true" type="openPreview" label="Planta" title="Planta" color="grey" visibleMode="close" fromSource="persona" fromView="datosUbicacion"}}
+    {{param ubicacion="=_data.ubicacion"}}
+    {{link title="=calc.concat('Planta', _items[0].persona.planta)" href="=fn('urlPlanta', _items[0].persona.planta)"}}
+  {{/action}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{field id="tieneUbicacion" type="expr" value="=!calc.in(@servicio, ['alimentacionPacientes','alimentacionFuncionarios'])"}}
+    {{#field id="servicio"}}
+      {{#editor}}
+        {{param partOf="='sla'"}}
+      {{/editor}}
+    {{/field}}
+    {{!-- {{#field id="servicio"}}
+      {{onChange clearFields="ubicacion,area,criticidadZona,vencimiento"}}
+    {{/field}}
+    {{#field id="ubicacion"}}
+      {{#editor}}
+        {{param servicio="=@servicio"}}
+        {{#onChange}}
+          {{set area="=persona.area"}}
+          {{set criticidadZona="=persona.criticidadZona"}}
+          {{set vencimiento="=moment().add(1, 'day').format()"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}} --}}
+  {{/section}}
+{{/define}}

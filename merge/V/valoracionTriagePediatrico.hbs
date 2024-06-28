@@ -1,0 +1,6 @@
+{{#define id="valoracionTriagePediatrico"}}
+  {{#section id="base"}}
+    {{field id="total" type="expr" value="=calc.sumArgs(@apariencia, @respiracion, @circulacion)"}}
+    {{field id="resultado" type="expr" value="=fn('valoracionTriagePediatrico', @total)"}}
+  {{/section}}
+{{/define}} 

@@ -1,0 +1,12 @@
+{{#define id="notaSeleccionCandidato"}}
+  {{#section id="base"}}
+    {{#field id="candidato"}}
+    	{{#onChange}}
+    		{{set claveCandidato="=persona.clave"}}
+    	{{/onChange}}
+    	{{#editor}}
+    		{{param momento="activo"}}
+    	{{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

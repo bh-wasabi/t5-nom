@@ -1,0 +1,83 @@
+{{#define id="notaPorPrepararEntregar"}}
+  {{param attribute1="=_created.service"}}
+  {{!-- {{param startOnOpen="materiales"}} --}}
+  {{!-- {{param removeIfEmptySection="materiales"}}
+  {{param removeIfEmptyField="continuar"}} --}}
+
+  {{#section id="materiales"}}
+    {{#field id="surtirCerrado"}}
+      {{#onChange}}
+        {{set faltante="=calc.missingOver(calc.sumArgs(@surtirCerrado,@surtirAbierto,-@dosisTotal))"}}
+        {{set sobrante="=calc.leftOver(calc.sumArgs(@surtirCerrado,@surtirAbierto,-@dosisTotal))"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="surtirAbierto"}}
+      {{#onChange}}
+        {{set faltante="=calc.missingOver(calc.sumArgs(@surtirCerrado,@surtirAbierto,-@dosisTotal))"}}
+        {{set sobrante="=calc.leftOver(calc.sumArgs(@surtirCerrado,@surtirAbierto,-@dosisTotal))"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+
+  {{action id="etiqueta" type="print-zebra-band" label="Imprimir Etiqueta" color="grey" visibleMode="close" forceReadOnly="true" template="etiqueta" hide="=true"}}
+  {{action id="preliminar" subAction="etiqueta"}}
+  
+  {{#grid id="materiales" section="materiales" allowSort="true" sortBy="orden"}}
+    {{!-- {{column field="fecha" type="date" format="DD/MMM/YYYY" width="100" readOnly="true"}}
+    {{column field="solicitud" type="text" width="180" readOnly="true"}} --}}
+    {{column field="orden" width="60"}}
+    {{column field="codigo" width="160" readOnly="true"}}
+    {{column field="descripcion" width="320" readOnly="true"}}
+    {{column field="presentacion" type="numeric" format="#,.##" width="100" readOnly="true"}}
+    {{column field="veces" type="numeric" format="#," width="50" readOnly="true"}}
+    {{column field="dosis" type="numeric" format="#,.##" width="55" readOnly="true"}}
+    {{column field="dosisTotal" type="numeric" format="#,.##" width="65" readOnly="true"}}
+    {{column field="surtirCerrado" type="numeric" format="#,.##" width="105" validateMultiples="presentacion"}}
+    {{column field="surtirAbierto" type="numeric" format="#,.##" width="100" validateExcess="abiertoDisponible"}}
+    {{column field="abiertoDisponible" type="numeric" format="#,.##" width="125" readOnly="true"}}
+    {{column field="faltante" type="numeric" format="#,.##" width="75" readOnly="true" validateIfValue="true"}}
+    {{!-- {{column field="sobrante" type="numeric" format="#," width="65" readOnly="true" validateExcess="dosisTotal"}} --}}
+    {{column field="sobrante" type="numeric" format="#,.##" width="75" readOnly="true"}}
+    {{column field="unidad" width="52" readOnly="true"}}
+    {{column field="fraccionar" width="75" readOnly="true"}}
+    {{column field="bioseguridadInfo" width="90" readOnly="true"}}
+    {{!-- {{column field="continuar" width="70"}} --}}
+  {{/grid}}
+{{/define}}
+
+{{#markup}}
+  {{#template id="etiqueta"}}
+  ^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR2,2~SD15^JUS^LRN^CI0^XZ
+  ^XA
+  ^MMT
+  ^PW1417
+  ^LL1772
+  ^LS0
+  ^FO30,32^GFA,02688,02688,26,,::gI0G1GFgM0gI0G3GFG8gL0gI0G7G1GCgL0::gI0G3G1GCgL0gI0G3GFG8gL0H0G7IFW0G1GFgM0H0G7IFG8hK0H0GCH0G1G8hK0H0GCI0GCX0G4gL0G0G1G9G8G0G6GEW0G2GEgL0G0G3GBG8G0G7G6W0G7G6I0G3gH0G0G3G7H0G3G7W0H3I0G6gH0G0G7G6H0G3GBW0G1GBI0G6gH0G0G6GEH0G1G9G8V0G1G9G8H0GCgH0G0HCI0GDGCW0GDGCG0G1GCgH0G0GDGCI0HCW0HCG0G1G8gH0G1G9G8I0G6JFK0G1IFG8J0G7IFgI0G1G8K0G7IFK0G3IFG8J0G7IFgI0G0GCK0GCH0G1G8J0G6I0GCJ0GEgL0G0GCJ0G1GCH0G1GCJ0GEI0GEJ0GCgL0G0G6J0G1G8I0GCJ0GCI0G6I0G1G8G0G3IFGCG0GFG0G1JFG8G3IFGEL0G0G7J0G3J0G6J0G8I0G7I0G1G8G0JFGEG0GFG0G3JFG8G7IFGEG0G3GEI0G0G3J0G3J0G6N0G3L0JFGEG0GFG0G7JFG8G7IFGEG0G7GFI0G0G3G8I0G6J0G3N0G1G8K0JFGEG0GFG0G7JFG8G7IFGEG0G7GFI0G0G1G8I0GEJ0G3H0G7G8GCI0G1G8G0G1G8GEG0GFH0G1GEG0GFG0G7G8J0G7G8J0HFG8H0H0GCHFHCJ0G1G8G0G7HCJ0GCG0G3GCGEG0GFH0G1GEG0GFG0G7G8J0G7G8I0G1HFGCH0H0GCH0G1GCJ0G1GCG0G7HCJ0GEG0G3HEG0GFI0GEG0GFG0G7GCJ0G7GCI0G1GFG7GCH0H0G6H0G3G8K0GEG0G7GFGCJ0G7G0G3GFGEG0GFK0GFG0G7JFG0G7HFG8G0G3GEG3GEH0H0G7IFG8K0JFGCJ0G7IFGEG0GFK0GFG0G7JFG8G7HFG8G0G3GEG3GEH0H0G3IFG8K0HFG7G3GCJ0G7GFHBGEG0GFK0GFG0G3JFG8G7HFG8G0G7GCG1GFH0K0G1G8J0G1GCG0G7G3GCJ0GEG0G1G9GEG0GFI0GEG0GFH0JFG8G7HFH0GFGCG1GFH0L0GCJ0G1G8G0G7G0GCJ0GCG0G1G8GEG0GFH0G1GEG0GFK0G7G8G7GCI0GFG8G0GFG8G0L0GEJ0G3G8M0G1GCK0GFH0G1GEG0GFK0G7G8G7GCH0G1GFH0G7G8G0L0G6J0G3N0G1G8K0GFH0G1GEG0GFK0GFG8G7GCH0G1GFH0G7GCG0L0G7J0G6N0G3L0JFGEG0GFG0G7JFG8G7GCH0G3HFG0G3GEG0L0G3J0G6I0G1G8I0G3I0G1G8G0JFGEG0GFG0G7JFG8G7GCH0G7HFG0G3GEG0L0G1G8I0GCJ0GCI0G6I0G1G8G0G7IFGCG0GFG0G3JFG0G7GCH0G7HFG0G1GFG0L0G1GCI0GCJ0GCI0GEJ0GCY0G7HFH0GEG0M0GCH0G1G8J0G6I0GCJ0GEgL0M0JFK0G7IFG8J0G7IFgI0M0G7IFK0G3IFG8J0G7IFG8gH0gK0GEH0G1G8gH0gK0GCI0GCgH0gJ0G1G9H0G6GEgH0gJ0G1GBG8G0H6gH0gJ0H3H0H3gH0gJ0G7G6H0G3GBgH0gJ0H6H0G1G9G8gG0gJ0HCI0GDG8gG0gJ0GDGCI0HCgG0gI0G1G9G8I0G6GEgG0gI0G1G9J0H6gG0gJ0G8K0GEgG0gJ0GCK0GCgG0gJ0GCJ0G1G8gG0gJ0G6J0G1G8gG0gJ0G7J0G3gH0gJ0G3J0G7gH0gJ0G1G8I0G6gH0gJ0G1G8HFGCGEgH0gK0GCHFG8GCgH0gK0GEH0G1G8gH0gK0G7IFG8gH0gK0G3IFgI0,:^FS
+  ^FT233,67^A0N,33,33^FB367,1,0,C^FH\^FDHospital Regional de Alta^FS
+  ^FT233,107^A0N,33,33^FB367,1,0,C^FH\^FDEspecialidad de Ixtapaluca^FS
+  ^FT38,151^A0N,29,28^FH\^FD{{normalize persona.nombreCompleto}}^FS
+  ^FT530,151^A0N,29,28^FH\^FD{{normalize persona.clave}}^FS
+  ^FT38,181^A0N,25,24^FH\^FDFecha Nacimiento:^FS
+  ^FT230,181^A0N,25,24^FH\^FD{{date persona.fechaNacimiento "DD/MMM/YYYY"}}^FS
+  ^FT38,213^A0N,25,24^FH\^FDCama:^FS
+  ^FT122,213^A0N,25,24^FH\^FD{{normalize base._cama}}^FS
+  ^FT38,247^A0N,25,24^FH\^FDCentral:^FS
+  ^FT122,247^A0N,25,24^FH\^FD{{normalize base._central}}^FS
+  ^FT38,281^A0N,25,24^FH\^FDElabora:^FS
+  ^FT122,281^A0N,25,24^FH\^FD{{normalize base._elaboradorMezcla}}^FS
+  ^FT38,312^A0N,25,24^FH\^FDFecha Preparacion:^FS
+  ^FT230,312^A0N,25,24^FH\^FD{{date base.fechaHoraPreparacion "DD/MMM/YYYY h:mma"}}^FS
+  ^FT38,346^A0N,25,24^FH\^FDEstabilidad (horas):^FS
+  ^FT235,346^A0N,25,24^FH\^FD{{base.estabilidad}}^FS
+  ^FT290,346^A0N,25,24^FH\^FDVolumen Total (ml):^FS
+  ^FT490,346^A0N,25,24^FH\^FD{{base.volumenTotal}}^FS
+  ^FT38,377^A0N,25,24^FH\^FDComposicion:^FS
+  ^FT180,377^A0N,25,24^FH\^FD{{normalize materiales.0.descripcion}} {{materiales.0.dosisTotal}}{{normalize materiales.0._unidad}}^FS
+  ^FT180,408^A0N,25,24^FH\^FD{{normalize materiales.1.descripcion}} {{materiales.1.dosisTotal}}{{normalize materiales.1._unidad}}^FS
+  ^FT180,439^A0N,25,24^FH\^FD{{normalize materiales.2.descripcion}} {{materiales.2.dosisTotal}}{{normalize materiales.2._unidad}}^FS
+  ^FT180,470^A0N,25,24^FH\^FD{{normalize materiales.3.descripcion}} {{materiales.3.dosisTotal}}{{normalize materiales.3._unidad}}^FS
+  ^FT180,501^A0N,25,24^FH\^FD{{normalize materiales.4.descripcion}} {{materiales.4.dosisTotal}}{{normalize materiales.4._unidad}}^FS
+  ^PQ1,0,1,Y^XZ
+  {{/template}}  
+{{/markup}}

@@ -1,0 +1,43 @@
+{{#define id="notaReceta"}}
+  {{action id="afectar" error="=(base.esControlado?base._medicamentoControlado:base._medicamentoReceta)?null:'Falta Indicar los Medicamentos'"}}
+  {{#report id="encabezado"}}
+    {{row}}
+    {{row image="logo" alignment="center" imageWidth="350"}}
+    {{row expr="_created._user" bold="true" alignment="center" fontSize="20" color="#c29e69"}}
+    {{row expr="_created._identification" alignment="center" color="#c29e69"}}
+    {{row}}
+    {{#columns margin="20,0,20,0"}}
+      {{#column}}
+        {{row expr="=persona.nombreCompleto" bold="true" fontSize="15" color="#9e2141"}}
+        {{row expr="=persona._edadActual" bold="true" fontSize="12" color="#9e2141"}}
+      {{/column}}
+      {{#column}}
+        {{row expr="=calc.format('date', _created.date, 'DD/MMM/YYYY')" bold="true" fontSize="12" color="#9e2141" alignment="right"}}
+      {{/column}}
+    {{/columns}}
+  {{/report}}  
+  {{#report id="pie"}}
+    {{#columns widths="*,50" margin="20,0,20,0"}}
+      {{#column}}
+        {{row text="Carretera Federal México-Puebla Km. 34.5, Pueblo de Zoquiapan, C.P. 56530" bold="true" fontSize="12" color="#c29e69"}}
+        {{row text="Ixtapaluca, Estado de México, Teléfono: 55 5972 9800" bold="true" fontSize="12" color="#c29e69"}}
+      {{/column}}
+      {{#column}}
+        {{row text="Firma" bold="true" fontSize="12" color="#c29e69" alignment="right"}}
+      {{/column}}
+    {{/columns}}
+  {{/report}}  
+  {{#report id="preliminar" fontSize="12" header="encabezado" footer="pie" showStandarFooter="false" pageOrientation="landscape" pageMargins="40,200,40,40"}}
+    {{#stack}}
+      [.#if esCRAE.]    
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/crae3b.png"}}
+      [.else.]      
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+      [./if.]
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{row expr="=base.medicamentoExterno||(base.esControlado?base._medicamentoControlado:base._medicamentoReceta)" alignment="center" bold="true" color="#9e2141"}}
+    {{/stack}}
+  {{/report}}
+{{/define}}

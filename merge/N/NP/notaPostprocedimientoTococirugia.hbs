@@ -1,0 +1,13 @@
+{{#define id="notaPostprocedimientoTococirugia"}}
+  {{#section id="base"}}
+    {{#field id="tococirugiaProgramada"}}
+      {{#editor}}
+        {{param id="=persona.id"}}
+      {{/editor}}
+      {{#onChange refresh="true"}}
+        {{set tococirugiaRealizada="=base.tococirugia"}}
+        {{set _tococirugiaRealizada="=base._tococirugia"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+{{/define}}

@@ -1,0 +1,12 @@
+{{#define id="notaConfirmacionAjustePrecios"}}
+  {{param startOnOpen="n/a"}}  
+  {{#grid id="aplicacion" section="aplicacion" disableEnter="true"}}
+    {{column field="fecha" width="110" readOnly="true"}}
+    {{column field="_date" width="150" readOnly="true"}}
+    {{column field="_name" width="600" readOnly="true"}}
+    {{column field="codigo" width="120" readOnly="true"}}
+    {{column field="listaPrecios" width="120" readOnly="true"}}
+    {{column field="importe" width="120" readOnly="true"}}
+    {{column field="continuar" width="80"}}
+  {{/grid}}
+{{/define}}

@@ -1,0 +1,19 @@
+{{#define id="notaSolicitudElementoTecnologico"}}
+  {{#action id="afectar" error="=base.requiereAdjuntos&&_.isEmpty(adjuntos)?'Falta Incluir el Archivo Adjunto Correspondiente':calc.getRef(base,'elementoTecnologico.base.ubicacion')?null:'Solicitud Incorrecta'"}}
+    {{#update section="base"}}
+      {{setRef ref="elementoTecnologico.base.vencimiento" value="=calc.dueDate(elementoTecnologico.base.vencimiento, 'atencion', calc.dueTimes('elementoTecnologico', elementoTecnologico.base.subTipoSolicitud, elementoTecnologico.base.motivo, elementoTecnologico.base.momentoDieta, elementoTecnologico.base.criticidadZona, elementoTecnologico.base.tiempos))"}}
+      {{setRef ref="elementoTecnologico.base.alerta"      value="=calc.alertDate(elementoTecnologico.base.vencimiento, 'atencion', calc.dueTimes('elementoTecnologico', elementoTecnologico.base.subTipoSolicitud, elementoTecnologico.base.motivo, elementoTecnologico.base.momentoDieta, elementoTecnologico.base.criticidadZona, elementoTecnologico.base.tiempos))"}}
+    {{/update}}
+  {{/action}}
+  {{#section id="base"}}
+    {{field id="requiereAdjuntos" type="expr" value="=elementoTecnologico.base.subTipoSolicitud=='mantenimientoTecnicoLegal'"}}  
+  {{/section}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

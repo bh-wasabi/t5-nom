@@ -1,0 +1,30 @@
+{{#define id="alimentacionFuncionarios"}}  
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{field id="tieneMotivo" type="expr" value="=@subTipoSolicitud==='invitados'"}}
+    {{#field id="fechaRegistro"}}
+      {{onChange clearFields="funcionario"}}
+    {{/field}}
+    {{field id="tipoDia" type="expr" value="=fn('tipoDia', @fechaRegistro, moment(@fechaRegistro).isoWeekday())"}}
+    {{#field id="momento"}}
+      {{onChange clearFields="funcionario"}}
+    {{/field}}
+    {{#field id="motivo"}}
+      {{#editor}}
+        {{param servicio="='alimentacionFuncionarios'"}}
+        {{param partOf="=subTipoSolicitud"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="funcionario"}}
+      {{#editor alwaysLoad="true"}}
+        {{param desayuno="=@momento=='desayuno'"}}
+        {{param almuerzo="=@momento=='almuerzo'"}}
+        {{param cena="=@momento=='cena'"}}
+        {{param diaHabil="=@tipoDia=='diaHabil'"}}
+        {{param diaInhabil="=@tipoDia=='diaInhabil'"}}
+        {{param colacion="=@subTipoSolicitud=='colacion'"}}
+        {{param invitados="=@subTipoSolicitud=='invitados'"}}
+      {{/editor}}
+    {{/field}}    
+  {{/section}}
+{{/define}}

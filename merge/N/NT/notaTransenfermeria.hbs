@@ -1,0 +1,865 @@
+{{#define type="doc" id="notaTransenfermeria"}}
+
+  {{!-- persona.copiarTrans --}}
+  {{!-- dpi.hbs --}}
+
+  {{param startOnOpen="n/a"}}
+  {{#section id="base"}}
+    {{field id="tieneSegmentacion" type="expr" value="=!calc.in(_created.service, ['cirugia','tococirugia'])"}}
+  {{/section}}
+  {{param name="=fn('notaTransenfermeriaName', 'Nota Transenfermería', @_created, @_created.service, _params.horas, _params._momento)"}}
+  {{#report id="preliminar" fontSize="8" header="preliminar-encabezado" showStandarFooter="true"}}    {{!-- pageOrientation="landscape" --}}
+    {{#stack}}
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{!-- {{#stack}}
+      {{#record title="Datos Paciente" titleStyle="title" layout="lightHorizontalLines" section="persona" headerStyle="field" margin="-10,0,0,10" widths="100,440"}}
+        {{row field="nombreCompleto" label="Nombre"}}
+        {{row field="clave" label="CURP"}}
+        {{row field="_genero" label="Genero"}}
+        {{row expr="=calc.format('date', fechaNacimiento, 'DD/MMM/YYYY')+' ('+_edadActual+')'" label="Fecha Nacimiento"}}
+      {{/record}}
+    {{/stack}} --}}
+    {{#stack}}
+      {{row condition="=base.tieneSegmentacion" text="VALORACIÓN" bold="true" alignment="center" fontSize="13" color="#2b7b47"}}
+
+      {{row condition="=informacionEmbarazoPartograma" text="Información Embarazo Partograma" fontSize="9" bold="true"}}
+      {{table section="informacionEmbarazoPartograma" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=exploracionFisicaPartograma" text="Exploración Física Partograma" fontSize="9" bold="true"}}
+      {{table section="exploracionFisicaPartograma" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=partograma" text="Partograma" fontSize="9" bold="true"}}
+      {{table section="partograma" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=habitusExterior" text="Habitus Exterior" fontSize="9" bold="true"}}
+      {{table section="habitusExterior" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=valoracionAparatosSistemas" text="Valoración por Aparatos y Sistemas" fontSize="9" bold="true"}}
+      {{table section="valoracionAparatosSistemas" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=estadoSalud" text="Estado de Salud" fontSize="9" bold="true"}}
+      {{table section="estadoSalud" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=signosVitales" text="Signos Vitales" fontSize="9" bold="true"}}
+      {{table section="signosVitales" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=parametrosVentilatorios" text="Parámetros Ventilatorios" fontSize="9" bold="true"}}
+      {{table section="parametrosVentilatorios" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=gasometria" text="Gasometría" fontSize="9" bold="true"}}
+      {{table section="gasometria" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{!-- {{row condition="=perfilGasometrico" text="Perfil Gasométrico" fontSize="9" bold="true"}}
+      {{table section="perfilGasometrico" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}} --}}
+
+      {{row condition="=tallerGasometrico" text="Taller Gasométrico" fontSize="9" bold="true"}}
+      {{table section="tallerGasometrico" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=tallerHemodinamico" text="Taller Hemodinámico" fontSize="9" bold="true"}}
+      {{table section="tallerHemodinamico" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=resultadosAuxiliaresDx" text="Auxiliares DX" fontSize="9" bold="true"}}
+      {{table section="resultadosAuxiliaresDx" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=escalas" text="Escalas" fontSize="9" bold="true"}}
+      {{table section="escalas" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=registroEscalasPediatrica" text="Registro Escalas Pediátricas" fontSize="9" bold="true"}}
+      {{table section="registroEscalasPediatrica" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=prevencionCaidasPediatrica" text="Prevención Caidas Pediátricas" fontSize="9" bold="true"}}
+      {{table section="prevencionCaidasPediatrica" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=prevencionUlceraDecubitoPediatrica" text="Prevención Ulcera Decubito Pediátricas" fontSize="9" bold="true"}}
+      {{table section="prevencionUlceraDecubitoPediatrica" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=cuidadoHeridasPediatrica" text="Cuidado Heridas Pediátricas" fontSize="9" bold="true"}}
+      {{table section="cuidadoHeridasPediatrica" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=prevencionIVUSondaVesicalPediatrica" text="Prevención IVU Sonda Vesical Pediátricas" fontSize="9" bold="true"}}
+      {{table section="prevencionIVUSondaVesicalPediatrica" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=cuidadosAccesoVascularPediatrica" text="Cuidados Acceso Vascular Pediátricas" fontSize="9" bold="true"}}
+      {{table section="cuidadosAccesoVascularPediatrica" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=procedimientosInvasivosPediatrica" text="Procedimientos Invasivos Pediátricas" fontSize="9" bold="true"}}
+      {{table section="procedimientosInvasivosPediatrica" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=labstixPediatrica" text="Labstix Pediátricas" fontSize="9" bold="true"}}
+      {{table section="labstixPediatrica" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=eventoCardiorespiratorio" text="Evento Cardiorespiratorio" fontSize="9" bold="true"}}
+      {{table section="eventoCardiorespiratorio" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=educacionAtencionPrimariaSalud" text="Educación de Atención Primaria a la Salud" fontSize="9" bold="true"}}
+      {{table section="educacionAtencionPrimariaSalud" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=base.tieneSegmentacion" text="DIAGNÓSTICO" fontSize="13" bold="true" alignment="center" fontSize="13" color="#2b7b47"}}
+      {{row condition="=nanda" text="Diagnósticos de Enfermeria (NANDA)" fontSize="9" bold="true"}}
+      {{table section="nanda" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=base.tieneSegmentacion" text="PLANEACIÓN" fontSize="13" bold="true" alignment="center" fontSize="13" color="#2b7b47"}}
+      {{row condition="=planesCuidado" text="Planes Cuidado" fontSize="9" bold="true"}}
+      {{table section="planesCuidado" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+      {{!-- {{row condition="=base.tieneSegmentacion&&planesCuidado" text="http://www.imss.gob.mx/guias_practicaclinica?field_categoria_gs_value=All" fontSize="7" alignment="center"}}
+      {{row condition="=base.tieneSegmentacion&&planesCuidado" text="http://www.cpe.salud.gob.mx/site3/publicaciones/docs/catalogo_planes_cuidado_enfermeria.pdf" fontSize="7" alignment="center"}}
+      {{row condition="=base.tieneSegmentacion&&planesCuidado" text="https://www.elsevier.com/clinical-solutions/covid-19-toolkit" fontSize="7" alignment="center"}} --}}
+
+      {{row condition="=base.tieneSegmentacion" text="Intervenciones" fontSize="12" alignment="center"}}
+      {{row condition="=nic" text="Intervenciones y Actividades (NIC)" fontSize="9" bold="true"}}
+      {{table section="nic" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=medicamentos" text="Medicamentos" fontSize="9" bold="true"}}
+      {{table section="medicamentos" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=soluciones" text="Soluciones" fontSize="9" bold="true"}}
+      {{table section="soluciones" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=mezclas" text="Mezclas" fontSize="9" bold="true"}}
+      {{table section="mezclas" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=dietas" text="Dietas" fontSize="9" bold="true"}}
+      {{table section="dietas" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=laboratorio" text="Laboratorio Indicado" fontSize="9" bold="true"}}
+      {{table section="laboratorio" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=laboratorioMolecular" text="Laboratorio Molecular Indicado" fontSize="9" bold="true"}}
+      {{table section="laboratorioMolecular" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=laboratorioPatologia" text="Laboratorio Patología Indicado" fontSize="9" bold="true"}}
+      {{table section="laboratorioPatologia" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=imagenologia" text="Imagenología Indicado" fontSize="9" bold="true"}}
+      {{table section="imagenologia" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=transfusiones" text="Transfusiones" fontSize="9" bold="true"}}
+      {{table section="transfusiones" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=controlLiquidos" text="Control de Líquidos" fontSize="9" bold="true"}}
+      {{table section="controlLiquidos" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=controlTextiles" text="Control Textiles" fontSize="9" bold="true"}}
+      {{table section="controlTextiles" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=controlTextiles2" text="Control Textiles" fontSize="9" bold="true"}}
+      {{table section="controlTextiles2" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=cateterSondaDrenaje" text="Catéteres, Sondas o Drenajes" fontSize="9" bold="true"}}
+      {{table section="cateterSondaDrenaje" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=cateterSondaDrenajeQuirofanoEnf" text="Catéteres, Sondas o Drenajes en Qx" fontSize="9" bold="true"}}
+      {{table section="cateterSondaDrenajeQuirofanoEnf" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=tiemposQuirurgicos" text="Tiempos Quirúrgicos" fontSize="9" bold="true"}}
+      {{table section="tiemposQuirurgicos" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=tiemposQuirurgicosEnf" text="Tiempos Quirúrgicos Enfermería en Qx" fontSize="9" bold="true"}}
+      {{table section="tiemposQuirurgicosEnf" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=tiemposIsquemia" text="Tiempos Isquemia" fontSize="9" bold="true"}}
+      {{table section="tiemposIsquemia" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=posicionQuirugica" text="Posicion Quirúgica" fontSize="9" bold="true"}}
+      {{table section="posicionQuirugica" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=base.tieneSegmentacion" text="Evaluación" fontSize="12" alignment="center"}}
+      {{row condition="=noc" text="Resultados Esperados (NOC)" fontSize="9" bold="true"}}
+      {{table section="noc" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=estudioHistopatologico" text="Estudios Histopatológicos" fontSize="9" bold="true"}}
+      {{table section="estudioHistopatologico" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=tecnicaAnestesica" text="Técnica Anestésica" fontSize="9" bold="true"}}
+      {{table section="tecnicaAnestesica" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=equipoQuirurgico" text="Equipo Quirúrgico" fontSize="9" bold="true"}}
+      {{table section="equipoQuirurgico" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=enfermeraResponsable" text="Enfermero(a)s Responsables" fontSize="9" bold="true"}}
+      {{table section="enfermeraResponsable" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=usuarios&&!enfermeraResponsable" text="Usuarios" fontSize="9" bold="true"}}
+      {{table condition="=usuarios&&!enfermeraResponsable" section="usuarios" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+
+      {{row condition="=comentarios" text="Observaciones Enfermería" fontSize="9" bold="true"}}
+      {{table section="comentarios" pivotText="true" titleStyle="title" layout="lightHorizontalLines" headerStyle="field" margin="-10,0,0,10" fontSize="7"}}
+    {{/stack}}
+    {{#stack}}
+      {{#record title="Firmas" titleStyle="title" layout="lightHorizontalLines" section="_stamp" headerStyle="field" margin="-10,0,0,10" widths="100,440"}}
+        {{row expr="=_created._user" label="Elabora"}}
+        {{row expr="=_created._turn" label="Turno Elabora"}}
+        {{row expr="=_created._identification" label="Especialidad Elabora"}}
+        {{row expr="=''" label="Firma Elabora"}}
+        {{row expr="=_created._responsable" label="Responsable"}}
+        {{row expr="=_created._responsableId" label="Especialidad Responsable"}}
+        {{row expr="=''" label="Firma Responsable"}}
+        {{row field="text" label="Cadena Original"}}
+        {{row field="signature" label="Sello Digital"}}
+      {{/record}}
+    {{/stack}}
+  {{/report}}  
+{{/define}}
+{{#markup}}
+  {{#page name="Nota Transenfermería"}}
+    {{#with base}}
+      {{#if tieneSegmentacion}}
+        {{#h3 class="h3-center"}}VALORACIÓN{{/h3}}
+      {{/if}}
+    {{/with}}
+    \{{#if informacionEmbarazoPartograma}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Información Embarazo Partograma
+            {{/h5}}
+            \{{pivot informacionEmbarazoPartograma}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if exploracionFisicaPartograma}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Exploración Física Partograma
+            {{/h5}}
+            \{{pivot exploracionFisicaPartograma}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if partograma}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Partograma
+            {{/h5}}
+            \{{pivot partograma}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if habitusExterior}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Habitus Exterior
+            {{/h5}}
+            \{{pivot habitusExterior}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if valoracionAparatosSistemas}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Valoración por Aparatos y Sistemas
+            {{/h5}}
+            \{{pivot valoracionAparatosSistemas}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if estadoSalud}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Estado de Salud
+            {{/h5}}
+            \{{pivot estadoSalud}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if signosVitales}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Signos Vitales
+            {{/h5}}
+            \{{pivot signosVitales}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if parametrosVentilatorios}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Parámetros Ventilatorios
+            {{/h5}}
+            \{{pivot parametrosVentilatorios}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if gasometria}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Gasometría
+            {{/h5}}
+            \{{pivot gasometria}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    {{!-- \{{#if perfilGasometrico}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Perfil Gasométrico
+            {{/h5}}
+            \{{pivot perfilGasometrico}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}} --}}
+    \{{#if tallerGasometrico}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Taller Gasométrico
+            {{/h5}}
+            \{{pivot tallerGasometrico}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if tallerHemodinamico}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Taller Hemodinámico
+            {{/h5}}
+            \{{pivot tallerHemodinamico}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if resultadosAuxiliaresDx}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Auxiliares DX
+            {{/h5}}
+            \{{pivot resultadosAuxiliaresDx}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if escalas}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Escalas
+            {{/h5}}
+            \{{pivot escalas}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if registroEscalasPediatrica}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Registro Escalas Pediátricas
+            {{/h5}}
+            \{{pivot registroEscalasPediatrica}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if prevencionCaidasPediatrica}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Prevención Caidas Pediátricas
+            {{/h5}}
+            \{{pivot prevencionCaidasPediatrica}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if prevencionUlceraDecubitoPediatrica}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Prevención Ulcera Decubito Pediátricas
+            {{/h5}}
+            \{{pivot prevencionUlceraDecubitoPediatrica}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if cuidadoHeridasPediatrica}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Cuidado Heridas Pediátricas
+            {{/h5}}
+            \{{pivot cuidadoHeridasPediatrica}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if prevencionIVUSondaVesicalPediatrica}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Prevención IVU Sonda Vesical Pediátricas
+            {{/h5}}
+            \{{pivot prevencionIVUSondaVesicalPediatrica}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if cuidadosAccesoVascularPediatrica}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Cuidados Acceso Vascular Pediátricas
+            {{/h5}}
+            \{{pivot cuidadosAccesoVascularPediatrica}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if procedimientosInvasivosPediatrica}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Procedimientos Invasivos Pediátricas
+            {{/h5}}
+            \{{pivot procedimientosInvasivosPediatrica}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if labstixPediatrica}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Labstix Pediátricas
+            {{/h5}}
+            \{{pivot labstixPediatrica}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if eventoCardiorespiratorio}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Evento Cardiorespiratorio
+            {{/h5}}
+            \{{pivot eventoCardiorespiratorio}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if educacionAtencionPrimariaSalud}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Educación de Atención Primaria a la Salud
+            {{/h5}}
+            \{{pivot educacionAtencionPrimariaSalud}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    {{#with base}}
+      {{#if tieneSegmentacion}}
+        {{#h3 class="h3-center"}}DIAGNÓSTICO{{/h3}}
+      {{/if}}
+    {{/with}}
+    \{{#if nanda}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Diagnósticos de Enfermeria (NANDA)
+            {{/h5}}
+            \{{pivot nanda}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    {{#with base}}
+      {{#if tieneSegmentacion}}
+        {{#h3 class="h3-center"}}PLANEACIÓN{{/h3}}
+      {{/if}}
+    {{/with}}
+    \{{#if planesCuidado}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Planes Cuidado
+            {{/h5}}
+            \{{pivot planesCuidado}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+      {{!-- {{#with base}}
+        {{#if tieneSegmentacion}}
+        <center><a class="link" href="http://www.imss.gob.mx/guias_practicaclinica?field_categoria_gs_value=All" target="_blank">Ver Guías de Práctica Clínica</a></center>
+        <center><a class="link" href="http://www.cpe.salud.gob.mx/site3/publicaciones/docs/catalogo_planes_cuidado_enfermeria.pdf" target="_blank">Ver Planes de Cuidado de Enfermería</a></center>
+        <center><a class="link" href="https://www.elsevier.com/clinical-solutions/covid-19-toolkit" target="_blank">Herramientas Clínicas COVID-19</a></center>
+        {{/if}}
+      {{/with}} --}}
+    \{{/if}}
+    {{#with base}}
+      {{#if tieneSegmentacion}}
+        {{#h4 class="h4-center"}}Intervenciones{{/h4}}
+      {{/if}}
+    {{/with}}
+    \{{#if nic}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Intervenciones y Actividades (NIC)
+            {{/h5}}
+            \{{pivot nic}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if medicamentos}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Medicamentos
+            {{/h5}}
+            \{{pivot medicamentos}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if soluciones}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Soluciones
+            {{/h5}}
+            \{{pivot soluciones}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if mezclas}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Mezclas
+            {{/h5}}
+            \{{pivot mezclas}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if dietas}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Dietas
+            {{/h5}}
+            \{{pivot dietas}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if laboratorio}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Laboratorio Indicado
+            {{/h5}}
+            \{{pivot laboratorio}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if laboratorioMolecular}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Laboratorio Molecular Indicado
+            {{/h5}}
+            \{{pivot laboratorioMolecular}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if laboratorioPatologia}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Laboratorio Patología Indicado
+            {{/h5}}
+            \{{pivot laboratorioPatologia}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if imagenologia}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Imagenología Indicado
+            {{/h5}}
+            \{{pivot imagenologia}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if transfusiones}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Transfusiones
+            {{/h5}}
+            \{{pivot transfusiones}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if controlLiquidos}}
+      {{#row}}
+        {{#row class="auto-form-row not-radius"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Control de Líquidos
+            {{/h5}}
+            \{{pivot controlLiquidos}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if controlTextiles}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Control Textiles
+            {{/h5}}
+            \{{pivot controlTextiles}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if controlTextiles2}}
+      {{#row}}
+        {{#row class="auto-form-row not-radius"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Control Textiles
+            {{/h5}}
+            \{{pivot controlTextiles2}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if cateterSondaDrenaje}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Catéteres, Sondas o Drenajes
+            {{/h5}}
+            \{{pivot cateterSondaDrenaje}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if cateterSondaDrenajeQuirofanoEnf}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Catéteres, Sondas o Drenajes en Qx
+            {{/h5}}
+            \{{pivot cateterSondaDrenajeQuirofanoEnf}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if tiemposQuirurgicos}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Tiempos Quirúrgicos
+            {{/h5}}
+            \{{pivot tiemposQuirurgicos}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if tiemposQuirurgicosEnf}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Tiempos Quirúrgicos Enfermería en Qx
+            {{/h5}}
+            \{{pivot tiemposQuirurgicosEnf}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if tiemposIsquemia}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Tiempos Isquemia
+            {{/h5}}
+            \{{pivot tiemposIsquemia}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if posicionQuirugica}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Posición Quirúgica
+            {{/h5}}
+            \{{pivot posicionQuirugica}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    {{#with base}}
+      {{#if tieneSegmentacion}}
+        {{#h4 class="h4-center"}}Evaluación{{/h4}}        
+      {{/if}}
+    {{/with}}
+    \{{#if noc}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Resultados Esperados (NOC)
+            {{/h5}}
+            \{{pivot noc}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if tecnicaAnestesica}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Técnica Anestésica
+            {{/h5}}
+            \{{pivot tecnicaAnestesica}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if estudioHistopatologico}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Estudios Histopatológicos
+            {{/h5}}
+            \{{pivot estudioHistopatologico}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if equipoQuirurgico}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Equipo Quirúrgico
+            {{/h5}}
+            \{{pivot equipoQuirurgico}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+    \{{#if enfermeraResponsable}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Enfermero(a)s Responsables
+            {{/h5}}
+            \{{pivot enfermeraResponsable}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{else}}
+      \{{#if usuarios}}
+        {{#row}}
+          {{#row class="auto-form-row"}}
+            {{#col medium="100%" class="auto-form-col"}}
+              {{#h5 class="auto-form-h5"}}
+                Usuarios
+              {{/h5}}
+              \{{pivot usuarios}}
+            {{/col}}
+          {{/row}}
+        {{/row}}
+      \{{/if}}
+    \{{/if}}
+    \{{#if comentarios}}
+      {{#row}}
+        {{#row class="auto-form-row"}}
+          {{#col medium="100%" class="auto-form-col"}}
+            {{#h5 class="auto-form-h5"}}
+              Observaciones Enfermería
+            {{/h5}}
+            \{{pivot comentarios}}
+          {{/col}}
+        {{/row}}
+      {{/row}}
+    \{{/if}}
+  {{/page}}
+{{/markup}}

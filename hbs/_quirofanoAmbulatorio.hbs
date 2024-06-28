@@ -1,0 +1,22 @@
+{{#define type="doc" id="_quirofanoAmbulatorio" name="Programación Quirófano Ambulatorio"}}
+  {{param pagesStart="1"}}
+  {{param pagesTabsPosition="left"}}
+  {{param pagesTabsWidth="20%"}}
+
+  {{#menu id="menu"}}
+    {{item text="Refrescar" icon="refresh" type="refresh"}}
+  {{/menu}}
+
+  {{browser id="agendas" menu="menu"}}
+  {{scheduler id="agendas" type="busy" views="week, day" currentView="week" firstDayOfWeek="0" startDayHour="0" endDayHour="24" source="planAgenda" view="agendasCirugiaAmbulatoria" multiResources="true" resourceLabel="Quirófano Ambulatorio" resourceId="actor" resourceName="_actor"}}
+{{/define}}
+
+{{#markup}}
+  {{#page}}
+    {{#row}}
+      {{#col medium="100%"}}
+        {{widget type="scheduler" scheduler="agendas"}}
+      {{/col}}
+    {{/row}}
+  {{/page}}
+{{/markup}}

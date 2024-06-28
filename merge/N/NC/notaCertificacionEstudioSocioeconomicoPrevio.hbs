@@ -1,0 +1,7 @@
+{{#define id="notaCertificacionEstudioSocioeconomicoPrevio"}}
+  {{#section id="base"}}
+    {{field id="listaPrecios" type="expr" value="='price'+nivelSocioeconomico"}}
+    {{field id="_listaPrecios" type="expr" value="=_nivelSocioeconomico"}}
+    {{validator type="expr" validIf="=certificacionEstudioPrevio=='si'" message="Falta Certificar"}}
+  {{/section}}
+{{/define}}

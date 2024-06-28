@@ -1,0 +1,32 @@
+{{#define id="notaSolicitudConsultaExterna"}}
+
+  {{#action id="historialCitas" hide="true" type="quickReport" label="Historial Citas - Consulta Externa" source="solicitud" view="historialCitas"}}
+    {{param persona="=persona.id"}}
+    {{param servicio="='consultaExterna'"}}
+    {{param desde="=from"}}
+    {{param hasta="=to"}}
+    {{#grid exportToExcel="true" allowSearch="true" allowRefresh="true" filters="true" defaultDate="all" showDates="all,next30,next15,next7,next3,tomorrow,today,yesterday,last3,last7,last15,last30" wordWrapEnabled="true" pdfFontSize="4" pdfPageOrientation="landscape" columnAutoWidth="wordWrapEnabled"}}
+      {{column field="persona.nombreCompleto" label="Paciente"}}
+      {{column field="persona._edadActual" label="Edad"}}
+      {{column field="persona._genero" label="Genero"}}
+      {{column field="base.fechaHoraCita" type="date" label="Fecha Cita" format="DD/MMM/YYYY hh:mma"}}
+      {{column field="base._nota" label="Nota"}}
+      {{column field="base.codigo" label="Código"}}
+      {{column field="base.descripcion" label="Descripción"}}
+      {{column field="base._tipoCita" label="Tipo Cita"}}
+      {{column field="base._prestadorServicios" label="Médico"}}
+      {{column field="base._especialidad" label="Especialidad"}}
+      {{column field="_updated._moment" label="Momento"}}
+    {{/grid}}
+  {{/action}}
+
+  {{#section id="base"}}
+    {{field id="esHospitalizacion" type="expr" value="=tipoEpisodio=='hospitalizacion'"}}
+    {{#field id="wizardConsultaExterna"}}
+      {{#onChange}}
+        {{push consultaExterna="=fn('consultaExternaCantidad', base, base.cantidad)"}}
+        {{set wizardConsultaExterna="={}"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+{{/define}}

@@ -1,0 +1,15 @@
+{{#define id="infoPaciente"}}
+  {{#section id="base"}}
+    {{#field id="paciente"}}
+      {{#editor}}
+        {{param tipoExpediente="='paciente'"}}
+        {{#onChange}}
+          {{set edadActual="=calc.fromNow(persona.fechaNacimiento)"}}
+          {{set genero="=persona.genero"}}
+          {{set somatometria="=detalle.somatometria"}}
+          {{set _somatometria="=detalle._somatometria"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

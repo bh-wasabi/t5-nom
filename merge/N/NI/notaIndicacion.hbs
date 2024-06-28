@@ -1,0 +1,51 @@
+{{#define id="notaIndicacion"}}
+  {{param attribute1="=(base.cirugia.length||base.tococirugia.length)?'urgente':null"}}
+  {{param attribute2="=_.isEmpty(base.cirugia)&&_.isEmpty(base.tococirugia)&&_.isEmpty(calc.filterInRef(base.procedimiento, 'base.servicioSolicitado', ['tococirugia','endourologia','hemodinamia','braquiterapia']))?null:'procedimientoQx'"}}
+  {{action id="edi" label="Descargar Interface..." type="save-as" visibleMode="close" color="blue" btnSolid="true" condition="=_params.edi" items="=_params.edi" fileName="=_params.persona.nombreCompleto+'.hl7'"}}
+  {{#section id="base"}}
+    {{field id="esHospitalizacion" type="expr" value="=tipoEpisodio=='hospitalizacion'"}}
+    {{#field id="central"}}
+[.#if esMulti.]    
+      {{#editor}}
+        {{param servicio="=servicio"}}
+      {{/editor}}
+[./if.]      
+      {{#onChange clearFields="ubicacionMultidosis,cama"}}
+        [.#if esMulti.]
+        [.else.]      
+        {{set prioridad="=fn('prioridadCentral', central)"}}
+        [./if.]
+      {{/onChange}}
+    {{/field}}
+    {{#field id="ubicacionMultidosis"}}
+      {{#editor alwaysLoad="true"}}
+        {{param central="=central"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="cama"}}
+      {{#editor alwaysLoad="true"}}
+        {{param central="=central"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="wizardPlan"}}
+      {{#onChange}}
+        {{push laboratorio="=fn('laboratorio', base._extra.laboratorio, base)"}}
+        {{push imagenologia="=fn('imagenologia', base._extra.imagenologia, base)"}}
+        {{push patologia="=fn('patologia', base._extra.patologia, base)"}}
+        {{push procedimiento="=fn('procedimiento', base._extra.procedimiento, base)"}}
+        {{set wizardPlan="={}"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+  {{#grid id="farmaciaHoy" section="farmaciaHoy" allowInsert="false" allowRemove="false"}}
+    {{column field="_name" width="500" readOnly="true"}}
+    {{!-- {{column field="estatus" width="80" readOnly="true"}} --}}
+    {{column field="_moment" width="100" readOnly="true"}}
+    {{column field="porMinistrar" width="90" readOnly="true"}}
+    {{column field="horaSiguienteDosis" width="100" readOnly="true"}}
+    {{column field="velocidadActual" width="100" readOnly="true"}}
+    {{column field="velocidadNueva" width="100"}}
+    {{column field="horaModificacion" validateHour="true" width="120"}}
+    {{column field="accion" width="90"}}
+  {{/grid}}
+{{/define}}

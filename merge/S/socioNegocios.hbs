@@ -1,0 +1,7 @@
+{{#define id="socioNegocios"}}
+  {{#section id="base"}}
+    {{field id="nombreCompleto" type="expr" label="Nombre" value="=nombre"}}
+    {{field id="esPersonaMoral" type="expr" value="=@tipoPersona=='persona-moral'"}}
+    {{field id="esPersonaFisica" type="expr" value="=@tipoPersona=='persona-fisica'"}}
+  {{/section}}
+{{/define}}

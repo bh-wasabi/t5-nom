@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1d379xf" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.0.0">
+  <bpmn:collaboration id="instalacionProvisionalActivoFijo">
+    <bpmn:participant id="Participant_0nf4w4g" name="Instalación Provisional" processRef="Process_07grf7c" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_07grf7c" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_1ktnj5z">
+      <bpmn:lane id="Lane_1dh21yt" name="Consesionaria">
+        <bpmn:flowNodeRef>Event_11lkj67</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>pendiente</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enEsperaInstalacionDefinitiva</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>desinstalado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1qs20v6</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enDesinstalacion</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enInstalacionProvisional</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Event_11lkj67">
+      <bpmn:outgoing>Flow_1gr53fc</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="pendiente" name="Solicitud Instalación Provisional">
+      <bpmn:incoming>Flow_1gr53fc</bpmn:incoming>
+      <bpmn:outgoing>Flow_188e3gr</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_1l048f4" sourceRef="enEsperaInstalacionDefinitiva" targetRef="enDesinstalacion" />
+    <bpmn:sequenceFlow id="Flow_0psbdc8" sourceRef="enInstalacionProvisional" targetRef="enEsperaInstalacionDefinitiva" />
+    <bpmn:sequenceFlow id="Flow_1gr53fc" sourceRef="Event_11lkj67" targetRef="pendiente" />
+    <bpmn:sequenceFlow id="Flow_0d7ecn3" sourceRef="enDesinstalacion" targetRef="desinstalado" />
+    <bpmn:sequenceFlow id="Flow_1q3fzsa" sourceRef="desinstalado" targetRef="Event_1qs20v6" />
+    <bpmn:sequenceFlow id="Flow_188e3gr" sourceRef="pendiente" targetRef="enInstalacionProvisional" />
+    <bpmn:subProcess id="enDesinstalacion" name="En Desinstalación Provisional">
+      <bpmn:incoming>Flow_1l048f4</bpmn:incoming>
+      <bpmn:outgoing>Flow_0d7ecn3</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="enInstalacionProvisional" name="En Instalación Provisional">
+      <bpmn:incoming>Flow_188e3gr</bpmn:incoming>
+      <bpmn:outgoing>Flow_0psbdc8</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:receiveTask id="enEsperaInstalacionDefinitiva" name="En Espera Instalación Definitiva">
+      <bpmn:incoming>Flow_0psbdc8</bpmn:incoming>
+      <bpmn:outgoing>Flow_1l048f4</bpmn:outgoing>
+    </bpmn:receiveTask>
+    <bpmn:task id="desinstalado" name="Equipo Provisional Desinstalado">
+      <bpmn:incoming>Flow_0d7ecn3</bpmn:incoming>
+      <bpmn:outgoing>Flow_1q3fzsa</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="Event_1qs20v6">
+      <bpmn:incoming>Flow_1q3fzsa</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="instalacionProvisionalActivoFijo">
+      <bpmndi:BPMNShape id="Participant_0nf4w4g_di" bpmnElement="Participant_0nf4w4g" isHorizontal="true">
+        <dc:Bounds x="129" y="80" width="921" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1dh21yt_di" bpmnElement="Lane_1dh21yt" isHorizontal="true">
+        <dc:Bounds x="159" y="80" width="891" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1q3fzsa_di" bpmnElement="Flow_1q3fzsa">
+        <di:waypoint x="950" y="155" />
+        <di:waypoint x="992" y="155" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0d7ecn3_di" bpmnElement="Flow_0d7ecn3">
+        <di:waypoint x="810" y="155" />
+        <di:waypoint x="850" y="155" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1gr53fc_di" bpmnElement="Flow_1gr53fc">
+        <di:waypoint x="227" y="155" />
+        <di:waypoint x="259" y="155" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0psbdc8_di" bpmnElement="Flow_0psbdc8">
+        <di:waypoint x="520" y="155" />
+        <di:waypoint x="570" y="155" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1l048f4_di" bpmnElement="Flow_1l048f4">
+        <di:waypoint x="670" y="155" />
+        <di:waypoint x="710" y="155" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_188e3gr_di" bpmnElement="Flow_188e3gr">
+        <di:waypoint x="359" y="155" />
+        <di:waypoint x="420" y="155" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_11lkj67_di" bpmnElement="Event_11lkj67">
+        <dc:Bounds x="191" y="137" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0s8f9k2_di" bpmnElement="pendiente">
+        <dc:Bounds x="259" y="115" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1qms8p7_di" bpmnElement="enEsperaInstalacionDefinitiva">
+        <dc:Bounds x="570" y="115" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0htdk6g_di" bpmnElement="desinstalado">
+        <dc:Bounds x="850" y="115" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1qs20v6_di" bpmnElement="Event_1qs20v6">
+        <dc:Bounds x="992" y="137" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1mlkv3u_di" bpmnElement="enDesinstalacion">
+        <dc:Bounds x="710" y="115" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0b11z0e_di" bpmnElement="enInstalacionProvisional">
+        <dc:Bounds x="420" y="115" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="enDesinstalacion" />
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="enInstalacionProvisional" />
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

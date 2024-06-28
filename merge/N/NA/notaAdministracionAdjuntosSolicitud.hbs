@@ -1,0 +1,14 @@
+{{#define id="notaAdministracionAdjuntosSolicitud"}}
+  {{param startOnOpen="n/a"}}
+  {{#grid id="adjuntos" section="adjuntos" sortBy="orden, fecha" disableEnter="true"}}
+    {{column field="nombre" width="300"}}
+    {{column field="referencia" width="200"}}
+    {{column field="grupo" width="200"}}
+    {{column field="tipo" width="150"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="80" readOnly="true"}}
+    {{column field="tamano" width="80" readOnly="true"}}
+    {{column field="orden" width="60"}}
+    {{column field="eliminar" width="100"}}
+  {{/grid}}
+{{/define}}

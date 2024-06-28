@@ -1,0 +1,31 @@
+{{#define id="notaAnalisisCurriculumRH"}}
+  {{action id="tool" type="report-docx" label="Word" title="=_name" color="primary" icon="arrow-down-a" btnSolid="true" visibleMode="close" condition="=true"}}
+  {{!-- {{action id="tool" type="report-xlsx" label="Excel" title="=_name" color="green" visibleMode="close" condition="=true" icon="arrow-down-a" btnSolid="true"}} --}}
+  {{param notifyBody="Se hace de su conocimiento, que el proceso de selección, el cual contempla diversos instrumentos y etapas de evaluación, son conducidos por personal calificado de la Coordinación de Reclutamiento y Selección de Personal del HRAEI. Asimismo, se le informa que el dictamen derivado del proceso, no se le dará a conocer, quedando éste a resguardo de la Coordinación en mención, exclusivamente para uso laboral. Finalmente, al darse de alta en la plataforma de pruebas digitalizadas, y/o al presentarse en las instalaciones del HRAEI con el objeto de participar en alguna de las fases del proceso en el que se encuentra, se hace constar, que usted voluntariamente acepta realizar el proceso de selección y las condiciones del mismo."}}
+  {{#section id="base"}}
+    {{field id="noFavorable" type="expr" hide="true" value="=analisisCurricular=='noFavorable'"}}
+    {{#field id="puestoVincular"}}
+      {{#onChange newRef="documentacion"}}
+        {{set codigo="=base.codigo"}}
+        {{set sueldo="=base.sueldo"}}
+        {{set turnoPuesto="=base.condicionEspecificaPuesto.base._turnoPuesto"}}
+        {{set jornadaPuesto="=base.condicionEspecificaPuesto.base._jornadaPuesto"}}
+        {{set horarioLaboral="=calc.replaceAll('\n', ', ', base.condicionEspecificaPuesto.base._horarioLaboral)"}}
+        {{set nombrePuestoSuperiorJerarquico="=base.descripcionPuesto.base.nombrePuestoSuperiorJerarquico"}}
+        {{set codigoPuestoSuperiorJerarquico="=base.descripcionPuesto.base.codigoPuestoSuperiorJerarquico"}}
+        {{set puestoSuperiorJerarquico="=base.descripcionPuesto.base._puestoSuperiorJerarquico"}}
+        {{set _formacionAcademicaPuesto="=base._formacionAcademicaPuesto"}}
+        {{set _experienciaLaboralPuesto="=base._experienciaLaboralPuesto"}}
+        {{set _adscripcion="=base._adscripcion"}}
+        {{set apegoPuesto="=fn('apegoPuesto', _doc.base.datosFormacionAcademica, _doc.base.datosTiempoExperiencia, calc.findWhereRef(_doc.base.datosExperienciaLaboral, 'base.tipoTrabajo', 'trabajoActual')||calc.findWhereRef(_doc.base.datosExperienciaLaboral, 'base.tipoTrabajo', 'ultimoTrabajo'), base.formacionAcademicaPuesto, base.experienciaLaboralPuesto)"}}
+        {{!-- {{set formacionAcademicaPuesto="=base.formacionAcademicaPuesto"}} --}}
+        {{!-- {{set experienciaLaboralPuesto="=base.experienciaLaboralPuesto"}} --}}
+        {{!-- {{set formacionAcademicaPuesto="=base.formacionAcademicaPuesto"}} --}}
+        {{setRef ref="documentacion.base.documentacion" value="=base.documentacionRequerida"}}
+        {{setRef ref="documentacion.base._documentacion" value="=base._documentacionRequerida"}}
+        {{setRef ref="documentacion.base.vencimiento" value="=moment().add(1,'day').format()"}}
+        {{setRef ref="documentacion.base.estatus" value="='nuevo'"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+{{/define}}

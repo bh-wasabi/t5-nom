@@ -1,0 +1,25 @@
+{{#define id="cifCodificadorFuncional"}}
+  {{#section id="base"}}
+    {{#field id="clasificacionFuncionalCifNivelUno"}}
+      {{onChange clearFields="clasificacionFuncionalCifNivelDos,clasificacionFuncionalCifNivelTres,clasificacionFuncionalCifNivelCuatro"}}
+    {{/field}}
+    {{#field id="clasificacionFuncionalCifNivelDos"}}
+      {{onChange clearFields="clasificacionFuncionalCifNivelTres,clasificacionFuncionalCifNivelCuatro"}}
+      {{#editor}}
+        {{param partOf="=clasificacionFuncionalCifNivelUno"}}
+      {{/editor}}
+    {{/field}}  
+    {{#field id="clasificacionFuncionalCifNivelTres"}}
+      {{onChange clearFields="clasificacionFuncionalCifNivelCuatro"}}
+      {{#editor}}
+        {{param partOf="=clasificacionFuncionalCifNivelDos"}}
+      {{/editor}}
+    {{/field}}  
+    {{#field id="clasificacionFuncionalCifNivelCuatro"}}
+      {{#editor}}
+        {{param partOf="=clasificacionFuncionalCifNivelTres"}}
+      {{/editor}}
+    {{/field}}  
+    {{field id="codigoCifFinal" type="expr" value="=calc.concatPoint(clasificacionFuncionalCifNivelCuatro||clasificacionFuncionalCifNivelTres||clasificacionFuncionalCifNivelDos||clasificacionFuncionalCifNivelUno, clasificacionFuncionalCifCalificador)"}}
+  {{/section}}
+{{/define}} 

@@ -1,0 +1,11 @@
+{{#define id="datosMujerEgreso"}}
+ 	{{#section id="base"}}
+    {{field id="esMujer" type="expr" value="=persona.esMujer"}}
+    {{field id="siParto" type="expr" value="=tipoAtencionObstetrica=='parto'"}}
+    {{field id="siAborto" type="expr" value="=tipoAtencionObstetrica=='aborto'"}}
+    {{field id="siNacido" type="expr" value="=condicionNacimiento=='nacidoVivo'"}}
+    {{!-- Tarea 2504 --}}
+    {{field id="siNacidoMuerto" type="expr" value="=condicionNacimiento=='nacidoMuerto'"}}
+    {{!-- Tarea 2504 --}}
+  {{/section}}
+{{/define}}

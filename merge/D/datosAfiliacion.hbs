@@ -1,0 +1,11 @@
+{{#define id="datosAfiliacion"}}
+  {{#section id="base"}}
+  	{{field id="tipoBeneficiario" defaultValue="=_params.parentData.tipoBeneficiario"}}
+  	{{field id="tipoDerechohabiencia" defaultValue="=_params.parentData.tipoDerechohabiencia"}}
+    {{#field id="programa"}}
+    	{{#editor}}
+    		{{param partOf="=fn('tipoPrograma', @tipoBeneficiario, @tipoDerechohabiencia)"}}
+    	{{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}} 

@@ -1,0 +1,10 @@
+{{#define id="notaTiemposQuirurgicos"}}
+  {{#section id="base"}}
+    {{field id="tiempoTotalCirugia" type="expr" value="=fn('minutos', @iniciaCirugia, @terminaCirugia)"}}
+    {{field id="tiempoTotalAnestesia" type="expr" value="=fn('minutos', @iniciaAnestesia, @terminaAnestesia)"}}
+    {{field id="tiempoTotalSalaCirugia" type="expr" value="=fn('minutos', @ingresaPacienteSala, @salePacienteSala)"}}
+    {{field id="tiempoTotalIsquemia" type="expr" value="=calc.sumRef(tiemposIsquemiaCirculacion, 'base.duracion')"}}
+    {{field id="tiempoTotalPinzamientoAortico" type="expr" value="=calc.sumRef(tiemposPinzamientoAortico, 'base.duracion')"}}
+    {{field id="tiempoTotalBombaExtracorporea" type="expr" value="=calc.sumRef(tiemposBombaExtracorporea, 'base.duracion')"}}
+  {{/section}}    
+{{/define}}

@@ -1,0 +1,10 @@
+{{#define id="evaluacion"}}  
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{#field id="plantillaEvaluacion"}}
+      {{#editor}}
+        {{param momentoEvaluacion="=_mainDoc.base.subMoment"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

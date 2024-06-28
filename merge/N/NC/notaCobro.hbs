@@ -1,0 +1,157 @@
+{{#define id="notaCobro"}}
+  {{param startOnOpen="aplicacion"}}
+  {{param attribute1="=_.first(base.formaPago).base._formaPago"}}
+  {{param removeIfEmptySection="aplicacion"}}
+  {{param removeIfEmptyField="continuar"}}
+  {{param removeIfEmptyOrField1="importe"}}
+  {{!-- {{param removeIfEmptyOrField2="gratuidad"}} --}}
+  {{action id="cancelar" forceReadOnly="true"}}  
+  {{action id="afectar" forceReadOnly="true"}}
+  
+  {{#transform id="copiarCancelacion"}}
+    {{update section="persona" value="persona"}}
+    {{update section="contexto" value="contexto"}}
+    {{update section="base" value="base"}}
+    {{update section="aplicacion" value="aplicacion"}}
+  {{/transform}}
+  
+  {{#transform id="copiarFactura"}}
+    {{update section="aplicacion" type="array" transform="copiarConcepto"}}
+    {{update section="persona" transform="copiarPersona2"}}
+    {{#update section="base"}}
+      {{set formaPago="=calc.first(base.formaPago).base.formaPago"}}
+      {{set datosFacturacion="=fn('datosFacturacion', _params.join)"}}
+      {{set _datosFacturacion="=fn('_datosFacturacion', _params.join)"}}
+    {{/update}}
+  {{/transform}}
+
+  {{#transform id="copiarFacturaDonativo"}}
+    {{update section="aplicacion" type="array" transform="copiarConcepto"}}
+    {{update section="persona" transform="copiarPersona2"}}
+    {{#update section="base"}}
+      {{set fechaAutorizacion="=calc.lookupInPreset('app.variableGlobal', 'campo=donativoFechaAutorizacion').valor"}}
+      {{set numeroAutorizacion="=calc.lookupInPreset('app.variableGlobal', 'campo=donativoNumeroAutorizacion').valor"}}
+      {{set leyenda="=calc.lookupInPreset('app.variableGlobal', 'campo=donativoLeyenda').valor"}}
+      {{set formaPago="=calc.first(base.formaPago).base.formaPago"}}
+      {{set datosFacturacion="=fn('datosFacturacion', _params.join)"}}
+      {{set _datosFacturacion="=fn('_datosFacturacion', _params.join)"}}
+    {{/update}}
+  {{/transform}}
+
+  {{#view id="cobros"}}
+    {{#find limit="-1"}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="base"}}
+      {{include field="persona"}}
+      {{include field="aplicacion"}}
+      {{sort field="_id" direction="asc"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{filter condition="=solicitud" field="aplicacion._id" eq="=solicitud"}}
+      {{filter condition="=tipoExpediente" field="persona.tipoExpediente" eq="=tipoExpediente"}}
+      {{filter condition="=desde" field="_created.date" gt="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=hasta"}}      
+    {{/find}}
+    {{#unwind field="aplicacion"}}
+      {{filter condition="=solicitud" field="aplicacion._id" eq="=solicitud"}}
+    {{/unwind}}
+    {{calc field="_formaPago" value="=calc.first(base.formaPago).base._formaPago"}}
+  {{/view}}
+
+  {{#view id="estadoCuentas"}}
+    {{#find limit="-1"}}
+      {{include field="_name"}}
+      {{include field="_type"}}
+      {{include field="_created"}}
+      {{include field="base.importeTotal"}}
+      {{filter field="persona.id" eq="=persona"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+    {{/find}}
+    {{calc field="fecha" value="=_created.date"}}
+    {{calc field="abono" value="=base.importeTotal"}}
+  {{/view}}
+
+  {{#view id="kardexCajaCobros"}}
+    {{#find limit="-1"}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="base"}}
+      {{include field="aplicacion"}}
+      {{include field="persona"}}
+      {{sort field="_created.date" direction="asc"}}
+      {{filter condition="=cajero" field="base.cajero" eq="=cajero"}}
+      {{filter field="_created.date" gt="=desde"}}
+      {{filter field="_created.date" lt="=moment(hasta).add(1,'day').format('YYYY-MM-DD')"}}
+    {{/find}}
+    {{unwind field="aplicacion"}}
+    {{calc field="movimiento" value="=_name"}}
+    {{calc field="fecha" value="=_created.date"}}
+    {{calc field="_cajero" value="=base._cajero"}}
+    {{calc field="formaPago" value="=_.first(base.formaPago).base._formaPago"}}
+    {{calc field="refrencia" value="=aplicacion._name"}}
+    {{calc field="importe" value="=aplicacion.importe"}}
+  {{/view}}
+
+  {{#section id="base"}}
+    {{field id="totalFormasPago" type="calc" value="=calc.sumRef(formaPago, 'base.importe')"}}
+    {{field id="importeEfectivo" type="calc" value="=calc.sumRef(formaPago, 'base.importeEfectivo')"}}
+    {{field id="cambio" type="calc" value="=(totalFormasPago>importeTotal)?(totalFormasPago-importeTotal):0"}}
+    {{field id="totalEfectivo" type="calc" value="=importeEfectivo-cambio"}}
+    {{field id="totalTarjetas" type="calc" value="=calc.sumRef(formaPago, 'base.importeTarjeta')"}}
+    {{field id="totalCheques" type="calc" value="=calc.sumRef(formaPago, 'base.importeCheque')"}}
+    {{field id="totalTransferencias" type="calc" value="=calc.sumRef(formaPago, 'base.importeTransferencia')"}}
+    {{field id="totalDepositos" type="calc" value="=calc.sumRef(formaPago, 'base.importeDeposito')"}}
+    {{field id="totalPagares" type="calc" value="=calc.sumRef(formaPago, 'base.importePagare')"}}
+    {{field id="totalCobrado" type="calc" value="=importeEfectivo-cambio+totalCheques+totalTarjetas+totalTransferencias+totalDepositos+totalPagares"}}
+    {{!-- {{field id="factorEfectivo" type="calc" value="=calc.safeDiv(totalEfectivo,totalCobrado)"}}
+    {{field id="factorTarjetas" type="calc" value="=calc.safeDiv(totalTarjetas,totalCobrado)"}}
+    {{field id="factorCheques" type="calc" value="=calc.safeDiv(totalCheques,totalCobrado)"}}
+    {{field id="factorTransferencias" type="calc" value="=calc.safeDiv(totalTransferencias,totalCobrado)"}}
+    {{field id="factorPagares" type="calc" value="=calc.safeDiv(totalPagares,totalCobrado)"}} --}}
+    {{!-- {{validator validIf="=totalCobrado==(importeTotal||0)" type="expr" message="Importe Incorrecto"}} --}}
+  {{/section}}
+  {{#section id="aplicacion"}}
+    {{#field id="importe"}}
+      {{#onChange refreshApplyStatus="true"}}
+        {{set nuevoSaldo="=saldo-importe"}}
+      {{/onChange}}
+    {{/field}}
+    {{#onChange}}
+      {{#update section="base"}}
+        {{set importeTotal="=calc.sumExpr(aplicacion, '=calc.isTrue(continuar)?importe:0')"}}
+        {{!-- {{set totalGratuidad="=calc.sumExpr(aplicacion, '=calc.isTrue(continuar)?gratuidad:0')"}} --}}
+      {{/update}}
+      {{!-- {{update section="resumenAplicacion" value="=calc.mapArray(calc.mapReduce(_.where(aplicacion,{continuar:'si'}),'tipoSolicitud,_tipoSolicitud,iva,_iva','importe'), {tipoSolicitud:'tipoSolicitud',_tipoSolicitud:'_tipoSolicitud',importe:'=calc.round(importe/(1+calc.number(iva)/100),2)', impuestos: '=importe-calc.round(importe/(1+calc.number(iva)/100),2)',importeTotal:'importe',iva:'iva',_iva:'_iva'})"}} --}}
+    {{/onChange}}
+  {{/section}}  
+  {{#grid id="aplicacion" applyFilter="_tipoEpisodio" section="aplicacion" keyField="importe" disableEnter="true"}} {{!-- applyBaseColumn="saldo" applyTo="importe" applySuggest="saldo" applyValidate="true" applyValidateAllOrNothing="true"  --}}
+    {{column field="fecha" type="date" format="DD/MMM/YYYY" width="100" readOnly="true"}}
+    {{column field="vencimiento" type="date" format="DD/MMM/YYYY" width="100" readOnly="true"}}
+    {{column field="_tipoEpisodio" width="120" readOnly="true" label="Tipo Episodio"}}
+    {{column field="_name" width="470" readOnly="true"}}
+    {{column field="cantidadIndicada" type="numeric" width="70" format="#," readOnly="true"}}
+    {{column field="cantidadUtilizada" type="numeric" width="70" format="#," readOnly="true"}}
+    {{column field="saldo" type="numeric" width="100" format="currency" readOnly="true"}}
+    {{!-- {{column field="gratuidad" type="numeric" width="100" format="currency" validateIfHasValue="importe"}} --}}
+    {{column field="importe" type="numeric" width="100" format="currency"}}
+    {{column field="nuevoSaldo" type="numeric" width="100" format="currency" readOnly="true"}}
+    {{column field="continuar" width="70"}}
+  {{/grid}}
+  {{action id="notaCancelacionCobro" source="notaCancelacionCobro" label="Cancelar Cobro" transform="copiarCancelacion" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{action id="notaFactura" source="notaFactura" label="Facturar" transform="copiarFactura" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+  {{action id="notaFacturaDonativo" source="notaFacturaDonativo" label="Facturar Donativo" transform="copiarFacturaDonativo" hide="true" type="add-subdoc" visibleMode="close" color="brown" btnSolid="true" onlyPost="true"}}
+  {{#workflow id="afectar" start="afectar"}}
+    {{#step id="afectar"}}
+      {{#user}}
+        {{validate condition="=calc.round(base.importeTotal||0,2)!=calc.round(base.totalCobrado||0,2)" error="Importe Incorrecto"}}
+        {{validate condition="=!_name" error="Nombre Incorrecto"}}
+        {{#spAffect engine="node"}}
+          {{#update section="base"}}
+            {{set estatus="afectado"}}
+            {{set _estatus="Afectado"}}
+          {{/update}}
+        {{/spAffect}}
+      {{/user}}
+    {{/step}}
+  {{/workflow}}
+{{/define}}

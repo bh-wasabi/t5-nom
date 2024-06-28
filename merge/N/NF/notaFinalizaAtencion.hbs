@@ -1,0 +1,6 @@
+{{#define id="notaFinalizaAtencion"}}
+  {{param name="=fn('folioServiceName', fn('finalizaAtencion', @_created.service), @_created)"}}
+  {{#section id="base"}}
+    {{field id="nombre" value="=fn('folioServiceName', fn('finalizaAtencion', @_created.service), @_created)"}}
+  {{/section}} 
+{{/define}}

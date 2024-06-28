@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0vlxyx3" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.0.0">
+  <bpmn:collaboration id="altaActivoFijo">
+    <bpmn:participant id="Participant_1b4pxnl" name="Alta Activo Fijo" processRef="Process_abj343d" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_abj343d" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_1y53c73">
+      <bpmn:lane id="Lane_1f87sht" name="Consesionaria">
+        <bpmn:flowNodeRef>Event_1lr6otx</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>programado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>instalado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_0moz3fv</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enInstalacion</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>coordinandoInstalacion</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Event_1lr6otx">
+      <bpmn:outgoing>Flow_09scn7c</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="programado" name="Actividad Programada">
+      <bpmn:incoming>Flow_09scn7c</bpmn:incoming>
+      <bpmn:outgoing>Flow_10q0epp</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0rzf628" sourceRef="coordinandoInstalacion" targetRef="enInstalacion" />
+    <bpmn:sequenceFlow id="Flow_09scn7c" sourceRef="Event_1lr6otx" targetRef="programado" />
+    <bpmn:sequenceFlow id="Flow_1vliel7" sourceRef="enInstalacion" targetRef="instalado" />
+    <bpmn:sequenceFlow id="Flow_08v0dg2" sourceRef="instalado" targetRef="Event_0moz3fv" />
+    <bpmn:sequenceFlow id="Flow_10q0epp" sourceRef="programado" targetRef="coordinandoInstalacion" />
+    <bpmn:task id="instalado" name="Activo Fijo Instalado">
+      <bpmn:incoming>Flow_1vliel7</bpmn:incoming>
+      <bpmn:outgoing>Flow_08v0dg2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="Event_0moz3fv">
+      <bpmn:incoming>Flow_08v0dg2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="enInstalacion" name="En Instalación y Etiquetado">
+      <bpmn:incoming>Flow_0rzf628</bpmn:incoming>
+      <bpmn:outgoing>Flow_1vliel7</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="coordinandoInstalacion" name="Coordinando la Instalación">
+      <bpmn:incoming>Flow_10q0epp</bpmn:incoming>
+      <bpmn:outgoing>Flow_0rzf628</bpmn:outgoing>
+    </bpmn:task>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="altaActivoFijo">
+      <bpmndi:BPMNShape id="Participant_1b4pxnl_di" bpmnElement="Participant_1b4pxnl" isHorizontal="true">
+        <dc:Bounds x="159" y="80" width="929" height="150" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1f87sht_di" bpmnElement="Lane_1f87sht" isHorizontal="true">
+        <dc:Bounds x="189" y="80" width="899" height="150" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_10q0epp_di" bpmnElement="Flow_10q0epp">
+        <di:waypoint x="440" y="150" />
+        <di:waypoint x="500" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_08v0dg2_di" bpmnElement="Flow_08v0dg2">
+        <di:waypoint x="950" y="150" />
+        <di:waypoint x="1002" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1vliel7_di" bpmnElement="Flow_1vliel7">
+        <di:waypoint x="770" y="150" />
+        <di:waypoint x="850" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09scn7c_di" bpmnElement="Flow_09scn7c">
+        <di:waypoint x="278" y="150" />
+        <di:waypoint x="340" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rzf628_di" bpmnElement="Flow_0rzf628">
+        <di:waypoint x="600" y="150" />
+        <di:waypoint x="670" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1lr6otx_di" bpmnElement="Event_1lr6otx">
+        <dc:Bounds x="242" y="132" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1w6xj8r_di" bpmnElement="programado">
+        <dc:Bounds x="340" y="110" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ekrwaa_di" bpmnElement="instalado">
+        <dc:Bounds x="850" y="110" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0moz3fv_di" bpmnElement="Event_0moz3fv">
+        <dc:Bounds x="1002" y="132" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_181xn15_di" bpmnElement="enInstalacion">
+        <dc:Bounds x="670" y="110" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ekl04t_di" bpmnElement="coordinandoInstalacion">
+        <dc:Bounds x="500" y="110" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

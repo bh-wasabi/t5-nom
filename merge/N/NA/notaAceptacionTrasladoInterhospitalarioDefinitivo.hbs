@@ -1,0 +1,15 @@
+{{#define id="notaAceptacionTrasladoInterhospitalarioDefinitivo"}}
+  {{#section id="base"}}
+    {{#field id="camaDestino"}}
+      {{#editor}}
+        {{param estatus="='limpia'"}}
+        {{param central="=centralDestino"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="centralDestino"}}
+      {{#editor}}
+        {{param partOf="='hospitalizacion'"}}
+      {{/editor}}
+    {{/field}}    
+  {{/section}}
+{{/define}}

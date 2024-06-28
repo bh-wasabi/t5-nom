@@ -1,0 +1,12 @@
+{{#define id="acreditacionPuesto"}}
+  {{#section id="base"}}
+    {{#field id="acreditacionPrograma"}}
+      {{onChange clearFields="acreditacionPatologia"}}
+    {{/field}}
+    {{#field id="acreditacionPatologia"}}
+      {{#editor}}
+        {{param acreditacionPrograma="=acreditacionPrograma"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

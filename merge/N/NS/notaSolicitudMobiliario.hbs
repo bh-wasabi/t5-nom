@@ -1,0 +1,19 @@
+{{#define id="notaSolicitudMobiliario"}}
+  {{#action id="afectar" error="=base.requiereAdjuntos&&_.isEmpty(adjuntos)?'Falta Incluir el Archivo Adjunto Correspondiente':calc.getRef(base,'mobiliario.base.ubicacion')?null:'Solicitud Incorrecta'"}}
+    {{#update section="base"}}
+      {{setRef ref="mobiliario.base.vencimiento" value="=calc.dueDate(mobiliario.base.vencimiento, 'atencion', calc.dueTimes('mobiliario', mobiliario.base.subTipoSolicitud, mobiliario.base.motivo, mobiliario.base.momentoDieta, mobiliario.base.criticidadZona, mobiliario.base.tiempos))"}}
+      {{setRef ref="mobiliario.base.alerta"      value="=calc.alertDate(mobiliario.base.vencimiento, 'atencion', calc.dueTimes('mobiliario', mobiliario.base.subTipoSolicitud, mobiliario.base.motivo, mobiliario.base.momentoDieta, mobiliario.base.criticidadZona, mobiliario.base.tiempos))"}}
+    {{/update}}
+  {{/action}}
+  {{#section id="base"}}
+    {{field id="requiereAdjuntos" type="expr" value="=mobiliario.base.subTipoSolicitud=='mantenimientoTecnicoLegal'"}}  
+  {{/section}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

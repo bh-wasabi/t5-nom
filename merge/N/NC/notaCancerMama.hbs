@@ -1,0 +1,25 @@
+{{#define id="notaCancerMama"}}
+  {{#section id="base"}}
+    {{field id="siCancerMujer" type="expr" value="tieneCancer&&esMujer"}}
+    {{field id="siCancerHombre" type="expr" value="tieneCancer&&!esMujer"}}
+    {{field id="siAntecedentes" type="expr" value="=cancerOvario=='si'||cancerMama=='si'"}}
+  {{/section}}
+  {{#section id="atencionClinica"}}
+    {{field id="sitioDeMetastasis" type="expr" value="=metastasis=='m1'"}}
+    {{field id="siExtra" type="expr" value="=mastectomiaExtra=='si'"}}
+  {{/section}}
+  {{#section id="inmunohistoquimica"}}
+    {{field id="realizoPdl" type="expr" value="=seRealizoPdl=='si'"}}
+    {{field id="oncoHer" type="expr" value="=oncogenHer2=='++'"}}
+  {{/section}}
+  {{#section id="quimioterapia"}}
+    {{field id="siQuimioterapia" type="expr" value="=quimioterapia=='si'"}}
+    {{field id="momentoQuimioQT" type="expr" value="=momentoQT=='neoadyuvante'||momentoQT=='adyuvante'"}}
+    {{field id="causaIncompleta" type="expr" value="=causaQtIncompleta=='fallecio'"}}
+    {{field id="noCausa" type="expr" value="=causaQtIncompleta!='fallecio'"}}
+    {{field id="especificaQT" type="expr" value="=causaFallecioQt=='otra'"}}
+  {{/section}}
+  {{#section id="radioterapia"}}
+    {{field id="siRadioterapia" type="expr" value="=radioterapia=='si'"}}
+  {{/section}}
+{{/define}}

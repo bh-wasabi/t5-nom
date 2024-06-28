@@ -1,0 +1,291 @@
+{{#define id="paciente"}}
+  {{param name="=_params.name||'Paciente'"}}
+  {{action id="eliminar" hide="true"}}
+
+  {{!-- {{action id="afectarTodo" condition="=true" type="affect-all" label="Procesar Todo..." color="red" btnSolid="true" visibleMode="close" confirm="true" confirmMessage="¿Desea Procesar en Lote?" superUser="true"}} --}}
+
+  {{#action id="tool" condition="true" type="photo" label="Tomar Foto" color="grey" as="foto" icon="camera"}}
+    {{#update section="base"}}
+      {{setRef ref="foto.base.nombre" value="='Fotografía'"}}
+      {{setRef ref="foto.base.url" value="=foto.url"}}
+    {{/update}}
+  {{/action}}  
+
+  
+  {{!-- Modificar Bloque - Tarea 3966 --}}
+  {{#action id="sugerirCurp" hide="true" type="update" error="=!base.generoCurp&&'Falta Indicar Genero CURP'"}}
+    {{#update section="base"}}
+      {{set clave="=calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento, fechaNacimiento)"}}
+    {{/update}}
+  {{/action}}
+  {{!-- Tarea 3966 --}}
+
+    {{!-- {{action id="ver" type="dicom" condition="true" label="Radiografía" type="dicom" color="grey"}} --}}
+  
+  {{!-- {{#transform id="copiar-sujeto" type="edi" ediDetailSegments="OBR,OBX"}}
+    {{#update section="sujeto"}}
+      {{set id="=_id"}}
+      {{set nombreCompleto="=base.nombreCompleto"}}
+      {{set clave="=base.clave"}}
+      {{set genero="=base.genero"}}
+      {{set _genero="=base._genero"}}
+      {{set fechaNacimiento="=base.fechaNacimiento"}}
+      {{set religion="=base.religion"}}
+      {{set _religion="=base._religion"}}
+      {{set idioma="=base.idioma"}}
+      {{set _idioma="=base._idioma"}}
+      {{set tipoSanguineo="=base.tipoSanguineo"}}
+      {{set _tipoSanguineo="=base._tipoSanguineo"}}
+    {{/update}}
+  {{/transform}} --}}
+
+  {{!-- 
+  {{action id="subdoc" transform="copiar-sujeto" condition="=true" type="add-subdoc" source="notaNuevaAtencionUrgencias" visibleMode="close" color="deep-orange" label="Nueva Atención Urgencias" onlyPost="true"}}
+   --}}
+
+  {{#grid id="agregarLote" section="base" disableEnter="true" allowRemove="true"}}
+    {{column field="clave" width="150"}}
+    {{column field="pasaporte" width="150"}}
+    {{column field="descripcion" width="200"}}
+    {{column field="track" width="100" required="true"}}
+    {{column field="nombres" width="200" required="true"}}
+    {{column field="apellidoPaterno" width="200"}}
+    {{column field="apellidoMaterno" width="200"}}
+  {{/grid}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base.nombreCompleto"}}
+      {{include field="base.clave"}}    
+      {{include field="base.genero"}}
+      {{include field="base.tipoSanguineo"}}
+      {{include field="base.fechaNacimiento"}}
+      {{include field="_readOnly"}}
+      {{sort field="base.nombreCompleto" direction="asc"}}
+      {{search field="base.nombreCompleto"}}
+      {{search field="base.clave" directSearchIfLength="9,12,13,14,15,16,17,18"}}
+      {{search field="base.fechaNacimiento"}}
+      {{filter condition="=excluirPaciente" field="_id" neq="=excluirPaciente" isObjectId="true"}}
+    {{/find}}
+  {{/view}}
+  {{#section id="base"}}
+    {{field id="nombreCompleto" type="expr" label="Nombre" value="=calc.concat(@nombres, @apellidoPaterno, @apellidoMaterno)"}}
+    {{field id="esMujer" type="expr" value="=base.genero==='mujer'"}}    
+    {{field id="esMenor3Meses" type="expr" value="=moment().diff(moment(fechaNacimiento), 'months')<=3"}}
+    {{field id="esMenor3Dias" type="expr" value="=moment().diff(moment(fechaNacimiento), 'days')<=3"}} 
+    {{!-- Tarea 3092 --}}
+    {{field id="esMenor5Anos" type="expr" value="=calc.fromNowYears(fechaNacimiento)<5"}}
+    {{!-- Tarea 3092 --}}
+    {{field id="clave2" type="expr" value="=@clave2||'PN'+calc.zeroFill(_created.folio||_parentDoc._created.folio||moment().unix(),7)"}} 
+    {{#field id="cama"}}
+      {{#editor}}
+        {{param tipoUbicacion="='cama'"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="regimenAlimenticio"}}
+      {{onChange clearFields="alimentacionDesayuno,hidratacionDesayuno,alimentacionColacionAM,hidratacionColacionAM,alimentacionAlmuerzo,hidratacionAlmuerzo,alimentacionColacionPM,hidratacionColacionPM,alimentacionCena,hidratacionCena"}}
+    {{/field}}
+    {{#field id="alimentacionDesayuno"}}
+      {{#editor}}
+        {{param momentoDieta="='desayuno'"}}
+        {{param regimenAlimenticio="=regimenAlimenticio"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="hidratacionDesayuno"}}
+      {{#editor}}
+        {{param momentoDieta="='desayuno'"}}
+        {{param regimenAlimenticio="=regimenAlimenticio"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="alimentacionColacionAM"}}
+      {{#editor}}
+        {{param momentoDieta="='colacionAM'"}}
+        {{param regimenAlimenticio="=regimenAlimenticio"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="hidratacionColacionAM"}}
+      {{#editor}}
+        {{param momentoDieta="='colacionAM'"}}
+        {{param regimenAlimenticio="=regimenAlimenticio"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="alimentacionAlmuerzo"}}
+      {{#editor}}
+        {{param momentoDieta="='almuerzo'"}}
+        {{param regimenAlimenticio="=regimenAlimenticio"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="hidratacionAlmuerzo"}}
+      {{#editor}}
+        {{param momentoDieta="='almuerzo'"}}
+        {{param regimenAlimenticio="=regimenAlimenticio"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="alimentacionColacionPM"}}
+      {{#editor}}
+        {{param momentoDieta="='colacionPM'"}}
+        {{param regimenAlimenticio="=regimenAlimenticio"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="hidratacionColacionPM"}}
+      {{#editor}}
+        {{param momentoDieta="='colacionPM'"}}
+        {{param regimenAlimenticio="=regimenAlimenticio"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="alimentacionCena"}}
+      {{#editor}}
+        {{param momentoDieta="='cena'"}}
+        {{param regimenAlimenticio="=regimenAlimenticio"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="hidratacionCena"}}
+      {{#editor}}
+        {{param momentoDieta="='cena'"}}
+        {{param regimenAlimenticio="=regimenAlimenticio"}}
+      {{/editor}}
+    {{/field}}
+    {{field id="tieneOtrasAlertasAlimentarias" type="expr" value="=calc.in('otras', @alertaAlimentaria)"}} 
+    [.#if esHIS.]
+    {{validator type="expr" validIf="=calc.curp3Ok(clave)" message="CURP Incorrecto"}}
+    {{validator type="expr" validIf="=calc.setTimeStr(@fechaNacimiento,@horaNacimiento)<moment().format()" message="Fecha Nacimiento Incorrecta"}}
+    [./if.]
+    {{!-- Tarea 3092 --}}
+    {{#field id="paisNacimiento" type="text" label="País Nacimiento"}}
+      {{#onChange}}
+        {{set entidadNacimiento="=paisNacimiento=='MX'?entidadNacimiento:'NE'"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="fechaNacimiento" type="text" label="Fecha Nacimiento"}}
+      {{#onChange}}
+        {{set escolaridad="=moment().diff(moment(fechaNacimiento), 'years')<3?'noAplica':''"}}
+        {{set sabeLeerEscribir="=moment().diff(moment(fechaNacimiento), 'years')<3?'no':''"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="escolaridad" type="text" label="Escolaridad"}}
+      {{#onChange}}
+        {{set sabeLeerEscribir="=!calc.in(escolaridad, ['noEspecificado','ninguna','noAplica','seIgnora'])?'si':''"}}
+      {{/onChange}}
+    {{/field}}
+    {{#onChange}}
+      {{#update}}
+        {{set afromexicano="=esMenor5Anos&&familiarResponsable[0].base.afromexicano?familiarResponsable[0].base.afromexicano:afromexicano"}}
+      {{/update}}
+    {{/onChange}}
+    {{validator type="expr" validIf="=moment().diff(moment(@fechaNacimiento), 'years')<120" message="Paciente Mayor a 120 años"}}
+    {{!-- Tarea 3092 --}}
+    {{!-- Tarea 3710 --}}
+    {{validator type="expr" validIf="=calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'))===clave" message="CURP Incorrecto"}}
+    {{!-- Tarea 3710 --}}    
+
+    {{!-- Agregar Bloque - Tarea 3966 --}}
+    {{field id="noEsMexico" type="expr" value="=paisNacimiento!='MX'"}}
+    {{validator type="expr" notValidIf="=paisNacimiento=='MX'&&entidadNacimiento=='NE'" message="Entidad Nacimiento Incorrecta"}}
+    {{validator type="expr" notValidIf="=paisNacimiento!='MX'&&entidadNacimiento!='NE'" message="Entidad Nacimiento Incorrecta"}}
+    {{!-- Tarea 3966 --}}    
+  {{/section}}
+
+{{!--   {{#edi id="orden-trabajo"}}
+    {{#segment}}
+      {{element seq="1" value="='MSH'"}}
+      {{element seq="2" value="='^~\&'"}}
+      {{element seq="3" value="='MEDSYS'"}}
+      {{element seq="4" value="='01'"}}
+      {{element seq="5" value="='LIS'"}}
+      {{element seq="6" value="='01'"}}
+    {{/segment}}
+    {{#segment}}
+      {{element seq="1" value="='PID'"}}
+      {{element seq="2" value="='1'"}}
+      {{element seq="3" value="=base.clave"}}
+      {{element seq="5" value="=fn('XPN', base.nombres, base.apellidoPaterno, base.apellidoMaterno)"}}
+      {{element seq="7" value="=fn('DTM', base.fechaNacimiento)"}}
+      {{element seq="8" value="=fn('IS', base.genero)"}}
+      {{element seq="11" value="=fn('XAD', calc.getRef(base, 'direccion.0.base'))"}}
+    {{/segment}}
+    {{#segment items="[{servicio:'026-02'},{servicio:'026-04'},{servicio:'026-06'}]"}}
+      {{element seq="1" value="='OBR'"}}
+      {{element seq="2" value="='01'"}}
+      {{element seq="5" value="=@servicio"}}
+      {{element seq="10"}}
+    {{/segment}}
+  {{/edi}} --}}
+
+{{!--   {{#report id="preliminar" fontSize="8" header="preliminar-encabezado" showStandarFooter="true"}}
+    {{#stack}}
+      {{#image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei2.png"}}
+      {{/image}}
+    {{/stack}}
+    {{#stack}}
+      {{#record title="Datos Generales" titleStyle="title" section="base" headerStyle="field" margin="-10,0,0,10" widths="104,416"}}
+        {{row field="nombres" align="left"}}
+        {{row field="apellidoPaterno" align="left"}}
+        {{row field="apellidoMaterno" align="left"}}
+        {{row field="genero" align="left"}}
+        {{row field="clave" align="left"}}
+        {{row field="estadoCivil" align="left"}}
+        {{row field="registradoCivilmente" align="left"}}
+        {{row field="tipoSanguineo" align="left"}}
+        {{row field="religion" align="left"}}
+        {{row field="ocupacion" align="left"}}
+        {{row field="escolaridad" align="left"}}
+        {{row field="direccion" align="left"}}
+        {{row field="identificacion" align="left"}}
+        {{row field="formaContacto" align="left"}}
+        {{row field="foto" align="left"}}
+        {{row field="fechaNacimiento" align="left"}}
+        {{row field="entidadNacimiento" align="left"}}
+        {{row field="paisNacimiento" align="left"}}
+        {{row field="nacionalidad" align="left"}}
+        {{row field="formaPago" align="left"}}
+        {{row field="datosFacturacion" align="left"}}
+        {{row field="idiomasHabla" align="left"}}
+        {{row field="idiomaPreferido" align="left"}}
+        {{row field="grupoEtnico" align="left"}}
+      {{/record}}
+    {{/stack}}
+    {{#grid}}
+      {{#row}}
+        {{column text="Columna 1" bold="true"}}
+        {{column text="Columna 2" bold="true"}}
+        {{column text="Columna 3" bold="true"}}
+      {{/row}}
+      {{#row}}
+        {{column text="Renglón 1"}}
+        {{column text="Renglón 1"}}
+        {{column text="Renglón 1"}}
+      {{/row}}
+      {{#row}}
+        {{column text="Renglón 2"}}
+        {{column text="Renglón 2"}}
+        {{column text="Renglón 2"}}
+      {{/row}}
+      {{#row}}
+        {{column text="Renglón 3"}}
+        {{column text="Renglón 3"}}
+        {{column text="Renglón 3"}}
+      {{/row}}
+    {{/grid}}
+  {{/report}} --}}
+{{/define}}
+
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{base.nombreCompleto}}</br>
+      <span style="font-size:12px;">{{base.clave}} {{base._genero}}</span>
+      {{#if _readOnly}}
+      <span class="read-only" style="font-size:12px;"><strong>&nbsp;&nbsp;Solo Lectura&nbsp;&nbsp;</strong></span>
+      {{/if}}
+      <span style="font-size:12px;float:right;">{{date base.fechaNacimiento "DD/MMM/YYYY"}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

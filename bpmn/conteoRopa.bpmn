@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:tns="http://xml.semture.de/bpmn20" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="P_p5" name="" targetNamespace="http://xml.semture.de/bpmn20" exporter="Camunda Modeler" exporterVersion="4.6.0" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://bpmn.sourceforge.net/schemas/BPMN20.xsd">
+  <collaboration id="COLLABORATION-P_p5">
+    <extensionElements>
+      <camunda:properties>
+        <camunda:property />
+      </camunda:properties>
+    </extensionElements>
+    <participant id="PO_p92" name="Sistema Informático de Comunicación" processRef="PROCESS-PO_p92" />
+  </collaboration>
+  <process id="PROCESS-PO_p92" processType="None" isClosed="false" isExecutable="true">
+    <laneSet id="LANESET-PO_p92">
+      <lane id="PO_p91" name="Usuario o PAPS">
+        <flowNodeRef>Event_1w723yx</flowNodeRef>
+        <flowNodeRef>pendiente</flowNodeRef>
+      </lane>
+      <lane id="PO_p87" name="Sociedad Concesionaria">
+        <flowNodeRef>Gateway_1q7vh9v</flowNodeRef>
+        <flowNodeRef>contado</flowNodeRef>
+        <flowNodeRef>Event_15j1699</flowNodeRef>
+        <flowNodeRef>Activity_05bv3iq</flowNodeRef>
+        <flowNodeRef>porContar</flowNodeRef>
+      </lane>
+    </laneSet>
+    <sequenceFlow id="Flow_06t3tqb" sourceRef="Event_1w723yx" targetRef="pendiente" />
+    <sequenceFlow id="Flow_1iymibc" sourceRef="porContar" targetRef="Gateway_1q7vh9v" />
+    <sequenceFlow id="Flow_0hg4o3e" sourceRef="Gateway_1q7vh9v" targetRef="Activity_05bv3iq" />
+    <sequenceFlow id="Flow_032mq2w" sourceRef="Gateway_1q7vh9v" targetRef="contado" />
+    <sequenceFlow id="Flow_0gsj3vf" sourceRef="contado" targetRef="Event_15j1699" />
+    <startEvent id="Event_1w723yx">
+      <outgoing>Flow_06t3tqb</outgoing>
+    </startEvent>
+    <task id="pendiente" name="Solicitud Conteo Ropa Sucia">
+      <incoming>Flow_06t3tqb</incoming>
+      <outgoing>Flow_1ofthe6</outgoing>
+    </task>
+    <sequenceFlow id="Flow_1ofthe6" sourceRef="pendiente" targetRef="porContar" />
+    <parallelGateway id="Gateway_1q7vh9v">
+      <incoming>Flow_1iymibc</incoming>
+      <outgoing>Flow_0hg4o3e</outgoing>
+      <outgoing>Flow_032mq2w</outgoing>
+    </parallelGateway>
+    <task id="contado" name="Contado">
+      <incoming>Flow_032mq2w</incoming>
+      <outgoing>Flow_0gsj3vf</outgoing>
+    </task>
+    <endEvent id="Event_15j1699">
+      <incoming>Flow_0gsj3vf</incoming>
+    </endEvent>
+    <subProcess id="Activity_05bv3iq" name="Solicitud Entrega Ropa">
+      <incoming>Flow_0hg4o3e</incoming>
+    </subProcess>
+    <subProcess id="porContar" name="Conteo Ropa">
+      <incoming>Flow_1ofthe6</incoming>
+      <outgoing>Flow_1iymibc</outgoing>
+    </subProcess>
+  </process>
+  <bpmndi:BPMNDiagram id="CollaborationP_p5" name="Colaboración">
+    <bpmndi:BPMNPlane id="PLANE-P_p5" bpmnElement="COLLABORATION-P_p5">
+      <bpmndi:BPMNShape id="PoolPO_p92" bpmnElement="PO_p92" isHorizontal="true" isExpanded="true">
+        <dc:Bounds x="143" y="112" width="655" height="458" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SwimlanePO_p87" bpmnElement="PO_p87" isHorizontal="true" isExpanded="true">
+        <dc:Bounds x="174" y="282" width="623" height="288" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SwimlanePO_p91" bpmnElement="PO_p91" isHorizontal="true" isExpanded="true">
+        <dc:Bounds x="174" y="113" width="623" height="169" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0gsj3vf_di" bpmnElement="Flow_0gsj3vf">
+        <di:waypoint x="690" y="375" />
+        <di:waypoint x="732" y="375" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_032mq2w_di" bpmnElement="Flow_032mq2w">
+        <di:waypoint x="525" y="375" />
+        <di:waypoint x="590" y="375" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0hg4o3e_di" bpmnElement="Flow_0hg4o3e">
+        <di:waypoint x="500" y="400" />
+        <di:waypoint x="500" y="450" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1iymibc_di" bpmnElement="Flow_1iymibc">
+        <di:waypoint x="410" y="375" />
+        <di:waypoint x="475" y="375" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_06t3tqb_di" bpmnElement="Flow_06t3tqb">
+        <di:waypoint x="238" y="180" />
+        <di:waypoint x="310" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ofthe6_di" bpmnElement="Flow_1ofthe6">
+        <di:waypoint x="360" y="235" />
+        <di:waypoint x="360" y="335" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1w723yx_di" bpmnElement="Event_1w723yx">
+        <dc:Bounds x="202" y="162" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0j0u0oj_di" bpmnElement="pendiente">
+        <dc:Bounds x="310" y="155" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0bkgt9o_di" bpmnElement="Gateway_1q7vh9v">
+        <dc:Bounds x="475" y="350" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_051xvpe_di" bpmnElement="contado">
+        <dc:Bounds x="590" y="335" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_15j1699_di" bpmnElement="Event_15j1699">
+        <dc:Bounds x="732" y="357" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_06bcpny_di" bpmnElement="Activity_05bv3iq">
+        <dc:Bounds x="450" y="450" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0dx4nri_di" bpmnElement="porContar">
+        <dc:Bounds x="310" y="335" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

@@ -1,0 +1,13 @@
+{{#define id="notaPostprocedimiento"}}
+  {{#section id="base"}}
+    {{#field id="procedimientoProgramado"}}
+      {{#editor}}
+        {{param id="=persona.id"}}
+      {{/editor}}
+      {{#onChange refresh="true"}}
+        {{set procedimientoRealizado="=base.procedimiento"}}
+        {{set _procedimientoRealizado="=base._procedimiento"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+{{/define}}

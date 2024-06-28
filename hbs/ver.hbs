@@ -1,0 +1,248 @@
+{{#define type="doc" id="ver" name="Lista"}}
+  {{!-- {{#view id="cie10"}}
+    {{editor display="nombre"}}
+    {{search index="cie10" sort="nombre"}}
+  {{/view}}  
+  {{#view id="cie9"}}
+    {{editor display="nombre"}}
+    {{search index="cie9" sort="nombre"}}
+  {{/view}}  
+  {{#view id="sepomex"}}
+    {{editor display="nombre"}}
+    {{search index="sepomex" sort="nombre"}}
+  {{/view}}
+  {{#view id="clues"}}
+    {{editor display="nombre"}}
+    {{search index="clues" sort="nombre"}}
+  {{/view}}  
+  {{#view id="codeSystem" forceCache="true"}}
+    {{define type="param" id="name"}}
+    {{define type="param" id="partOf"}}
+    {{editor value="code" display="display"}}
+    {{#search index="his4" type="help" limit="25" sort="order"}}
+      {{param name="name"}}
+      {{param partOf="partOf"}}
+    {{/search}}
+  {{/view}} --}}
+  {{#view id="cie10"}}
+    {{editor display="nombre"}}
+    {{!-- {{#search index="cie10" type="_doc" sort="nombre" filterParamsOnlySearch="true"}}
+      {{param estatus="='activo'"}}
+    {{/search}} --}}
+    {{#search index="cie10-23" type="_doc" filterParamsOnlySearch="true"}}
+      {{param tipo="normal"}}
+    {{/search}}
+  {{/view}}  
+  {{#view id="cie10sub"}}
+    {{editor display="nombre"}}
+    {{#search index="cie10-23" type="_doc" filterParamsOnlySearch="true"}}
+      {{param tipo="sub"}}
+    {{/search}}
+  {{/view}}  
+  {{#view id="cie9"}}
+    {{editor display="nombre"}}
+    {{search index="cie9" type="_doc" sort="nombre"}}
+  {{/view}}  
+  {{#view id="sepomex"}}
+    {{editor display="nombre"}}
+[.#if esRH.]    
+    {{search index="sepomex2" type="_doc" sort="nombre"}}
+[.else.]
+    {{search index="sepomex" type="_doc" sort="nombre"}}
+[./if.]
+  {{/view}}
+  {{#view id="clues"}}
+    {{editor display="nombre"}}
+    {{search index="clues-23" type="_doc" sort="nombre"}}
+    {{!-- {{search index="clues" type="_doc" sort="nombre"}}     --}}
+  {{/view}}  
+  {{#view id="correosMexico"}}
+    {{define type="param" id="estado"}}
+    {{editor display="nombre"}}
+    {{#search index="cp-23" type="_doc" sort="nombre" filterParamsOnlySearch="true"}}
+      {{param c_estado="=estado"}}
+    {{/search}}
+  {{/view}}  
+  {{#view id="localidadCorreosMexico"}}
+    {{define type="param" id="estado"}}
+    {{define type="param" id="municipio"}}
+    {{editor display="nombre"}}
+    {{#search index="localidad-23" type="_doc" sort="nombre" filterParamsOnlySearch="true"}}
+      {{param c_estado="=estado"}}
+      {{param c_mnpio="=municipio"}}
+    {{/search}}
+  {{/view}}  
+  {{#view id="cucop"}}
+    {{editor display="nombre"}}
+    {{search index="cucop" type="_doc" sort="nombre"}}
+  {{/view}}  
+  {{#view id="codeSystem" forceCache="true"}}
+    {{define type="param" id="name"}}
+    {{define type="param" id="partOf"}}
+    {{editor value="code" display="display"}}
+    {{#search index="his4" type="_doc" limit="25" sort="order"}}
+      {{param name="name"}}
+      {{param partOf="partOf"}}
+    {{/search}}
+  {{/view}}
+  {{#view id="productoVidal"}}
+    {{editor value="productid" display="name"}}
+    {{search index="productos" type="_doc" limit="25" sort="name"}}
+  {{/view}}
+  {{#view id="genericoVidal"}}
+    {{editor value="commonnamegroupid" display="name"}}
+    {{search index="genericos" type="_doc" limit="25" sort="name"}}
+  {{/view}}
+  {{#view id="alergiaVidal"}}
+    {{editor value="allergyid" display="name"}}
+    {{search index="alergias" type="_doc" limit="25" sort="name"}}
+  {{/view}}
+  {{#view id="moleculaVidal"}}
+    {{editor value="moleculeid" display="name"}}
+    {{search index="moleculas" type="_doc" limit="25" sort="name"}}
+  {{/view}}
+
+  {{#view id="buscarCita"}}
+    {{define type="param" id="body"}}
+    {{slots resourceSource="planAgenda" duration="=(body.esCirugia)?body.duracionCirugia:body.duracionCita" from="=body.desde" days="=body.horizonteCita" area="=body.area" subArea="=body.subArea" resourceTypes="=fn('tipoRecursosRequeridos', body)" cacheKey="=body._doc.id" ttl="60"}}
+  {{/view}}
+
+  {{!-- {{#view id="planInventario"}}
+    {{define type="param" id="origen" value="=origen"}}
+    {{define type="param" id="destino" value="=destino"}}
+    {{define type="param" id="tipoPlan" value="=tipoPlan"}}
+    {{define type="param" id="subTipoPlan" value="=subTipoPlan"}}
+    {{define type="param" id="tipoUnidad" value="=tipoUnidad"}}
+    {{request fn="inventarioRelativo"}}
+  {{/view}}  
+
+  {{#view id="existencia"}}
+    {{define type="param" id="ubicacion" value="=ubicacion"}}
+    {{define type="param" id="tipoPlan" value="=tipoPlan"}}
+    {{define type="param" id="subTipoPlan" value="=subTipoPlan"}}
+    {{define type="param" id="tipoUnidad" value="=tipoUnidad"}}
+    {{request fn="inventarioRelativo"}}
+  {{/view}}  
+  {{#view id="recolectado"}}
+    {{define type="param" id="ubicacion" value="=ubicacion"}}
+    {{define type="param" id="tipoPlan" value="=tipoPlan"}}
+    {{define type="param" id="subTipoPlan" value="=subTipoPlan"}}
+    {{define type="param" id="tipoUnidad" value="=tipoUnidad"}}
+    {{request fn="inventarioRelativo"}}
+  {{/view}}  
+  {{#view id="empacado"}}
+    {{define type="param" id="ubicacion" value="=ubicacion"}}
+    {{define type="param" id="tipoPlan" value="=tipoPlan"}}
+    {{define type="param" id="subTipoPlan" value="=subTipoPlan"}}
+    {{define type="param" id="tipoUnidad" value="=tipoUnidad"}}
+    {{request fn="inventarioRelativo"}}
+  {{/view}}  
+
+  {{#cube id="planDistribucion" name="Planeador" view="planInventario" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{column field="_ubicacion" label="Ubicación" width="100"}}
+    {{column field="_origen" label="Origen" width="100"}}
+    {{row field="_tipoArticulo" label="Tipo Artículo" width="100" expanded="true"}}
+    {{row field="descripcion" label="Descripción" width="250"}}
+    {{sum field="porRecibir" label="por Recibir" format="#,"}}
+    {{sum field="existencia" label="Existencia" format="#,"}}
+    {{sum field="porRecolectar" label="por Recolectar" format="#,"}}
+    {{sum field="recolectado" label="Recolectado" format="#,"}}
+    {{sum field="porEmpacar" label="por Empacar" format="#,"}}
+    {{sum field="empacado" label="Empacado" format="#,"}}
+    {{sum field="porSurtir" label="por Surtir" format="#,"}}
+    {{sum field="disponibilidad" label="Disponibilidad" format="#,"}}
+    {{sum field="minimo" label="Mínimo" format="#,"}}
+    {{sum field="maximo" label="Máximo" format="#,"}}
+    {{sum field="faltante" label="Faltante" format="#,"}}
+  {{/cube}}
+  {{#cube id="planConsumo" name="Planeador" view="planInventario" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{column field="_destino" label="Ubicación" width="100"}}
+    {{row field="_tipoArticulo" label="Tipo Artículo" width="100" expanded="true"}}
+    {{row field="descripcion" label="Descripción" width="250"}}
+    {{sum field="porRecibir" label="por Recibir" format="#,"}}
+    {{sum field="existencia" label="Existencia" format="#,"}}
+    {{sum field="porSurtir" label="por Ministrar" format="#,"}}
+    {{sum field="disponibilidad" label="Disponibilidad" format="#,"}}
+    {{sum field="minimo" label="Mínimo" format="#,"}}
+    {{sum field="maximo" label="Máximo" format="#,"}}
+    {{sum field="faltante" label="Faltante" format="#,"}}
+  {{/cube}}
+  {{#cube id="planReparto" name="Planeador" view="planInventario" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{row field="_tipoArticulo" label="Tipo Artículo" width="100" expanded="true"}}
+    {{row field="descripcion" label="Descripción" width="250"}}
+    {{sum field="existencia" label="Existencia" format="#,"}}
+  {{/cube}}   --}}
+
+  {{#view id="exportarCie9"}}
+    {{search index="cie9" type="_doc" limit="10000"}}
+  {{/view}}  
+  
+  {{#view id="exportarCie10"}}
+    {{search index="cie10-23" type="_doc" limit="10000"}}
+  {{/view}}  
+
+  {{#view id="exportarAfiliacion"}}
+    {{preset name="app.nom" where="catalogo=derechohabiencia"}}
+  {{/view}}
+
+  {{#view id="exportarAgenteLesion"}}
+    {{preset name="app.nom" where="catalogo=agenteLesion"}}
+  {{/view}}
+
+  {{#view id="exportarAreaAnatomica"}}
+    {{preset name="app.nom" where="catalogo=areaAnatomica"}}
+  {{/view}}
+
+  {{#view id="exportarConsecuenciaLesion"}}
+    {{preset name="app.nom" where="catalogo=consecuenciaLesion"}}
+  {{/view}}
+
+  {{#view id="exportarEntidades"}}
+    {{preset name="cfg.entidadFederativa"}}
+  {{/view}}
+
+  {{#view id="exportarEscolaridad"}}
+    {{preset name="app.nom" where="catalogo=escolaridad"}}
+  {{/view}}
+
+  {{#view id="exportarEstadoConyugal"}}
+    {{preset name="cfg.maritalStatus"}}
+  {{/view}}
+
+  {{#view id="exportarLenguaIndigena"}}
+    {{preset name="cfg.lenguaIndigena"}}
+  {{/view}}
+
+  {{#view id="exportarMunicipio"}}
+    {{preset name="cfg.municipio"}}
+  {{/view}}
+
+  {{#view id="exportarPais"}}
+    {{preset name="cfg.pais"}}
+  {{/view}}
+
+  {{#view id="exportarServicioAtencion"}}
+    {{preset name="app.nom" where="catalogo=servicioAtencion"}}
+  {{/view}}
+
+  {{#view id="exportarSexo"}}
+    {{preset name="app.nom" where="catalogo=sexo"}}
+  {{/view}}
+
+  {{#view id="exportarSitioLesion"}}
+    {{preset name="app.nom" where="catalogo=sitioLesion"}}
+  {{/view}}
+
+  {{#view id="exportarTipoAsentamiento"}}
+    {{preset name="cfg.tipoAsentamiento"}}
+  {{/view}}
+
+  {{#view id="exportarTipoPersonal"}}
+    {{preset name="app.nom" where="catalogo=tipoPersonal"}}
+  {{/view}}
+
+  {{#view id="exportarTipoVialidad"}}
+    {{preset name="cfg.tipoVialidad"}}
+  {{/view}}
+
+{{/define}}

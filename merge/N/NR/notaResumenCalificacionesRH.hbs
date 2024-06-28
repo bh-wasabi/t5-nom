@@ -1,0 +1,6 @@
+{{#define id="notaResumenCalificacionesRH"}}
+  {{action id="afectar" error="=calificacionFinal?null:'Calificación Final Incorrecta'"}}
+  {{#section id="base"}}
+    {{field id="calificacionFinal" type="calc" value="=fn('resumenCalificacionesRH', base)"}}
+  {{/section}}  
+{{/define}}

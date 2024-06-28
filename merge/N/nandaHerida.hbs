@@ -1,0 +1,18 @@
+{{#define id="nandaHerida"}}
+  {{#section id="base"}}
+    {{field id="sinRiesgo" type="expr" hide="true" value="=tipoDiagnosticoNanda!='riesgo'"}}
+    {{#field id="etiquetaDiagnostica"}}
+      {{onChange clearFields="factorRelacionado,caracteristicasDefinitorias"}}
+    {{/field}}
+    {{#field id="factorRelacionado"}}
+      {{#editor alwaysLoad="true"}}
+        {{!-- {{param partOf="=etiquetaDiagnostica"}} --}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="caracteristicasDefinitorias"}}
+      {{#editor alwaysLoad="true"}}
+        {{!-- {{param partOf="=etiquetaDiagnostica"}} --}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

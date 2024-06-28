@@ -1,0 +1,7 @@
+{{#define id="notaFoCon03"}}
+	{{action id="tool" type="report-xlsx" label="Descargar Excel" title="=_name" color="teal" visibleMode="close" condition="=_isAffected" btnSolid="true" icon="arrow-down-a"}}
+  {{#grid id="garantias" section="garantias" allowRemove="true" allowInsert="true"}}
+    {{column field="tipoGarantia" width="200"}}
+    {{column field="porcentajeGarantia" width="200"}}
+  {{/grid}}
+{{/define}}

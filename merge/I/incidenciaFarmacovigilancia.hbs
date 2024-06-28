@@ -1,0 +1,10 @@
+{{#define id="incidenciaFarmacovigilancia"}}
+  {{#section id="base"}}
+  	{{field id="duracionReaccion" type="expr" value="=calc.duration(fechaInicioReaccion, fechaFinalReaccion)"}}
+    {{#field id="diagnostico"}}
+    	{{#editor}}
+    		{{param persona="=calc.forceId(_parentData.pacienteInvolucrado)"}}
+    	{{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

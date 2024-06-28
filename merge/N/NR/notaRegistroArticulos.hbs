@@ -1,0 +1,24 @@
+{{#define id="notaRegistroArticulos"}}
+  {{param startOnOpen="n/a"}}
+  {{action id="importarDatos" condition="=true" type="menu" menu="importarDatos" label="Cargar" color="green"}}
+  {{#menu id="importarDatos" color="green"}}
+    {{item action="cargarExcel" text="Cargar Excel..."}}
+  {{/menu}}  
+
+  {{#action id="cargarExcel" type="openFile" label="Cargar Excel" color="green" visibleMode="close" condition="=base.estatus=='borrador'"}}
+    {{#openFile type="xlsx" as="excel" subType="registroArticulos" isRegistry="=true"}}
+      {{update section="articulos" value="=excel"}}
+    {{/openFile}}
+  {{/action}}  
+
+  {{#grid id="articulos" section="articulos" keyField="codigo" allowInsert="true" allowRemove="true" applySplit="true" applyTo="cantidad"}}
+    {{column field="codigo" width="150" required="true"}}
+    {{column field="descripcion" width="400"}}
+    {{column field="categoria" width="350"}}
+    {{column field="grupo" width="150"}}
+    {{column field="familia" width="150"}}
+    {{column field="unidadEvaluacion" width="140" hide="=base.tipoArticulo!='meta'"}}
+    {{column field="ejercicio" width="90" hide="=base.tipoArticulo!='meta'"}}
+    {{column field="ponderacion" width="90" hide="=base.tipoArticulo!='competencia'"}}
+  {{/grid}}
+{{/define}}

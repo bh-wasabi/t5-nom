@@ -1,0 +1,30 @@
+{{#define id="notaSolicitudMaterial"}}
+  {{#section id="base"}}
+    {{field id="esHospitalizacion" type="expr" value="=tipoEpisodio=='hospitalizacion'"}}
+    {{#field id="central"}}
+[.#if esMulti.]    
+      {{#editor}}
+        {{param servicio="=servicio"}}
+      {{/editor}}
+[./if.]      
+      {{#onChange clearFields="ubicacionMultidosis,cama"}}
+[.#if esMulti.]      
+        {{set prioridad="=fn('prioridadServicio', servicio)"}}
+[.else.]
+        {{set prioridad="=fn('prioridadCentral', central)"}}
+[./if.]        
+      {{/onChange}}
+    {{/field}}
+    {{#field id="ubicacionMultidosis"}}
+      {{#editor alwaysLoad="true"}}
+        {{param central="=central"}}
+      {{/editor}}
+    {{/field}}    
+    {{#field id="cama"}}
+      {{#editor alwaysLoad="true"}}
+        {{param central="=central"}}
+      {{/editor}}
+    {{/field}}
+    {{!-- {{validator type="expr" notValidIf="=!central" message="Central Incorecta"}} --}}
+  {{/section}}
+{{/define}}

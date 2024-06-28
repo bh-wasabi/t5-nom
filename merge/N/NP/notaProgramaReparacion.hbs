@@ -1,0 +1,5 @@
+{{#define id="notaProgramaReparacion"}}
+  {{#section id="base"}}
+    {{validator type="expr" validIf="=calc.hasValue(calc.getRef(incumplimiento, 'base.tipoIncumplimiento'))" message="Falta Especificar el Tipo Incumplimiento"}}
+  {{/section}}
+{{/define}}

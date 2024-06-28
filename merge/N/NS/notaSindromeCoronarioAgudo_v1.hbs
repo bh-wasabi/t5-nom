@@ -1,0 +1,11 @@
+{{#define id="notaSindromeCoronarioAgudo_v1"}}
+  {{#view id="reporte"}}
+    {{#find limit="-1"}}
+      {{sort field="_id" direction="asc"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{filter condition="=desde" field="_created.date" gt="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=moment(hasta).add(1,'day').format()"}}
+    {{/find}}
+  {{/view}}  
+{{/define}}
+

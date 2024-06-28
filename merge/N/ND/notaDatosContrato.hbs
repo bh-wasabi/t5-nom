@@ -1,0 +1,108 @@
+{{#define id="notaDatosContrato"}}
+  {{#section id="base"}}
+    {{field id="esAseo" type="expr" value="=servicio=='aseo'"}}
+    {{field id="esRopa" type="expr" value="=servicio=='ropa'"}}
+    {{field id="esControlVectores" type="expr" value="=servicio=='controlVectores'"}}
+    {{field id="esSeguridad" type="expr" value="=servicio=='seguridad'"}}
+    {{field id="esReclutamientoSeleccion" type="expr" value="=servicio=='reclutamientoSeleccion'"}}
+    {{field id="esResiduosHospitalarios" type="expr" value="=servicio=='residuosHospitalarios'"}}
+    {{field id="esEstacionamiento" type="expr" value="=servicio=='estacionamiento'"}}
+    {{field id="esAlimentacionPacientes" type="expr" value="=servicio=='alimentacionPacientes'"}}
+    {{field id="esAlimentacionFuncionarios" type="expr" value="=servicio=='alimentacionFuncionarios'"}}
+    {{field id="esAdquisiciones" type="expr" value="=calc.in(servicio, ['adquisicionEquipo','adquisicionMobiliario'])"}}
+    {{field id="tieneHorarioEspecifico" type="expr" value="=tipoHorario=='especifico'"}}
+    {{field id="tieneProgramaAnual" type="expr" value="=calc.in(servicio, ['compra','venta'])"}}
+    {{field id="tieneProgramaValidacionInventario" type="expr" value="=calc.in(servicio, ['mobiliario','equipoMedico','moi','elementoTecnologico'])"}}
+    {{#field id="motivoSolicitud"}}
+      {{#editor}}
+        {{param servicio="=servicio"}}
+     {{/editor}}
+    {{/field}}
+    {{#field id="ubicacionCentralRopaLimpia"}}
+      {{#editor}}
+        {{param tipoUbicacion="='central'"}}
+        {{param subTipoUbicacion="='ropaLimpia'"}}
+     {{/editor}}
+    {{/field}}
+    {{#field id="ubicacionCentralRopaSucia"}}
+      {{#editor}}
+        {{param tipoUbicacion="='central'"}}
+        {{param subTipoUbicacion="='ropaSucia'"}}
+     {{/editor}}
+    {{/field}}
+    {{#field id="ubicacionLavanderia"}}
+      {{#editor}}
+        {{param tipoUbicacion="='central'"}}
+        {{param subTipoUbicacion="='lavanderia'"}}
+     {{/editor}}
+    {{/field}}
+  {{/section}}  
+  {{#section id="tiempos"}}
+    {{#field id="subTipoSolicitud"}}
+      {{#editor}}
+        {{param partOf="=base.servicio"}}
+     {{/editor}}
+    {{/field}}
+    {{#field id="motivo"}}
+      {{#editor}}
+        {{param servicio="=base.servicio"}}
+        {{param partOf="=subTipoSolicitud.substr(subTipoSolicitud.indexOf('-')+1)"}}
+     {{/editor}}
+    {{/field}}
+  {{/section}}  
+  {{#section id="programaAnual"}}
+    {{#field id="articulo"}}
+      {{#onChange}}
+        {{set codigo="=base.codigo"}}
+      {{/onChange}}
+    {{/field}}
+    {{field id="cantidadTotal" type="calc" value="=calc.sumArgs(@cantidad01,@cantidad02,@cantidad03,@cantidad04,@cantidad05,@cantidad06,@cantidad07,@cantidad08,@cantidad09,@cantidad10,@cantidad11,@cantidad12)"}}
+    {{field id="valorTotal" type="calc" value="=cantidadTotal*valorUnitario"}}
+  {{/section}}  
+  {{#report id="servicio" fontSize="10"}}
+    {{#stack}}
+      {{#columns}}
+        {{#box layout="noBorders" width="742" margin="-10,0,0,0"}}
+          {{row expr="=_servicio" color="white" align="center" bold="true" fillColor="#2b7b47"}}
+        {{/box}}
+      {{/columns}}
+    {{/stack}}
+  {{/report}}
+  {{#grid id="tiempos" keyField="subTipoSolicitud" section="tiempos" allowInsert="true" allowRemove="true"}}
+    {{column field="subTipoSolicitud" width="250"}}
+    {{column field="motivo" label="Motivo (Opcional)" width="250"}}
+    {{column field="momentoDieta" width="250" show="=base.esAlimentacionPacientes"}}
+    {{column field="criticidadZona" width="200"}}
+    {{column field="horarioAtencion" width="120" validateHours="true"}}
+    {{column field="tiempoAlertaAtencion" width="160"}}
+    {{column field="tiempoAtencion" width="120"}}
+    {{column field="tiempoAlertaEjecucion" width="160"}}
+    {{column field="tiempoEjecucion" width="120"}}
+  {{/grid}}
+  {{#grid id="programaAnual" disableEnter="true" keyField="articulo" section="programaAnual" allowInsert="true" allowRemove="true"}}
+    {{column field="servicio" width="200"}}
+    {{column field="articulo" width="350"}}
+    {{column field="codigo" width="150" readOnly="true"}}
+    {{column field="valorUnitario" width="100"}}
+    {{column field="cantidad01" width="50"}}
+    {{column field="cantidad02" width="60"}}
+    {{column field="cantidad03" width="50"}}
+    {{column field="cantidad04" width="50"}}
+    {{column field="cantidad05" width="50"}}
+    {{column field="cantidad06" width="50"}}
+    {{column field="cantidad07" width="50"}}
+    {{column field="cantidad08" width="60"}}
+    {{column field="cantidad09" width="80"}}
+    {{column field="cantidad10" width="60"}}
+    {{column field="cantidad11" width="80"}}
+    {{column field="cantidad12" width="70"}}
+  {{/grid}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}} 

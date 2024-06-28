@@ -1,0 +1,19 @@
+{{#define id="notaAccesoComedor"}}
+  {{#view id="reporte"}}
+    {{#find limit="-1"}}
+      {{include field="_created"}}
+      {{include field="base"}}
+      {{include field="persona"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{filter condition="=desde" field="_created.date" gte="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=hasta"}}
+    {{/find}}
+
+    {{join source="persona" view="datosPersona" as="join" id="persona.id"}}
+    {{calcPreJoin2 field="foto" type="expr" value="=join.persona.prestadorServicios.foto.base.url"}}
+    {{calcPreJoin2 field="plaza" type="expr" value="=calc.getRef(join, 'detalle.confirmacionAltaEmpleado.plaza')"}}
+    {{#join2 source="plaza" view="adscripcion" value="=adscripcion.descripcion" as="adscripcion"}}
+      {{param codigo="=plaza"}}
+    {{/join2}}
+  {{/view}}
+{{/define}}

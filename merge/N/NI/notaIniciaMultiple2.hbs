@@ -1,0 +1,10 @@
+{{#define id="notaIniciaMultiple2"}}
+  {{param startOnOpen="aplicacion"}}
+  {{action id="edi" label="Descargar Interface..." type="save-as" visibleMode="close" color="blue" btnSolid="true" condition="=_params.edi" items="=_params.edi" fileName="=_params.persona.nombreCompleto+'.hl7'"}}
+  {{#grid id="aplicacion" section="aplicacion" disableEnter="true" applyTo="continuar" applyContinue="true"}}
+    {{column field="fecha" type="date" format="DD/MMM/YYYY" width="110" readOnly="true"}}
+    {{!-- {{column field="_tipoSolicitud" width="200" readOnly="true"}} --}}
+    {{column field="_name" width="600" readOnly="true"}}
+    {{column field="continuar"}}
+  {{/grid}}
+{{/define}}

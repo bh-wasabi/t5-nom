@@ -1,0 +1,8 @@
+{{#define id="consultaExterna"}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{field id="precio" type="calc" value="=calc.sumRef(procedimientoMultiple, 'base.precio')"}}
+    {{field id="precioPublico" type="calc" value="=calc.sumRef(procedimientoMultiple, 'base.precioPublico')"}}
+    {{validator type="expr" validIf="=calc.isTrue(calc.lookupInPreset('app.variableGlobal', 'campo=permitePrecioEnCeros').valor)||calc.number(precio)>0" message="Precio Incorrecto"}}
+  {{/section}}
+{{/define}}

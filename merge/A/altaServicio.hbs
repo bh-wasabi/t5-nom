@@ -1,0 +1,14 @@
+{{#define id="altaServicio"}}
+  {{#section id="base"}}
+    {{field id="esOtroMotivo" type="expr" value="=@motivoAlta=='otro-motivo'"}}
+    {{field id="esOtroServicio" type="expr" value="=@destinoAlta=='otroServicio'"}}
+    {{#field id="servicio"}}
+      {{onChange clearFields="subTipoSolicitud,momento"}}
+    {{/field}}
+    {{#field id="subTipoSolicitud"}}
+      {{#editor alwaysLoad="true"}}
+        {{param partOf="=servicio"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

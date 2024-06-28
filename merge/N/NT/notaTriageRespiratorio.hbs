@@ -1,0 +1,19 @@
+{{#define id="notaTriageRespiratorio"}}
+  {{param attribute1="=base.destinoEnUrgencias"}}
+  {{param attribute2="=base.solicitud._attributes['2']"}}
+  {{#section id="base"}}
+    {{field id="resultado" type="expr" value="=fn('resultadoTriageRespiratorio', dificultadRespirar, dolorToracico, fiebre, dolorCabeza, tos)"}}
+    {{field id="esAmarillo" type="expr" value="=(resultado==='amarillo')"}}
+    {{field id="esOtraEnfermedad" type="expr" value="=calc.in(['otro'], @padeceEnfermedadTriageRespiratorio)"}}
+    {{field id="esOtro" type="expr" value="=calc.in('otro', otros)"}}
+    {{#field id="destinoEnUrgencias"}}
+      {{onChange clearFields="cama"}}
+    {{/field}}
+    {{#field id="cama"}}
+      {{#editor alwaysLoad="true"}}
+        {{param central="=fn('centralUrgencias', 'menor', @destinoEnUrgencias)"}}
+        {{param estatus="='limpia'"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}      
+{{/define}}

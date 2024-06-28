@@ -1,0 +1,6 @@
+{{#define id="escalaBraden"}}
+  {{#section id="base"}}
+    {{field id="total" type="calc" value="=calc.sumArgs(@escalaBradenPercepcionSensorial, @escalaBradenExposicionHumedad, @escalaBradenActividad, @escalaBradenMovilidad, @escalaBradenNutricion, @escalaBradenRoce)"}}
+    {{field id="nivel" type="expr" value="=fn('escalaBraden', total)"}}
+  {{/section}}
+{{/define}} 

@@ -1,0 +1,21 @@
+{{#define id="notaPostoperatoriaAjuste"}}
+  {{#section id="base"}}
+    {{#field id="nota"}}
+      {{#editor}}
+        {{param persona="=persona.id"}}
+      {{/editor}}
+      {{#onChange refresh="true"}}
+        {{set solicitud="=base.solicitud"}}
+        {{set tipoEpisodio="=base.tipoEpisodio"}}
+        {{set hospitalizacionDesde="=base.hospitalizacionDesde"}}
+        {{set seleccionarDiagnosticoPreoperatorio="=base.seleccionarDiagnosticoPreoperatorio"}}
+        {{set diagnostico="=base.diagnostico"}}
+        {{set diagnosticoPostoperatorio="=base.diagnosticoPostoperatorio"}}
+        {{set seleccionarProcedimiento="=base.seleccionarProcedimiento"}}
+        {{set procedimientoCirugia="=base.procedimientoCirugia"}}
+        {{set datosCirugiaRealizada="=base.datosCirugiaRealizada"}}
+        {{set caracteristicasCirugia="=base.caracteristicasCirugia"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+{{/define}}

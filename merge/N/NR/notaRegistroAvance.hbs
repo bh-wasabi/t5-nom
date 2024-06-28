@@ -1,0 +1,99 @@
+{{#define id="notaRegistroAvance"}}
+  {{param attribute1="=calc.first(fn((base.tipoAvance||'next')+'Step', base.tipoSolicitud, base.subTipoSolicitud, base.momento, base.subMomento, base.hint||base.diagnostico||base.resolucion||base.formaEntrega, base.subDiagnostico)).newMoment"}}
+  {{param attribute2="=calc.first(fn((base.tipoAvance||'next')+'Step', base.tipoSolicitud, base.subTipoSolicitud, base.momento, base.subMomento, base.hint||base.diagnostico||base.resolucion||base.formaEntrega, base.subDiagnostico)).newMomentName"}}
+  {{param attribute3="=calc.first(fn((base.tipoAvance||'next')+'Step', base.tipoSolicitud, base.subTipoSolicitud, base.momento, base.subMomento, base.hint||base.diagnostico||base.resolucion||base.formaEntrega, base.subDiagnostico)).newSubMoment"}}
+  {{param attribute4="=calc.first(fn((base.tipoAvance||'next')+'Step', base.tipoSolicitud, base.subTipoSolicitud, base.momento, base.subMomento, base.hint||base.diagnostico||base.resolucion||base.formaEntrega, base.subDiagnostico)).newSubMomentName"}}
+  {{param attribute5="=calc.first(fn((base.tipoAvance||'next')+'Step', base.tipoSolicitud, base.subTipoSolicitud, base.momento, base.subMomento, base.hint||base.diagnostico||base.resolucion||base.formaEntrega, base.subDiagnostico)).newValidate"}}
+
+  {{!-- barcode="base.solicitud.base.loteMezcla" barcodeFormat="CODE39" barcodeEncoding="Z64" --}}
+  {{action id="etiqueta" condition="=_created.subType=='centralMezclas_mezclaSiCumple'" type="print-zebra-band" label="Imprimir Etiqueta" color="grey" visibleMode="close" forceReadOnly="true" template="etiqueta" hide="=true"}}   
+  {{action id="preliminar" subAction="etiqueta"}}
+
+  {{#action id="afectar" error="=base.requiereAdjuntos&&_.isEmpty(adjuntos)?'Falta Incluir el Archivo Adjunto Correspondiente':(base.errorAsignacionPersonal?'Requiere Asignación del Personal':null)"}}
+    {{#update section="base"}}
+      {{set condition="=calc.hasValue(tipoVencimiento&&tiempo)" vencimiento="=calc.dueDate(vencimiento, tipoVencimiento, tiempo)"}}
+      {{set condition="=calc.hasValue(tipoVencimiento&&tiempo)" alerta="=calc.alertDate(vencimiento, tipoVencimiento, tiempo)"}}
+      {{set condition="=calc.hasValue(tiempoEspecifico)" vencimiento="=moment().add(tiempoEspecifico, 'minute').format()"}}
+      {{set condition="=calc.hasValue(tiempoEspecifico)" alerta="=moment().add(tiempoEspecifico-10, 'minute').format()"}}
+      {{set condition="=calc.hasValue(nuevoVencimiento)" vencimiento="=nuevoVencimiento"}}
+      {{set condition="=calc.hasValue(nuevoVencimiento)" alerta="=nuevoVencimiento"}}
+    {{/update}}
+  {{/action}}
+  {{#section id="base"}}
+    {{field id="tieneTiempoRequerido" type="expr" value="=@diagnostico=='requiereResolucion'"}}
+    {{field id="tieneTiempoEspecifico" type="expr" value="=calc.in(@diagnostico, ['reparacion','reparacionProvisiona'])"}}
+    {{field id="requiereComentarios" type="expr" value="=calc.in(@diagnostico, ['reprogramarReparacion','reprogramarMantenimiento'])"}}
+    {{field id="tieneReprogramacion" type="expr" value="=esReprogramacion||calc.in(@diagnostico, ['requiereServicioTecnico','requiereMantenimientoInSitu','aplicarGarantia','aplicarReemplazo'])"}}
+    {{#field id="diagnostico"}}
+      {{#editor}}
+        {{param partOf="=base.tipoSolicitud+'-'+base.subTipoSolicitud"}}
+        {{onChange clearFields="subDiagnostico"}}
+      {{/editor}}
+    {{/field}}  
+    {{#field id="subDiagnostico"}}
+      {{#editor}}
+        {{param partOf="=@diagnostico"}}
+      {{/editor}}
+    {{/field}}  
+    {{#field id="resolucion"}}
+      {{#editor}}
+        {{param partOf="=base.tipoSolicitud+'-'+base.subTipoSolicitud"}}
+      {{/editor}}
+    {{/field}}      
+    {{field id="tieneSubDiagnostico" type="expr" value="=fn('tieneSubDiagnostico', _created.service, base.diagnostico)"}}
+    {{field id="mensaje" type="expr" value="=calc.concatDash(base.diagnostico||base.resolucion, base.subDiagnostico)"}}
+    {{field id="_mensaje" type="expr" value="=calc.concatDash(base._diagnostico||base._resolucion, base._subDiagnostico)"}}
+    {{field id="nivelCriticidad" type="expr" value="=fn('nivelCriticidad', tipoSolicitud, subTipoSolicitud, @diagnostico, @subDiagnostico)"}}
+    {{field id="tiempoMaximoPlanSolucion" type="calc" value="=fn('tiempoMaximoPlanSolucion', nivelCriticidad)"}}
+    {{validator type="expr" validIf="=comentarios||!requiereComentarios" message="Comentarios Requeridos"}}
+  {{/section}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="referencia" width="300" items="=base.referencias"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}
+
+{{#markup}}
+  {{#template id="etiqueta"}}
+  ^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR2,2~SD15^JUS^LRN^CI0^XZ
+  ^XA
+  ^MMT
+  ^PW1417
+  ^LL1772
+  ^LS0
+  ^FO30,32^GFA,02688,02688,26,,::gI0G1GFgM0gI0G3GFG8gL0gI0G7G1GCgL0::gI0G3G1GCgL0gI0G3GFG8gL0H0G7IFW0G1GFgM0H0G7IFG8hK0H0GCH0G1G8hK0H0GCI0GCX0G4gL0G0G1G9G8G0G6GEW0G2GEgL0G0G3GBG8G0G7G6W0G7G6I0G3gH0G0G3G7H0G3G7W0H3I0G6gH0G0G7G6H0G3GBW0G1GBI0G6gH0G0G6GEH0G1G9G8V0G1G9G8H0GCgH0G0HCI0GDGCW0GDGCG0G1GCgH0G0GDGCI0HCW0HCG0G1G8gH0G1G9G8I0G6JFK0G1IFG8J0G7IFgI0G1G8K0G7IFK0G3IFG8J0G7IFgI0G0GCK0GCH0G1G8J0G6I0GCJ0GEgL0G0GCJ0G1GCH0G1GCJ0GEI0GEJ0GCgL0G0G6J0G1G8I0GCJ0GCI0G6I0G1G8G0G3IFGCG0GFG0G1JFG8G3IFGEL0G0G7J0G3J0G6J0G8I0G7I0G1G8G0JFGEG0GFG0G3JFG8G7IFGEG0G3GEI0G0G3J0G3J0G6N0G3L0JFGEG0GFG0G7JFG8G7IFGEG0G7GFI0G0G3G8I0G6J0G3N0G1G8K0JFGEG0GFG0G7JFG8G7IFGEG0G7GFI0G0G1G8I0GEJ0G3H0G7G8GCI0G1G8G0G1G8GEG0GFH0G1GEG0GFG0G7G8J0G7G8J0HFG8H0H0GCHFHCJ0G1G8G0G7HCJ0GCG0G3GCGEG0GFH0G1GEG0GFG0G7G8J0G7G8I0G1HFGCH0H0GCH0G1GCJ0G1GCG0G7HCJ0GEG0G3HEG0GFI0GEG0GFG0G7GCJ0G7GCI0G1GFG7GCH0H0G6H0G3G8K0GEG0G7GFGCJ0G7G0G3GFGEG0GFK0GFG0G7JFG0G7HFG8G0G3GEG3GEH0H0G7IFG8K0JFGCJ0G7IFGEG0GFK0GFG0G7JFG8G7HFG8G0G3GEG3GEH0H0G3IFG8K0HFG7G3GCJ0G7GFHBGEG0GFK0GFG0G3JFG8G7HFG8G0G7GCG1GFH0K0G1G8J0G1GCG0G7G3GCJ0GEG0G1G9GEG0GFI0GEG0GFH0JFG8G7HFH0GFGCG1GFH0L0GCJ0G1G8G0G7G0GCJ0GCG0G1G8GEG0GFH0G1GEG0GFK0G7G8G7GCI0GFG8G0GFG8G0L0GEJ0G3G8M0G1GCK0GFH0G1GEG0GFK0G7G8G7GCH0G1GFH0G7G8G0L0G6J0G3N0G1G8K0GFH0G1GEG0GFK0GFG8G7GCH0G1GFH0G7GCG0L0G7J0G6N0G3L0JFGEG0GFG0G7JFG8G7GCH0G3HFG0G3GEG0L0G3J0G6I0G1G8I0G3I0G1G8G0JFGEG0GFG0G7JFG8G7GCH0G7HFG0G3GEG0L0G1G8I0GCJ0GCI0G6I0G1G8G0G7IFGCG0GFG0G3JFG0G7GCH0G7HFG0G1GFG0L0G1GCI0GCJ0GCI0GEJ0GCY0G7HFH0GEG0M0GCH0G1G8J0G6I0GCJ0GEgL0M0JFK0G7IFG8J0G7IFgI0M0G7IFK0G3IFG8J0G7IFG8gH0gK0GEH0G1G8gH0gK0GCI0GCgH0gJ0G1G9H0G6GEgH0gJ0G1GBG8G0H6gH0gJ0H3H0H3gH0gJ0G7G6H0G3GBgH0gJ0H6H0G1G9G8gG0gJ0HCI0GDG8gG0gJ0GDGCI0HCgG0gI0G1G9G8I0G6GEgG0gI0G1G9J0H6gG0gJ0G8K0GEgG0gJ0GCK0GCgG0gJ0GCJ0G1G8gG0gJ0G6J0G1G8gG0gJ0G7J0G3gH0gJ0G3J0G7gH0gJ0G1G8I0G6gH0gJ0G1G8HFGCGEgH0gK0GCHFG8GCgH0gK0GEH0G1G8gH0gK0G7IFG8gH0gK0G3IFgI0,:^FS
+  ^FT233,67^A0N,33,33^FB367,1,0,C^FH\^FDHospital Regional de Alta^FS
+  ^FT233,107^A0N,33,33^FB367,1,0,C^FH\^FDEspecialidad de Ixtapaluca^FS
+  ^FT38,151^A0N,29,28^FH\^FD{{normalize persona.nombreCompleto}}^FS
+  ^FT530,151^A0N,29,28^FH\^FD{{normalize persona.clave}}^FS
+  ^FT38,181^A0N,25,24^FH\^FDFecha Nacimiento:^FS
+  ^FT230,181^A0N,25,24^FH\^FD{{date persona.fechaNacimiento "DD/MMM/YYYY"}}^FS
+  {{!-- ^FO181,530^GFA,03840,03840,00040,{{_barcode}} --}}
+  ^FT38,213^A0N,25,24^FH\^FDTipo Mezcla:^FS
+  ^FT230,213^A0N,25,24^FH\^FD{{normalize base.solicitud.base._subTipoSolicitud}}^FS
+  ^FT38,247^A0N,25,24^FH\^FDLote Mezcla:^FS
+  ^FT230,247^A0N,25,24^FH\^FD{{normalize base.solicitud.base.loteMezcla}}^FS
+  ^FT38,281^A0N,25,24^FH\^FDTiempo Estabilidad:^FS
+  ^FT340,281^A0N,25,24^FH\^FD{{normalize base.datosEntregaMezcla.base._tiempoEstabilidad}}^FS
+  ^FT38,312^A0N,25,24^FH\^FDTemperatura Almacenamiento:^FS
+  ^FT340,312^A0N,25,24^FH\^FD{{normalize base.datosEntregaMezcla.base._temperaturaAlmacenamiento}}^FS
+  ^FT38,346^A0N,25,24^FH\^FDProteger de la Luz:^FS
+  ^FT340,346^A0N,25,24^FH\^FD{{normalize base.datosEntregaMezcla.base._protegerLuz}}^FS
+  ^FT38,377^A0N,25,24^FH\^FDCama:^FS
+  ^FT122,377^A0N,25,24^FH\^FD{{normalize base.solicitud.base._cama}}^FS
+  ^FT38,408^A0N,25,24^FH\^FDCentral:^FS
+  ^FT122,408^A0N,25,24^FH\^FD{{normalize base.solicitud.base._central}}^FS
+  ^FT38,439^A0N,25,24^FH\^FDComposicion:^FS
+  ^FT180,439^A0N,25,24^FH\^FD{{normalize materiales.0.descripcion}} {{materiales.0.dosisTotal}}{{normalize materiales.0._unidad}}^FS
+  ^FT180,470^A0N,25,24^FH\^FD{{normalize materiales.1.descripcion}} {{materiales.1.dosisTotal}}{{normalize materiales.1._unidad}}^FS
+  ^FT180,501^A0N,25,24^FH\^FD{{normalize materiales.2.descripcion}} {{materiales.2.dosisTotal}}{{normalize materiales.2._unidad}}^FS
+  ^FT180,532^A0N,25,24^FH\^FD{{normalize materiales.3.descripcion}} {{materiales.3.dosisTotal}}{{normalize materiales.3._unidad}}^FS
+  ^FT180,563^A0N,25,24^FH\^FD{{normalize materiales.4.descripcion}} {{materiales.4.dosisTotal}}{{normalize materiales.4._unidad}}^FS
+  ^PQ1,0,1,Y^XZ
+  {{/template}}  
+{{/markup}}

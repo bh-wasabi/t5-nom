@@ -1,0 +1,11 @@
+{{#define id="datosLaboratorioSeguimientoArtritis"}}
+{{action id="verFib" hide="=true" condition="=true" type="message" label="FIB-4" width="300" height="300" 
+message='
+<a class="link" href="https://www.hepatitisc.uw.edu/page/clinical-calculators/fib-4" target="_blank">FIB-4</a>
+' }} 
+  {{#section id="base"}}
+    {{field id="fibAvanzada" type="expr" value="=@fib4>0&&@fib4<1.45?'Poco Probable de Tener Fibrosis':''"}}
+    {{field id="fibIntermedia" type="expr" value="=@fib4>=1.45&&@fib4<=3.25?'Fibrosis No Curativa':''"}}
+    {{field id="fibSignificativa" type="expr" value="=@fib4>3.25?'Probable Fibrosis Avanzada':''"}}
+  {{/section}}
+{{/define}}

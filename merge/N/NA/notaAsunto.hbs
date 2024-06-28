@@ -1,0 +1,36 @@
+{{#define id="notaAsunto"}}
+  {{#transform id="copiar-asunto"}}
+    {{#update section="base"}}
+      {{set tiempoAsuntoAbierto="=calc.fromNow(base.fechaOcurrio)"}}
+    {{/update}}
+  {{/transform}}
+  {{#workflow id="afectar" start="afectar"}}
+    {{#step id="afectar"}}
+      {{#user}}
+        {{#validate condition="=!_name" error="Nombre Incorrecto"}}
+        {{/validate}}
+        {{#spAffect engine="node"}}
+          {{#update section="base"}}
+            {{set estatus="abierto"}}
+            {{set _estatus="Abierto"}}
+          {{/update}}
+        {{/spAffect}}
+      {{/user}}
+    {{/step}}
+  {{/workflow}}
+  {{action id="notaAsuntoSeguimiento" source="notaAsuntoSeguimiento" label="Seguimiento" transform="copiar-asunto" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{action id="notaAsuntoCierre" source="notaAsuntoCierre" label="Cierre" transform="copiar-asunto" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{#browser id="abierto" view="lista-asunto" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="brown" showActions="=calc.fn('notasAsunto', base)"}}
+    {{list itemTemplate="lista-asunto" allowSearch="true" allowRefresh="true" allowEdit="true" allowInsert="false"}}
+  {{/browser}}
+  {{#section id="base"}}
+    {{#field id="categoria"}}
+      {{onChange clearFields="subCategoria"}}
+    {{/field}}
+    {{#field id="subCategoria"}}
+      {{#editor alwaysLoad="true"}}
+        {{param partOf="=categoria"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

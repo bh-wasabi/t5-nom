@@ -1,0 +1,18 @@
+{{#define id="organizacion"}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base.nombre"}}
+      {{include field="base._estatus"}}    
+      {{sort field="base.nombre" direction="asc"}}
+    {{/find}}
+  {{/view}}
+{{/define}}
+
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{base.nombre}}</br>
+      <span style="font-size:12px;">{{base._estatus}}</span>
+    </div>    
+  {{/template}}
+{{/markup}}

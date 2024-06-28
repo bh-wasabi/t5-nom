@@ -1,0 +1,12 @@
+{{#define id="planCobroAnticipado"}}
+  {{param startOnOpen="aplicacion"}}
+  {{#grid id="aplicacion" section="aplicacion" applyTo="importe" applySuggest="saldo"}}
+    {{column field="solicitud" width="200" readOnly="true"}}
+    {{column field="tipoSolicitud" width="230" readOnly="true"}}
+    {{column field="categoria" width="230" readOnly="true"}}
+    {{column field="fecha" type="date" format="DD/MMM/YYYY" width="100" readOnly="true"}}
+    {{column field="vencimiento" type="date" format="DD/MMM/YYYY" width="100" readOnly="true"}}
+    {{column field="saldo" type="numeric" width="120" format="currency" readOnly="true"}}
+    {{column field="importe" type="numeric" width="120" format="currency" }}
+  {{/grid}}
+{{/define}}

@@ -1,0 +1,28 @@
+{{#define id="notaPorCancelarMinistrado"}}
+  {{param attribute1="=_created.service"}}
+  {{param startOnOpen="aplicacion"}}
+  {{param removeIfEmptySection="aplicacion"}}
+  {{param removeIfEmptyField="continuar"}}
+  
+  {{!-- {{#section id="aplicacion"}}
+    {{#field id="lote"}}
+      {{#editor type="select" source="mov" view="loteEspecifico" alwaysLoad="true" sendSearchValue="true" value="lote" display="loteVencimiento"}}
+        {{param codigo="=codigo"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}} --}}
+  
+  {{#grid id="aplicacion" section="aplicacion" keyField="continuar" applyTo="continuar" applyContinue="true"}}
+    {{column field="horaRequerida" width="130" readOnly="true"}}
+    {{column field="solicitud" type="text" width="180" readOnly="true"}}
+    {{column field="_name" width="300" readOnly="true"}}
+    {{column field="central" width="150" readOnly="true"}}
+    {{column field="cama" width="70" readOnly="true"}}
+    {{column field="comentarios" width="200"}}
+    {{column field="horaMinistracion" validateHour="true" width="120"}}
+    {{column field="continuar" width="70"}}
+    {{column field="lote" label="Lote" width="100" required="true"}}
+    {{column field="vencimiento" label="Vencimiento" validateDate="true" width="90" required="true"}}
+    {{column field="costoUnitario" label="Costo Unitario" width="110" type="numeric" format="#,.##"}}  {{!-- required="true" --}}
+  {{/grid}}
+{{/define}}

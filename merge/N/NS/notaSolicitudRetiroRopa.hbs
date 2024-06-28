@@ -1,0 +1,17 @@
+{{#define id="notaSolicitudRetiroRopa"}}
+  {{param attribute1="=_created.service"}}
+  {{#action id="afectar"}}
+    {{#update section="base"}}
+      {{setRef ref="retiroRopa.base.vencimiento" value="=calc.dueDate(base.retiroRopa.base.vencimiento, 'atencion', calc.dueTimes('ropa', 'retiroRopa', base.retiroRopa.base.motivo, base.retiroRopa.base.momentoDieta, base.retiroRopa.base.criticidadZona, base.retiroRopa.base.tiempos))"}}
+      {{setRef ref="retiroRopa.base.alerta"      value="=calc.alertDate(base.retiroRopa.base.vencimiento, 'atencion', calc.dueTimes('ropa', 'retiroRopa', base.retiroRopa.base.motivo, base.retiroRopa.base.momentoDieta, base.retiroRopa.base.criticidadZona, base.retiroRopa.base.tiempos))"}}
+    {{/update}}
+  {{/action}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

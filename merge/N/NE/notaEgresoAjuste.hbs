@@ -1,0 +1,63 @@
+{{#define id="notaEgresoAjuste"}}
+  {{#section id="base"}}
+    {{#field id="nota"}}
+      {{#editor}}
+        {{param persona="=persona.id"}}
+      {{/editor}}
+      {{#onChange refresh="true"}}
+        {{set catalogoGuiasPracticaClinica="catalogoGuiasPracticaClinica"}}
+        {{set guiaPracticaClinica="guiaPracticaClinica"}}
+        {{set fechaInicialAtencion="fechaInicialAtencion"}}
+        {{set fechaIngresoHospitalario="fechaIngresoHospitalario"}}
+        {{set nacioHospital="nacioHospital"}}
+        {{set procedenciaIngreso="procedenciaIngreso"}}
+        {{set servicios="servicios"}}
+        {{set fueAtencionObstetrica="fueAtencionObstetrica"}}
+        {{set datosMujer="datosMujer"}}
+        {{set motivoEgreso="motivoEgreso"}}
+        {{set cluesTraslado="cluesTraslado"}}
+        {{set fechaHoraDefuncion="fechaHoraDefuncion"}}
+        {{set solicitaEgresoPaciente="solicitaEgresoPaciente"}}
+        {{set parentesco="parentesco"}}
+        {{set mujerFertil="mujerFertil"}}
+        {{set causaExterna="causaExterna"}}
+        {{set codigoCausaExterna="codigoCausaExterna"}}
+        {{set codigoMorfologiaTumor="codigoMorfologiaTumor"}}
+        {{set seleccionarDiagnosticoPrincipalIngreso="seleccionarDiagnosticoPrincipalIngreso"}}
+        {{set seleccionarDiagnosticoEgreso="seleccionarDiagnosticoEgreso"}}
+        {{set diagnostico="diagnostico"}}
+        {{set primeraVezSubsecuente="primeraVezSubsecuente"}}
+        {{set signosVitales="signosVitales"}}
+        {{set pacientePSiquiatrico="pacientePSiquiatrico"}}
+        {{set tipoUnidadPsiquiatrica="tipoUnidadPsiquiatrica"}}
+        {{set tipoServicioPsiquiatrico="tipoServicioPsiquiatrico"}}
+        {{set HospitalParcial="HospitalParcial"}}
+        {{set procedimientoDiagnosticosTerapeuticosQuirurgicos="procedimientoDiagnosticosTerapeuticosQuirurgicos"}}
+        {{set procedimientosCirugiasCie9="procedimientosCirugiasCie9"}}
+        {{set codigoCie9="codigoCie9"}}
+        {{set evolucion="evolucion"}}
+        {{set metodoAnticonceptivo="metodoAnticonceptivo"}}
+        {{set otroMetodo="otroMetodo"}}
+        {{set problemasClinicosientes="problemasClinicosientes"}}
+        {{set planAmbulatorio="planAmbulatorio"}}
+        {{set terapeuticaEmpleada="terapeuticaEmpleada"}}
+        {{set pronostico="pronostico"}}
+        {{set diasEstancia="diasEstancia"}}
+        {{set notificoMP="notificoMP"}}
+        {{set folioCertificadoDefuncion="folioCertificadoDefuncion"}}
+        {{set lesiones="lesiones"}}
+        {{set folioLesion="folioLesion"}}
+        {{set descripcionLesiones="descripcionLesiones"}}
+        {{set intencionalidad="intencionalidad"}}
+        {{set lugarOcurrio="lugarOcurrio"}}
+        {{set existioInfeccion="existioInfeccion"}}
+        {{set condicionDelEgreso="condicionDelEgreso"}}
+        {{set testigoUno="testigoUno"}}
+        {{set firmaTestigoUno="firmaTestigoUno"}}
+        {{set firmaTestigoDos="firmaTestigoDos"}}
+        {{set testigoDos="testigoDos"}}
+        {{set solicitudesEgreso="solicitudesEgreso"}}
+      {{/onChange}}      
+    {{/field}}
+  {{/section}}
+{{/define}}

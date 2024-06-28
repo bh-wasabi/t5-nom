@@ -1,0 +1,16 @@
+{{#define id="programaAnualEstacionamiento"}}
+  {{#section id="base"}}
+  	{{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{#field id="motivo"}}
+      {{#editor}}
+        {{param servicio="='estacionamiento'"}}
+        {{param partOf="=subTipoSolicitud"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="autoAsignacion"}}
+      {{#editor}}
+        {{param servicio="='estacionamiento'"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

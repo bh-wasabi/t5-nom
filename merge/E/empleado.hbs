@@ -1,0 +1,127 @@
+{{#define id="empleado"}}
+[.#if esSIC.]
+  {{param name="=_params.name||'Personal'"}}
+[.else.]  
+  {{param name="=_params.name||'Empleado'"}}
+[./if.]
+  {{action id="eliminar" hide="true"}}
+
+  {{action id="ver" condition="=true" type="menu" menu="menuReportes" label="Reportes" color="grey" isBrowserAction="true"}}
+  {{#menu id="menuReportes" color="grey"}}
+    {{item action="reporteListaEmpleados" text="Lista Empleados"}}
+  {{/menu}}  
+  {{action id="reporteListaEmpleados" hide="true" type="quickReport" source="empleado" view="listaEmpleados"}}
+
+  {{#view id="listaEmpleados"}}
+    {{#find}}
+      {{include field="base"}}
+      {{include field="_created"}}
+      {{sort field="_name" direction="asc"}}
+    {{/find}}
+  {{/view}}
+
+  {{#action id="tool" condition="true" type="photo" label="Tomar Foto" color="grey" as="foto" icon="camera"}}
+    {{#update section="base"}}
+      {{setRef ref="foto.base.nombre" value="='Fotografía'"}}
+      {{setRef ref="foto.base.url" value="=foto.url"}}
+    {{/update}}
+  {{/action}} 
+  {{action id="tool2" type="openFolder" condition="=adjuntos" items="=adjuntos" label="Adjuntos" color="grey" visibleMode="close"}}
+  {{#action id="sugerirCurp" hide="true" type="update"}}
+    {{#update section="base"}}
+      {{set clave="=calc.curp(nombres, apellidoPaterno, apellidoMaterno, genero, entidadNacimiento, fechaNacimiento)"}}
+    {{/update}}
+  {{/action}}
+[.#if esSIC.]
+  {{action id="copiar" label="Copiar..." condition="=true" confirm="true" confirmMessage="¿Desea Copiar el Personal?" btnSolid="false" color="grey"}}
+[./if.]  
+  {{#section id="base"}}
+[.#if esSIC.]
+    {{field id="servicio" defaultValue="=_params.servicio"}}  
+[./if.]  
+    {{field id="nombreCompleto" type="expr" label="Nombre" value="=calc.concat(@nombres, @apellidoPaterno, @apellidoMaterno)"}}
+    {{field id="esMujer" type="expr" value="=base.genero==='mujer'"}}
+    {{field id="esAseo" type="expr" value="=base.servicio=='aseo'"}}
+    {{#field id="puesto"}}
+      {{#onChange clearFields="documentacionRequerida"}}
+        {{set documentacionRequerida="=_remoteScope.persona.documentacionRequerida"}}
+        {{set _documentacionRequerida="=remoteScope.persona._documentacionRequerida"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+  {{#grid id="cursos" section="cursos" allowRemove="true" allowInsert="true"}}
+    {{column field="nombre" width="300"}}
+    {{column field="desde" label="Fecha Inicio" width="120"}}
+    {{column field="hasta" label="Fecha Termino" width="120"}}
+    {{column field="activoRelacionado" width="300"}}
+[.#if esSIC.]    
+    {{column field="vencimiento" width="160"}}
+[.else.]
+    {{column field="aprobado" width="100"}}
+[./if.]      
+    {{column field="comentarios" width="300"}}
+  {{/grid}}
+  {{#grid id="certificados" section="certificados" allowRemove="true" allowInsert="true"}}
+    {{column field="nombre" width="300"}}
+    {{column field="antecedentes" width="250"}}
+    {{column field="fecha" width="120"}}
+    {{column field="vencimiento" width="120"}}
+    {{column field="obligatorioServicio" width="150"}}
+    {{column field="acreditaciones" width="120"}}
+    {{column field="comentarios" width="250"}}
+  {{/grid}}
+  {{#grid id="vacunas" section="vacunas" allowRemove="true" allowInsert="true"}}
+    {{column field="nombre" width="300"}}
+    {{column field="fecha" width="120"}}
+    {{column field="vencimiento" width="120"}}
+    {{column field="obligatorioServicio" width="150"}}
+    {{column field="acreditaciones" width="120"}}
+    {{column field="comentarios" width="250"}}
+  {{/grid}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base.nombreCompleto"}}
+      {{include field="base.clave"}}    
+      {{include field="base.genero"}}
+      {{include field="base.puesto"}}
+      {{include field="base.servicio"}}
+      {{include field="base.establecimientos"}}
+      {{include field="base.fechaNacimiento"}}
+      {{include field="_readOnly"}}
+      {{sort field="base.nombreCompleto" direction="asc"}}
+      {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+      {{search field="base.nombreCompleto"}}
+      {{search field="base.clave" directSearchIfLength="9,12,13,14,15,16,17,18"}}
+      {{search field="base.fechaNacimiento"}}
+      {{search field="base._puesto"}}
+      {{search field="base._servicio"}}
+      {{search field="base._establecimientos"}}
+    {{/find}}
+  {{/view}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="300"}}
+    {{column field="referencia" width="300" items="=_.pluck(cursos, 'nombre').concat(_.pluck(@certificados, 'nombre')).concat(_.pluck(@vacunas, 'nombre'))"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}  
+{{/define}}
+
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{base.nombreCompleto}}
+[.#if esSIC.]      
+      <span style="font-size:12px;float:right">{{base._servicio}}</span>
+      </br><span style="font-size:12px;">{{base._establecimientos}}</span>
+[.else.]      
+      </br><span style="font-size:12px;">{{base._puesto}}</span>
+[./if.]
+      {{#if _readOnly}}
+      <span class="read-only" style="font-size:12px;"><strong>&nbsp;&nbsp;Solo Lectura&nbsp;&nbsp;</strong></span>
+      {{/if}}
+    </div>
+  {{/template}}
+{{/markup}}

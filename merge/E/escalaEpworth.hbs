@@ -1,0 +1,6 @@
+{{#define id="escalaEpworth"}}
+  {{#section id="base"}}
+    {{field id="total" type="calc" value="=calc.sumArgs(@epworthSentadoLeyendo, @epworthViendoTelevision, @epworthSentadoInactivoLugarPublico, @epworthSentadoComoPasajero, @epworthAcostadoParaDescansar, @epworthSentadoHablando, @epworthSentadoPostComida, @epworthSentadoCocheTrafico)"}}
+    {{field id="nivel" type="expr" value="=fn('escalaEpworth', total)"}}
+  {{/section}}
+{{/define}} 

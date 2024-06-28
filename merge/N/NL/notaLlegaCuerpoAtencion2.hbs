@@ -1,0 +1,14 @@
+{{#define id="notaLlegaCuerpoAtencion2"}}
+  {{#section id="base"}}
+    {{#field id="cama"}}
+      {{#editor}}
+[.#if esMulti.]      
+        {{param servicio="=_created.service"}}
+[.else.]
+        {{param central="=_created.service"}}
+[./if.]        
+        {{param estatus="='limpia'"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}  
+{{/define}}

@@ -1,0 +1,25 @@
+{{#define id="notaIngresoAjuste"}}
+  {{#section id="base"}}
+    {{#field id="nota"}}
+      {{#editor}}
+        {{param persona="=persona.id"}}
+      {{/editor}}
+      {{#onChange refresh="true"}}
+        {{set medico="base.medico"}}
+        {{set especialidad="base.especialidad"}}
+        {{set servicio="base.servicio"}}
+        {{set procedenciaIngreso="base.procedenciaIngreso"}}
+        {{set informacionInterrogatorio="base.informacionInterrogatorio"}}
+        {{set resumenInterrogatorio="base.resumenInterrogatorio"}}
+        {{set embarazada="base.embarazada"}}
+        {{set signosVitales="base.signosVitales"}}
+        {{set motivoAtencion="base.motivoAtencion"}}
+        {{set resumenExporacionFisica="base.resumenExporacionFisica"}}
+        {{set estadoMental="base.estadoMental"}}
+        {{set resultadosRelevantes="base.resultadosRelevantes"}}
+        {{set pronostico="base.pronostico"}}
+        {{set reingreso="base.reingreso"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+{{/define}}

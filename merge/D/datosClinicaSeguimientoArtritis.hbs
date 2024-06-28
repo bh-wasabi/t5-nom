@@ -1,0 +1,9 @@
+{{#define id="datosClinicaSeguimientoArtritis"}}
+  {{#section id="base"}}
+    {{field id="resultadoCdai" type="calc" value="=calc.sumArgs(@articulacionesInflamadas,@articulacionesDolorosas,@evaluacionGlobalPga,@evaluacionDelEvaluadorEga,)"}}
+    {{field id="resultadoCdaiRemision" type="expr" value="=resultadoCdai>0&&resultadoCdai<2.8?'Remisión':''"}}
+    {{field id="resultadoCdaiBaja" type="expr" value="=resultadoCdai>2.8&&resultadoCdai<10?'Actividad de Enfermedad Baja':''"}}
+    {{field id="resultadoCdaiModerada" type="expr" value="=resultadoCdai>=10&&resultadoCdai<=22?'Actividad de Enfermedad Moderada':''"}}
+    {{field id="resultadoCdaiAlta" type="expr" value="=resultadoCdai>22?'Actividad de Enfermedad Alta':''"}}
+  {{/section}}
+{{/define}}

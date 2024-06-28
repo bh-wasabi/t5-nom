@@ -1,0 +1,7 @@
+{{#define id="datosEncuesta"}}
+  {{#section id="base"}}
+    {{field id="esResponsableInterno" type="expr" value="=@tipoResponsableEncuesta=='interno'"}}
+    {{field id="esResponsableOtro" type="expr" value="=@tipoResponsableEncuesta=='otro'"}}
+    {{validator type="expr" validIf="=valorNumericoEncuesta" message="Falta Indicar el Valor Númerico Encuesta (1-100)"}}
+  {{/section}}
+{{/define}} 

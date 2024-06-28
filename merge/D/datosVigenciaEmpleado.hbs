@@ -1,0 +1,9 @@
+{{#define id="datosVigenciaEmpleado"}}
+  {{#section id="base"}}
+    {{#field id="hasta"}}
+      {{#onChange}}
+        {{set alertaVencimiento="=moment(hasta).add(-1, 'month').format('YYYY-MM-DD')"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+{{/define}} 

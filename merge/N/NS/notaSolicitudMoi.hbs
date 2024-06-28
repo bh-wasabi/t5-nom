@@ -1,0 +1,43 @@
+{{#define id="notaSolicitudMoi"}}
+  {{#action id="afectar" error="=base.requiereAdjuntos&&_.isEmpty(adjuntos)?'Falta Incluir el Archivo Adjunto Correspondiente':calc.getRef(base,'moi.base.ubicacion')?(base.esTrasladoCilindros&&_.isEmpty(articulos)?'Faltan los Artículos':null):'Solicitud Incorrecta'"}}
+    {{#update section="base"}}
+      {{setRef ref="moi.base.vencimiento" value="=calc.dueDate(moi.base.vencimiento, 'atencion', calc.dueTimes('moi', moi.base.subTipoSolicitud, moi.base.motivo, moi.base.momentoDieta, moi.base.criticidadZona, moi.base.tiempos))"}}
+      {{setRef ref="moi.base.alerta"      value="=calc.alertDate(moi.base.vencimiento, 'atencion', calc.dueTimes('moi', moi.base.subTipoSolicitud, moi.base.motivo, moi.base.momentoDieta, moi.base.criticidadZona, moi.base.tiempos))"}}
+    {{/update}}
+  {{/action}}
+  {{#section id="base"}}
+    {{field id="esTrasladoCilindros" type="expr" value="=_created.subType=='trasladoCilindros'"}}  
+    {{field id="requiereAdjuntos" type="expr" value="=moi.base.subTipoSolicitud=='mantenimientoTecnicoLegal'"}}  
+  {{/section}}
+  {{#section id="articulos"}}
+    {{#field id="articulo"}}
+      {{#editor display="base.codigo" view="activos"}}
+        {{param servicio="='moi'"}}
+        {{param tipoArticulo="='material'"}}      
+      {{/editor}}
+      {{#onChange}}
+        {{set codigo="=base.codigo"}}
+        {{set descripcion="=base.descripcion"}}
+        {{set tipoArticulo="=base.tipoArticulo"}}
+        {{set unidad="=base.unidadExistencia"}}
+        {{set _unidad="=base._unidadExistencia"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}  
+  {{#grid id="articulos" section="articulos" keyField="cantidad" allowInsert="true" allowRemove="true"}}
+    {{column field="articulo" label="Código" width="150" validateDuplicate="true"}}
+    {{column field="cantidad" label="Cantidad" width="100" type="numeric" format="#,"}}
+    {{column field="codigo" label="Código" width="150" readOnly="true"}}
+    {{column field="descripcion" label="Descripción" width="300" readOnly="true"}}
+    {{column field="tipoArticulo" label="Tipo Artículo" width="150" readOnly="true"}}
+    {{column field="_unidad" label="Unidad" width="200" readOnly="true"}}
+  {{/grid}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

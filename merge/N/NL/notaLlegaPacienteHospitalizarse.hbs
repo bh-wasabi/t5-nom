@@ -1,0 +1,10 @@
+{{#define id="notaLlegaPacienteHospitalizarse"}}
+  {{#transform id="copiar"}}
+    {{update section="persona" value="=persona"}}
+    {{update section="base" value="=base"}}
+  {{/transform}}
+
+  {{!-- Hay que darle acceso en flowAccess --}}
+  {{action id="notaRechazoIngresoHospitalario" source="notaRechazoIngresoHospitalario" label="Rechazo Ingreso" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{action id="notaEncame" source="notaEncame" label="Encame" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+{{/define}}

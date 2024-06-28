@@ -1,0 +1,12 @@
+{{#define id="tipoCentinela"}}
+	{{#view id="lista" name="Lista"}}
+		{{#find}}
+			{{include field="base.codigo"}}
+			{{search field="_name"}}
+			{{filter condition="=servicio" field="base.servicio" in="=servicio"}}
+		{{/find}}
+	{{/view}}
+	{{#section id="base"}}
+    {{field id="nombre" type="expr" value="=calc.concatValueKey(descripcion,codigo)"}}
+	{{/section}}
+{{/define}}

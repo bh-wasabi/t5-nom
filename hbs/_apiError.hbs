@@ -1,0 +1,21 @@
+{{#define id="_apiError"}}
+  {{#view id="report"}}
+    {{#find limit="-1"}}
+      {{sort field="_id" direction="asc"}}
+      {{filter condition="=desde" field="date" gt="=moment(desde).format('YYYY-MM-DD')"}}
+      {{filter condition="=hasta" field="date" lt="=moment(hasta).format('YYYY-MM-DD')"}}
+    {{/find}}
+  {{/view}}
+  {{#action id="reporteIntentosFallidosApi" hide="true" type="quickReport" label="Reporte Intentos Fallidos (API)" source="_apiError" view="report"}}
+    {{param desde="=from"}}
+    {{param hasta="=to"}}
+    {{#grid showDates="all,today,yesterday,last3,last7,last15,last30" exportToExcel="true" columnChooser="true" allowSearch="true" allowRefresh="true" filters="true" wordWrapEnabled="true" hidePdf="true" pdfFontSize="6" pdfPageOrientation="landscape" columnAutoWidth="wordWrapEnabled"}}
+      {{column field="date" label="Fecha" type="date" format="DD/MMM/YYYY h:mma" width="150"}}
+      {{column field="url" label="URL"}}
+      {{column field="error" label="Error"}}
+      {{column field="rawBody" label="Request" hide="true"}}
+      {{column field="userAgent" label="Agente" hide="true"}}
+    {{/grid}}
+  {{/action}}  
+{{/define}}
+

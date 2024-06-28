@@ -1,0 +1,32 @@
+{{#define id="notaPlanTratamientoHospitalario"}}
+  {{param attribute1="=(base.cirugia.length||base.tococirugia.length)?'urgente':null"}}
+  {{param attribute2="=_.isEmpty(base.cirugia)&&_.isEmpty(base.tococirugia)&&_.isEmpty(calc.filterInRef(base.procedimiento, 'base.servicioSolicitado', ['tococirugia','endourologia','hemodinamia','braquiterapia']))?null:'procedimientoQx'"}}
+  {{!-- {{#action id="ver" label="Análisis ViDAL" type="sub-link" color="blue" btnSolid="true" condition="=vidal.pdf"}}
+    {{link href="=vidal.pdf"}}
+  {{/action}} --}}
+  {{action id="tool7" condition="=true" label="Análisis ViDAL" type="affect" btnSolid="true" color="primary" confirmVidal="true" previewVidalPreview="true" confirmVidalTitle="Análisis ViDAL"}}
+  {{action id="afectar" confirmVidal="true" confirmVidalTitle="Análisis ViDAL"}}
+  {{#section id="base"}}
+    {{field id="esHospitalizacion" type="expr" value="=tipoEpisodio=='hospitalizacion'"}}
+    {{#field id="central"}}
+      {{#onChange clearFields="ubicacionMultidosis,cama"}}
+        [.#if esMulti.]
+        [.else.]      
+        {{set prioridad="=fn('prioridadCentral', central)"}}
+        [./if.]
+      {{/onChange}}
+    {{/field}}
+    {{#field id="ubicacionMultidosis"}}
+      {{#editor alwaysLoad="true"}}
+        {{param central="=central"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="cama"}}
+      {{#editor alwaysLoad="true"}}
+        {{param central="=central"}}
+      {{/editor}}
+    {{/field}}
+    {{validator type="expr" validIf="=!calc.findDuplicatesWhereRefIn(@medicamento, 'base.codigo', 'base.estatus', ['nuevo','continuar'], '_updated.moment', [null, 'pendiente','programado','entregado'], 'base.dosisUnica', ['no'])" message="=calc.concat('Medicamento Duplicado', calc.findDuplicatesWhereRefIn(@medicamento, 'base.codigo', 'base.estatus', ['nuevo','continuar'], '_updated.moment', [null, 'pendiente','programado','entregado'], 'base.dosisUnica', ['no']))"}}
+    {{validator type="expr" validIf="=!calc.findDuplicatesWhereRefIn(@solucion,    'base.codigo', 'base.estatus', ['nuevo','continuar'], '_updated.moment', [null, 'pendiente','programado','entregado'], 'base.dosisUnica', ['no'])" message="=calc.concat('Solución Duplicada',    calc.findDuplicatesWhereRefIn(@solucion,    'base.codigo', 'base.estatus', ['nuevo','continuar'], '_updated.moment', [null, 'pendiente','programado','entregado'], 'base.dosisUnica', ['no']))"}}
+  {{/section}}
+{{/define}}

@@ -1,0 +1,78 @@
+{{#define id="notaRegistroMetas"}}
+  {{param startOnOpen="n/a"}}
+  {{param removeIfEmptySection="metas"}}
+  {{param removeIfEmptyField="meta"}}
+  {{action id="cancelar" forceReadOnly="true"}}
+  {{action id="afectar" error="=base.ponderacionTotal!=100?'Total Incorrecto':null" forceReadOnly="true"}}
+
+  {{#transform id="copiarRechazo"}}
+    {{update section="persona" value="=persona"}}
+    {{#update section="base"}}
+      {{set referencia="=_name"}}
+    {{/update}}
+  {{/transform}}
+  {{#transform id="copiarRegistro" readOnly="true"}}
+    {{update section="persona" value="=persona"}}
+    {{update section="base" value="=base"}}
+    {{update section="metas" value="=metas"}}
+    {{update section="adjuntos" value="=adjuntos"}}
+  {{/transform}}
+
+  {{action id="tool4" condition="=base.estatus=='afectado'&&_created.subType=='solicitud'" source="notaRechazo" subType="registroMetas" subTypeName="Rechazo Solicitud Registro Metas" label="Rechazar" transform="copiarRechazo" type="add-subdoc" visibleMode="close" color="red" icon="close" btnSolid="true" onlyPost="true" userRole="recursosHumanosJefe"}}
+  {{action id="tool5" condition="=base.estatus=='afectado'&&_created.subType=='solicitud'" source="notaRegistroMetas" subType="registro" subTypeName="Registro Metas" label="Autorizar Registro Metas" transform="copiarRegistro" type="add-subdoc" visibleMode="close" color="green" icon="checkmark" btnSolid="true" onlyPost="true" userRole="recursosHumanosJefe"}}
+  
+  {{#section id="base"}}
+    {{field id="instrucciones" type="expr" value="=calc.concatEnter(
+  '1.- Selecciona un Eje Estratégico',
+  '2.- Selecciona una Línea Estratégica',
+  '3.- Redacta una Meta Utilizando la Metodología SMART',
+  '4.- Selecciona una Unidad de Medida',
+  '5.- Redactar los Parámetros de Medición o Nivel de cumplimiento, (No Aprobatorio, Mínimo Aprobatorio, Satisfactorio, Sobresaliente)',
+  '6.- Agrega un Indicador que permita medir el Cumplimiento de la Meta Redactada',
+  '7.- Agrega la Ponderación por cada Meta de Acuerdo a su Importancia',
+  '8.- Guarda cada uno de ellos',
+  '9.- Recuerda que la sumatoria de la ponderación de las Metas debe ser 100%')"}}
+  {{/section}}
+  {{#section id="metas"}}
+    {{#field id="ejeEstrategico"}}
+      {{onChange clearFields="lineaEstrategica"}}
+    {{/field}}
+    {{#field id="lineaEstrategica"}}
+      {{#editor}}
+        {{param ejeEstrategico="=ejeEstrategico"}}
+      {{/editor}}
+    {{/field}}
+    {{#onChange}}
+      {{#update section="base"}}
+        {{set ponderacionTotal="=calc.round(calc.sumRef(metas, 'ponderacion'),2)"}}
+      {{/update}}
+    {{/onChange}}
+  {{/section}}
+
+  {{#grid id="metas" keyField="meta" section="metas" disableEnter="true" allowInsert="true" allowRemove="true" fixedColumnsLeft="3"}}
+    {{column field="ejeEstrategico" width="200"}}
+    {{column field="lineaEstrategica" width="300"}}
+    {{column field="meta" width="200" required="true"}}
+    {{column field="resultadoObtenido" width="200"}}
+    {{column field="indicador" width="200"}}
+    {{column field="nivelCumplimientoNoAprobatorio" width="150"}}
+    {{column field="nivelCumplimientoMinimoAprobatorio" width="170"}}
+    {{column field="nivelCumplimientoSatisfactorio" width="170"}}
+    {{column field="nivelCumplimientoSobresaliente" width="180"}}
+    {{column field="direccion" width="200"}}
+    {{column field="ponderacion" width="90" required="true"}}
+    {{column field="fechaCompromiso" width="140" validateDate="true"}}
+    {{column field="unidadMedida" width="130"}}
+    {{!-- {{column field="comentarios" width="200"}} --}}
+  {{/grid}}
+  
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="referencia" width="300" items="=_.pluck(metas, 'meta')"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

@@ -1,0 +1,38 @@
+{{#define id="condicion"}}
+
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{!-- {{include field="base.descripcion"}}
+      {{include field="base.codigo"}} --}}
+      {{search field="_name"}}
+      {{sort field="_name" direction="asc"}}
+      {{filter condition="=persona" field="persona.id" eq="=persona"}}
+    {{/find}}
+  {{/view}}
+
+  {{#view id="cubo"}}
+    {{#find limit="-1"}}
+      {{include field="_date"}}
+      {{include field="persona.nombreCompleto"}}
+      {{include field="persona.clave"}}
+      {{include field="persona._genero"}}
+      {{include field="base.codigo"}}
+      {{include field="base.descripcion"}}
+      {{include field="base._categoria"}}
+      {{include field="base._estatus"}}
+      {{filter condition="=codigo" field="base.codigo" eq="=calc.upperCase(codigo)"}}
+    {{/find}}
+  {{/view}}
+
+  {{#cube id="cubo" name="Diagnósticos" view="cubo" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{column field="base._estatus" label="Estatus"}}
+    {{column field="base._categoria" width="250" label="Categoría"}}
+    {{row field="persona._genero" width="80" label="Genero"}}
+    {{row field="base.codigo" width="100" label="Código"}}
+    {{row field="base.descripcion" width="250" label="Descripción"}}
+    {{row field="persona.nombreCompleto" width="250" label="Paciente"}}
+    {{row field="persona.clave" width="150" label="CURP"}}
+    {{count field="_id" label="Cantidad" format="#"}}
+  {{/cube}}
+{{/define}}

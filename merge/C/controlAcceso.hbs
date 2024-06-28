@@ -1,0 +1,7 @@
+{{#define id="controlAcceso"}}  
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{field id="tieneAcceso" type="expr" value="=@tipoAcceso!='restringido'"}}
+    {{field id="tieneVigencia" type="expr" value="=tieneAcceso&&vigencia=='si'"}}
+  {{/section}}
+{{/define}}

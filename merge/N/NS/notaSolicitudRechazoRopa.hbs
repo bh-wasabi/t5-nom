@@ -1,0 +1,71 @@
+{{#define id="notaSolicitudRechazoRopa"}}
+  {{param attribute1="=_created.service"}}
+  {{!-- {{param startOnOpen="articulos"}} --}}
+  {{param removeIfEmptySection="articulos"}}
+  {{param removeIfEmptyField="cantidad"}}
+  {{#action id="afectar" error="=!calc.sumRef(articulos, 'cantidad')?'Faltan Indicar los Artículos a Solicitar':null"}}
+    {{#update section="base"}}
+      {{setRef ref="rechazoRopa.base.vencimiento" value="=calc.dueDate(base.rechazoRopa.base.vencimiento, 'atencion', calc.dueTimes('ropa', 'rechazoRopa', base.rechazoRopa.base.motivo, base.rechazoRopa.base.momentoDieta, base.rechazoRopa.base.criticidadZona, base.rechazoRopa.base.tiempos))"}}
+      {{setRef ref="rechazoRopa.base.alerta"      value="=calc.alertDate(base.rechazoRopa.base.vencimiento, 'atencion', calc.dueTimes('ropa', 'rechazoRopa', base.rechazoRopa.base.motivo, base.rechazoRopa.base.momentoDieta, base.rechazoRopa.base.criticidadZona, base.rechazoRopa.base.tiempos))"}}
+    {{/update}}
+  {{/action}}
+
+  {{#section id="articulos"}}
+    {{#field id="articulo"}}
+      {{#editor display="base.codigo" view="bienes"}}
+        {{param tipoArticulo="ropa"}}
+        {{param establecimiento="=_created.establishment"}}
+        {{param tipoPrenda="=base.rechazoRopa.base.subTipoSolicitud"}}
+      {{/editor}}
+      {{#onChange}}
+        {{!-- {{#join source="mov" view="disponible" as="existencia"}}
+          {{param aux="inv"}}
+          {{param cuenta="=_doc.base.almacenOrigen"}}
+          {{param codigo="=base.codigo"}}
+        {{/join}} --}}
+        {{set codigo="=base.codigo"}}
+        {{set descripcion="=base.descripcion"}}
+        {{set tipoArticulo="=base.tipoArticulo"}}
+        {{set talla="=base.datosRopa.base.talla"}}
+        {{set unidad="=base.unidadExistencia"}}
+        {{set _unidad="=base._unidadExistencia"}}
+        {{set peso="=base.datosRopa.base.peso"}}
+        {{set factor="=1"}}
+        {{!-- {{set disponible="=existencia.cantidad||0"}} --}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="motivo"}}
+      {{#editor}}
+        {{param servicio="='ropa'"}}
+        {{param partOf="='rechazo'"}}
+      {{/editor}}
+    {{/field}}
+    {{#onChange}}
+      {{#update section="base"}}
+        {{set pesoTotal="=calc.sumExpr(articulos, '=peso*cantidad')"}}
+      {{/update}}
+    {{/onChange}}    
+  {{/section}}
+  
+  {{#grid id="articulos" section="articulos" keyField="cantidad" allowInsert="true" allowRemove="true"}}
+    {{column field="articulo" label="Código" width="150"}}
+    {{column field="cantidad" label="Cantidad" width="100" type="numeric" format="#,"}}  {{!-- validateExcess="disponible" --}}
+    {{!-- {{column field="codigo" label="Código" width="150" readOnly="true"}} --}}
+    {{column field="descripcion" label="Descripción" width="300" readOnly="true"}}
+    {{column field="tipoArticulo" label="Tipo Artículo" width="150" readOnly="true"}}
+    {{column field="motivo" label="Motivo" width="200" required="true"}}
+    {{column field="talla" label="Talla" width="100" readOnly="true"}}
+    {{column field="peso" label="Peso Unitario (g)" width="120" type="numeric" format="#,.##" readOnly="true"}}  {{!-- validateExcess="disponible" --}}
+    {{!-- {{column field="factor" label="Factor" width="70" type="numeric" format="#,.##" readOnly="true"}} --}}
+    {{!-- {{column field="loteEspecifico" label="Lote Especifico" width="150" validateDuplicate="true"}} --}}
+    {{!-- {{column field="disponible" label="Disponible" readOnly="true" width="80" type="numeric" format="#,"}} --}}
+  {{/grid}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

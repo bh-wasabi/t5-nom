@@ -1,0 +1,8 @@
+{{#define id="alergia"}}
+  {{#section id="base"}}
+  	{{field id="esHipersensibilidad" type="expr" value="=@grupoAlergeno==='hipersensibilidad'"}}
+  	{{field id="esMolecula" type="expr" value="=@grupoAlergeno==='molecula'"}}
+    {{field id="esAlergicoMedicamentos" type="expr" value="=@grupoAlergeno==='DA'"}}
+    {{field id="esAlergicoOtros" type="expr" value="=calc.in(@grupoAlergeno,['MA','MC'])"}}
+  {{/section}}
+{{/define}} 

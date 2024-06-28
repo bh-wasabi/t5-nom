@@ -1,0 +1,20 @@
+{{#define id="notaEncame"}}
+  {{#section id="base"}}
+    {{#field id="central"}}
+      {{onChange clearFields="cama"}}
+      {{#editor}}
+        [.#if esMulti.]
+        {{param zona="hospitalizacion"}}
+        [.else.]
+        {{param partOf="hospitalizacion"}}
+        [./if.]
+      {{/editor}}
+    {{/field}}
+    {{#field id="cama"}}
+      {{#editor alwaysLoad="true"}}
+        {{param estatus="='limpia'"}}
+        {{param central="=central"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

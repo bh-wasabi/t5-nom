@@ -1,0 +1,101 @@
+{{#define id="notaRegistroLesiones"}}
+  {{!-- Tarea 2438 --}}
+  {{#section id="base"}}
+  	{{#onChange}}
+  		{{#update}}
+  			{{set cantidadAfectacionesTratadas="=afectacionesTratadas.length"}}
+  		{{/update}}
+  	{{/onChange}}
+    {{validator type="expr" notValidIf="=atencionMedicaLesion.base.consecuenciaLesion=='defuncion'&&afectacionesTratadas[0].base.destinoAtencionLesion!='defuncion'" log="=atencionMedicaLesion.base.consecuenciaLesion=='defuncion'&&afectacionesTratadas[0].base.destinoAtencionLesion!='defuncion'" message="Verificar Destino en Afectaciones Tratadas"}}
+  {{/section}}
+  {{#section id="circunstanciasEvento"}}
+    {{field id="esViolencia" type="expr" value="=calc.in(tipoIntencionalidad, ['violenciaFamiliar','violenciaNoFamiliar'])"}}
+    {{validator type="expr" validIf="=!@tipoDroga||@tipoDroga.length<4" message="Máximo 3 Drogas"}}
+    {{validator type="expr" notValidIf="=@tipoParentesco=='conyugue'&&@edadAgresor==''" message="Edad del Agresor Requerida"}}
+    {{validator type="expr" notValidIf="=@tipoDroga.length>1&&(calc.in('ninguna',@tipoDroga)||calc.in('seIgnora',@tipoDroga))" message="Drogas Incorrectas"}}
+  {{/section}}
+  {{!-- Tarea 2438 --}}
+  {{#view id="sinbaLesiones"}}
+    {{complexView type="sinbaLesiones"}}
+  {{/view}}
+  {{#grid id="sinbaLesiones" name="SINBA - Lesiones" view="sinbaLesiones" exportToExcel="true" allowRefresh="true" columnChooser="true" wordWrapEnabled="true" columnAutoWidth="wordWrapEnabled"}}
+    {{column field="clues"}}
+    {{column field="folio"}}
+    {{column field="nombre"}}
+    {{column field="primerApellido"}}
+    {{column field="segundoApellido"}}
+    {{column field="fechaNacimiento" format="DD/MMM/YYYY"}}
+    {{column field="paisNacimiento"}}
+    {{column field="entidadNacimiento"}}
+    {{column field="escolaridad"}}
+    {{column field="leerEscribir"}}
+    {{column field="sexo"}}
+    {{column field="derechohabiencia"}}
+    {{column field="gratuidad"}}
+    {{column field="seConsideraIndigena"}}
+    {{column field="hablaLenguaIndigena"}}
+    {{column field="lenguaInfigena"}}
+    {{column field="seAutodenominaAfromexicano"}}
+    {{column field="mujerFertil"}}
+    {{column field="edadGestacional"}}
+    {{column field="discapacidad"}}
+    {{column field="usuarioReferido"}}
+    {{column field="fechaEvento" format="DD/MMM/YYYY"}}
+    {{column field="horaEvento"}}
+    {{column field="diaFestivo"}}
+    {{column field="sitioOcurrencia"}}
+    {{column field="entidadOcurrencia"}}
+    {{column field="municipioOcurrencia"}}
+    {{column field="localidadOcurrencia"}}
+    {{column field="otraLocalidad"}}
+    {{column field="codigoPostal"}}
+    {{column field="nombreVialidad"}}
+    {{column field="numeroExterior"}}
+    {{column field="tipoAsentamiento"}}
+    {{column field="nombreAsentamiento"}}
+    {{column field="seOtorgaAtencionPrehospitalaria"}}
+    {{column field="tiempoTranscurridoAtencionHospital"}}
+    {{column field="tipoDroga"}}
+    {{column field="intencionalidadEventoLesion"}}
+    {{column field="eventoRepetido"}}
+    {{column field="agenteLesion"}}
+    {{column field="otroAgente"}}
+    {{column field="accidenteVehiculoMotor"}}
+    {{column field="usoEquipoSeguridad"}}
+    {{column field="equipoUtilizadoAccidenteAuto"}}
+    {{column field="otroEquipoSeguridad"}}
+    {{column field="tipoAccidenteViolencia"}}
+    {{column field="numeroAgresores"}}
+    {{column field="tipoParentesco"}}
+    {{column field="genero"}}
+    {{column field="edadAgresor"}}
+    {{column field="agresorEfectoTipoDroga"}}
+    {{column field="fechaAtencion" format="DD/MMM/YYYY"}}
+    {{column field="horaAtencion"}}
+    {{column field="servicioAtencionLesion"}}
+    {{column field="especifiqueAtencion"}}
+    {{column field="tipoAtencionLesion"}}
+    {{column field="areaAnatomica"}}
+    {{column field="otraAreaAfectada"}}
+    {{column field="consecuenciaLesion"}}
+    {{column field="especifiqueConsecuencia"}}
+    {{column field="descripcionAfeccion"}}
+    {{column field="diagnosticoLesion"}}
+    {{column field="numeroAfectacion"}}
+    {{column field="descripcionAfectacion"}}
+    {{column field="codigoAfectacion"}}
+    {{column field="diagnosticoLesion"}}
+    {{column field="descripcionCausas"}}
+    {{column field="codigoCausasExternas"}}
+    {{column field="destinoAtencionLesion"}}
+    {{column field="especificarDestino"}}
+    {{column field="envioMinisterioPublico"}}
+    {{column field="folioCertificadoDefuncion"}}
+    {{column field="responsableAtencionMedica"}}
+    {{column field="curpResponsable"}}
+    {{column field="nombresResponsable"}}
+    {{column field="apellidoPaternoResponable"}}
+    {{column field="apellidoMaternoResponsable"}}
+    {{column field="cedulaResponsable"}}
+  {{/grid}}
+{{/define}}

@@ -1,0 +1,20 @@
+{{#define id="notaActualizacionPlaza"}}
+  {{#section id="base"}}
+    {{#field id="puesto"}}
+      {{#editor alwaysLoad="true" view="conVacantesEscalafon"}}
+        {{param vacante="=true"}}
+        {{#onChange}}
+          {{set codigoPuesto="=base.codigo"}}
+          {{set numeroPuesto="=base.numero"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="plazaNueva"}}
+      {{#editor}}
+        {{#onChange}}
+          {{set codigoPlazaNueva="=base.codigo"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

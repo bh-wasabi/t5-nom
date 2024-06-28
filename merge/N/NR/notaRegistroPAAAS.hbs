@@ -1,0 +1,15 @@
+{{#define id="notaRegistroPAAAS"}}
+  {{action id="afectar" error="=!base.ejercicio?'Ejercicio Incorrecto':null"}}
+  {{action id="importarDatos" condition="=true" type="menu" menu="importarDatos" label="Cargar" color="green"}}
+  {{#menu id="importarDatos" color="green"}}
+    {{item action="cargarExcel" text="Cargar Excel..."}}
+  {{/menu}}  
+  {{#action id="cargarExcel" type="openFile" label="Cargar Excel" color="green" visibleMode="close" condition="=base.estatus=='borrador'"}}
+    {{#openFile type="xlsx" as="excel" subType="=_created.subType" isEntry="=_created.subType=='ampliacionPAAAS" isExit="=_created.subType=='reduccionPAAAS"}}
+      {{update section="articulos" value="=excel"}}
+    {{/openFile}}
+  {{/action}}  
+  {{#section id="articulos"}}
+    {{field id="importeTotal" type="calc" value="=cantidad*precio"}}
+  {{/section}}
+{{/define}}

@@ -1,0 +1,25 @@
+{{#define id="cifCodificadorActividad"}}
+  {{#section id="base"}}
+    {{#field id="clasificacionActividadCifNivelUno"}}
+      {{onChange clearFields="clasificacionActividadCifNivelDos,clasificacionActividadCifNivelTres,clasificacionActividadCifNivelCuatro"}}
+    {{/field}}
+    {{#field id="clasificacionActividadCifNivelDos"}}
+      {{onChange clearFields="clasificacionActividadCifNivelTres,clasificacionActividadCifNivelCuatro"}}
+      {{#editor}}
+        {{param partOf="=clasificacionActividadCifNivelUno"}}
+      {{/editor}}
+    {{/field}}  
+    {{#field id="clasificacionActividadCifNivelTres"}}
+      {{onChange clearFields="clasificacionActividadCifNivelCuatro"}}
+      {{#editor}}
+        {{param partOf="=clasificacionActividadCifNivelDos"}}
+      {{/editor}}
+    {{/field}}  
+    {{#field id="clasificacionActividadCifNivelCuatro"}}
+      {{#editor}}
+        {{param partOf="=clasificacionActividadCifNivelTres"}}
+      {{/editor}}
+    {{/field}}  
+    {{field id="codigoCifActividadFinal" type="expr" value="=calc.concatPoint(clasificacionActividadCifNivelCuatro||clasificacionActividadCifNivelTres||clasificacionActividadCifNivelDos||clasificacionActividadCifNivelUno, clasificacionActividadCifCalificadorUno, clasificacionActividadCifCalificadorDos)"}}
+  {{/section}}
+{{/define}} 

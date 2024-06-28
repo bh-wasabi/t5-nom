@@ -1,0 +1,14 @@
+{{#define id="registroMedicamentoCirugia"}}
+  {{#section id="base"}}
+    {{#field id="articulo"}}
+      {{#editor alwaysLoad="true"}}
+        {{param tipoArticulo="='medicamento'"}}
+        {{#onChange}}
+          {{set codigo="=base.codigo"}}
+          {{set descripcion="=base.descripcion"}}
+          {{set codigoInternacional="=base.codigoInternacional"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

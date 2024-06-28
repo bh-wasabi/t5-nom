@@ -1,0 +1,34 @@
+{{#define id="notaDetecciones"}}
+  {{#section id="base"}}
+     {{field id="esMayor60" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=60"}}
+     {{field id="esMayor19" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=19"}}
+  {{/section}}
+  {{#section id="enfermedades"}}
+    {{field id="siVph" type="expr" value="=deteccionVPH=='realizada'"}}
+    {{field id="esMujer" type="expr" value="=base.esMujer"}}
+    {{!-- Tarea 3156 --}}
+    {{field id="siCancerCuelloUterino" type="expr" value="=deteccionCancerCuelloUterino=='realizada'"}}
+    {{!-- Tarea 3156 --}}
+  {{/section}}
+  {{#section id="otrosDatos"}}
+    {{!-- Tarea 3156 --}}
+    {{field id="esMujer" type="expr" value="=base.esMujer"}}
+    {{!-- Tarea 3156 --}}
+    {{field id="esMayor10" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=10"}}
+    {{field id="esMayor40" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=40"}}
+    {{field id="esMayor19" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=19"}}
+    {{field id="esMayorHombre" type="expr" value="!esMujer&&esMayor40"}}
+    {{field id="siHiperplasia" type="expr" value="=hiperplasiaProstatica=='positivo'"}}
+  {{/section}}
+  {{!-- Tarea 3156 --}}
+  {{#view id="ultima"}}
+    {{#find limit="1"}}
+      {{include field="_name"}}
+      {{sort field="_id" direction="asc"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{filter condition="=persona" field="persona.id" eq="=persona"}}
+      {{filter condition="=desde" field="_created.date" gt="=desde"}}
+    {{/find}}
+ {{/view}}
+ {{!-- Tarea 3156 --}}
+{{/define}}

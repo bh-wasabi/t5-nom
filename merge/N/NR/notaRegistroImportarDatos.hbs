@@ -1,0 +1,12 @@
+{{#define id="notaRegistroImportarDatos"}}
+  {{param startOnOpen="n/a"}}
+  {{action id="importarDatos" condition="=true" type="menu" menu="importarDatos" label="Cargar" color="green"}}
+  {{#menu id="importarDatos" color="green"}}
+    {{item action="cargarExcel" text="Cargar Excel..."}}
+  {{/menu}}  
+  {{#action id="cargarExcel" hide="=true" type="openFile" label="Cargar Excel" color="green" visibleMode="open"}}
+    {{#openFile type="xlsx" as="excel" subType="=_created.subType" isRegistry="=true"}}
+      {{update section="registros" value="=excel"}}
+    {{/openFile}}
+  {{/action}}  
+{{/define}}

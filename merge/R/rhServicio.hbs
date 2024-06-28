@@ -1,0 +1,50 @@
+{{#define id="rhServicio"}}
+  {{#view id="lista" name="Lista"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="base._direccion"}}
+      {{include field="base._subDireccion"}}
+      {{include field="base._unidadDireccion"}}
+      {{search field="_name"}}
+      {{search field="base._direccion"}}
+      {{search field="base._subDireccion"}}
+      {{search field="base._unidadDireccion"}}
+      {{sort field="base._direccion" direction="asc"}}
+      {{sort field="base._subDireccion" direction="asc"}}
+      {{sort field="base._unidadDireccion" direction="asc"}}
+      {{sort field="base.orden" direction="asc"}}
+      {{sort field="_name" direction="asc"}}
+      {{filter condition="=direccion" field="base.direccion" eq="direccion"}}
+      {{filter condition="=subDireccion" field="base.subDireccion" eq="subDireccion"}}
+      {{filter condition="=unidadDireccion" field="base.unidadDireccion" eq="unidadDireccion"}}
+    {{/find}}
+  {{/view}}
+  {{#section id="base"}}
+    {{#field id="direccion"}}
+      {{onChange clearFields="subDireccion,unidadDireccion"}}
+    {{/field}}
+    {{#field id="subDireccion"}}
+      {{#editor}}
+        {{onChange clearFields="unidadDireccion"}}
+        {{param direccion="=direccion"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="unidadDireccion"}}
+      {{#editor}}
+        {{param direccion="=direccion"}}
+        {{param subDireccion="=subDireccion"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}
+
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}
+      </br><span style="font-size:12px;">{{base._unidadDireccion}}</span>
+      </br><span style="font-size:12px;">{{base._subDireccion}}</span>
+      </br><span style="font-size:12px;">{{base._direccion}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

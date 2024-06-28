@@ -1,0 +1,17 @@
+{{#define id="notaAsignacionManualCama"}}
+  {{#section id="base"}}
+    {{#field id="central"}}
+      {{#onChange clearFields="ubicacionMultidosis,cama"}}
+        [.#if esMulti.]
+        [.else.]      
+        {{set prioridad="=fn('prioridadCentral', central)"}}
+        [./if.]
+      {{/onChange}}
+    {{/field}}
+    {{#field id="cama"}}
+      {{#editor alwaysLoad="true"}}
+        {{param central="=central"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

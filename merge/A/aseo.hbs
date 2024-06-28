@@ -1,0 +1,25 @@
+{{#define id="aseo"}}  
+  {{#action id="bim" hide="true" type="bim360" label="BIM" title="=calc.concat('BIM', _items[0].persona.planta)" bim="=_items[0].persona.bim" color="grey" visibleMode="close" fromSource="persona" fromView="datosUbicacion"}}
+    {{param ubicacion="=_data.ubicacion"}}
+  {{/action}}
+  {{#action id="planta" hide="true" type="openPreview" label="Planta" title="Planta" color="grey" visibleMode="close" fromSource="persona" fromView="datosUbicacion"}}
+    {{param ubicacion="=_data.ubicacion"}}
+    {{link title="=calc.concat('Planta', _items[0].persona.planta)" href="=fn('urlPlanta', _items[0].persona.planta)"}}
+  {{/action}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{#field id="ubicacion"}}
+      {{#editor}}
+        {{param tipoAseo="=subTipoSolicitud!='reposicionInsumos'?subTipoSolicitud:null"}}
+        {{#onChange}}
+          {{set area="=persona.area"}}
+          {{set criticidadZona="=persona.criticidadZona"}}
+          {{set vencimiento="=_doc.base.subTipoSolicitud=='reposicionInsumos'?fn('vencimientoZona', persona.criticidadZona):fn('vencimientoUbicacionAseo', _doc.base.subTipoSolicitud, persona.tipoAseo&&persona.tipoAseo.base)"}}
+          {{set alerta="=_doc.base.subTipoSolicitud=='reposicionInsumos'?null:fn('alertaUbicacionAseo', _doc.base.subTipoSolicitud, persona.tipoAseo&&persona.tipoAseo.base)"}}
+          {{set tiempoEjecucion="=_doc.base.subTipoSolicitud=='reposicionInsumos'?null:fn('ejecucionUbicacionAseo', _doc.base.subTipoSolicitud, persona.tipoAseo&&persona.tipoAseo.base)"}}
+          {{set tiempoAlertaEjecucion="=_doc.base.subTipoSolicitud=='reposicionInsumos'?null:fn('alertaEjecucionUbicacionAseo', _doc.base.subTipoSolicitud, persona.tipoAseo&&persona.tipoAseo.base)"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

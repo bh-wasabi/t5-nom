@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1u9xwb1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.6.0">
+  <bpmn:collaboration id="Collaboration_0tglf60">
+    <bpmn:participant id="Participant_1ha3tbx" name="Solicitud de Hidratación a Pacientes" processRef="Process_0m0yeq8" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_0m0yeq8" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_0arawf6">
+      <bpmn:lane id="Lane_0b0j7pr" name="Concecionaria">
+        <bpmn:flowNodeRef>entregado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>programado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1k8em2e</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_0t4gfgl" name="Usuario o PAPS">
+        <bpmn:flowNodeRef>Event_0tk39ks</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>pendiente</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Event_0tk39ks">
+      <bpmn:outgoing>Flow_08ocer0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="pendiente" name="Solicitud de Hidratación a Pacientes">
+      <bpmn:incoming>Flow_08ocer0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1t6vkqh</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="entregado" name="Hidratación Entregada">
+      <bpmn:incoming>Flow_1y0ptju</bpmn:incoming>
+      <bpmn:outgoing>Flow_0kwm04r</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="programado" name="Solicitud Programada">
+      <bpmn:incoming>Flow_1t6vkqh</bpmn:incoming>
+      <bpmn:outgoing>Flow_1y0ptju</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="Event_1k8em2e">
+      <bpmn:incoming>Flow_0kwm04r</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_08ocer0" sourceRef="Event_0tk39ks" targetRef="pendiente" />
+    <bpmn:sequenceFlow id="Flow_1t6vkqh" sourceRef="pendiente" targetRef="programado" />
+    <bpmn:sequenceFlow id="Flow_1y0ptju" sourceRef="programado" targetRef="entregado" />
+    <bpmn:sequenceFlow id="Flow_0kwm04r" sourceRef="entregado" targetRef="Event_1k8em2e" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0tglf60">
+      <bpmndi:BPMNShape id="Participant_1ha3tbx_di" bpmnElement="Participant_1ha3tbx" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="410" height="370" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0t4gfgl_di" bpmnElement="Lane_0t4gfgl" isHorizontal="true">
+        <dc:Bounds x="190" y="80" width="380" height="131" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0b0j7pr_di" bpmnElement="Lane_0b0j7pr" isHorizontal="true">
+        <dc:Bounds x="190" y="211" width="380" height="239" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0kwm04r_di" bpmnElement="Flow_0kwm04r">
+        <di:waypoint x="420" y="381" />
+        <di:waypoint x="472" y="381" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1y0ptju_di" bpmnElement="Flow_1y0ptju">
+        <di:waypoint x="370" y="310" />
+        <di:waypoint x="370" y="341" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1t6vkqh_di" bpmnElement="Flow_1t6vkqh">
+        <di:waypoint x="370" y="185" />
+        <di:waypoint x="370" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_08ocer0_di" bpmnElement="Flow_08ocer0">
+        <di:waypoint x="268" y="145" />
+        <di:waypoint x="320" y="145" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_0tk39ks_di" bpmnElement="Event_0tk39ks">
+        <dc:Bounds x="232" y="127" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_11rlz63_di" bpmnElement="pendiente">
+        <dc:Bounds x="320" y="105" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1blghe9_di" bpmnElement="entregado">
+        <dc:Bounds x="320" y="341" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1snqngm_di" bpmnElement="programado">
+        <dc:Bounds x="320" y="230" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1k8em2e_di" bpmnElement="Event_1k8em2e">
+        <dc:Bounds x="472" y="363" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

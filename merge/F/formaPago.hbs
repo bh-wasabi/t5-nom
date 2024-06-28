@@ -1,0 +1,17 @@
+{{#define id="formaPago"}}
+  {{#section id="base"}}
+    {{field id="esEfectivo" type="expr" value="=@formaPago=='efectivo'"}}
+    {{field id="esTarjeta" type="expr" value="=@formaPago=='tarjeta'"}}
+    {{field id="esCheque" type="expr" value="=@formaPago=='cheque'"}}
+    {{field id="esPagare" type="expr" value="=@formaPago=='pagare'"}}
+    {{field id="esTransferencia" type="expr" value="=@formaPago=='transferencia'"}}
+    {{field id="esDeposito" type="expr" value="=@formaPago=='deposito'"}}
+    {{field id="importeEfectivo" type="expr" value="=esEfectivo?importe:0"}}
+    {{field id="importeCheque" type="expr" value="=esCheque?importe:0"}}
+    {{field id="importeTarjeta" type="expr" value="=esTarjeta?importe:0"}}
+    {{field id="importeTransferencia" type="expr" value="=esTransferencia?importe:0"}}
+    {{field id="importeDeposito" type="expr" value="=esDeposito?importe:0"}}
+    {{field id="importePagare" type="expr" value="=esPagare?importe:0"}}
+  {{/section}}
+{{/define}}
+

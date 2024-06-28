@@ -1,0 +1,15 @@
+{{#define id="notaSolicitudTococirugia"}}
+  {{param attribute1="=_created.subType"}}
+  {{#view id="programados"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{sort field="_id" direction="desc"}}
+      {{search field="_name"}}
+      {{filter condition="=id" field="persona.id" eq="=id"}}
+    {{/find}}
+  {{/view}}
+  {{#section id="base"}}
+    {{field id="esHospitalizacion" type="expr" value="=tipoEpisodio=='hospitalizacion'"}}
+  {{/section}}
+{{/define}}

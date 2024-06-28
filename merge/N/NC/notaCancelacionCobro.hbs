@@ -1,0 +1,47 @@
+{{#define id="notaCancelacionCobro"}}
+  {{param startOnOpen="n/a"}}
+
+  {{#view id="estadoCuentas"}}
+    {{#find limit="-1"}}
+      {{include field="_name"}}
+      {{include field="_type"}}
+      {{include field="_created"}}
+      {{include field="base.importeTotal"}}
+      {{filter field="persona.id" eq="=persona"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+    {{/find}}
+    {{calc field="fecha" value="=_created.date"}}
+    {{calc field="cargo" value="=base.importeTotal"}}
+  {{/view}}
+
+  {{#view id="resumen"}}
+    {{#find limit="-1"}}
+      {{include field="_name"}}
+      {{include field="_parent"}}
+      {{include field="_type"}}
+      {{include field="_created"}}
+      {{include field="persona"}}
+      {{include field="base"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{filter condition="=tipoExpediente" field="persona.tipoExpediente" eq="=tipoExpediente"}}
+      {{filter condition="=desde" field="_created.date" gt="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=hasta"}}      
+    {{/find}}
+  {{/view}}
+
+  {{#view id="resumenCancelacionCobros"}}
+    {{#find limit="-1"}}
+      {{include field="_name"}}
+      {{include field="_parent"}}
+      {{include field="_type"}}
+      {{include field="_created"}}
+      {{include field="persona"}}
+      {{include field="base"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{filter condition="=tipoExpediente" field="persona.tipoExpediente" eq="=tipoExpediente"}}
+      {{filter condition="=desde" field="_created.date" gt="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=hasta"}}      
+    {{/find}}
+    {{union source="notaCancelacionCobroAnticipo" view="resumen"}}
+  {{/view}}
+{{/define}}

@@ -1,0 +1,43 @@
+{{#define id="notaAplicacionAnticipo"}}
+  {{!-- {{param startOnOpen="aplicacion"}} --}}
+  {{param removeIfEmptySection="aplicacion"}}
+  {{param removeIfEmptyField="importe"}}
+  {{action id="afectar" error="=(base.nuevoSaldo<0)?'Nuevo Saldo Incorrecto':null"}}
+  
+  {{#transform id="copiarCancelacion"}}
+    {{update section="persona" value="persona"}}
+    {{update section="contexto" value="contexto"}}
+    {{update section="base" value="base"}}
+    {{update section="aplicacion" value="aplicacion"}}
+  {{/transform}}
+
+  {{#transform id="copiarFactura"}}
+    {{update section="aplicacion" type="array" transform="copiarConcepto"}}
+    {{update section="persona" transform="copiarPersona2"}}
+    {{#update section="base"}}
+      {{set formaPago="=base.formaPago"}}
+      {{set datosFacturacion="=base.datosFacturacion"}}
+      {{set _datosFacturacion="=base._datosFacturacion"}}
+    {{/update}}
+  {{/transform}}
+  {{action id="notaFactura" source="notaFactura" label="Facturar" transform="copiarFactura" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+
+  {{action id="notaCancelacionAplicacionAnticipo" source="notaCancelacionAplicacionAnticipo" label="Cancelación Aplicación Anticipo" transform="copiarCancelacion" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" btnSolid="true"}}
+  {{#section id="base"}}
+    {{field id="nuevoSaldo" value="=saldo-importeTotal"}}
+  {{/section}}
+  {{#section id="aplicacion"}}
+    {{#onChange}}
+      {{#update section="base"}}
+        {{set importeTotal="=calc.sum(aplicacion, 'importe')"}}
+      {{/update}}
+    {{/onChange}}
+  {{/section}}
+  {{#grid id="aplicacion" section="aplicacion" disableEnter="true" applyBase="base.saldo" applyTo="importe" applyMax="saldo" applyValidate="true"}}
+    {{column field="fecha" type="date" format="DD/MMM/YYYY" width="100" readOnly="true"}}
+    {{column field="vencimiento" type="date" format="DD/MMM/YYYY" width="100" readOnly="true"}}
+    {{column field="_name" width="600" readOnly="true"}}
+    {{column field="saldo" type="numeric" width="120" format="currency" readOnly="true"}}
+    {{column field="importe" type="numeric" width="120" format="currency" }}
+  {{/grid}}
+{{/define}}

@@ -1,0 +1,20 @@
+{{#define id="notaInfusionCelulasProgenitoras"}}
+  {{#section id="base"}}
+    {{field id="esOtraIndicacionProcedimiento" type="expr" value="=calc.in('otra', IndicacionProcedimiento)"}}
+    {{field id="esOtraPreMedicacion" type="expr" value="=calc.in('otra', preMedicacionMedula)"}}
+    {{#onChange}}
+      {{#update section="base"}}
+        {{set procedimientoRealizado="=calc.concat('En la habitación del paciente, a través de un catéter venoso central (Tipo Mahurkar), se realiza la infusión de las células progenitoras hematopoyéticas', @procedimientoInfusionCelulas, 'provenientes de Banco de sangre donde se encontraban',@_bancoSangreInfusionCelulas, 'para infusión con número de identificación', @identificacionBolsas+'.','Se realiza triple verificación de nombre del receptor y datos de identificación de bolsas por personal médico y de enfermería.')"}}
+      {{/update}}
+    {{/onChange}}
+  {{/section}}
+  {{#grid id="signosVitales" section="signosVitales" allowInsert="true" allowRemove="true"}}
+    {{column field="hora" width="100"}}
+    {{column field="frecuenciaCardiaca" width="160"}}
+    {{column field="tensionArterial" width="160"}}
+    {{column field="frecuenciaRespiratoria" width="160"}}
+    {{column field="temperatura" width="160"}}
+    {{column field="so2" width="160"}}
+    {{column field="observaciones" width="300"}}
+  {{/grid}}  
+{{/define}}

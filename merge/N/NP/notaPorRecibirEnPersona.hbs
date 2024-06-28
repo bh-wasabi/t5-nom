@@ -1,0 +1,39 @@
+{{#define id="notaPorRecibirEnPersona"}}
+  {{param attribute1="=_created.service"}}
+  {{param removeIfEmptySection="articulos"}}
+  {{param removeIfEmptyField="cantidad"}}
+  
+  {{!-- {{param startOnOpen="articulos"}} --}}
+  {{#section id="base"}}
+    {{#field id="persona"}}
+      {{#editor}}
+        {{param tipoExpediente="='ubicacion'"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+  {{#section id="articulos"}}
+    {{#field id="articulo"}}
+      {{editor display="base.codigo"}}
+      {{#onChange}}
+        {{set codigo="=base.codigo"}}
+        {{set descripcion="=base.descripcion"}}
+        {{set tipoArticulo="=base.tipoArticulo"}}
+        {{set unidad="=base.unidadCompra"}}
+        {{set factor="=base.factorCompra"}}
+        {{set costoUnitario="=base.costoUnitario*base.factorCompra"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+  
+  {{#grid id="articulos" section="articulos" keyField="cantidad" allowInsert="true" allowRemove="true"}}
+    {{column field="articulo" label="Código" width="150"}}
+    {{column field="cantidad" label="Cantidad" width="100" type="numeric" format="#,"}}
+    {{column field="descripcion" label="Descripción" width="300" readOnly="true"}}
+    {{!-- {{column field="tipoArticulo" label="Tipo Artículo" width="150" readOnly="true"}} --}}
+    {{column field="_unidad" label="Unidad" width="200" readOnly="true"}}
+    {{column field="factor" label="Factor" width="70" type="numeric" format="#,.##" readOnly="true"}}
+    {{column field="lote" label="Lote" width="100"}}
+    {{column field="vencimiento" label="Vencimiento" validateDate="true" width="90"}}
+    {{column field="costoUnitario" label="Costo Proveedor" width="110" type="numeric" format="#,.##"}}
+  {{/grid}}
+{{/define}}

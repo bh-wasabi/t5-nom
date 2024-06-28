@@ -1,0 +1,14 @@
+{{#define id="exploracionFisica"}}
+  {{param ignoreDefaultDisplayValidation="true"}}
+  {{#section id="base"}}
+    {{field id="esPositivoHabitusExterior" type="expr" value="=exploracionFisicaHabitusExterior==='positivo'"}}
+    {{field id="esPositivoCabeza" type="expr" value="=exploracionFisicaCabeza==='positivo'"}}
+    {{field id="esPositivoCuello" type="expr" value="=exploracionFisicaCuello==='positivo'"}}
+    {{field id="esPositivoTorax" type="expr" value="=exploracionFisicaTorax==='positivo'"}}
+    {{field id="esPositivoAbdomen" type="expr" value="=exploracionFisicaAbdomen==='positivo'"}}
+    {{field id="esPositivoGenitales" type="expr" value="=exploracionFisicaGenitales==='positivo'"}}
+    {{field id="esPositivoExtremidades" type="expr" value="=exploracionFisicaExtremidades==='positivo'"}}
+    {{field id="esPositivoPiel" type="expr" value="=exploracionFisicaPiel==='positivo'"}}
+    {{field id="esPositivoNeurologicos" type="expr" value="=exploracionFisicaNeurologicos==='positivo'"}}
+  {{/section}}  
+{{/define}}

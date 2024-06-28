@@ -1,0 +1,51 @@
+{{#define id="notaPreCierreCuenta"}}
+  {{!-- {{param startOnOpen="n/a"}} --}}
+  {{param totalsSection="totales"}}
+  {{#section id="base"}}
+    {{field id="esHospitalizacion" type="expr" value="=tipoEpisodio=='hospitalizacion'"}}
+    {{#field id="tabulador"}}
+      {{#onChange}}
+        {{set socioNegocios="=base.socioNegocios"}}
+        {{set listaPrecios="=base.listaPrecios"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+  {{#section id="totales"}}
+    {{field id="totalCobertura" type="sum" section="aplicacion" value="montoCoberturaContinuar"}}
+    {{!-- {{field id="totalGratuidad" type="sum" section="aplicacion" value="gratuidadContinuar"}} --}}
+    {{field id="totalPaciente" type="sum" section="aplicacion" value="montoPacienteContinuar"}}
+    {{field id="anticiposPorAplicar" type="sum" section="anticiposPorAplicar" value="importe"}}
+    {{field id="nuevoSaldoPaciente" value="=calc.round(totalPaciente-anticiposPorAplicar,2)"}}
+  {{/section}}
+  {{#section id="aplicacion"}}
+  	{{#field id="tieneCobertura"}}
+  		{{#onChange}}
+        {{join source="precios" as="precios" id="codigo"}}
+  			{{set montoCobertura="=calc.isTrue(@tieneCobertura)?_join.precios[_doc.base.listaPrecios]:null"}}
+        {{!-- {{set gratuidad="=!calc.isTrue(@tieneCobertura)&&calc.isTrue(@gratis)?importe:null"}} --}}
+  			{{set montoPaciente="=!calc.isTrue(@tieneCobertura)&&!calc.isTrue(@gratis)?importe:null"}}
+  		{{/onChange}}
+  	{{/field}}
+    {{field id="montoCoberturaContinuar" type="expr" value="=calc.isTrue(continuar)?montoCobertura:0"}}
+    {{field id="gratuidadContinuar" type="expr" value="=calc.isTrue(continuar)?gratuidad:0"}}
+    {{field id="montoPacienteContinuar" type="expr" value="=calc.isTrue(continuar)?montoPaciente:0"}}
+  {{/section}}
+  {{#grid id="aplicacion" section="aplicacion" disableEnter="true"}}
+    {{column field="fecha" type="date" format="DD/MMM/YYYY" width="100" readOnly="true"}}
+    {{column field="_name" width="550" readOnly="true"}}
+    {{column field="codigo" width="120" readOnly="true"}}
+    {{column field="importe" width="110" readOnly="true"}}
+    {{column field="tieneCobertura" width="110"}}
+    {{column field="montoCobertura" width="115" readOnly="true"}}
+    {{!-- {{column field="gratis" width="60" readOnly="true"}} --}}
+    {{!-- {{column field="gratuidad" width="110" readOnly="true"}} --}}
+    {{column field="montoPaciente" width="110" readOnly="true"}}
+    {{column field="continuar" width="75"}}
+  {{/grid}}
+  {{#grid id="anticiposPorAplicar" section="anticiposPorAplicar" disableEnter="true" applyBaseColumn="saldo" applyTo="importe" applySuggest="saldo" applyMax="saldo" applyValidate="true"}}
+    {{column field="fecha" type="date" format="DD/MMM/YYYY" width="100" readOnly="true"}}
+    {{column field="referencia" width="550" readOnly="true"}}
+    {{column field="saldo" width="110" readOnly="true" format="currency"}}
+    {{column field="importe" width="110" format="currency"}}
+  {{/grid}}
+{{/define}}

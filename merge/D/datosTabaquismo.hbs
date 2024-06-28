@@ -1,0 +1,7 @@
+{{#define id="datosTabaquismo"}}
+  {{#section id="base"}}
+    {{field id="tieneTabaquismo" type="expr" value="=@tabaquismo&&@tabaquismo!=='nunca'"}}
+    {{field id="tieneDetalles" type="expr" value="=@tieneTabaquismo&&Utils.isTrue(@detalles)"}}
+    {{field id="esEx" type="expr" value="=@tieneDetalles&&@tabaquismo==='ex'"}}        
+  {{/section}}
+{{/define}} 

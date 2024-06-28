@@ -1,0 +1,9 @@
+{{#define id="notaTerminaCurso"}}
+  {{param attribute1="=_created.service"}}
+  {{#grid id="aplicacion" section="aplicacion" disableEnter="true"}}
+    {{column field="_persona" width="350" readOnly="true"}}
+    {{column field="calificacion" type="numeric" label="Calificación" format="#.#" required="true"}}
+    {{column field="comentarios" width="400"}}
+    {{column field="continuar" label="Continuar"}}
+  {{/grid}}
+{{/define}}

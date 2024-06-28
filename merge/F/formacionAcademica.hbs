@@ -1,0 +1,10 @@
+{{#define id="formacionAcademica"}}
+  {{#section id="base"}}
+    {{field id="calificacion" type="calc" label="Calificación" value="=calc.sumArgs(@nivelAcademico,@cursosAcademicos,@meritosAcademicos)"}}
+    {{validator type="expr" notValidIf="=calc.number(@nivelAcademico)>=4&&!@nivelMedioSuperior" message="Falta Indicar el Nivel Medio Superior"}}
+    {{validator type="expr" notValidIf="=calc.number(@nivelAcademico)>=5&&!@nivelSuperior" message="Falta Indicar el Nivel Superior"}}
+    {{validator type="expr" notValidIf="=calc.number(@nivelAcademico)>=6&&!@nivelMaestria" message="Falta Indicar el Nivel Maestría"}}
+    {{validator type="expr" notValidIf="=calc.number(@nivelAcademico)>=6&&!@nivelPostradoEspecialidad" message="Falta Indicar el Nivel Posgrado Especialidad"}}
+    {{validator type="expr" notValidIf="=calc.number(@nivelAcademico)>=6&&!@nivelDoctoradoSubEspecialidad" message="Falta Indicar el Nivel Doctorado Sub Especialidad"}}
+  {{/section}}
+{{/define}}

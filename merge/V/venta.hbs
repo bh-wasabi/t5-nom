@@ -1,0 +1,20 @@
+{{#define id="venta"}}  
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{#field id="articulo"}}
+      {{#editor}}
+        {{param ubicacion="=ubicacion"}}
+        {{param estatus="='activo'"}}
+        {{#onChange}}
+          {{join source="persona" as="ubicacion" id="base.ubicacion"}}
+          {{set codigo="=base.codigo"}}
+          {{set descripcion="=base.descripcion"}}
+          {{set descripcionLarga="=base.descripcionLarga"}}
+          {{set unidad="=base.unidadVenta"}}
+          {{set moneda="=base.monedaPrecio"}}
+          {{set tipoCambio="=base.monedaPrecio=='MXN'?1:null"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

@@ -1,0 +1,20 @@
+{{#define id="notaNotificacionEventoAdverso"}}
+  {{#view id="reporte"}}
+    {{#find limit="-1"}}
+      {{include field="_created"}}
+      {{include field="base"}}
+      {{sort field="_id" direction="asc"}}
+      {{filter condition="=categoria" field="base.eventoAdverso.base.categoria" eq="=categoria"}}
+      {{filter condition="=subCategoria" field="base.eventoAdverso.base.subCategoria" eq="=subCategoria"}}
+      {{filter condition="=personalDetectaIncidente" field="base.eventoAdverso.base.personalDetectaIncidente" eq="=personalDetectaIncidente"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{filter condition="=desde" field="_created.date" gt="=moment(desde).format('YYYY-MM-DD')"}}
+      {{filter condition="=hasta" field="_created.date" lt="=moment(hasta).format('YYYY-MM-DD')"}}
+    {{/find}}
+    {{#unwind field="base.eventoAdverso"}}
+      {{filter condition="=categoria" field="base.eventoAdverso.base.categoria" eq="=categoria"}}
+      {{filter condition="=subCategoria" field="base.eventoAdverso.base.subCategoria" eq="=subCategoria"}}
+      {{filter condition="=personalDetectaIncidente" field="base.eventoAdverso.base.personalDetectaIncidente" eq="=personalDetectaIncidente"}}
+    {{/unwind}}
+  {{/view}}
+{{/define}}

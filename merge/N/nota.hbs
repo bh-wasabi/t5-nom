@@ -1,0 +1,962 @@
+{{#define id="nota"}}
+  {{param excludeHideTenant="true"}}
+
+  {{#view id="lista"}}
+[.#if esSIC.]
+    {{#find limit="30"}}
+[.else.]
+    {{#find elastic="true"}}
+[./if.]    
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="referencia"}}
+      {{include field="motivo"}}
+      {{include field="tablero"}}
+      {{include field="persona"}}
+      {{include field="contexto"}}
+      {{include field="edi"}}
+      {{include field="_notify"}}
+      {{include field="flujo"}}
+[.#if esRM.]      
+      {{sort field="_created.date" direction="desc"}}
+[.else.]      
+      {{sort field="_id" direction="desc"}}
+[./if.]      
+      {{search field="_name"}}
+[.#if esSIC.]      
+      {{search field="_created._service"}}
+      {{search field="_created.establishment"}}
+      {{search field="referencia"}}
+      {{search field="motivo"}}
+      {{!-- {{search field="_created._establishment"}} --}}
+[./if.]
+      {{search field="contexto._diagnostico"}}
+      {{search field="persona.nombreCompleto"}}
+      {{!-- {{search field="persona.nombreCompleto" elastic="true" elasticIndex="nota" elasticSort="_id"}} --}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="_created.date" type="date"}}
+      {{search field="_created.folio" type="number"}}
+      {{search field="_created._user"}}
+      {{filter condition="=notaId" field="_id" eq="=notaId" isObjectId="true"}}
+      {{filter condition="=id" field="persona.id" eq="=id"}}
+      {{filter condition="=ubicacion" field="involucrados" in="=ubicacion"}}
+      {{filter condition="=cajero" field="involucrados" eq="=cajero"}}
+      {{filter condition="=tipo" field="_type" eq="=tipo"}}
+      {{filter condition="=tipos" field="_type" in="=tipos"}}
+      {{filter condition="=subTipo" field="_created.subType" eq="=subTipo"}}
+      {{filter condition="=noCompletado" field="flujo.estatus" ne="='completado'"}}
+      {{filter condition="=request" field="_created.request" eq="=request"}}
+      {{filter condition="=desde" field="_created.date" gte="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=moment(hasta).add(1,'d').format('YYYY-MM-DD')"}}
+      {{filter condition="=esOficial" field="_type" in="=calc.pluck(calc.getPresetAll('cfg.printAll'), 'id')"}}
+      {{filter condition="=servicio" field="_created.service" eq="=servicio"}}
+      {{filter condition="=conNotificacion" field="_notify" exists="=true"}}
+      {{filter condition="=tipoExpediente" field="persona.tipoExpediente" eq="=tipoExpediente"}}
+      {{filter condition="=referencia" field="referencia" eq="=referencia"}}
+      {{hint condition="=id" index="persona.id_1"}}
+    {{/find}}
+  {{/view}}
+
+  {{#view id="historial"}}
+[.#if esSIC.]
+    {{#find}}
+[.else.]
+    {{#find elastic="true"}}
+[./if.]    
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="referencia"}}
+      {{include field="motivo"}}
+      {{include field="tablero"}}
+      {{include field="persona"}}
+      {{include field="motivo"}}
+      {{include field="flujo"}}
+      {{sort field="_id" direction="desc"}}
+      {{search field="_name"}}
+[.#if esSIC.]      
+      {{search field="_created._service"}}
+      {{search field="_created.establishment"}}
+      {{!-- {{search field="_created._establishment"}} --}}
+[./if.]      
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="_created.date" type="date"}}
+      {{search field="_created.folio" type="number"}}
+      {{filter field="flujo.estatus" eq="='completado'"}}
+      {{filter condition="=servicio" field="_created.service" eq="=servicio"}}
+      {{filter condition="=categoria" field="flujo.categoria" eq="=categoria"}}
+      {{filter condition="=desde" field="_created.date" gt="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=moment(hasta).add(1,'day').format()"}}
+      {{hint condition="=servicio" index="service_date"}}
+    {{/find}}
+  {{/view}}
+
+  {{#view id="historialDestinoClues"}}
+[.#if esSIC.]
+    {{#find}}
+[.else.]
+    {{#find elastic="true"}}
+[./if.]    
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="referencia"}}
+      {{include field="motivo"}}
+      {{include field="tablero"}}
+      {{include field="persona"}}
+      {{include field="motivo"}}
+      {{include field="flujo"}}
+      {{sort field="_id" direction="desc"}}
+      {{search field="_name"}}
+[.#if esSIC.]      
+      {{search field="_created._service"}}
+      {{search field="_created.establishment"}}
+      {{!-- {{search field="_created._establishment"}} --}}
+[./if.]      
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="_created.date" type="date"}}
+      {{search field="_created.folio" type="number"}}
+      {{filter field="flujo.estatus" eq="='completado'"}}
+      {{filter condition="=servicio" field="_created.service" eq="=servicio"}}
+      {{filter condition="=categoria" field="flujo.categoria" eq="=categoria"}}
+      {{filter condition="=desde" field="_created.date" gt="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=moment(hasta).add(1,'day').format()"}}
+      {{filter field="flujo.destino" in="=user.establishmentData.clues"}}
+      {{hint condition="=servicio" index="service_date"}}
+    {{/find}}
+  {{/view}}
+  
+  {{#view id="historial2"}}
+[.#if esSIC.]
+    {{#find}}
+[.else.]
+    {{#find elastic="true"}}
+[./if.]    
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="referencia"}}
+      {{include field="motivo"}}
+      {{include field="tablero"}}
+      {{include field="persona"}}
+      {{include field="flujo"}}
+      {{sort field="_id" direction="desc"}}
+      {{search field="_name"}}
+[.#if esSIC.]      
+      {{search field="_created._service"}}
+      {{search field="_created.establishment"}}
+      {{!-- {{search field="_created._establishment"}} --}}
+[./if.]
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="_created.date" type="date"}}
+      {{search field="_created.folio" type="number"}}
+      {{filter condition="=servicio" field="_created.service" eq="=servicio"}}
+      {{filter condition="=categoria" field="flujo.categoria" eq="=categoria"}}
+      {{filter condition="=desde" field="_created.date" gt="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=moment(hasta).add(1,'day').format()"}}
+      {{hint condition="=servicio" index="service_date"}}
+    {{/find}}
+  {{/view}}
+
+  {{#view id="bitacoraSupervision"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="referencia"}}
+      {{include field="motivo"}}
+      {{include field="tablero"}}
+      {{include field="persona"}}
+      {{include field="contexto"}}
+      {{include field="edi"}}
+      {{include field="_notify"}}
+      {{include field="flujo"}}
+      {{sort field="_created.date" direction="desc"}}
+      {{search field="_name"}}      
+[.#if esSIC.]      
+      {{search field="_created._service"}}
+      {{search field="_created.establishment"}}
+      {{!-- {{search field="_created._establishment"}} --}}
+[./if.]
+      {{search field="contexto._diagnostico"}}
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="_created.date" type="date"}}
+      {{search field="_created.folio" type="number"}}
+      {{search field="_created._user"}}
+      {{filter condition="=id" field="persona.id" eq="=id"}}
+      {{filter condition="=ubicacion" field="involucrados" in="=ubicacion"}}
+      {{filter condition="=cajero" field="involucrados" eq="=cajero"}}
+      {{filter condition="=tipo" field="_type" eq="=tipo"}}
+      {{filter condition="=tipos" field="_type" in="=tipos"}}
+      {{filter condition="=subTipo" field="_created.subType" eq="=subTipo"}}
+      {{filter condition="=noCompletado" field="flujo.estatus" ne="='completado'"}}
+      {{filter condition="=request" field="_created.request" eq="=request"}}
+      {{filter condition="=desde" field="_created.date" gte="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=moment(hasta).add(1,'d').format('YYYY-MM-DD')"}}
+      {{filter condition="=esOficial" field="_type" in="=calc.pluck(calc.getPresetAll('cfg.printAll'), 'id')"}}
+      {{filter condition="=servicio" field="_created.service" eq="=servicio"}}
+      {{filter condition="=conNotificacion" field="_notify" exists="=true"}}
+      {{filter field="_created.subType" in="=calc.hasRoleAdd('inspectorFiscal,supervisorSC,supervisorSGG','IF,SC,SGG')"}}
+      {{hint condition="=id" index="persona.id_1"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="bitacoraContingencia"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="referencia"}}
+      {{include field="motivo"}}
+      {{include field="tablero"}}
+      {{include field="persona"}}
+      {{include field="contexto"}}
+      {{include field="edi"}}
+      {{include field="_notify"}}
+      {{include field="flujo"}}
+      {{sort field="_created.date" direction="desc"}}
+      {{search field="_name"}}      
+[.#if esSIC.]      
+      {{search field="_created._service"}}
+      {{search field="_created.establishment"}}
+      {{!-- {{search field="_created._establishment"}} --}}
+[./if.]
+      {{search field="contexto._diagnostico"}}
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="_created.date" type="date"}}
+      {{search field="_created.folio" type="number"}}
+      {{search field="_created._user"}}
+      {{filter condition="=id" field="persona.id" eq="=id"}}
+      {{filter condition="=ubicacion" field="involucrados" in="=ubicacion"}}
+      {{filter condition="=cajero" field="involucrados" eq="=cajero"}}
+      {{filter condition="=tipo" field="_type" eq="=tipo"}}
+      {{filter condition="=tipos" field="_type" in="=tipos"}}
+      {{filter condition="=subTipo" field="_created.subType" eq="=subTipo"}}
+      {{filter condition="=noCompletado" field="flujo.estatus" ne="='completado'"}}
+      {{filter condition="=request" field="_created.request" eq="=request"}}
+      {{filter condition="=desde" field="_created.date" gte="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=moment(hasta).add(1,'d').format('YYYY-MM-DD')"}}
+      {{filter condition="=esOficial" field="_type" in="=calc.pluck(calc.getPresetAll('cfg.printAll'), 'id')"}}
+      {{filter condition="=servicio" field="_created.service" eq="=servicio"}}
+      {{filter condition="=conNotificacion" field="_notify" exists="=true"}}
+      {{hint condition="=id" index="persona.id_1"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="misNotificaciones"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="referencia"}}
+      {{include field="motivo"}}
+      {{include field="tablero"}}
+      {{include field="persona"}}
+      {{include field="contexto"}}
+      {{include field="edi"}}
+      {{include field="_notify"}}
+      {{sort field="_created.date" direction="desc"}}
+      {{search field="_name"}}      
+[.#if esSIC.]      
+      {{search field="_created._service"}}
+      {{search field="_created.establishment"}}
+      {{!-- {{search field="_created._establishment"}} --}}
+[./if.]
+      {{search field="contexto._diagnostico"}}
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="_created.date" type="date"}}
+      {{search field="_created.folio" type="number"}}
+      {{search field="_created._user"}}
+      {{filter condition="=id" field="persona.id" eq="=id"}}
+      {{filter condition="=ubicacion" field="involucrados" in="=ubicacion"}}
+      {{filter condition="=cajero" field="involucrados" eq="=cajero"}}
+      {{filter condition="=tipo" field="_type" eq="=tipo"}}
+      {{filter condition="=subTipo" field="_created.subType" eq="=subTipo"}}
+      {{filter condition="=noCompletado" field="flujo.estatus" ne="='completado'"}}
+      {{filter condition="=request" field="_created.request" eq="=request"}}
+      {{filter condition="=desde" field="_created.date" gte="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=moment(hasta).add(1,'d').format('YYYY-MM-DD')"}}
+      {{filter condition="=esOficial" field="_type" in="=calc.pluck(calc.getPresetAll('cfg.printAll'), 'id')"}}
+      {{filter condition="=servicio" field="_created.service" eq="=servicio"}}
+      {{filter field="_notify.readers.user" eq="=user.id"}}
+      {{hint condition="=id" index="persona.id_1"}}
+    {{/find}}
+    {{calc field="_unRead" type="expr" value="=_.findWhere(_notify.readers, {user: user.id}).unRead"}}
+    {{calc field="nombre" type="expr" value="=persona.nombreCompleto"}}
+  {{/view}}
+  {{#view id="misNotas"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="referencia"}}
+      {{include field="motivo"}}
+      {{include field="tablero"}}
+      {{include field="persona"}}
+      {{include field="contexto"}}
+      {{include field="edi"}}
+      {{sort field="_created.date" direction="desc"}}
+      {{search field="_name"}}      
+[.#if esSIC.]      
+      {{search field="_created._service"}}
+      {{search field="_created.establishment"}}
+      {{!-- {{search field="_created._establishment"}} --}}
+[./if.]
+      {{search field="contexto._diagnostico"}}
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="_created.date" type="date"}}
+      {{search field="_created.folio" type="number"}}
+      {{search field="_created._user"}}
+      {{filter field="_created.user" eq="=user.id"}}
+      {{filter condition="=id" field="persona.id" eq="=id"}}
+      {{filter condition="=ubicacion" field="involucrados" in="=ubicacion"}}
+      {{filter condition="=cajero" field="involucrados" eq="=cajero"}}
+      {{filter condition="=tipo" field="_type" eq="=tipo"}}
+      {{filter condition="=subTipo" field="_created.subType" eq="=subTipo"}}
+      {{filter condition="=noCompletado" field="flujo.estatus" ne="='completado'"}}
+      {{filter condition="=request" field="_created.request" eq="=request"}}
+      {{filter condition="=desde" field="_created.date" gte="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=moment(hasta).add(1,'d').format('YYYY-MM-DD')"}}
+      {{filter condition="=esOficial" field="_type" in="=calc.pluck(calc.getPresetAll('cfg.printAll'), 'id')"}}
+      {{filter condition="=servicio" field="_created.service" eq="=servicio"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="notasAlumno"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="tablero"}}
+      {{include field="persona"}}
+      {{include field="contexto"}}
+      {{include field="edi"}}
+      {{sort field="_created.date" direction="desc"}}
+      {{search field="_name"}}      
+[.#if esSIC.]      
+      {{search field="_created._service"}}
+      {{search field="_created.establishment"}}
+      {{!-- {{search field="_created._establishment"}} --}}
+[./if.]
+      {{search field="contexto._diagnostico"}}
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="_created.date" type="date"}}
+      {{search field="_created.folio" type="number"}}
+      {{search field="_created._user"}}
+      {{filter field="_type" in="notaBitacoraActividadesCurriculares,notaBitacoraActividadesExtracurriculares,notaEvaluacionCompetencias"}}
+      {{filter condition="=id" field="persona.id" eq="=id"}}
+      {{filter condition="=ubicacion" field="involucrados" in="=ubicacion"}}
+      {{filter condition="=cajero" field="involucrados" eq="=cajero"}}
+      {{filter condition="=subTipo" field="_created.subType" eq="=subTipo"}}
+      {{filter condition="=noCompletado" field="flujo.estatus" ne="='completado'"}}
+      {{filter condition="=request" field="_created.request" eq="=request"}}
+      {{filter condition="=desde" field="_created.date" gte="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=moment(hasta).add(1,'d').format('YYYY-MM-DD')"}}
+      {{filter condition="=esOficial" field="_type" in="=calc.pluck(calc.getPresetAll('cfg.printAll'), 'id')"}}
+      {{filter condition="=servicio" field="_created.service" eq="=servicio"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="porDias"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="referencia"}}
+      {{include field="motivo"}}
+      {{include field="tablero"}}
+      {{include field="persona"}}
+      {{include field="contexto"}}
+      {{include field="edi"}}
+      {{sort field="_id" direction="desc"}}
+      {{search field="_name"}}
+[.#if esSIC.]      
+      {{search field="_created._service"}}
+      {{search field="_created.establishment"}}
+      {{search field="referencia"}}
+      {{search field="motivo"}}
+      {{!-- {{search field="_created._establishment"}} --}}
+[./if.]
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="_created.date" type="date"}}
+      {{search field="_created.folio" type="number"}}
+      {{search field="_created._user"}}
+      {{filter field="_created.date" gt="=moment().add(-dias,'d').format('YYYY-MM-DD')"}}
+[.#if esSIC.]            
+      {{filter field="_created.service" in="=(user.service||[]).concat('usuario')"}}      {{!-- para que se vean las notas que se generan fuera del servicio --}}
+[./if.]      
+    {{/find}}
+  {{/view}}
+  {{#view id="todo"}}
+    {{#find limit="-1"}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="tablero"}}
+      {{include field="persona"}}
+      {{include field="contexto"}}
+      {{include field="edi"}}
+      {{sort field="_id" direction="asc"}}
+      {{search field="_name"}}
+[.#if esSIC.]      
+      {{search field="_created._service"}}
+      {{search field="_created.establishment"}}
+      {{!-- {{search field="_created._establishment"}} --}}
+[./if.]
+      {{search field="contexto._diagnostico"}}
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="_created.date" type="date"}}
+      {{search field="_created.folio" type="number"}}
+      {{filter condition="=id" field="persona.id" eq="=id"}}
+      {{filter condition="=tipo" field="_type" eq="=tipo"}}
+      {{filter condition="=request" field="_created.request" eq="=request"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="reprogramacionCitas"}}
+    {{#find limit="-1"}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="tablero"}}
+      {{include field="persona"}}
+      {{include field="contexto"}}
+      {{sort field="_created.date" direction="asc"}}
+      {{search field="_name"}}
+[.#if esSIC.]      
+      {{search field="_created._service"}}
+      {{search field="_created.establishment"}}
+      {{!-- {{search field="_created._establishment"}} --}}
+[./if.]
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="_created.date" type="date"}}
+      {{search field="_created.folio" type="number"}}
+      {{filter field="_type" in="notaProgramarSolicitud,notaReprogramarSolicitud,notaCancelacionSolicitud"}}
+      {{filter condition="=servicio" field="_created.service" eq="=servicio"}}
+      {{filter condition="=desde" field="_created.date" gt="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=hasta"}}
+    {{/find}}
+    {{join source="solicitud" view="base" as="solicitud" id="_created.request"}}
+  {{/view}}
+
+  {{#view id="resumenReprogramacionCitasPorUsuario"}}
+    {{#pipeline}}
+      {{filter field="_created.service" eq="=servicio"}}
+      {{filter field="_type" in="notaProgramarSolicitud,notaReprogramarSolicitud,notaCancelacionSolicitud"}}
+      {{filter condition="=desde" field="_created.date" gt="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=hasta"}}
+      {{sort field="_created.date" direction="asc"}}
+      {{group field="_created._user" as="_usuario"}}
+      {{group field="_created.name" as="tipoMovimiento"}}
+      {{group field="_created.folio" type="count" as="conteo"}}
+    {{/pipeline}}  
+  {{/view}}
+
+  {{#view id="facturaGlobal"}}
+    {{#find limit="-1"}}
+      {{include field="_created.date"}}
+      {{include field="_name"}}
+      {{include field="importe"}}
+      {{filter field="flujo.estatus" eq="='pendiente'"}}
+      {{filter field="flujo.categoria" eq="='cuentaPaciente'"}}
+      {{filter condition="=desde" field="_created.date" gt="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=moment(hasta).add(1, 'day').format('YYYY-MM-DD')"}}
+    {{/find}}  
+    {{calc field="fecha" type="expr" value="=_created.date"}}
+    {{calc field="cantidad" type="calc" value="=1"}}
+    {{calc field="subTotal" type="calc" value="=importe"}}
+    {{calc field="importeIva" type="calc" value="=0"}}
+  {{/view}}
+
+  {{#view id="resumenFacturacionAnticipos"}}
+    {{#pipeline}}
+      {{filter field="_type" in="notaFactura,notaCancelacionFactura,notaCredito,notaCancelacionCredito,notaCobroAnticipo,notaCancelacionCobroAnticipo,notaAplicacionAnticipo,notaCancelacionAplicacionAnticipo"}}
+      {{filter condition="=desde" field="_created.date" gt="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=moment(hasta).add(1, 'day').format('YYYY-MM-DD')"}}
+      {{sort field="_created._user" direction="asc"}}
+      {{sort field="_type" direction="asc"}}
+      {{group field="_created._user" as="_usuario"}}
+      {{group field="_type"}}
+      {{group field="_id" type="count" as="cantidad"}}
+      {{group field="importe" type="sum"}}
+    {{/pipeline}}  
+    {{calc field="_tipoMovimiento" value="=fn('_tipoMovimiento', _type)"}}
+  {{/view}}
+
+  {{#view id="bitacora"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="tablero"}}
+      {{include field="persona"}}
+      {{include field="edi"}}
+      {{sort field="_id" direction="desc"}}
+      {{search field="_name"}}
+[.#if esSIC.]      
+      {{search field="_created._service"}}
+      {{search field="_created.establishment"}}
+      {{!-- {{search field="_created._establishment"}} --}}
+[./if.]
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="_created.date" type="date"}}
+      {{search field="_created.folio" type="number"}}
+      {{filter field="_created.board" eq="=id"}}
+    {{/find}}
+  {{/view}}
+
+  {{#view id="pendientes"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="tablero"}}
+      {{include field="persona"}}
+      {{include field="flujo"}}
+      {{sort field="_id" direction="desc"}}
+      {{search field="_name"}}
+[.#if esSIC.]      
+      {{search field="_created._service"}}
+      {{search field="_created.establishment"}}
+      {{!-- {{search field="_created._establishment"}} --}}
+[./if.]
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="_created.date" type="date"}}
+      {{search field="_created.folio" type="number"}}
+      {{search field="flujo.grupo"}}
+      {{filter field="flujo.estatus" eq="='pendiente'"}}
+      {{!-- {{filter field="_created.date" gt="=moment().add(-30,'d').format()"}} --}}
+      {{filter condition="=id" field="persona.id" eq="=id"}}
+      {{filter condition="=categoria" field="flujo.categoria" eq="=categoria"}}
+      {{filter condition="=tema" field="flujo.tema" in="=tema.split(';')"}}
+      {{filter condition="=servicio" field="_created.service" eq="=servicio"}}
+      {{filter condition="=origen" field="flujo.origen" eq="=origen"}}
+      {{filter condition="=sinDestino" field="flujo.destino" neq="=sinDestino"}}
+      {{filter condition="=sinDestino2" field="flujo.destino" neq="=sinDestino2"}}
+      {{filter condition="=destino" field="flujo.destino" eq="=destino"}}
+      {{filter condition="=sinOrigen" field="flujo.origen" neq="=sinOrigen"}}
+      {{filter condition="=sinOrigen2" field="flujo.origen" neq="=sinOrigen2"}}      
+[.#if esMulti.]
+      {{filter field="_created.establishment" in="=user.establishment"}}
+[./if.]
+    {{/find}}
+  {{/view}}
+
+  {{#view id="pendientesDestinoClues"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="tablero"}}
+      {{include field="persona"}}
+      {{include field="flujo"}}
+      {{sort field="_id" direction="desc"}}
+      {{search field="_name"}}
+[.#if esSIC.]      
+      {{search field="_created._service"}}
+      {{search field="_created.establishment"}}
+      {{!-- {{search field="_created._establishment"}} --}}
+[./if.]
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="_created.date" type="date"}}
+      {{search field="_created.folio" type="number"}}
+      {{search field="flujo.grupo"}}
+      {{filter field="flujo.estatus" eq="='pendiente'"}}
+      {{!-- {{filter field="_created.date" gt="=moment().add(-30,'d').format()"}} --}}
+      {{filter condition="=id" field="persona.id" eq="=id"}}
+      {{filter condition="=categoria" field="flujo.categoria" eq="=categoria"}}
+      {{filter condition="=tema" field="flujo.tema" in="=tema.split(';')"}}
+      {{filter condition="=servicio" field="_created.service" eq="=servicio"}}
+      {{filter condition="=origen" field="flujo.origen" eq="=origen"}}
+      {{filter condition="=sinDestino" field="flujo.destino" neq="=sinDestino"}}
+      {{filter condition="=sinDestino2" field="flujo.destino" neq="=sinDestino2"}}
+      {{filter condition="=destino" field="flujo.destino" eq="=destino"}}
+      {{filter condition="=sinOrigen" field="flujo.origen" neq="=sinOrigen"}}
+      {{filter condition="=sinOrigen2" field="flujo.origen" neq="=sinOrigen2"}}      
+      {{filter field="flujo.destino" in="=user.establishmentData.clues"}}
+    {{/find}}
+  {{/view}}
+
+  {{#view id="subPendientes"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="tablero"}}
+      {{include field="persona"}}
+      {{include field="flujo"}}
+      {{sort field="_id" direction="desc"}}
+      {{search field="_name"}}
+[.#if esSIC.]      
+      {{search field="_created._service"}}
+      {{search field="_created.establishment"}}
+      {{!-- {{search field="_created._establishment"}} --}}
+[./if.]
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="_created.date" type="date"}}
+      {{search field="_created.folio" type="number"}}
+      {{search field="flujo.grupo"}}
+      {{filter field="flujo.subEstatus" eq="='pendiente'"}}
+      {{!-- {{filter field="_created.date" gt="=moment().add(-30,'d').format()"}} --}}
+      {{filter condition="=id" field="persona.id" eq="=id"}}
+      {{filter condition="=categoria" field="flujo.categoria" eq="=categoria"}}
+      {{filter condition="=tema" field="flujo.tema" in="=tema.split(';')"}}
+      {{filter condition="=servicio" field="_created.service" eq="=servicio"}}
+      {{filter condition="=origen" field="flujo.origen" eq="=origen"}}
+      {{filter condition="=sinDestino" field="flujo.destino" neq="=sinDestino"}}
+      {{filter condition="=sinDestino2" field="flujo.destino" neq="=sinDestino2"}}
+      {{filter condition="=destino" field="flujo.destino" eq="=destino"}}
+      {{filter condition="=sinOrigen" field="flujo.origen" neq="=sinOrigen"}}
+      {{filter condition="=sinOrigen2" field="flujo.origen" neq="=sinOrigen2"}}      
+    {{/find}}
+  {{/view}}
+
+  {{#view id="tieneHistoriaClinica"}}
+    {{#find limit="1"}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="tablero"}}
+      {{include field="persona"}}
+      {{include field="flujo"}}
+      {{search field="_name"}}
+[.#if esSIC.]      
+      {{search field="_created._service"}}
+      {{search field="_created.establishment"}}
+      {{!-- {{search field="_created._establishment"}} --}}
+[./if.]
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="_created.date" type="date"}}
+      {{search field="_created.folio" type="number"}}
+      {{filter field="_type" in="notaHistoriaClinica,notaHistoriaClinicaAtencionRecienNacido,notaHistoriaClinicaAtencionRecienNacido2"}}
+      {{filter field="persona.id" eq="=id"}}
+    {{/find}}
+  {{/view}}
+
+  {{#view id="pendientesFacturacion"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="tablero"}}
+      {{include field="persona"}}
+      {{include field="flujo"}}
+      {{sort field="_id" direction="desc"}}
+      {{search field="_name"}}
+[.#if esSIC.]      
+      {{search field="_created._service"}}
+      {{search field="_created.establishment"}}
+      {{!-- {{search field="_created._establishment"}} --}}
+[./if.]
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="_created.date" type="date"}}
+      {{search field="_created.folio" type="number"}}
+      {{filter field="flujo.estatus" eq="='pendiente'"}}
+      {{!-- {{filter field="_created.date" gt="=moment().add(-30,'d').format()"}} --}}
+      {{filter condition="=id" field="persona.id" eq="=id"}}
+      {{filter condition="=categoria" field="flujo.categoria" eq="=categoria"}}
+      {{filter condition="=servicio" field="_created.service" eq="=servicio"}}
+      {{filter condition="=origen" field="flujo.origen" eq="=origen"}}
+      {{filter condition="=sinDestino" field="flujo.destino" neq="=sinDestino"}}
+      {{filter condition="=sinDestino2" field="flujo.destino" neq="=sinDestino2"}}
+      {{filter condition="=destino" field="flujo.destino" eq="=destino"}}
+      {{filter condition="=sinOrigen" field="flujo.origen" neq="=sinOrigen"}}
+      {{filter condition="=tema" field="flujo.tema" eq="=tema"}}
+    {{/find}}
+    {{join source="persona" view="datosFacturacion" as="join" id="persona.id"}}
+  {{/view}}
+
+  {{#view id="pendientesTrabajoSocial"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="tablero"}}
+      {{include field="persona"}}
+      {{include field="flujo"}}
+      {{sort field="_id" direction="desc"}}
+      {{search field="_name"}}
+[.#if esSIC.]      
+      {{search field="_created._service"}}
+      {{search field="_created.establishment"}}
+      {{!-- {{search field="_created._establishment"}} --}}
+[./if.]
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="_created.date" type="date"}}
+      {{search field="_created.folio" type="number"}}
+      {{search field="flujo.nombre"}}
+      {{filter field="flujo.estatus" eq="='pendiente'"}}
+      {{!-- {{filter field="_created.date" gt="=moment().add(-30,'d').format()"}} --}}
+      {{filter condition="=id" field="persona.id" eq="=id"}}
+      {{filter condition="=categoria" field="flujo.categoria" eq="=categoria"}}
+      {{filter condition="=servicio" field="_created.service" eq="=servicio"}}
+      {{filter condition="=origen" field="flujo.origen" eq="=origen"}}
+      {{filter condition="=sinDestino" field="flujo.destino" neq="=sinDestino"}}
+      {{filter condition="=destino" field="flujo.destino" eq="=destino"}}
+      {{filter condition="=sinOrigen" field="flujo.origen" neq="=sinOrigen"}}
+      {{filter condition="=tema" field="flujo.tema" eq="=tema"}}
+    {{/find}}
+    {{join source="persona" view="detalleTrabajoSocial" as="join" id="persona.id"}}
+  {{/view}}
+
+  {{#view id="noCompletado"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="tablero"}}
+      {{include field="persona"}}
+      {{include field="flujo"}}
+      {{sort field="_id" direction="desc"}}
+      {{search field="_name"}}
+[.#if esSIC.]      
+      {{search field="_created._service"}}
+      {{search field="_created.establishment"}}
+      {{!-- {{search field="_created._establishment"}} --}}
+[./if.]
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="_created.date" type="date"}}
+      {{search field="_created.folio" type="number"}}
+      {{filter field="flujo.estatus" neq="='completado'"}}
+      {{filter condition="=id" field="persona.id" eq="=id"}}
+      {{filter condition="=tipoExpediente" field="persona.tipoExpediente" eq="=tipoExpediente"}}
+      {{filter condition="=tipo" field="_type" eq="=tipo"}}
+      {{filter condition="=categoria" field="flujo.categoria" eq="=categoria"}}
+      {{filter condition="=servicio" field="_created.service" eq="=servicio"}}
+      {{filter condition="=origen" field="flujo.origen" eq="=origen"}}
+      {{filter condition="=sinDestino" field="flujo.destino" neq="=sinDestino"}}
+      {{filter condition="=destino" field="flujo.destino" eq="=destino"}}
+      {{filter condition="=sinOrigen" field="flujo.origen" neq="=sinOrigen"}}
+      {{filter condition="=tema" field="flujo.tema" eq="=tema"}}
+    {{/find}}
+  {{/view}}
+  
+  {{#view id="servicio"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="tablero"}}
+      {{include field="persona"}}
+      {{include field="flujo"}}
+      {{sort field="_id" direction="desc"}}
+      {{search field="_name"}}
+[.#if esSIC.]      
+      {{search field="_created._service"}}
+      {{search field="_created.establishment"}}
+      {{!-- {{search field="_created._establishment"}} --}}
+[./if.]
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="_created.date" type="date"}}
+      {{search field="_created.folio" type="number"}}
+      {{filter field="flujo.estatus" neq="='pendiente'"}}
+      {{filter condition="=categoria" field="flujo.categoria" eq="=categoria"}}
+      {{filter condition="=servicio" field="_created.service" eq="=servicio"}}
+      {{filter condition="=desde" field="_created.date" gt="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=moment(hasta).add(1,'day').format()"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="resumenActivos"}}
+    {{#find}}
+      {{include field="_created"}}
+      {{include field="flujo"}}
+      {{sort field="_id" direction="desc"}}
+      {{filter field="persona.id" eq="=id"}}
+      {{filter field="flujo.estatus" eq="='pendiente'"}}
+      {{!-- {{filter field="_created.date" gt="=moment().add(-30,'d').format()"}} --}}
+    {{/find}}
+    {{calc field="etiqueta" type="expr" value="=calc.concat(calc.format('date', _created.date, 'DD/MMM/YYYY h:mma'))"}}
+    {{calc field="nombre" type="expr" value="=_name"}}
+  {{/view}}
+
+  {{#view id="resumenMetasPorAutorizar"}}
+    {{#pipeline}}
+      {{filter field="flujo.estatus" eq="='pendiente'"}}
+      {{filter field="flujo.categoria" eq="='evaluacionDesempeno'"}}
+      {{filter field="flujo.tema" eq="='metas'"}}
+      {{group field="_id" type="count" as="count"}}
+    {{/pipeline}}  
+  {{/view}}
+
+  {{#view id="resumenResultadosTxDx"}}
+    {{#find}}
+      {{include field="_created"}}
+      {{include field="flujo"}}
+      {{sort field="_id" direction="desc"}}
+      {{filter field="persona.id" eq="=id"}}
+      {{filter field="_type" in="notaResultadoEstudio,notaVerImagenologia,notaResultadoImagenologia,notaResultadoDeteccionBocavirus,notaResultadoDeteccionLegionella,notaResultadoDeteccionSarsCov2,notaResultadoDeteccionPanelDna"}}
+      {{!-- {{filter field="_created.date" gt="=moment().add(-30,'d').format()"}} --}}
+    {{/find}}
+    {{calc field="etiqueta" type="expr" value="=calc.concat(calc.format('date', _created.date, 'DD/MMM/YYYY h:mma'))"}}
+    {{calc field="nombre" type="expr" value="=_name"}}
+  {{/view}}
+  
+  {{#view id="resultadosTxDx"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="tablero"}}
+      {{include field="persona"}}
+      {{include field="flujo"}}
+      {{sort field="_id" direction="desc"}}
+      {{search field="_name"}}
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="_created._request"}}
+      {{filter field="_type" in="notaResultadoEstudio,notaVerImagenologia,notaResultadoImagenologia,notaResultadoDeteccionBocavirus,notaResultadoDeteccionLegionella,notaResultadoDeteccionSarsCov2,notaResultadoDeteccionPanelDna"}}
+      {{filter condition="=id" field="persona.id" eq="=id"}}
+    {{/find}}
+  {{/view}}
+
+  {{#view id="notaRequerida"}}
+    {{#pipeline}}
+      {{filter field="persona.id" eq="=persona"}}
+      {{filter field="_created.service" eq="=servicio"}}
+      {{filter field="_created.date" gte="=desde"}}
+      {{filter field="_type" eq="=tipo"}}
+      {{group field="_created.folio" type="count" as="conteo"}}
+    {{/pipeline}}  
+  {{/view}}
+
+  {{!-- {{#view id="totalDefunciones"}}
+    {{#pipeline}}
+      {{filter field="_created.date" gte="=calc.fromYearMonth(ejercicio,periodo)" required="true"}}
+      {{filter field="_created.date" lte="=calc.toYearMonth(ejercicio,periodo)" required="true"}}
+      {{filter field="_type" eq="='notaDefuncion'"}}
+      {{group field="persona._genero" as="_genero"}}
+      {{group field="_id" type="count" as="conteo"}}
+    {{/pipeline}}
+  {{/view}}
+  {{#grid id="totalDefunciones" view="totalDefunciones" pdfFontSize="6" filters="false" exportToExcel="true" allowRefresh="true" columnChooser="false" allowSearch="true" wordWrapEnabled="true" columnAutoWidth="wordWrapEnabled"}}
+    {{column field="_genero" label="Genero"}}
+    {{column field="conteo" label="Conteo" summaryType="sum"}}
+  {{/grid}} --}}
+
+  {{!-- {{#view id="totalEgresos"}}
+    {{#pipeline}}
+      {{filter field="_created.date" gte="=calc.fromYearMonth(ejercicio,periodo)" required="true"}}
+      {{filter field="_created.date" lte="=calc.toYearMonth(ejercicio,periodo)" required="true"}}
+      {{filter field="_type" eq="='notaEgreso'"}}
+      {{group field="persona._genero" as="_genero"}}
+      {{group field="_id" type="count" as="conteo"}}
+    {{/pipeline}}
+  {{/view}}
+  {{#grid id="totalEgresos" view="totalEgresos" pdfFontSize="6" filters="false" exportToExcel="true" allowRefresh="true" columnChooser="false" allowSearch="true" wordWrapEnabled="true" columnAutoWidth="wordWrapEnabled"}}
+    {{column field="_genero" label="Genero"}}
+    {{column field="conteo" label="Conteo" summaryType="sum"}}
+  {{/grid}} --}}
+
+  {{#browser id="lista" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green" showActions="fix-user,preliminar,preliminar2,ver,ver2,tool,tool2,tool3,tool4,tool5,tool6"}}
+    {{list itemTemplate="persona" allowSearch="true" allowRefresh="true" allowAnalysis="true"}}
+  {{/browser}}  
+  {{#browser id="activas" view="pendientes" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green"}}
+    {{list itemTemplate="persona" allowSearch="true" allowRefresh="true" allowAnalysis="true"}}
+  {{/browser}}  
+  {{#browser id="notificaciones" view="lista" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green"}}
+    {{list itemTemplate="personaNotificacion" allowSearch="true" allowRefresh="true" allowAnalysis="true"}}
+    {{param conNotificacion="=true"}}
+  {{/browser}}  
+  {{#browser id="resultadosTxDx" view="resultadosTxDx" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green"}}
+    {{list itemTemplate="persona" allowSearch="true" allowRefresh="true" allowAnalysis="true"}}
+  {{/browser}}  
+  {{#browser id="bitacora" view="bitacora" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green"}}
+    {{list itemTemplate="persona" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}  
+  {{#browser id="servicio" view="servicio" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="indigo"}}
+    {{list itemTemplate="persona" allowSearch="true" allowRefresh="true"}}
+  {{/browser}}
+  {{#browser id="bitacoraSupervision" view="bitacoraSupervision" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green"}}
+    {{list itemTemplate="persona" allowSearch="true" allowRefresh="true"}}
+    {{param tipo="notaRegistroSupervision"}}
+  {{/browser}}
+  {{#browser id="bitacoraContingencia" view="bitacoraContingencia" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green"}}
+    {{list itemTemplate="persona" allowSearch="true" allowRefresh="true"}}
+    {{param tipo="notaRegistroContingencia"}}
+  {{/browser}}
+  {{#browser id="1" view="porDias" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green"}}
+    {{list itemTemplate="persona" allowSearch="true" allowRefresh="true"}}
+    {{param dias="1"}}
+  {{/browser}}
+  {{#browser id="7" view="porDias" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green"}}
+    {{list itemTemplate="persona" allowSearch="true" allowRefresh="true"}}
+    {{param dias="7"}}
+  {{/browser}}
+  {{#browser id="15" view="porDias" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green"}}
+    {{list itemTemplate="persona" allowSearch="true" allowRefresh="true"}}
+    {{param dias="15"}}
+  {{/browser}}
+  {{#browser id="30" view="porDias" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green"}}
+    {{list itemTemplate="persona" allowSearch="true" allowRefresh="true"}}
+    {{param dias="30"}}
+  {{/browser}}
+  {{#browser id="60" view="porDias" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green"}}
+    {{list itemTemplate="persona" allowSearch="true" allowRefresh="true"}}
+    {{param dias="60"}}
+  {{/browser}}
+  {{!-- {{#browser id="90" view="porDias" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green"}}
+    {{list itemTemplate="persona" allowSearch="true" allowRefresh="true"}}
+    {{param dias="90"}}
+  {{/browser}} --}}
+{{/define}}
+
+{{#markup}}  
+  {{!-- para las lista de nota se usa el template _app.persona --}}
+  {{#template id="verNota"}}
+    <div>{{_name}}</div>
+    <span style="font-size:12px;">{{persona.nombreCompleto}}</span>
+    <span style="font-size:12px;float:right;">{{date _created.date "DD/MMM/YYYY hh:mma"}}</span>
+    {{!--Tarea #3764 Fecha:24/Mayo RACC--}}
+    {{#if persona.fechaNacimiento}}
+      </br><span style="font-size:12px;">Nacimiento: {{date persona.fechaNacimiento "DD/MMM/YYYY"}}</span>
+    {{/if}}
+    {{!--Tarea #3764 Fecha:24/Mayo RACC--}}    
+  {{/template}}
+  {{#template id="verNotaPendiente"}}
+    <div class="list-material">
+      <li class="has-action-left">
+        <div class="list-action-left"><i class="icon ion-{{flujo.icono}} text-{{flujo.color}}"></i></div>
+        <div class="list-content">
+          {{#if persona.nombreCompleto}}
+          <span class="title">{{persona.nombreCompleto}}</span>
+          {{!--Tarea #3764 Fecha:24/Mayo RACC--}}
+          {{#if persona.fechaNacimiento}}
+            </br><span style="font-size:12px;">Nacimiento: {{date persona.fechaNacimiento "DD/MMM/YYYY"}}</span>
+          {{/if}}
+          {{!--Tarea #3764 Fecha:24/Mayo RACC--}}          
+          {{#if flujo.saldo}}
+          <span style="font-size:12px;">{{_name}}</span>
+          <span style="font-size:12px;float:right;"><strong>Saldo: {{number flujo.saldo "currency"}}</strong></span>
+          <br><span style="font-size:12px;" class="color-gris-obscuro2">{{flujo.grupo}}</span>
+          {{else}}
+          <span style="font-size:12px;">{{flujo.nombre}}</span>
+          <br><span style="font-size:12px;">{{_name}}</span>
+          {{/if}}
+          {{else}}
+          <span class="title">{{_name}}</span>
+          <br>
+          {{/if}}
+          <span style="font-size:12px;float:right;">{{date _created.date "DD/MMM/YYYY hh:mma"}}</span>
+        </div>          
+      </li>
+    </div>
+  {{/template}}  
+  {{#template id="verNotaSubPendiente"}}
+    <div class="list-material">
+      <li class="has-action-left">
+        <div class="list-action-left"><i class="icon ion-{{flujo.icono}} text-{{flujo.color}}"></i></div>
+        <div class="list-content">
+          {{#if persona.nombreCompleto}}
+          <span class="title">{{persona.nombreCompleto}}</span>
+          {{#if flujo.subSaldo}}
+          <span style="font-size:12px;">{{_name}}</span>
+          <span style="font-size:12px;float:right;"><strong>Saldo: {{number flujo.subSaldo "currency"}}</strong></span>
+          <br><span style="font-size:12px;" class="color-gris-obscuro2">{{flujo.grupo}}</span>
+          {{else}}
+          <span style="font-size:12px;">{{flujo.nombre}}</span>
+          <br><span style="font-size:12px;">{{_name}}</span>
+          {{/if}}
+          {{else}}
+          <span class="title">{{_name}}</span>
+          <br>
+          {{/if}}
+          <span style="font-size:12px;float:right;">{{date _created.date "DD/MMM/YYYY hh:mma"}}</span>
+        </div>          
+      </li>
+    </div>
+  {{/template}}  
+{{/markup}}

@@ -1,0 +1,42 @@
+{{#define id="notaEvaluacionCuestionario"}}
+	{{param startOnOpen="preguntas"}}
+  {{param removeIfEmptySection="preguntas"}}
+  {{param removeIfEmptyField="pregunta"}}
+  {{#view id="resumenEvaluaciones"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="base"}}
+      {{include field="persona"}}
+      {{sort field="_created.date" direction="desc"}}
+      {{search field="_name"}}      
+      {{search field="persona.nombreCompleto"}}
+      {{search field="persona.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
+      {{search field="_created.date" type="date"}}
+      {{search field="_created.folio" type="number"}}
+      {{search field="_created._user"}}
+      {{filter field="_type" in="notaEvaluacionCuestionario"}}
+      {{filter condition="=id" field="persona.id" eq="=id"}}
+      {{filter condition="=subTipo" field="_created.subType" eq="=subTipo"}}
+      {{filter condition="=noCompletado" field="flujo.estatus" ne="='completado'"}}
+      {{filter condition="=request" field="_created.request" eq="=request"}}
+      {{filter condition="=desde" field="_created.date" gte="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=moment(hasta).add(1,'d').format('YYYY-MM-DD')"}}
+      {{filter condition="=servicio" field="_created.service" eq="=servicio"}}
+    {{/find}}
+    {{calc field="etiqueta" type="expr" value="=calc.format('date', _created.date, 'DD/MMM/YYYY h:mma')"}}
+    {{calc field="nombre" type="expr" value="=calc.concat(base._tipoCuestionario,'Puntos:',base.puntos)"}}
+  {{/view}}
+  {{#grid id="preguntas" section="preguntas" disableEnter="true"}}
+    {{column field="pregunta" width="460" readOnly="true"}}
+    {{column field="respuesta" width="460" readOnly="true"}}
+    {{column field="calificacion" width="80"}}
+  {{/grid}}
+  {{#section id="preguntas"}}
+    {{#onChange forceRecalc="true"}}
+      {{#update section="base"}}
+        {{set puntos="=calc.sum(preguntas, 'calificacion')"}}
+      {{/update}}
+    {{/onChange}}
+  {{/section}}
+{{/define}}

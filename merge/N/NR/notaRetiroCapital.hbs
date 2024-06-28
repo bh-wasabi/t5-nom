@@ -1,0 +1,13 @@
+{{#define id="notaRetiroCapital"}}
+  {{#section id="base"}}
+    {{#field id="moneda"}}
+      {{onChange clearFields="cuentaBancaria"}}
+    {{/field}}
+    {{#field id="cuentaBancaria"}}
+      {{#editor}}
+        {{param moneda="=@moneda"}}
+      {{/editor}}
+    {{/field}}
+    {{field id="importeTotalMN" type="calc" value="=importe*tipoCambio"}}
+  {{/section}}
+{{/define}}

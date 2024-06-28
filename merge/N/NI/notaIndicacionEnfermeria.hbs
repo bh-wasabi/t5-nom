@@ -1,0 +1,14 @@
+{{#define id="notaIndicacionEnfermeria"}}
+  {{param startOnOpen="farmaciaHoy"}}
+  {{#grid id="farmaciaHoy" section="farmaciaHoy" allowInsert="false" allowRemove="false"}}
+    {{column field="_name" width="500" readOnly="true"}}
+    {{!-- {{column field="estatus" width="80" readOnly="true"}} --}}
+    {{column field="_moment" width="100" readOnly="true"}}
+    {{column field="porMinistrar" width="90" readOnly="true"}}
+    {{column field="horaSiguienteDosis" width="100" readOnly="true"}}
+    {{column field="velocidadActual" width="100" readOnly="true"}}
+    {{column field="velocidadNueva" width="100"}}
+    {{column field="horaModificacion" validateHour="true" width="120"}}
+    {{column field="accion" width="90"}}
+  {{/grid}}
+{{/define}}

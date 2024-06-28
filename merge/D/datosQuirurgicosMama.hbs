@@ -1,0 +1,8 @@
+{{#define id="datosQuirurgicosMama"}}
+  {{#section id="base"}}
+    {{field id="siLateralidad" type="expr" value="=lateralidadQx!='sinRegistro'"}}
+    {{field id="siMastectomia" type="expr" value="=tipoLateralidad=='mastectomia'"}}
+    {{field id="siGanglionar" type="expr" value="=tipoLateralidad=='ganglionar'"}}
+    {{field id="Menor" type="expr" value="=base.esMujer"}}
+  {{/section}}
+{{/define}}

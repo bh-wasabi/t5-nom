@@ -1,0 +1,29 @@
+{{#define id="notaAltaEmpleado"}}
+  {{action id="afectar" error="=(base.rfc&&base.rfc.length==13)?null:'RFC Incorrecto'"}}
+  {{#section id="base"}}
+    {{!-- {{#field id="banco"}}
+      {{#onChange}}
+        {{set numeroBanco="=base.numero"}}
+      {{/onChange}}
+    {{/field}} --}}
+    {{#field id="puesto"}}
+      {{#onChange}}
+        {{set codigoPuesto="=base.codigo"}}
+        {{set numeroPuesto="=base.numero"}}
+      {{/onChange}}
+      {{!-- {{#editor view="conVacantes"}}
+        {{param vacante="=true"}}
+        {{#onChange}}
+          {{set codigo="=base.codigo"}}
+        {{/onChange}}
+      {{/editor}} --}}
+    {{/field}}
+    {{#field id="plaza"}}
+      {{#editor}}
+        {{#onChange}}
+          {{set codigoPlaza="=base.codigo"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}    
+  {{/section}}
+{{/define}}

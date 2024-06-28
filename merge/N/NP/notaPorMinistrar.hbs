@@ -1,0 +1,28 @@
+{{#define id="notaPorMinistrar"}}
+  {{param attribute1="=_created.service"}}
+  {{param startOnOpen="aplicacion"}}
+  {{param removeIfEmptySection="aplicacion"}}
+  {{param removeIfEmptyField="continuar"}}
+  
+  {{#grid id="aplicacion" section="aplicacion" keyField="continuar" applyTo="continuar" applyContinue="true"}}
+    {{column field="horaRequerida" width="130" readOnly="true"}}
+    {{column field="solicitud" type="text" width="180" readOnly="true"}}
+    {{column field="_name" width="300" readOnly="true"}}
+    {{column field="central" width="150" readOnly="true"}}
+    {{column field="cama" width="70" readOnly="true"}}
+    {{column field="comentarios" width="150"}}
+    {{column field="horaMinistracion" validateHour="true" width="120"}}
+    {{column field="ingresoLiquido" label="Ctrl Líq/ml" width="85" validateNumber="true"}}
+    {{column field="continuar" width="70"}}
+  {{/grid}}
+
+  {{!-- {{#transform id="copiarCancelacion" treatment="costo"}}
+    {{update section="persona" value="persona"}}
+    {{update section="contexto" value="contexto"}}
+    {{update section="base" value="base"}}
+    {{update section="aplicacion" value="aplicacion"}}
+  {{/transform}}
+
+  {{action id="tool" condition="true" userRole="cancelacionMinistracion" source="notaPorCancelarMinistrado" label="Cancelar" transform="copiarCancelacion" type="add-subdoc" visibleMode="close" color="grey" onlyPost="true"}} --}}
+  {{action id="afectar" error="=_.findWhere(aplicacion, {continuar:'si'})?null:'Falta Seleccionar'"}}  
+{{/define}}

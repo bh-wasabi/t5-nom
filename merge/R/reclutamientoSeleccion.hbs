@@ -1,0 +1,30 @@
+{{#define id="reclutamientoSeleccion"}}  
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{#field id="vacante"}}
+      {{onChange clearFields="plaza,codigo,descripcion"}}
+    {{/field}}
+    {{#field id="plaza"}}
+      {{#editor}}
+        {{param estatus="=calc.isTrue(vacante)?'vacante':null"}}
+        {{param tipoContratacion="='bolsaTalentos'"}}
+      {{/editor}}
+      {{#onChange}}
+        {{set codigo="=puesto.codigo"}}
+        {{set descripcion="=puesto.descripcion"}}
+      {{/onChange}}
+    {{/field}}
+    {{!-- {{field id="sinVacante" type="expr" value="=@vacante==='no'"}}
+    {{#field id="vacante"}}
+      {{onChange clearFields="puesto,codigo"}}
+    {{/field}}
+    {{#field id="puesto"}}
+      {{#editor alwaysLoad="true" view="conVacantes"}}
+        {{param vacante="=calc.isTrue(vacante)"}}
+        {{#onChange}}
+          {{set codigo="=base.codigo"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}} --}}
+  {{/section}}
+{{/define}}

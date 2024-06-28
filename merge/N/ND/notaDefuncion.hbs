@@ -1,0 +1,25 @@
+{{#define id="notaDefuncion"}}
+  {{#section id="datosRegistroCivil"}}
+    {{#field id="sepomex" type="text" label="SEPOMEX"}}
+      {{#onChange}}
+        {{set localidad="=colonia"}}
+        {{set municipio="=municipio"}}
+        {{set entidad="=estado"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+
+  {{#view id="totalDefunciones"}}
+    {{#pipeline}}
+      {{filter field="_created.date" gte="=calc.fromYearMonth(ejercicio,periodo)" required="true"}}
+      {{filter field="_created.date" lte="=calc.toYearMonth(ejercicio,periodo)" required="true"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{group field="_created._service" as="_servicio"}}
+      {{group field="_id" type="count" as="conteo"}}
+    {{/pipeline}}
+  {{/view}}
+  {{#grid id="totalDefunciones" view="totalDefunciones" pdfFontSize="6" filters="false" exportToExcel="true" allowRefresh="true" columnChooser="false" allowSearch="true" wordWrapEnabled="true" columnAutoWidth="wordWrapEnabled"}}
+    {{column field="_servicio" label="Servicio"}}
+    {{column field="conteo" label="Conteo" summaryType="sum"}}
+  {{/grid}}  
+{{/define}}

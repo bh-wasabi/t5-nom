@@ -1,0 +1,35 @@
+{{#define id="notaAltaServicioAjuste"}}
+  {{#section id="base"}}
+    {{#field id="nota"}}
+      {{#editor}}
+        {{param persona="=persona.id"}}
+      {{/editor}}
+      {{#onChange refresh="true"}}
+        {{set fechaIngreso="base.fechaIngreso"}}
+        {{set fechaEgreso="base.fechaEgreso"}}
+        {{set diagnosticoIngreso="base.diagnosticoIngreso"}}
+        {{set diagnostico="base.diagnostico"}}
+        {{set signosVitales="base.signosVitales"}}
+        {{set altaServicio="base.altaServicio"}}
+        {{set terapeuticaEmpleada="base.terapeuticaEmpleada"}}
+        {{set resultadosRelevantes="base.resultadosRelevantes"}}
+        {{set resumenClinico="base.resumenClinico"}}
+        {{set pronostico="base.pronostico"}}
+        {{set especialidad="base.especialidad"}}
+        {{set servicio="base.servicio"}}
+        {{set cama="base.cama"}}
+        {{set continuarAtencion="base.continuarAtencion"}}
+        {{set comentarios="base.comentarios"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="central"}}
+      {{onChange clearFields="cama"}}
+    {{/field}}
+    {{!-- {{#field id="cama"}}
+      {{#editor alwaysLoad="true"}}
+        {{param estatus="='preAlta'"}}
+        {{param central="=central"}}
+      {{/editor}}
+    {{/field}} --}}
+  {{/section}}
+{{/define}}

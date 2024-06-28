@@ -1,0 +1,11 @@
+{{#define id="requerimientoExtraordinario"}}  
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{#field id="motivo"}}
+      {{#editor}}
+        {{param servicio="='seguridad'"}}
+        {{param partOf="='extraordinaria'"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

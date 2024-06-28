@@ -1,0 +1,15 @@
+{{#define id="notaFoCon02"}}
+	{{action id="tool" type="report-xlsx" label="Descargar Excel" title="=_name" color="teal" visibleMode="close" condition="=_isAffected" btnSolid="true" icon="arrow-down-a"}}
+  {{#grid id="articulos" section="articulos"}}
+    {{column field="partida" width="60" readOnly="true"}}
+    {{column field="codigo" width="200" readOnly="true"}}
+    {{column field="descripcion" width="300" readOnly="true"}}
+    {{column field="consumoPromedioMensual" width="200"}}
+		{{column field="existencia" width="100"}}
+		{{column field="fechaUltimaEntrada" width="150" validateDate="true"}}
+		{{column field="existenciaDisponible" width="150"}}
+		{{column field="bienesAsignados" width="150"}}
+		{{column field="rotacionInventario" width="150"}}
+		{{column field="observaciones" label="Observaciones en caso de que las existencias se encuentren asignadas" width="450"}}
+  {{/grid}}
+{{/define}}

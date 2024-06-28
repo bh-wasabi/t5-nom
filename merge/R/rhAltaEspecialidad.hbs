@@ -1,0 +1,38 @@
+{{#define id="rhAltaEspecialidad"}}
+  {{#view id="lista" name="Lista"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="base._especialidad"}}
+      {{include field="base._subEspecialidad"}}
+      {{search field="_name"}}
+      {{search field="base._especialidad"}}
+      {{search field="base._subEspecialidad"}}
+      {{sort field="base._especialidad" direction="asc"}}
+      {{sort field="base._subEspecialidad" direction="asc"}}
+      {{sort field="base.orden" direction="asc"}}
+      {{sort field="_name" direction="asc"}}
+      {{filter condition="=especialidad" field="base.especialidad" eq="especialidad"}}
+      {{filter condition="=subEspecialidad" field="base.subEspecialidad" eq="subEspecialidad"}}
+    {{/find}}
+  {{/view}}
+  {{#section id="base"}}
+    {{#field id="especialidad"}}
+      {{onChange clearFields="subEspecialidad"}}
+    {{/field}}
+    {{#field id="subEspecialidad"}}
+      {{#editor}}
+        {{param especialidad="=especialidad"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}
+
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}
+      </br><span style="font-size:12px;">{{base._especialidad}}</span>
+      </br><span style="font-size:12px;">{{base._subEspecialidad}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

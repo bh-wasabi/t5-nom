@@ -1,0 +1,7 @@
+{{#define id="exploracionFisicaGineco"}}
+  {{param ignoreDefaultDisplayValidation="true"}}
+  {{#section id="base"}}
+    {{field id="esPositivoGlandulaMamaria" type="expr" value="=exploracionFisicaGlandulaMamaria==='positivo'"}}
+    {{field id="esPositivoTactoVaginal" type="expr" value="=exploracionFisicaTactoVaginal==='positivo'"}}
+  {{/section}}
+{{/define}}

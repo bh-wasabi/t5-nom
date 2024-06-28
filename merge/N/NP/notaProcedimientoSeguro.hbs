@@ -1,0 +1,14 @@
+{{#define id="notaProcedimientoSeguro"}}
+  {{#section id="base"}}
+    {{field id="esProcedimientoHemodialisis" type="expr" value="=procedimientoAltoRiesgo==='hemodialisis'"}}
+    {{field id="esProcedimientoTransfusion" type="expr" value="=procedimientoAltoRiesgo==='transfusion'"}}
+    {{field id="esProcedimientoRadioterapia" type="expr" value="=procedimientoAltoRiesgo==='radioterapia'"}}
+    {{field id="esProcedimientoBiopsia" type="expr" value="=procedimientoAltoRiesgo==='biopsia'"}}
+    {{field id="esProcedimientoContraste" type="expr" value="=procedimientoAltoRiesgo==='contraste'"}}
+    {{field id="esProcedimientoAccesosVasculares" type="expr" value="=procedimientoAltoRiesgo==='accesosVasculares'"}}
+    {{field id="esProcedimientoPuncionMedula" type="expr" value="=procedimientoAltoRiesgo==='puncionMedula'"}}
+    {{field id="esProcedimientoQuimioterapia" type="expr" value="=procedimientoAltoRiesgo==='quimioterapia'"}}
+    {{field id="esProcedimientoTerapiaHipotermia" type="expr" value="=procedimientoAltoRiesgo==='terapiaHipotermia'"}}
+    {{field id="esProcedimientoPrisma" type="expr" value="=procedimientoAltoRiesgo==='prisma'"}}    
+  {{/section}}
+{{/define}} 

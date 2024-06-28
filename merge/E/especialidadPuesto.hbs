@@ -1,0 +1,18 @@
+{{#define id="especialidadPuesto"}}
+	{{#section id="base"}}
+    {{#field id="especialidad"}}
+      {{onChange clearFields="subEspecialidad,altaEspecialidad"}}
+    {{/field}}
+    {{#field id="subEspecialidad"}}
+      {{#editor}}
+        {{param especialidad="=especialidad"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="altaEspecialidad"}}
+      {{#editor}}
+        {{param especialidad="=especialidad"}}
+        {{param subEspecialidad="=subEspecialidad"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

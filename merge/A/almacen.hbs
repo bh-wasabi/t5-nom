@@ -1,0 +1,21 @@
+{{#define id="almacen"}}
+  {{action id="eliminar" hide="true"}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base.orden"}}
+      {{include field="base.establecimiento"}}
+      {{sort field="base._establecimiento" direction="asc"}}
+      {{sort field="base.orden" direction="asc"}}
+      {{search field="_name"}}
+      {{search field="base._establecimiento"}}
+    {{/find}}
+  {{/view}}
+{{/define}}
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}</br>
+      <span style="font-size:12px;">{{base._establecimiento}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

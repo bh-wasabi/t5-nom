@@ -1,0 +1,15 @@
+{{#define id="notaPorCorregirLote"}}
+  {{param attribute1="=_created.service"}}
+  {{param startOnOpen="lotes"}}
+
+  {{#grid id="lotes" section="lotes" disableEnter="true"}}
+    {{column field="_cuenta" label="Ubicación" width="400" readOnly="true"}}
+    {{column field="lote" label="Lote" width="130" readOnly="true"}}
+    {{column field="vencimiento" label="Caducidad" width="130" readOnly="true"}}
+    {{!-- {{column field="costoUnitario" label="Costo Unitario" width="100" readOnly="true"}} --}}
+    {{column field="cantidad" label="Cantidad" width="100" type="numeric" format="#," readOnly="true"}}
+    {{column field="nuevoLote" label="Nuevo Lote" width="130" required="true"}}
+    {{column field="nuevoVencimiento" label="Nueva Caducidad" width="130" validateDate="true" required="true"}}
+    {{!-- {{column field="nuevoCostoUnitario" label="Nuevo Costo Unitario" width="140"}} --}}
+  {{/grid}}
+{{/define}}

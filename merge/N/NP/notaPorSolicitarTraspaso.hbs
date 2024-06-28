@@ -1,0 +1,70 @@
+{{#define id="notaPorSolicitarTraspaso"}}
+  {{param attribute1="=_created.service"}}
+  {{param removeIfEmptySection="articulos"}}
+  {{param removeIfEmptyField="cantidad"}}
+
+  {{#transform id="copiar"}}
+    {{update section="base" value="=base"}}
+    {{#update section="base"}}
+      {{set solicitante="_created.user"}}
+      {{set _solicitante="_created._user"}}
+    {{/update}}
+    {{update section="articulos" value="=articulos"}}
+  {{/transform}}
+
+  {{action id="notaPorCancelarTraspasoAlmacenes" label="Cancelar Traspaso Almacenes" transform="copiar" source="notaPorCancelarTraspaso" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{action id="notaPorAutorizarTraspasoAlmacenes" label="Autorizar Traspaso Almacenes" transform="copiar" source="notaPorAutorizarTraspaso" hide="true" type="add-subdoc" visibleMode="close" btnSolid="true" color="deep-orange" onlyPost="true"}}
+  {{action id="notaPorAutorizarTraspasoRecepcionFarmacia" label="Autorizar Recepción Farmacia" transform="copiar" source="notaPorAutorizarTraspaso" hide="true" type="add-subdoc" visibleMode="close" btnSolid="true" color="deep-orange" onlyPost="true"}}
+  {{action id="notaPorAutorizarTraspasoDevolucionFarmacia" label="Autorizar Devolución Farmacia" transform="copiar" source="notaPorAutorizarTraspaso" hide="true" type="add-subdoc" visibleMode="close" btnSolid="true" color="deep-orange" onlyPost="true"}}
+
+  {{!-- Tiene que estar en la vista "lista" --}}
+  {{#section id="base"}}
+[.#if esMulti.]  
+    {{#field id="ubicacionOrigen"}}
+      {{#onChange clearFields="ubicacionDestino"}}
+        {{set subTipoAlmacenOrigen="=persona.subTipoAlmacen"}}
+        {{set _subTipoAlmacenOrigen="=persona._subTipoAlmacen"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="ubicacionDestino"}}
+      {{#editor}}
+        {{param subTipoAlmacen="=fn('subTipoAlmacenTraspaso', subTipoAlmacenOrigen)"}}
+      {{/editor}}
+    {{/field}}
+[./if.]
+    {{field id="esDestinoCuarentena" type="expr" hide="true" value="=calc.in(ubicacionDestino, ['cuarentenaCuracion','cuarentenaFarmacia'])"}}
+    {{validator type="expr" validIf="=@ubicacionOrigen!=@ubicacionDestino" message="Ubicación Incorrecta"}}
+    {{validator type="expr" notValidIf="=@ubicacionDestino=='ceyeEnEsterilizacion'&&@ubicacionOrigen!='ceyeSucio'" message="Ubicación Origen Incorrecta"}}
+    {{validator type="expr" notValidIf="=@ubicacionDestino=='ceyeEsterilizado'&&@ubicacionOrigen!='ceyeEnEsterilizacion'" message="Ubicación Origen Incorrecta"}}
+  {{/section}}
+
+  {{#section id="articulos"}}
+    {{#field id="articulo"}}
+      {{editor display="base.codigo" view="bienes"}}
+      {{#onChange}}
+        {{set codigo="=base.codigo"}}
+        {{set descripcion="=base.descripcion"}}
+        {{set tipoArticulo="=base.tipoArticulo"}}
+        {{set unidad="=_doc.base.esDestinoCuarentena?'pieza':base.unidadTraspaso"}}
+        {{set _unidad="=_doc.base.esDestinoCuarentena?'Pieza':base._unidadTraspaso"}}
+        {{set factor="=_doc.base.esDestinoCuarentena?1:base.factorTraspaso"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="loteEspecifico"}}
+      {{#editor type="select" source="mov" view="loteEspecifico" alwaysLoad="true" sendSearchValue="true" value="lote" display="loteVencimiento"}}
+        {{param codigo="=codigo"}}
+        {{param cuenta="=base.ubicacionOrigen"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+  
+  {{#grid id="articulos" section="articulos" keyField="cantidad" allowInsert="true" allowRemove="true"}}
+    {{column field="articulo" label="Código" width="150" validateDuplicate="true"}}
+    {{column field="cantidad" label="Cantidad" width="100" type="numeric" format="#,"}}
+    {{column field="codigo" label="Código" width="150" readOnly="true"}}
+    {{column field="descripcion" label="Descripción" width="300" readOnly="true"}}
+    {{column field="_unidad" label="Unidad" width="200" readOnly="true"}}
+    {{column field="factor" label="Factor" width="50" type="numeric" format="#,.##" readOnly="true"}}
+    {{column field="loteEspecifico" label="Lote Especifico" width="150" validateDuplicate="true"}}
+  {{/grid}}
+{{/define}}

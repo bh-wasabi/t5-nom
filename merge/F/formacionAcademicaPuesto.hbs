@@ -1,0 +1,12 @@
+{{#define id="formacionAcademicaPuesto"}}
+  {{#section id="base"}}
+    {{#field id="areaGeneral"}}
+      {{onChange clearFields="carreraGenerica"}}
+    {{/field}}
+    {{#field id="carreraGenerica"}}
+      {{#editor}}
+        {{param areaGeneral="=areaGeneral"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

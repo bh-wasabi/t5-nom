@@ -1,0 +1,25 @@
+{{#define id="cifCodificadorAmbiental"}}
+  {{#section id="base"}}
+    {{#field id="clasificacionAmbientalCifNivelUno"}}
+      {{onChange clearFields="clasificacionAmbientalCifNivelDos,clasificacionAmbientalCifNivelTres,clasificacionAmbientalCifNivelCuatro"}}
+    {{/field}}
+    {{#field id="clasificacionAmbientalCifNivelDos"}}
+      {{onChange clearFields="clasificacionAmbientalCifNivelTres,clasificacionAmbientalCifNivelCuatro"}}
+      {{#editor}}
+        {{param partOf="=clasificacionAmbientalCifNivelUno"}}
+      {{/editor}}
+    {{/field}}  
+    {{#field id="clasificacionAmbientalCifNivelTres"}}
+      {{onChange clearFields="clasificacionAmbientalCifNivelCuatro"}}
+      {{#editor}}
+        {{param partOf="=clasificacionAmbientalCifNivelDos"}}
+      {{/editor}}
+    {{/field}}  
+    {{#field id="clasificacionAmbientalCifNivelCuatro"}}
+      {{#editor}}
+        {{param partOf="=clasificacionAmbientalCifNivelTres"}}
+      {{/editor}}
+    {{/field}}  
+    {{field id="codigoCifAmbientalFinal" type="expr" value="=calc.concatPoint(clasificacionAmbientalCifNivelCuatro||clasificacionAmbientalCifNivelTres||clasificacionAmbientalCifNivelDos||clasificacionAmbientalCifNivelUno, (clasificacionAmbientalCifCalificadorUno||'')+(clasificacionAmbientalCifCalificadorDos||''))"}}
+  {{/section}}
+{{/define}} 

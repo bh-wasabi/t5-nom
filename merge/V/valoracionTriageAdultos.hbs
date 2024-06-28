@@ -1,0 +1,5 @@
+{{#define id="valoracionTriageAdultos"}}
+  {{#section id="base"}}
+    {{field id="resultado" type="expr" value="=fn('resultadoTriage', calc.toArray(@__triageAdultosTraumatismo, @__triageAdultosHerida, @__triageAdultosTrabajoRespiratorio, @__triageAdultosCianosis, @__triageAdultosPalidez, @__triageAdultosHemorragia, @__triageAdultosDolor, @__triageAdultosIntoxicacion, @__triageAdultosConvulsiones, @__triageAdultosDeshidratacion, @__triageAdultosPsicosis))"}}
+  {{/section}}
+{{/define}} 

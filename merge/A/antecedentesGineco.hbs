@@ -1,0 +1,8 @@
+{{#define id="antecedentesGineco"}}
+  {{#section id="base"}}
+    {{validator type="expr" validIf="=(@menarcaEdad||0)<=_doc.edadActual" message="Edad Menarca Incorrecta"}}
+    {{validator type="expr" validIf="=(@pubarcaEdad||0)<=_doc.edadActual" message="Edad Pubarca Incorrecta"}}
+    {{validator type="expr" validIf="=(@telarcaEdad||0)<=_doc.edadActual" message="Edad Telarca Incorrecta"}}
+    {{validator type="expr" validIf="=(@menopausiaEdad||0)<=_doc.edadActual" message="Edad Menopausia Incorrecta"}}
+  {{/section}}
+{{/define}}

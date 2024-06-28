@@ -1,0 +1,27 @@
+{{#define id="contrato"}}
+  {{action id="adjuntar" hide="true"}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base.estatus"}}
+      {{include field="base.tipoContrato"}}
+      {{include field="base.servicio"}}
+      {{sort field="_name" direction="asc"}}
+      {{search field="_name"}}
+      {{search field="base._servicio"}}
+    {{/find}}
+  {{/view}}
+  {{action id="eliminar" hide="true"}}
+  {{#section id="base"}}
+    {{field id="nombreCompleto" type="expr" label="Nombre" value="nombre"}}
+    {{field id="esRopa" type="expr" value="=servicio=='ropa'"}}
+  {{/section}}  
+{{/define}} 
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}</br>
+      <span style="font-size:12px;">{{base._servicio}}</span>
+      <span style="font-size:12px;float:right;">{{base._tipoContrato}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

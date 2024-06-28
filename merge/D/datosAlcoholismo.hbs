@@ -1,0 +1,7 @@
+{{#define id="datosAlcoholismo"}}
+  {{#section id="base"}}
+    {{field id="tieneAlcoholismo" type="expr" value="=@alcoholismo&&@alcoholismo!=='nunca'"}}
+    {{field id="tieneDetalles" type="expr" value="=@tieneAlcoholismo&&Utils.isTrue(@detalles)"}}
+    {{field id="esEx" type="expr" value="=@tieneDetalles&&@alcoholismo==='ex'"}}
+  {{/section}}
+{{/define}} 

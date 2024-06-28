@@ -1,0 +1,12 @@
+{{#define id="notaIniciaAtencion2"}}
+  {{action id="edi" label="Descargar Interface..." type="save-as" visibleMode="close" color="blue" btnSolid="true" condition="=_params.edi" items="=_params.edi" fileName="=_params.persona.nombreCompleto+'.hl7'"}}
+  {{#section id="base"}}
+    {{field id="tieneCama" type="expr" value="=!calc.in(_created.service, ['interconsulta'])"}}
+    {{#field id="cama"}}
+      {{#editor}}
+        {{param central="=_created.service"}}
+        {{param estatus="='limpia'"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}  
+{{/define}}

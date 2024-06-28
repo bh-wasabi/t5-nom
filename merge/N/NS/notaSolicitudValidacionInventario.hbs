@@ -1,0 +1,17 @@
+{{#define id="notaSolicitudValidacionInventario"}}
+  {{param removeIfEmptySection="articulos"}}
+  {{param removeIfEmptyField="codigo"}}
+  
+  {{#grid id="articulos" section="articulos" applyFilter="tipoActivoFijo,area,codigoUbicacion,ubicacion,codigo,descripcion,_responsableMantenimiento,codigoTipoActivo,descripcionTipoActivo,familiaTipoActivo" applyFilterOpen="true" applyFilterMultiple="true"}}
+    {{column field="tipoActivoFijo" width="150" readOnly="true" show="=base.validacionInventario.base.tipoArticulo=='activoFijo'"}}
+    {{column field="area" width="200" readOnly="true"}}
+    {{column field="codigoUbicacion" width="120" readOnly="true"}}
+    {{column field="ubicacion" width="200" readOnly="true"}}
+    {{column field="codigo" width="120" readOnly="true"}}
+    {{column field="descripcion" width="250" readOnly="true"}}
+    {{column field="codigoTipoActivo" width="120" readOnly="true"}}
+    {{column field="descripcionTipoActivo" width="200" readOnly="true"}}
+    {{column field="familiaTipoActivo" width="100" readOnly="true"}}
+    {{column field="responsableMantenimiento" width="150" readOnly="true"}}
+  {{/grid}}
+{{/define}}

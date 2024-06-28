@@ -1,0 +1,27 @@
+{{#define id="notaConsentimientoInformado"}}
+  {{action id="ver" condition="=true" label="Imprimir Documento" type="report-markdown" fileName="=calc.concat(documento._tipoOficio, _created.folio)||'Documento'" value="=documento.texto" templateSource="plantillaOficio" templateId="=documento.plantilla" error="=documento.texto&&documento.plantilla?null:'Pantilla Incorrecta'" visibleMode="always" btnSolid="true" color="brown" header="preliminar-encabezado" showStandarFooter="true"}}
+  {{#section id="base"}}
+    {{#field id="academia"}}
+      {{editor view="lista-activo"}}
+      {{#onChange}}
+        {{set procedimientoEspecifico="=base.procedimientoEspecifico"}}
+        {{set procedimientoAutorizar="=base.procedimientoAutorizar"}}
+        {{set servicioAutorizar="=base.servicioAutorizar||' '"}}
+        {{set beneficios="=base.beneficios||' '"}}
+        {{set riesgos="=base.riesgos||' '"}}
+        {{set comentarios="=base.comentarios||' '"}}
+        {{set actoAutorizado="=base.actoAutorizado||' '"}}
+        {{set fundamentoLegal="=base.fundamentoLegal||' '"}}
+      {{/onChange}}
+    {{/field}}    
+  {{/section}}
+  {{#section id="documento"}}
+    {{#field id="plantilla"}}
+      {{editor view="lista"}}
+      {{#onChange}}
+        {{set tipoOficio="=base.tipoOficio"}}
+        {{set texto="=calc.hbsMarkdown(base.texto, _doc)"}}
+      {{/onChange}}
+    {{/field}}    
+  {{/section}}
+{{/define}}

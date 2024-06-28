@@ -1,0 +1,6 @@
+{{#define id="escalaGlasgow"}}
+  {{#section id="base"}}
+    {{field id="total" type="expr" value="=calc.sumArgs(@glasgowAperturaOcular, @glasgowRespuestaVerbal, @glasgowRespuestaMotora)"}}
+    {{field id="resultado" type="expr" value="=fn('escalaGlasgow', total)"}}
+  {{/section}}
+{{/define}} 

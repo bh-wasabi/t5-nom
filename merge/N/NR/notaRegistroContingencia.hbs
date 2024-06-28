@@ -1,0 +1,39 @@
+{{#define id="notaRegistroContingencia"}}
+  {{action id="afectar" error="=_.isEmpty(_doc.adjuntos)?'Falta Incluir el Archivo Adjunto Correspondiente':(base.fechaHoraTermino&&base.servicios&&base.medidasTomadas&&base.resultadoObtenido&&base.solicitudesRegistradas&&base.evaluacionDanos&&base.comentarios?null:'Para Procesar la Contingencia Debe Llenar Toda la Forma')"}}
+  {{#section id="base"}}
+    {{#field id="servicio"}}
+      {{onChange clearFields="motivo"}}
+    {{/field}}
+    {{#field id="motivo"}}
+      {{#editor}}
+        {{param servicio="=@servicio"}}
+      {{/editor}}
+    {{/field}}
+    {{validator type="expr" validIf="=moment(fechaHoraInicio).format('DD/MMM/YYYY h:mma')<moment(fechaHoraTermino).format('DD/MMM/YYYY h:mma')" message="Fecha Incorrecta"}}
+  {{/section}}
+
+  {{#view id="reporte"}}
+    {{#find limit="-1"}}
+      {{include field="_created"}}
+      {{include field="base"}}
+      {{sort field="_id" direction="asc"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{filter condition="=desde" field="_created.date" gt="=moment(desde).format('YYYY-MM-DD')"}}
+      {{filter condition="=hasta" field="_created.date" lt="=moment(hasta).format('YYYY-MM-DD')"}}
+    {{/find}}
+  {{/view}}
+  {{action id="ver" condition="=true" type="menu" menu="menuReportes" label="Reportes" color="grey" isBrowserAction="true"}}
+  {{#menu id="menuReportes" color="grey"}}
+    {{item action="reporteContingencia" text="Reporte Contingencias" userRole="reporteContingencia"}}
+  {{/menu}}  
+  {{action id="reporteContingencia" hide="true" type="quickReport" view="reporte"}}
+
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

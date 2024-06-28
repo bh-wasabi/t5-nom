@@ -1,0 +1,33 @@
+{{#define id="notaSolicitudTrasladoInterhospitalarioDefinitivo"}}
+
+  {{#transform id="copiarNota"}}
+    {{update section="persona" value="=persona"}}
+    {{#update section="base"}}
+      {{set solicitudTraslado="=_params"}}
+      {{set central="=base.central"}}
+      {{set _central="=base._central"}}
+      {{set cama="=base.cama"}}
+      {{set _cama="=base._cama"}}
+      {{set camaDestino="=base.camaDestino"}}
+      {{set _camaDestino="=base._camaDestino"}}
+      {{set centralDestino="=base.centralDestino"}}
+      {{set _centralDestino="=base._centralDestino"}}
+    {{/update}}
+  {{/transform}}
+
+  {{!-- Hay que darle acceso en flowAccess --}}
+  {{action id="notaRechazoTraslado" source="notaRechazoTraslado" label="Rechazo Traslado" transform="copiarNota" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{action id="notaAceptacionTrasladoInterhospitalarioDefinitivo" source="notaAceptacionTrasladoInterhospitalarioDefinitivo" label="Aceptación TrasladoInterhospitalario Definitivo" transform="copiarNota" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+
+  {{#section id="base"}}
+    {{#field id="centralDestino"}}
+      {{#editor}}
+[.#if esMulti.]      
+        {{param zona="hospitalizacion"}}
+[.else.]        
+        {{param partOf="='hospitalizacion'"}}
+[./if.]        
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

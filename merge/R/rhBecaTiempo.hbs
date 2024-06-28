@@ -1,0 +1,19 @@
+{{#define id="rhBecaTiempo"}}  
+  {{#section id="base"}}
+    {{field id="esAsistente" type="expr" value="=@tipoParticipacionCurso==='asistente'"}}
+    {{field id="esPonente" type="expr" value="=@tipoParticipacionCurso==='ponente'"}}
+    {{#field id="seleccionarCurso"}}
+      {{#onChange}}
+        {{set codigo="=info.base.codigo"}}
+        {{set descripcion="=info.base.descripcion"}}
+        {{set datosCurso="=info.base.datosCurso"}}
+        {{set nombreEvento="=info.base.descripcion"}}
+        {{set modalidadCurso="=info.base.modalidadCurso"}}
+        {{set _modalidadCurso="=info.base._modalidadCurso"}}
+        {{set lugarImparticion="=info.base.lugarImparticion"}}
+        {{set desde="=info.base.desde"}}
+        {{set hasta="=info.base.hasta"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+{{/define}}

@@ -1,0 +1,10 @@
+{{#define id="datosMetodosPlanificacion"}}
+  {{#section id="base"}}
+    {{field id="esMujer" type="expr" value="=base.esMujer||_params.mainDoc.base.esMujer"}}
+    {{field id="esHombre" type="expr" value="!esMujer"}}
+    {{field id="noAplica" type="expr" value="=revisionColocacionMetodoQuirurgico=='noAplica'&&esMujer"}}
+    {{validator type="expr" validIf="=@numeroPerservativosEntregados>=0&&@numeroPerservativosEntregados<=50" message="Error en Preservativos Entregados"}}
+    {{validator type="expr" validIf="=@numeroPerservativosEntregadosFemeninos>=0&&@numeroPerservativosEntregadosFemeninos<=50" message="Error en Preservativos Entregados Femeninos"}}
+    {{validator type="expr" validIf="=(esHombre&&calc.in(@revisionColocacionMetodoQuirurgico,['intervencionQx','noAplica'])&&@altaAzoospermia!='si')||esMujer&&calc.in(@revisionColocacionMetodoQuirurgico,['revisionPosteriorQx'])" message="Error en el Campo Revisión o Colocación del Método Quirúrgico"}}
+  {{/section}}
+{{/define}}

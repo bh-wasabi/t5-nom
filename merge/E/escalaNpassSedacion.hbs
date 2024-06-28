@@ -1,0 +1,6 @@
+{{#define id="escalaNpassSedacion"}}
+  {{#section id="base"}}
+    {{field id="totalNpassSedacion" type="calc" value="=calc.sumArgs(@escalaNpassSedacionLlantoIrritabilidad,@escalaNpassSedacionComportamiento,@escalaNpassSedacionExpresionFacial,@escalaNpassSedacionTonoMuscular,@escalaNpassSedacionSignos)"}}
+    {{field id="nivelNpassSedacion" type="expr" value="=totalNpassSedacion==0?'sin':(totalNpassSedacion<-5?'profunda':'leve')"}}
+  {{/section}}
+{{/define}}

@@ -1,0 +1,8 @@
+{{#define id="notaSaleActivoFijo"}}
+  {{#section id="base"}}
+    {{field id="esPersonal" type="expr" value="=@tipoResponsable=='personal'"}}
+    {{field id="esProveedor" type="expr" value="=@tipoResponsable=='proveedor'"}}
+    {{field id="responsable" type="expr" value="=esPersonal?@personal:@proveedor"}}
+    {{field id="_responsable" type="expr" value="=esPersonal?@_personal:@_proveedor"}}
+  {{/section}} 
+{{/define}}

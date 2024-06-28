@@ -1,0 +1,48 @@
+{{#define id="notaEvaluacion"}}
+  {{param startOnOpen="n/a"}}
+  {{action id="afectar" refreshList="true" condition="=false"}}
+  {{#action id="tool4" type="openPreview" condition="=base.bibliografia" label="Bibliografía" title="Bibliografía" visibleMode="open" color="cyan"}}
+    {{link href="=base.bibliografia"}}
+  {{/action}}
+  {{action id="tool5" type="run-eval" condition="=preguntas.length" label="Ver Instrucciones" title="=base._plantillaEvaluacion" visibleMode="open" color="cyan" btnSolid="true" items="preguntas" topics="temas" options="opcionesRespuesta" key="orden" value="pregunta" response="respuesta" image="imagenUrl" header="=tema" preview="=base.instrucciones" timeOut="=calc.isTrue(base.limiteTiempo)?base.tiempoMaximo:null" autoExec="afectar"}}
+
+  {{#view id="reporte"}}
+    {{#find limit="-1"}}
+      {{include field="_created"}}
+      {{include field="base"}}
+      {{include field="persona"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{filter condition="=desde" field="_created.date" gte="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=hasta"}}
+    {{/find}}
+    {{join source="persona" view="detalle" as="join" id="persona.id"}}
+    {{calc2 field="puesto" type="expr" value="=join.detalle.solicitudEmpleo.base.puesto"}}
+    {{calc2 field="_puesto" type="expr" value="=join.detalle.solicitudEmpleo.base._puesto"}}
+    {{calc2 field="codigoPuesto" type="expr" value="=join.detalle.solicitudEmpleo.base.codigo"}}
+  {{/view}}
+
+  {{#report id="tipoTema" fontSize="13"}}
+    {{#stack}}
+      {{#columns}}
+        {{#box layout="noBorders" width="566" margin="-10,0,0,0"}}
+          {{row expr="=calc.concat(@tipoTema, (@puntaje||0)+'/'+(@totalPuntos||0), '('+(@aprobacion||0)+'%)')" color="white" align="center" bold="true" fillColor="#2b7b47"}}
+        {{/box}}
+      {{/columns}}
+    {{/stack}}
+  {{/report}}
+  
+  {{#grid id="preguntas" section="preguntas" disableEnter="true"}}
+    {{column field="opcionesRespuesta" hiddenColumn="true" readOnly="true"}}
+    {{column field="imagen" width="200" readOnly="true" image="=imagen" imageHeight="200"}}
+    {{column field="pregunta" width="350" readOnly="true"}}
+    {{column field="respuesta" width="350" required="true" items="=calc.split(opcionesRespuesta)" validateOptions="opcionesRespuesta"}} {{!-- className="font-20px" --}}
+  {{/grid}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

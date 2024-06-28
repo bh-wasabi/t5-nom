@@ -1,0 +1,11 @@
+{{#define id="datosComplicacionesCoronario"}}
+  {{#section id="base"}}
+    {{field id="siDisfuncion" type="expr" value="=seleccionComplicaciones=='disfuncionVentricular'"}}
+    {{field id="siMecanicas" type="expr" value="=seleccionComplicaciones=='mecanicas'"}}
+    {{field id="siPericardicas" type="expr" value="=seleccionComplicaciones=='pericardicas'"}}
+    {{field id="siElectricas" type="expr" value="=seleccionComplicaciones=='electricas'"}}
+    {{field id="siArritmia" type="expr" value="=electricas=='arritmia'"}}
+    {{field id="siBloqueoAv" type="expr" value="=tipoArritmia=='bloqueoAv'"}}
+    {{field id="siExtraVentricular" type="expr" value="=tipoArritmia=='extrasistolesVentriculares'"}}
+  {{/section}}
+{{/define}}

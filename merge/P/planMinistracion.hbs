@@ -1,0 +1,25 @@
+{{#define id="planMinistracion"}}
+  {{param startOnOpen="articulos"}}
+  {{param attribute1="=base.tipoPlan"}}
+  {{param attribute2="=base.subTipoPlan"}}
+  {{#section id="base"}}
+    {{field id="origen" defaultValue="=_params.origen"}}
+    {{field id="destino" defaultValue="=_params.destino"}}
+    {{field id="tipoPlan" defaultValue="=_params.tipoPlan"}}
+    {{field id="subTipoPlan" defaultValue="=_params.subTipoPlan"}}
+    {{field id="transito" defaultValue="=_params.transito"}}
+    {{field id="esMinistracion" type="expr" value="=tipoPlan==='ministracion'"}}
+    {{field id="tieneAgente" type="expr" value="=esMinistracion"}}
+  {{/section}}
+  {{#grid id="articulos" section="articulos" applyTo="cantidad" applySuggest="sugerido"}}
+    {{column field="articulo" width="130" readOnly="true"}}
+    {{column field="_articulo" width="300" readOnly="true"}}
+    {{column field="_tipoArticulo" width="100" readOnly="true"}}
+    {{column field="_persona" width="200" readOnly="true"}}
+    {{column field="unidad" width="80" readOnly="true"}}
+    {{column field="lote" width="70" readOnly="true"}}
+    {{column field="vencimiento" width="90" readOnly="true"}}
+    {{column field="sugerido" type="numeric" width="70" readOnly="true"}}
+    {{column field="cantidad" type="numeric" width="70"}}
+  {{/grid}}
+{{/define}}

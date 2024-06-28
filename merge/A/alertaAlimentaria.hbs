@@ -1,0 +1,18 @@
+{{#define id="alertaAlimentaria"}}
+  {{action id="eliminar" hide="true"}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base.codigo"}}
+      {{sort field="base.codigo" direction="asc"}}
+      {{search field="base.codigo"}}
+    {{/find}}
+  {{/view}}
+{{/define}} 
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}</br>
+      <span style="font-size:12px;">{{base.codigo}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

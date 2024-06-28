@@ -1,0 +1,12 @@
+{{#define id="prospecto"}}
+  {{action id="eliminar" hide="true"}}
+  {{#section id="base"}}
+    {{field id="nombreCompleto" type="expr" label="Nombre" value="nombre"}}
+    {{field id="esMujer" type="expr" value="=base.genero=='mujer'"}}
+    {{#field id="fechaUltimaMenstruacion"}}
+      {{#onChange}}
+        {{set fechaProbableParto="=fn('fechaProbableParto', fechaUltimaMenstruacion)"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+{{/define}}

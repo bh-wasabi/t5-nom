@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0vlxyx3" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.0.0">
+  <bpmn:collaboration id="planInstalacionActivoFijo">
+    <bpmn:participant id="Participant_1b4pxnl" name="Plan Instalación Activo Fijo" processRef="Process_abj343d" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_abj343d" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_1y53c73">
+      <bpmn:lane id="Lane_1f87sht" name="Consesionaria">
+        <bpmn:flowNodeRef>Event_1lr6otx</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>programado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>porElaborarPlan</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0wzb526</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>instalado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1xyua4v</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>porGenerarPlan</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>enEjecucionPlan</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_0ljihb3" name="Inspector Fiscal (IF)">
+        <bpmn:flowNodeRef>porAutorizarPlan</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_1cc5i1l</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>porGenerarActa</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Event_1lr6otx">
+      <bpmn:outgoing>Flow_09scn7c</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="programado" name="Solicitud Plan Instalación">
+      <bpmn:incoming>Flow_09scn7c</bpmn:incoming>
+      <bpmn:outgoing>Flow_0i5zyvy</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_09scn7c" sourceRef="Event_1lr6otx" targetRef="programado" />
+    <bpmn:sequenceFlow id="Flow_0fh0wlj" sourceRef="porAutorizarPlan" targetRef="Gateway_1cc5i1l" />
+    <bpmn:sequenceFlow id="Flow_0cigeoa" sourceRef="porGenerarActa" targetRef="instalado" />
+    <bpmn:sequenceFlow id="Flow_1h5lf3v" sourceRef="instalado" targetRef="Event_1xyua4v" />
+    <bpmn:sequenceFlow id="Flow_0i5zyvy" sourceRef="programado" targetRef="porElaborarPlan" />
+    <bpmn:task id="porElaborarPlan" name="Por Elaborar Plan Instalación">
+      <bpmn:incoming>Flow_0i5zyvy</bpmn:incoming>
+      <bpmn:incoming>Flow_0ood8z0</bpmn:incoming>
+      <bpmn:outgoing>Flow_18hyrh5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="porAutorizarPlan" name="Por Autorizar Plan Instalación">
+      <bpmn:incoming>Flow_18hyrh5</bpmn:incoming>
+      <bpmn:outgoing>Flow_0fh0wlj</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_18hyrh5" sourceRef="porElaborarPlan" targetRef="porAutorizarPlan" />
+    <bpmn:sequenceFlow id="Flow_0ood8z0" name="No" sourceRef="Gateway_1cc5i1l" targetRef="porElaborarPlan" />
+    <bpmn:sequenceFlow id="Flow_148lnbt" sourceRef="Activity_0wzb526" targetRef="enEjecucionPlan" />
+    <bpmn:sequenceFlow id="Flow_15apydg" sourceRef="enEjecucionPlan" targetRef="porGenerarActa" />
+    <bpmn:exclusiveGateway id="Gateway_1cc5i1l" name="¿Autorizado?">
+      <bpmn:incoming>Flow_0fh0wlj</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ood8z0</bpmn:outgoing>
+      <bpmn:outgoing>Flow_18nabqw</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="Activity_0wzb526" name="Solicitudes Instalación Activos Fijos">
+      <bpmn:incoming>Flow_0gvo4t0</bpmn:incoming>
+      <bpmn:outgoing>Flow_148lnbt</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:task id="instalado" name="Termina Plan Instalación">
+      <bpmn:incoming>Flow_0cigeoa</bpmn:incoming>
+      <bpmn:outgoing>Flow_1h5lf3v</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="Event_1xyua4v">
+      <bpmn:incoming>Flow_1h5lf3v</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="porGenerarActa" name="Acta Recepción y Conformidad">
+      <bpmn:incoming>Flow_15apydg</bpmn:incoming>
+      <bpmn:outgoing>Flow_0cigeoa</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_18nabqw" name="Sí" sourceRef="Gateway_1cc5i1l" targetRef="porGenerarPlan" />
+    <bpmn:task id="porGenerarPlan" name="Por Generar Solicitudes Instalación">
+      <bpmn:incoming>Flow_18nabqw</bpmn:incoming>
+      <bpmn:outgoing>Flow_0gvo4t0</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0gvo4t0" sourceRef="porGenerarPlan" targetRef="Activity_0wzb526" />
+    <bpmn:task id="enEjecucionPlan" name="En Espera Ejecución Plan Instalación">
+      <bpmn:incoming>Flow_148lnbt</bpmn:incoming>
+      <bpmn:outgoing>Flow_15apydg</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics isSequential="true" />
+    </bpmn:task>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="planInstalacionActivoFijo">
+      <bpmndi:BPMNShape id="Participant_1b4pxnl_di" bpmnElement="Participant_1b4pxnl" isHorizontal="true">
+        <dc:Bounds x="159" y="80" width="1219" height="370" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0ljihb3_di" bpmnElement="Lane_0ljihb3" isHorizontal="true">
+        <dc:Bounds x="189" y="250" width="1189" height="200" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1f87sht_di" bpmnElement="Lane_1f87sht" isHorizontal="true">
+        <dc:Bounds x="189" y="80" width="1189" height="170" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0gvo4t0_di" bpmnElement="Flow_0gvo4t0">
+        <di:waypoint x="820" y="150" />
+        <di:waypoint x="850" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_18nabqw_di" bpmnElement="Flow_18nabqw">
+        <di:waypoint x="695" y="390" />
+        <di:waypoint x="770" y="390" />
+        <di:waypoint x="770" y="190" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="727" y="372" width="11" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_15apydg_di" bpmnElement="Flow_15apydg">
+        <di:waypoint x="1050" y="190" />
+        <di:waypoint x="1050" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_148lnbt_di" bpmnElement="Flow_148lnbt">
+        <di:waypoint x="950" y="150" />
+        <di:waypoint x="1000" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ood8z0_di" bpmnElement="Flow_0ood8z0">
+        <di:waypoint x="670" y="365" />
+        <di:waypoint x="670" y="150" />
+        <di:waypoint x="610" y="150" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="642" y="333" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_18hyrh5_di" bpmnElement="Flow_18hyrh5">
+        <di:waypoint x="560" y="190" />
+        <di:waypoint x="560" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0i5zyvy_di" bpmnElement="Flow_0i5zyvy">
+        <di:waypoint x="440" y="150" />
+        <di:waypoint x="510" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1h5lf3v_di" bpmnElement="Flow_1h5lf3v">
+        <di:waypoint x="1260" y="150" />
+        <di:waypoint x="1312" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0cigeoa_di" bpmnElement="Flow_0cigeoa">
+        <di:waypoint x="1100" y="380" />
+        <di:waypoint x="1210" y="380" />
+        <di:waypoint x="1210" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0fh0wlj_di" bpmnElement="Flow_0fh0wlj">
+        <di:waypoint x="610" y="390" />
+        <di:waypoint x="645" y="390" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09scn7c_di" bpmnElement="Flow_09scn7c">
+        <di:waypoint x="278" y="150" />
+        <di:waypoint x="340" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1lr6otx_di" bpmnElement="Event_1lr6otx">
+        <dc:Bounds x="242" y="132" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1w6xj8r_di" bpmnElement="programado">
+        <dc:Bounds x="340" y="110" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0u41m4j_di" bpmnElement="porElaborarPlan">
+        <dc:Bounds x="510" y="110" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0kbppnq_di" bpmnElement="porAutorizarPlan">
+        <dc:Bounds x="510" y="350" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1cc5i1l_di" bpmnElement="Gateway_1cc5i1l" isMarkerVisible="true">
+        <dc:Bounds x="645" y="365" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="637" y="422" width="66" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0zgb2md_di" bpmnElement="Activity_0wzb526">
+        <dc:Bounds x="850" y="110" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1obwz7n_di" bpmnElement="instalado">
+        <dc:Bounds x="1160" y="110" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1xyua4v_di" bpmnElement="Event_1xyua4v">
+        <dc:Bounds x="1312" y="132" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_151f1p2_di" bpmnElement="porGenerarActa">
+        <dc:Bounds x="1000" y="340" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1wl4vgf_di" bpmnElement="porGenerarPlan">
+        <dc:Bounds x="720" y="110" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0gocppa_di" bpmnElement="enEjecucionPlan">
+        <dc:Bounds x="1000" y="110" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

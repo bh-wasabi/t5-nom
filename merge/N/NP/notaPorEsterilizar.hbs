@@ -1,0 +1,15 @@
+{{#define id="notaPorEsterilizar"}}
+  {{param attribute1="=_created.service"}}
+  {{param startOnOpen="aplicacion"}}
+  {{param removeIfEmptySection="aplicacion"}}
+  {{param removeIfEmptyField="continuar"}}
+  
+  {{#grid id="aplicacion" section="aplicacion" keyField="continuar" disableEnter="true" applyFilter="central" applyTo="continuar" applyContinue="true"}}
+    {{column field="fecha" type="date" format="DD/MMM/YYYY" width="100" readOnly="true"}}
+    {{column field="_name" width="350" readOnly="true"}}
+    {{column field="_persona" width="180" readOnly="true"}}
+    {{column field="central" width="180" readOnly="true"}}
+    {{column field="cama" width="70" readOnly="true"}}
+    {{column field="continuar"}}
+  {{/grid}}
+{{/define}}

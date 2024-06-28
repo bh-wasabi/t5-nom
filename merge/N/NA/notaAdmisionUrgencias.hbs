@@ -1,0 +1,17 @@
+{{#define id="notaAdmisionUrgencias"}}
+  {{param attribute1="=base.destinoEnUrgencias"}}
+  {{#section id="base"}}
+    {{field id="resultado" type="expr" value="=fn('resultadoTriage', calc.toArray(@valoracionTriageAdultos.base.resultado, @escalaGlasgow.base.resultado, @signosVitalesTriageAdultos.base.resultado))"}}
+    {{field id="esAmarillo" type="expr" value="=(resultado==='amarillo')"}}
+    {{field id="tieneCama" type="expr" value="=calc.in(@destinoEnUrgencias, ['choque','atencion'])"}}
+    {{#field id="destinoEnUrgencias"}}
+      {{onChange clearFields="cama"}}
+    {{/field}}
+    {{#field id="cama"}}
+      {{#editor alwaysLoad="true"}}
+        {{param central="=fn('centralUrgencias', 'adulto', @destinoEnUrgencias)"}}
+        {{param estatus="='limpia'"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

@@ -1,0 +1,13 @@
+{{#define id="datosEnfermedadHepatitis"}}
+  {{action id="ver" hide="=true" condition="=true" type="message" label="Ver" width="300" height="300" 
+message='
+<a class="link" href="https://www.hepatitisc.uw.edu/page/clinical-calculators/fib-4" target="_blank">FIB 4</a><br>
+<a class="link" href="https://www.rccc.eu/calculadoras/NFS.html" target="_blank">NAFLD</a><br>
+<a class="link" href="https://www.hepatitisc.uw.edu/page/clinical-calculators/apri" target="_blank">APRI</a>
+' }} 
+  {{#section id="base"}}
+    {{field id="resultadoFib4" type="expr" value="=@fib4>0&&@fib4<=1.45?'F0-F2 Sin Fibrosis Avanzada':@fib4>1.46&&@fib4<=3.25?'Fibrosis Intermedia':@fib4>3.25?'F3-F4 Fibrosis Significativa':''"}}
+    {{field id="resultadoNafld" type="expr" value="=@nafld<-1.455?'F0-F2, Sin fibrosis avanzada':@nafld>-1.455&&@nafld<=0.675?'Fibrosis Intermedia':@nafld>0.676?'Fibrosis Significativa':''"}}
+    {{field id="resultadoApri" type="expr" value="=@apri<=0.5&&@apri<=1.45?'F0 - F2 Sin fibrosis avanzada':@apri>0.6&&@apri<=1.5?'Fibrosis Intermedia':@apri>1.5?'F3-F4 Fibrosis Significativa':''"}}
+  {{/section}}
+{{/define}}

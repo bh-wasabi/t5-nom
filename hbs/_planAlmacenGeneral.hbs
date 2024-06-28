@@ -1,0 +1,59 @@
+{{#define type="doc" id="_planAlmacenGeneral" name="Planeador Almacén General"}}
+  {{#menu id="menu"}}
+    {{#item text="Orden Compra" icon="doc" source="planCompra" type="add-subdoc" onlyPost="true" onlyRefresh="true" fromSource="ver" fromView="planInventario" toSection="articulos"}}
+      {{param ubicacion="almacenGeneral"}}
+      {{param tipoPlan="orden"}}
+      {{param subTipoPlan="compra"}}
+      {{param origen="(proveedor)"}}
+      {{param tipoUnidad="compra"}}
+    {{/item}}
+    {{#item text="Recibo Compra" icon="add" source="planCompra" type="add-subdoc" onlyPost="true" onlyRefresh="true" fromSource="ver" fromView="planInventario" toSection="articulos"}}
+      {{param ubicacion="almacenGeneral"}}
+      {{param tipoPlan="recibo"}}
+      {{param subTipoPlan="compra"}}
+      {{param origen="(proveedor)"}}
+      {{param tipoUnidad="compra"}}
+    {{/item}}
+    {{#item text="Recolección" icon="cart" source="planInventario" type="add-subdoc" onlyPost="true" onlyRefresh="true" fromSource="ver" fromView="planInventario" toSection="articulos"}}  {{!-- stockView="existencia"  --}}
+      {{param ubicacion="almacenGeneral"}}
+      {{param tipoPlan="recoleccion"}}
+      {{param tipoUnidad="traspaso"}}
+    {{/item}}
+    {{#item text="Empaque" icon="gift" source="planInventario" type="add-subdoc" onlyPost="true" onlyRefresh="true" fromSource="ver" fromView="planInventario" toSection="articulos"}}  {{!-- stockView="recolectado"  --}}
+      {{param ubicacion="almacenGeneral"}}
+      {{param tipoPlan="empaque"}}
+      {{param tipoUnidad="traspaso"}}
+   {{/item}}
+    {{#item text="Entrega" icon="export" source="planInventario" type="add-subdoc" onlyPost="true" onlyRefresh="true" fromSource="ver" fromView="planInventario" toSection="articulos"}}  {{!-- stockView="empacado"  --}}
+      {{param ubicacion="almacenGeneral"}}
+      {{param tipoPlan="entrega"}}
+      {{param transito="repartoAlmacenGeneral"}}
+      {{param tipoUnidad="traspaso"}}
+    {{/item}}
+    {{#item text="Ver" icon="bookmark"}}
+      {{item text="(vistas)" type="cube-view-names"}}
+      {{item text="Guardar vista..." icon="save" beginGroup="true" type="cube-view-save"}}
+      {{item text="Ajustes..." icon="preferences" type="cube-view-preferences"}}
+    {{/item}}
+    {{item text="Refrescar" icon="refresh" type="refresh"}}
+  {{/menu}}
+  {{browser id="cubo" menu="menu"}}
+{{/define}}
+
+{{#markup}}
+  {{#page}}
+    {{#row}}
+      {{#col small="100%"}}
+        {{#row}}
+          {{#widget type="cube" source="ver" cube="planDistribucion"}}
+            {{param ubicacion="almacenGeneral"}}
+            {{param tipoPlan="consulta"}}
+            {{param subTipoPlan="compra"}}
+            {{param origen="(proveedor)"}}
+            {{param tipoUnidad="compra"}}
+          {{/widget}}
+        {{/row}}
+      {{/col}}
+    {{/row}}
+  {{/page}}
+{{/markup}}

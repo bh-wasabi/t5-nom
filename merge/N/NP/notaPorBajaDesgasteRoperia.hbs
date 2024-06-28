@@ -1,0 +1,57 @@
+{{#define id="notaPorBajaDesgasteRopa"}}
+  {{param attribute1="=_created.service"}}
+  {{param removeIfEmptySection="articulos"}}
+  {{param removeIfEmptyField="cantidad"}}
+  {{param startOnOpen="articulos"}}
+  
+  {{#section id="base"}}
+    {{field id="tieneFechaHoraRegistro" type="expr" value="=_created.subType=='cancelacionReservado'"}}
+    {{field id="esAlmacen" type="expr" value="=tipoAlmacen=='almacen'"}}
+    {{field id="esUbicacion" type="expr" value="=tipoAlmacen=='ubicacion'"}}
+    {{field id="esPersona" type="expr" value="=tipoAlmacen=='persona'"}}
+    {{field id="esServicio" type="expr" value="=tipoAlmacen=='servicio'"}}
+    {{#field id="ubicacion"}}
+      {{#editor}}
+        {{param tipoExpediente="='ubicacion'"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="persona"}}
+      {{#editor}}
+        {{param tipoExpediente="='paciente'"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="servicio"}}
+      {{#editor}}
+        {{param tipoExpediente="='servicio'"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+
+  {{#section id="articulos"}}
+    {{#field id="articulo"}}
+      {{#editor display="base.descripcion" view="bienes"}}
+        {{param tipoArticulo="ropa"}}
+      {{/editor}}
+      {{#onChange}}
+        {{set codigo="=base.codigo"}}
+        {{set descripcion="=base.descripcion"}}
+        {{set tipoArticulo="=base.tipoArticulo"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="loteEspecifico"}}
+      {{#editor type="select" source="mov" view="loteEspecifico" alwaysLoad="true" sendSearchValue="true" value="lote" display="loteVencimiento"}}
+        {{param codigo="=codigo"}}
+        {{param cuenta="=fn('cuentaTipoAlmacen', base.tipoAlmacen, base)"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+  
+  {{#grid id="articulos" section="articulos" keyField="cantidad" allowInsert="true" allowRemove="true"}}
+    {{column field="articulo" label="Artículo" width="350" validateDuplicate="true"}}
+    {{column field="codigo" label="Código" width="150" readOnly="true"}}
+    {{!-- {{column field="descripcion" label="Descripción" width="350" readOnly="true"}} --}}
+    {{column field="tipoArticulo" label="Tipo Artículo" width="150" readOnly="true"}}
+    {{column field="cantidad" label="Cantidad" width="100" type="numeric" format="#,"}}
+    {{column field="loteEspecifico" label="Lote Especifico" width="150" validateDuplicate="true"}}
+  {{/grid}}
+{{/define}}

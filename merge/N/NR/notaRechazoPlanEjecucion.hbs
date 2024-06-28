@@ -1,0 +1,7 @@
+{{#define id="notaRechazoPlanEjecucion"}}
+  {{#section id="base"}}
+    {{field id="esOtro" type="expr" value="=calc.in('otro', @motivo)"}}
+  {{/section}}  
+  {{action id="cancelar" forceReadOnly="true"}}  
+  {{action id="afectar" forceReadOnly="true"}}  
+{{/define}}

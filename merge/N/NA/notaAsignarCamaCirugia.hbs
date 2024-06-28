@@ -1,0 +1,12 @@
+{{#define id="notaAsignarCamaCirugia"}}
+  {{#section id="base"}}
+    {{field id="tieneCama" type="expr" value="=!calc.in(_created.service, ['interconsulta'])"}}    
+    {{field id="tieneAnestesiologo" type="expr" value="=calc.in(_created.service, ['cirugia','cirugiaAmbulatoria','tococirugia','endourologia','endourologia','hemodinamia','braquiterapia'])"}}
+    {{#field id="cama"}}
+      {{#editor}}
+        {{param central="=_created.service"}}
+        {{param estatus="='limpia'"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}  
+{{/define}}

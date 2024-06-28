@@ -1,0 +1,13 @@
+{{#define id="patologia"}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{field id="codigo" type="expr" value="=calc.getRef(estudioPatologia, 'base.codigo')"}}
+    {{field id="descripcion" type="expr" value="=calc.getRef(estudioPatologia, 'base.descripcion')"}}
+    {{field id="listaPrecios" type="expr" value="=calc.getRef(estudioPatologia, 'base.listaPrecios')"}}
+    {{field id="precio" type="calc" value="=calc.sumRef(estudioPatologia, 'base.precio')"}}
+    {{field id="precioPublico" type="calc" value="=calc.sumRef(estudioPatologia, 'base.precioPublico')"}}
+    {{field id="tipoArticulo" type="expr" value="=calc.getRef(estudioPatologia, 'base.tipoArticulo')"}}
+    {{field id="_tipoArticulo" type="expr" value="=calc.getRef(estudioPatologia, 'base._tipoArticulo')"}}
+    {{!-- {{validator type="expr" validIf="=@numeroEspecimenes==(@caracteristicasEspecimen&&caracteristicasEspecimen.length)" message="No Coincide el Número de Especimenes"}} --}}
+  {{/section}}
+{{/define}}

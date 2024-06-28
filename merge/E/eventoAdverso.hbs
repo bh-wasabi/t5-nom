@@ -1,0 +1,49 @@
+{{#define id="eventoAdverso"}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{field id="esCalidad" type="expr" value="=categoria=='calidad'"}}
+    {{field id="esFarmacovigilancia" type="expr" value="=categoria=='farmacovigilancia'"}}
+    {{field id="esTecnovigilancia" type="expr" value="=categoria=='tecnovigilancia'"}}    
+    {{field id="esEventoAdversoConDano" type="expr" value="=tipoEvento=='eventoAdversoConDano'"}}
+    {{field id="esHospitalizacion" type="expr" value="=areaOcurreIncidente=='hospitalizacion'"}}
+    
+    {{#field id="categoria"}}
+    	{{onChange clearFields="subCategoria,clasificacion"}}
+    {{/field}}
+
+		{{#field id="subCategoria"}}
+      {{onChange clearFields="clasificacion"}}
+      {{#editor alwaysLoad="true"}}
+        {{param partOf="=categoria"}}
+      {{/editor}}
+    {{/field}}    
+
+    {{#field id="clasificacion"}}
+      {{#editor alwaysLoad="true"}}
+        {{param partOf="=subCategoria"}}
+      {{/editor}}
+    {{/field}}
+
+    {{#field id="pacienteInvolucrado"}}
+      {{#onChange}}
+        {{set fechaNacimiento="=persona.fechaNacimiento"}}
+      {{/onChange}}
+    {{/field}}
+
+    {{#field id="areaOcurreIncidente"}}
+      {{onChange clearFields="centralOcurreIncidente"}}
+    {{/field}}
+
+    {{#field id="centralOcurreIncidente"}}
+      {{#editor}}
+        {{param partOf="hospitalizacion"}}
+      {{/editor}}
+    {{/field}}
+
+    {{#onChange}}
+      {{#update section="base"}}
+        {{set categoria2="=fn('categoriaEventoAdverso2', categoria, tipoEvento)"}}
+      {{/update}}
+    {{/onChange}}
+  {{/section}}
+{{/define}} 

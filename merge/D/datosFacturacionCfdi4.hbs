@@ -1,0 +1,16 @@
+{{#define id="datosFacturacionCfdi4"}}
+  {{#section id="base"}}
+    {{#field id="tipoPersona"}}
+      {{#onChange}}
+        {{set rfc="=fn('rfcPorOmision', @tipoPersona)"}}
+        {{set razonSocial="=fn('razonSocialPorOmisionCfdi4', @tipoPersona)"}}
+        {{set usoCfdi="=fn('usoCfdiPorOmisionCfdi4', @tipoPersona)"}}
+        {{set regimenFiscal="=fn('regimenFiscalPorOmisionCfdi4', @tipoPersona)"}}
+        {{set objetoImpuesto="=fn('objetoImpuestoPorOmisionCfdi4', @tipoPersona)"}}
+      {{/onChange}}
+    {{/field}}
+    {{field id="esPersonaMoral" type="expr" value="=@tipoPersona==='persona-moral'"}}
+    {{field id="esPersonaFisica" type="expr" value="=@tipoPersona==='persona-fisica'"}}
+    {{field id="tieneDireccion" type="expr" value="=esPersonaMoral||esPersonaFisica"}}
+  {{/section}}
+{{/define}} 

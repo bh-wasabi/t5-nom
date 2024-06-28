@@ -1,0 +1,38 @@
+{{#define id="rhUnidadDireccion"}}
+  {{#view id="lista" name="Lista"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="base._direccion"}}
+      {{include field="base._subDireccion"}}
+      {{search field="_name"}}
+      {{search field="base._direccion"}}
+      {{search field="base._subDireccion"}}
+      {{sort field="base._direccion" direction="asc"}}
+      {{sort field="base._subDireccion" direction="asc"}}
+      {{sort field="base.orden" direction="asc"}}
+      {{sort field="_name" direction="asc"}}
+      {{filter condition="=direccion" field="base.direccion" eq="direccion"}}
+      {{filter condition="=subDireccion" field="base.subDireccion" eq="subDireccion"}}
+    {{/find}}
+  {{/view}}
+  {{#section id="base"}}
+    {{#field id="direccion"}}
+      {{onChange clearFields="subDireccion"}}
+    {{/field}}
+    {{#field id="subDireccion"}}
+      {{#editor}}
+        {{param direccion="=direccion"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}
+
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}
+      </br><span style="font-size:12px;">{{base._subDireccion}}</span>
+      </br><span style="font-size:12px;">{{base._direccion}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

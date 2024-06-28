@@ -1,0 +1,370 @@
+{{#define id="notaGRP"}}
+  {{param attribute1="=_created.service"}}
+  {{param removeIfEmptySection="articulos"}}
+  {{param removeIfEmptyField="cantidad"}}
+  {{action id="afectar" error="=base.esEntradaInventario&&_.isEmpty(_.compact(_.pluck(articulos, 'lote')))?'Falta Especificar Lotes':_.isEmpty(_.compact(_.pluck(articulos, 'clavePresupuestal')))?'Falta Clave Presupuestal':null" errorType="warning"}}
+
+  {{action id="importarDatos" condition="=base.esInicial" type="menu" menu="importarDatos" label="Cargar" color="green"}}
+  {{#menu id="importarDatos" color="green"}}
+    {{item action="cargarExcel" text="Cargar Excel..."}}
+  {{/menu}}  
+  {{#action id="cargarExcel" hide="=true" type="openFile" label="Cargar Excel" color="green" visibleMode="open"}}
+    {{#openFile type="xlsx" as="excel" subType="=_created.subType" isExit="true" touch="base" suggest="=base.fuenteFinanciamiento" suggestName="=base._fuenteFinanciamiento"}}
+      {{update section="articulos" value="=excel"}}
+    {{/openFile}}
+  {{/action}}  
+
+  {{#action id="bitacora" hide="true" type="sub-link" label="Bitácora" color="grey"}}
+    {{#link href="'/nota/bitacora'" name="='Bitácora'" title="='Bitácora'"}}
+      {{param id="_id"}}
+    {{/link}}
+  {{/action}}  
+
+  {{action id="adjuntos" hide="=true" type="openFolder" label="Adjuntos" items="=adjuntos" color="grey" visibleMode="close"}}
+  {{action id="flujo" hide="true" type="bpmn" color="grey" label="Flujo" title="=_name" visibleMode="close" bpmn="=calc.first(fn('bpmn', 'notaGRP', base.tipoProceso)).fileName" moment="=_params.flujo.tema" momentColor="blue"}}
+  
+  {{#transform id="copiarNota"}}
+    {{update section="persona" transform="copiarPersona2"}}
+  {{/transform}}
+
+  {{#transform id="copiar" mergeNoteInventory="articulos" mergeNoteInventoryAmount="=_params.importeEspecifico" mergeNoteInventoryClearField="costoUnitarioComprometido"}}
+    {{update section="persona" value="=persona"}}
+    {{update section="base" value="=base"}}
+    {{update section="articulos" value="=articulos"}}
+  {{/transform}}
+
+  {{#transform id="copiarPendiente" mergeNoteInventory="pendiente" mergeNoteInventoryAmount="=_params.importeEspecifico"}}
+    {{update section="persona" value="=persona"}}
+    {{update section="base" value="=base"}}
+    {{update section="pendiente" value="=articulos"}}
+  {{/transform}}
+
+  {{#transform id="copiarSinCantidad" mergeNoteInventory="articulos" mergeNoteInventoryClearField="cantidad"}}
+    {{update section="persona" value="=persona"}}
+    {{update section="base" value="=base"}}
+    {{update section="articulos" value="=articulos"}}
+  {{/transform}}
+
+  {{#transform id="copiarModificacion" mergeNoteInventory="articulos" mergeNoteInventoryCopy="pendiente"}}
+    {{update section="persona" value="=persona"}}
+    {{update section="base" value="=base"}}
+    {{update section="articulos" value="=articulos"}}
+  {{/transform}}
+
+  {{#transform id="copiarCambioFuente" mergeNoteInventory="articulos" mergeNoteInventoryClearField="costoUnitarioComprometido" mergeNoteInventoryNewCode="clavePresupuestalAlterna" mergeNoteInventoryOldCode="clavePresupuestal" mergeNoteInventoryCopySource="fuenteFinanciamiento"}}
+    {{update section="persona" value="=persona"}}
+    {{update section="base" value="=base"}}
+    {{update section="pendiente" value="=calc.clone(articulos)"}}
+    {{update section="articulos" value="=articulos"}}
+    {{#update section="base"}}
+      {{set fuenteFinanciamiento="=(base.esIngresosPropios)?'1':'4'"}}
+      {{set _fuenteFinanciamiento="=(base.esIngresosPropios)?'Recursos Fiscales':'Ingresos Propios'"}}
+    {{/update}}
+  {{/transform}}
+
+  {{#transform id="copiarComprometido" mergeNoteInventory="articulos" mergeNoteInventoryMax="1" mergeNoteInventoryWhere="{'periodo':_params.periodo}" mergeNoteInventoryCopyFromField="costoUnitario" mergeNoteInventoryCopyToField="costoUnitarioComprometido"}}
+    {{update section="persona" value="=persona"}}
+    {{update section="base" value="=base"}}
+    {{update section="articulos" value="=articulos"}}
+  {{/transform}}
+
+  {{action id="menuVer" hide="true" type="menu" menu="menuVer" label="Ver" color="grey"}}
+  {{#menu id="menuVer" color="grey"}}
+    {{item action="preliminar" text="PDF"}}
+    {{item action="adjuntos" text="Adjuntos"}}
+    {{item action="bitacora" text="Bitácora"}}
+    {{item action="flujo" text="Flujo" beginGroup="true"}}
+  {{/menu}}
+
+  {{action id="menuContratoCompra" hide="true" type="menu" menu="menuContratoCompra" label="Contrato" color="deep-orange"}}
+  {{#menu id="menuContratoCompra" color="deep-orange" btnSolid="true"}}
+    {{item action="ampliacionContratoCompra" text="Ampliación"}}
+    {{item action="reduccionContratoCompra" text="Reducción"}}
+    {{item action="modificacionContratoCompra" text="Modificación" beginGroup="true"}}
+  {{/menu}}
+
+  {{action id="tool" condition="=_isAffected&&base.estatus=='afectado'" type="cancel" label="Cancelar" color="red" visibleMode="close" workflow="cancelar" userRole="cancelacionTransacciones"}}
+
+  {{#action id="ampliacionContratoCompra" hide="true" type="add-subdoc" subType="ampliacionContratoCompra" subTypeName="Ampliación Contrato Compra" label="Ampliación Contrato Compra" transform="copiarSinCantidad" source="notaGRP" color="deep-orange" btnSolid="false" visibleMode="close" onlyPost="true" fromSource="mov" fromView="invNota"}}
+    {{param cuenta="=persona.id"}}
+    {{param subCuenta="=_id"}}
+  {{/action}}
+  {{#action id="reduccionContratoCompra" hide="true" type="add-subdoc" subType="reduccionContratoCompra" subTypeName="Reducción Contrato Compra" label="Reducción Contrato Compra" transform="copiarSinCantidad" source="notaGRP" color="deep-orange" btnSolid="false" visibleMode="close" onlyPost="true" fromSource="mov" fromView="invNota"}}
+    {{param cuenta="=persona.id"}}
+    {{param subCuenta="=_id"}}
+  {{/action}}
+  {{#action id="modificacionContratoCompra" hide="true" type="add-subdoc" subType="modificacionContratoCompra" subTypeName="Modificación Contrato Compra" label="Modificación Contrato Compra" transform="copiarModificacion" source="notaGRP" color="deep-orange" btnSolid="false" visibleMode="close" onlyPost="true" fromSource="mov" fromView="invNota"}}
+    {{param cuenta="=persona.id"}}
+    {{param subCuenta="=_id"}}
+  {{/action}}
+  {{#action id="ordenCompra" hide="true" type="add-subdoc" subType="ordenCompra" subTypeName="Orden Compra" label="Orden Compra" transform="copiar" source="notaGRP" color="deep-orange" btnSolid="true" visibleMode="close" onlyPost="true" fromSource="mov" fromView="invNota"}}
+    {{param cuenta="=persona.id"}}
+    {{param subCuenta="=_id"}}
+  {{/action}}
+  {{#action id="ordenCompraPorMonto" hide="true" type="add-subdoc" subType="ordenCompraPorMonto" subTypeName="Orden Compra por Monto" label="Orden Compra por Monto" transform="copiarPendiente" source="notaGRP" color="deep-orange" btnSolid="true" visibleMode="close" onlyPost="true" fromSource="mov" fromView="invNota"}}
+    {{ask field="importeEspecifico" type="number" label="Importe Específico" value="=_params.flujo.saldo"}}
+    {{param cuenta="=persona.id"}}
+    {{param subCuenta="=_id"}}
+  {{/action}}
+  {{#action id="reciboCompra" hide="true" type="add-subdoc" subType="reciboCompra" subTypeName="Recibo Compra" label="Recibo Compra" transform="copiar" source="notaGRP" color="deep-orange" btnSolid="true" visibleMode="close" onlyPost="true" fromSource="mov" fromView="invNota"}}
+    {{param cuenta="=persona.id"}}
+    {{param subCuenta="=_id"}}
+  {{/action}}
+  {{#action id="reciboActivos" hide="true" type="add-subdoc" subType="reciboActivos" subTypeName="Recibo Activos" label="Recibo Activos" transform="copiar" source="notaGRP" color="deep-orange" btnSolid="true" visibleMode="close" onlyPost="true" fromSource="mov" fromView="invNota"}}
+    {{param cuenta="=persona.id"}}
+    {{param subCuenta="=_id"}}
+  {{/action}}
+  {{#action id="facturaCompra" hide="true" type="add-subdoc" subType="facturaCompra" subTypeName="Factura Compra" label="Factura Compra" transform="copiar" source="notaGRP" color="deep-orange" btnSolid="true" visibleMode="close" onlyPost="true" fromSource="mov" fromView="invNota"}}
+    {{param cuenta="=persona.id"}}
+    {{param subCuenta="=_id+'/sub'"}}
+  {{/action}}
+
+  {{#action id="ordenGasto" hide="true" type="add-subdoc" subType="ordenGasto" subTypeName="Orden Gasto" label="Orden Gasto" transform="copiar" source="notaGRP" color="deep-orange" btnSolid="true" visibleMode="close" onlyPost="true" fromSource="mov" fromView="invNota"}}
+    {{param cuenta="=persona.id"}}
+    {{param subCuenta="=_id"}}
+  {{/action}}
+  {{#action id="comprobanteGasto" hide="true" type="add-subdoc" subType="comprobanteGasto" subTypeName="Comprobante Gasto" label="Comprobante Gasto" transform="copiarComprometido" source="notaGRP" color="deep-orange" btnSolid="true" visibleMode="close" onlyPost="true" fromSource="mov" fromView="invNota"}}
+    {{ask field="periodo" type="select" label="Periodo" keys="1,2,3,4,5,6,7,8,9,10,11,12" names="Enero,Febrero,Marzo,Abril,Mayo,Junio,Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre"}}
+    {{param cuenta="=persona.id"}}
+    {{param subCuenta="=_id"}}
+  {{/action}}
+
+  {{#action id="nomina" hide="true" type="add-subdoc" subType="nomina" subTypeName="Nómina" label="Nómina" transform="copiarComprometido" source="notaGRP" color="deep-orange" btnSolid="true" visibleMode="close" onlyPost="true" fromSource="mov" fromView="invNota"}}
+    {{ask field="periodo" type="select" label="Periodo" keys="1,2,3,4,5,6,7,8,9,10,11,12" names="Enero,Febrero,Marzo,Abril,Mayo,Junio,Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre"}}
+    {{param cuenta="=persona.id"}}
+    {{param subCuenta="=_id"}}
+  {{/action}}
+
+  {{#action id="cxpCambioPeriodo" hide="true" type="add-subdoc" subType="cxpCambioPeriodo" subTypeName="Cuenta por Pagar - Cambio Período" label="Cambio Período" transform="copiarModificacion" source="notaGRP" color="deep-orange" btnSolid="false" visibleMode="close" onlyPost="true" fromSource="mov" fromView="invNota"}}
+    {{param cuenta="=persona.id"}}
+    {{param subCuenta="=_id"}}
+  {{/action}}
+  {{#action id="ordenPagoCambioFuente" hide="true" type="add-subdoc" subType="ordenPagoCambioFuente" subTypeName="Orden Pago - Cambio Fuente" label="Cambio Fuente" transform="copiarCambioFuente" source="notaGRP" color="deep-orange" btnSolid="false" visibleMode="close" onlyPost="true" fromSource="mov" fromView="invNota"}}
+    {{param cuenta="=persona.id"}}
+    {{param subCuenta="=_id"}}
+  {{/action}}
+  {{#action id="ordenPago" hide="true" type="add-subdoc" subType="ordenPago" subTypeName="Orden Pago" label="Orden Pago" transform="copiar" source="notaGRP" color="deep-orange" btnSolid="true" visibleMode="close" onlyPost="true" fromSource="mov" fromView="invNota"}}
+    {{ask field="importeEspecifico" type="number" label="Importe Específico" value="=_params.flujo.saldo"}}
+    {{param cuenta="=persona.id"}}
+    {{param subCuenta="=_id"}}
+  {{/action}}
+  {{#action id="pago" hide="true" type="add-subdoc" subType="pago" subTypeName="Pago" label="Pago" transform="copiar" source="notaGRP" color="deep-orange" btnSolid="true" visibleMode="close" onlyPost="true" fromSource="mov" fromView="invNota"}}
+    {{ask field="importeEspecifico" type="number" label="Importe Específico" value="=_params.flujo.saldo"}}
+    {{param cuenta="=persona.id"}}
+    {{param subCuenta="=_id"}}
+  {{/action}}
+  {{#action id="cobroProveedor" hide="true" type="add-subdoc" subType="cobroProveedor" subTypeName="Cobro Proveedor" label="Cobro Proveedor" transform="copiar" source="notaGRP" color="deep-orange" btnSolid="true" visibleMode="close" onlyPost="true" fromSource="mov" fromView="invNota"}}
+    {{ask field="importeEspecifico" type="number" label="Importe Específico" value="=_params.flujo.saldo"}}
+    {{param cuenta="=persona.id"}}
+    {{param subCuenta="=_id"}}
+  {{/action}}
+  {{#action id="pagoAnticipoActivos" hide="true" type="add-subdoc" subType="pagoAnticipoActivos" subTypeName="Pago Anticipo Activos" label="Pago Anticipo Activos" transform="copiar" source="notaGRP" color="deep-orange" btnSolid="true" visibleMode="close" onlyPost="true" fromSource="mov" fromView="invNota"}}
+    {{ask field="importeEspecifico" type="number" label="Importe Específico" value="=_params.flujo.saldo"}}
+    {{param cuenta="=persona.id"}}
+    {{param subCuenta="=_id"}}
+  {{/action}}
+  {{#action id="pagoConciliado" hide="true" type="add-subdoc" subType="pagoConciliado" subTypeName="Pago Conciliado" label="Pago Conciliado" transform="copiar" source="notaGRP" color="deep-orange" btnSolid="true" visibleMode="close" onlyPost="true" fromSource="mov" fromView="invNota"}}
+    {{param cuenta="=persona.id"}}
+    {{param subCuenta="=_id"}}
+  {{/action}}
+
+  {{#section id="base"}}
+    {{field id="esContratoCompra" type="expr" value="=_created.subType=='contratoCompra'"}}
+    {{field id="esContratoCompraPorMonto" type="expr" value="=_created.subType=='contratoCompraPorMonto'"}}
+    {{field id="esContratoGasto" type="expr" value="=_created.subType=='contratoGasto'"}}
+    {{field id="esContratoNomina" type="expr" value="=_created.subType=='contratoNomina'"}}
+    {{field id="esContratoActivos" type="expr" value="=_created.subType=='contratoActivos'"}}
+    {{field id="esDonacionActivos" type="expr" value="=_created.subType=='donacionActivos'"}}
+    {{field id="esModificacionContratoCompra" type="expr" value="=_created.subType=='modificacionContratoCompra'"}}
+    {{field id="esContrato" type="expr" value="=esContratoCompra||esContratoCompraPorMonto||esContratoActivos||esContratoGasto||esContratoNomina"}}
+    {{field id="esCompraDirecta" type="expr" value="=_created.subType=='compraDirecta'"}}
+    {{field id="esGastoDirecto" type="expr" value="=_created.subType=='gastoDirecto'"}}
+    {{field id="esOrdenCompra" type="expr" value="=_created.subType=='ordenCompra'"}}
+    {{field id="esOrdenCompraPorMonto" type="expr" value="=_created.subType=='ordenCompraPorMonto'"}}
+    {{field id="esOrdenCompraDirecta" type="expr" value="=_created.subType=='ordenCompraDirecta'"}}
+    {{field id="esReciboCompra" type="expr" value="=_created.subType=='reciboCompra'"}}
+    {{field id="esReciboActivos" type="expr" value="=_created.subType=='reciboActivos'"}}
+    {{field id="esCxpCambioPeriodo" type="expr" value="=_created.subType=='cxpCambioPeriodo'"}}
+    {{field id="esOrdenPagoCambioFuente" type="expr" value="=_created.subType=='ordenPagoCambioFuente'"}}
+    {{field id="esPago" type="expr" value="=_created.subType=='pago'"}}
+    {{field id="esPagoAnticipoActivos" type="expr" value="=_created.subType=='pagoAnticipoActivos'"}}
+    {{field id="esPagoConciliado" type="expr" value="=_created.subType=='pagoConciliado'"}}
+    {{field id="esDevolucionCompra" type="expr" value="=_created.subType=='devolucionCompra'"}}
+    {{field id="esDevolucionGasto" type="expr" value="=_created.subType=='devolucionGasto'"}}
+    {{field id="esCobroProveedor" type="expr" value="=_created.subType=='cobroProveedor'"}}
+
+    {{field id="esInicial" type="expr" value="=esContrato||esOrdenCompraDirecta||esOrdenCompraPorMonto||esCompraDirecta||esGastoDirecto||esDevolucionCompra||esDevolucionGasto"}}
+    {{field id="esBien" type="expr" value="=esContratoCompra||esOrdenCompraPorMonto||esOrdenCompraDirecta||esCompraDirecta||esDevolucionCompra||esModificacionContratoCompra"}}
+    {{field id="esActivos" type="expr" value="=esContratoActivos||esDonacionActivos||esReciboActivos"}}
+    {{field id="esEntradaInventario" type="expr" value="=esReciboCompra||esCompraDirecta||esReciboActivos||esDonacionActivos"}}
+    {{field id="esSalidaInventario" type="expr" value="=esDevolucionCompra"}}
+    {{field id="esIngresosPropios" type="expr" value="=@fuenteFinanciamiento=='4'"}}
+
+    {{field id="tipoArticulo" type="expr" value="=esActivos?'tipoActivo':(esContratoNomina?'conceptoNomina':(esContratoGasto||esGastoDirecto||esDevolucionGasto||esContratoCompraPorMonto?'conceptoGasto':null))"}}
+    {{field id="actividadInstitucional" type="expr" value="=esContratoNomina?persona.id:null"}}
+    {{field id="bloquearArticulos" type="expr" value="=esPagoConciliado||esPagoAnticipoActivos||esOrdenPagoCambioFuente"}}
+    {{field id="bloquearEdicion" type="expr" value="=esCxpCambioPeriodo"}}
+    {{field id="importeEnLetra" type="expr" value="=calc.pesos(importeTotal)"}}
+
+    {{field id="tieneEjercicio" type="expr" value="=esInicial"}}
+    {{field id="tienePeriodo" type="expr" value="=!esDonacionActivos"}}
+    {{field id="tieneUnidad" type="expr" value="=(esInicial||esOrdenCompraPorMonto||esEntradaInventario||esModificacionContratoCompra)&&!(esActivos||esContratoCompraPorMonto)"}}
+    {{field id="tieneCuentaBancaria" type="expr" value="=esPago||esPagoAnticipoActivos||esCobroProveedor"}}
+    {{field id="tieneAlmacen" type="expr" value="=esEntradaInventario||esSalidaInventario"}}
+[.#if tieneConexionPaaas.]    
+    {{field id="tieneSolicitud" type="expr" value="=esContratoCompra||esOrdenCompraPorMonto||esContratoGasto||esContratoActivos"}}
+[./if.]      
+    {{field id="tieneLote" type="expr" value="=esEntradaInventario"}}
+    {{field id="tieneVencimiento" type="expr" value="=esEntradaInventario"}}
+    {{field id="tieneControlInventario" type="expr" value="=!esPagoConciliado"}}
+    {{field id="tieneControlSubInventario" type="expr" value="=esOrdenCompra||esOrdenCompraPorMonto||esOrdenCompraDirecta"}}
+
+    {{field id="siguientePaso" type="expr" value="=esContratoActivos&&tieneAnticipo?'anticipoActivosPorPagar':_created.subType"}}
+    {{field id="_siguientePaso" type="expr" value="=esContratoActivos&&tieneAnticipo?'Anticipo Activos por Pagar':_created.subTypeName"}}
+
+    {{#field id="fuenteFinanciamiento"}}
+      {{onChange clearFields="cuentaBancaria"}}
+    {{/field}}
+    {{#field id="cuentaBancaria"}}
+      {{#editor}}
+        {{param moneda="='MXN'"}}
+        {{param fuenteFinanciamiento="=fuenteFinanciamiento"}}
+      {{/editor}}
+      {{#onChange}}
+        {{set cuentaCuentaBancaria="=persona.cuenta"}}
+      {{/onChange}}    
+    {{/field}}
+    {{#field id="solicitud"}}
+      {{#editor display="_parent.name"}}
+        {{param tipoSolicitud="='adquisicion'"}}
+        {{param subMomento="='mga4.2.6.3'"}}
+      {{/editor}}
+      {{#onChange}}
+        {{set ejercicio="=base.adquisicion.base.ejercicio"}}
+      {{/onChange}}    
+    {{/field}}
+    {{#onChange forceRecalc="true" suggestTo="articulos"}}
+      {{#update section="base"}}
+        {{set cantidadTotal="=calc.sumExpr(articulos, '=cantidad')"}}
+        {{set subTotal="=calc.round(calc.sumExpr(articulos, '=costoUnitario*cantidad'),2)"}}
+        {{set importeIva="=calc.round(calc.sumExpr(articulos, '=costoUnitario*cantidad*(calc.number(iva)/100)'),2)"}}
+        {{!-- {{set importeRetencionIsr="=calc.round(calc.sumExpr(articulos, '=costoUnitario*cantidad*(calc.number(retencionIsr)/100)'),2)"}}
+        {{set importeRetencionIva="=calc.round(calc.sumExpr(articulos, '=costoUnitario*cantidad*(calc.number(retencionIva)/100)'),2)"}}
+        {{set importeTotal="=calc.round(base.subTotal-base.importeRetencionIsr-base.importeRetencionIva+base.importeIva,2)"}} --}}
+        {{set importeTotal="=calc.round(base.subTotal+base.importeIva,2)"}}
+        {{set importeAnticipo="=calc.round(calc.sumExpr(articulos, '=costoUnitario*cantidad*(1+calc.number(@iva)/100)*(calc.number(@anticipo)/100)'),2)"}}
+      {{/update}}
+    {{/onChange}}    
+  {{/section}}
+  {{!-- Tiene que estar en la vista "lista" --}}
+  {{#section id="pendiente"}}
+    {{field id="costoUnitarioInventario" type="calc" value="=costoUnitario/factor"}}
+    {{field id="costoTotal" type="calc" value="=cantidad*costoUnitario"}}
+    {{field id="importeTotal" type="calc" value="=calc.addTax(costoTotal, @iva)"}}
+    {{field id="importeAnticipo" type="calc" value="=calc.round(importeTotal*(@anticipo/100),2)"}}
+    {{field id="importeNeto" type="calc" value="=importeTotal-importeAnticipo"}}
+  {{/section}}
+  
+  {{#section id="articulos"}}
+    {{#field id="articulo"}}
+      {{#editor display="base.codigo" view="lista"}}      
+        {{param esBien="=base.esBien"}}
+        {{param tipoArticulo="=base.tipoArticulo"}}
+        {{param actividadInstitucional="=base.actividadInstitucional"}}
+      {{/editor}}
+      {{#onChange getSourceDoc="true" getSourceDocAs="_articulo"}}
+        {{set codigo="=base.codigo"}}
+        {{set descripcion="=base.descripcionAlmacen||base.descripcion"}}
+        {{set tipoArticulo="=base.tipoArticulo"}}
+        {{set cuadroBasico="=base.cuadroBasico"}}
+        {{set iva="=_articulo.base.ivaCompra"}}
+        {{set _iva="=_articulo.base._ivaCompra"}}
+        {{set fuenteFinanciamiento="=base.fuenteFinanciamiento"}}
+        {{set _fuenteFinanciamiento="=base._fuenteFinanciamiento"}}
+        {{set clavePresupuestal="=(base.esIngresosPropios)?_articulo.base.clavePresupuestalIngresosPropios:_articulo.base.clavePresupuestalRecursosFiscales"}}
+        {{set _clavePresupuestal="=(base.esIngresosPropios)?_articulo.base._clavePresupuestalIngresosPropios:_articulo.base._clavePresupuestalRecursosFiscales"}}
+        {{set clavePresupuestalAlterna="=(!base.esIngresosPropios)?_articulo.base.clavePresupuestalIngresosPropios:_articulo.base.clavePresupuestalRecursosFiscales"}}
+        {{set _clavePresupuestalAlterna="=(!base.esIngresosPropios)?_articulo.base._clavePresupuestalIngresosPropios:_articulo.base._clavePresupuestalRecursosFiscales"}}
+        {{!-- {{set cuentaMayor="=_articulo.base.cuentaMayor"}}
+        {{set _cuentaMayor="=_articulo.base._cuentaMayor"}} --}}
+        {{set cuenta="=_articulo.base.cuenta"}}
+        {{set depreciacion="=_articulo.base.depreciacion"}}
+        {{set _depreciacion="=_articulo.base._depreciacion"}}
+        {{set metodoDepreciacion="=_articulo.base.metodoDepreciacion"}}
+        {{set _metodoDepreciacion="=_articulo.base._metodoDepreciacion"}}
+        {{set cuentaDepreciacionActivos="=_articulo.base.cuentaDepreciacionActivos"}}
+        {{set cuentaDepreciacionGastos="=_articulo.base.cuentaDepreciacionGastos"}}
+        {{!-- {{set _cuentaDepreciacionActivos="=_articulo.base._cuentaDepreciacionActivos"}}
+        {{set cuentaContableDepreciacionActivos="=_articulo.base.cuentaContableDepreciacionActivos"}} --}}
+        {{!-- {{set _cuentaDepreciacionGastos="=_articulo.base._cuentaDepreciacionGastos"}}
+        {{set cuentaContableDepreciacionGastos="=_articulo.base.cuentaContableDepreciacionGastos"}} --}}
+        {{set mesesDepreciacion="=_articulo.base.mesesDepreciacion"}}
+        {{set tieneSeries="=calc.isTrue(_articulo.base.series)"}}
+        {{set factor="=1"}}
+      {{/onChange}}
+    {{/field}}
+
+    {{field id="costoUnitarioInventario" type="calc" value="=costoUnitario/factor"}}
+    {{field id="costoTotal" type="calc" value="=cantidad*costoUnitario"}}
+    {{field id="importeTotal" type="calc" value="=calc.addTax(costoTotal, @iva)"}}
+    {{field id="importeAnticipo" type="calc" value="=calc.round(importeTotal*(@anticipo/100),2)"}}
+    {{field id="importeNeto" type="calc" value="=importeTotal-importeAnticipo"}}
+    {{#onChange}}
+      {{#update section="base"}}
+        {{set cantidadTotal="=calc.sumExpr(articulos, '=cantidad')"}}
+        {{set subTotal="=calc.round(calc.sumExpr(articulos, '=costoUnitario*cantidad'),2)"}}
+        {{set importeIva="=calc.round(calc.sumExpr(articulos, '=costoUnitario*cantidad*(calc.number(@iva)/100)'),2)"}}
+{{!--   {{set importeRetencionIsr="=calc.round(calc.sumExpr(articulos, '=costoUnitario*cantidad*(calc.number(retencionIsr)/100)'),2)"}}
+        {{set importeRetencionIva="=calc.round(calc.sumExpr(articulos, '=costoUnitario*cantidad*(calc.number(retencionIva)/100)'),2)"}}
+        {{set importeTotal="=calc.round(base.subTotal-base.importeRetencionIsr-base.importeRetencionIva+base.importeIva,2)"}} --}}
+        {{set importeTotal="=calc.round(base.subTotal+base.importeIva,2)"}}
+        {{set importeAnticipo="=calc.round(calc.sumExpr(articulos, '=costoUnitario*cantidad*(1+calc.number(@iva)/100)*(calc.number(@anticipo)/100)'),2)"}}
+      {{/update}}
+    {{/onChange}}
+    {{#field id="loteEspecifico"}}
+      {{#editor type="select" source="mov" view="loteEspecifico" alwaysLoad="true" sendSearchValue="true" value="lote" display="loteVencimiento"}}
+        {{param codigo="=_articulo"}}
+        {{param cuenta="=base.almacen"}}
+      {{/editor}}
+    {{/field}}    
+  {{/section}}
+  
+  {{#grid id="articulos" section="articulos" keyField="cantidad" allowInsert="true" allowRemove="true" readOnlyExpr="=base.bloquearArticulos"}}
+    {{column field="articulo" label="Código" width="150" readOnlyExpr="=base.bloquearEdicion"}}
+    {{column field="descripcion" label="Descripción" width="350" readOnly="true"}}
+    {{column field="cantidadMinima" label="Mínimo" width="70" type="numeric" format="#," show="=base.esContrato"}}
+    {{column field="cantidadMaxima" label="Máximo" width="70" type="numeric" format="#," show="=base.esContrato"}}
+    {{column field="cantidad" label="Cantidad" width="70" type="numeric" format="#," readOnlyExpr="=base.bloquearEdicion"}}
+    {{column field="unidad" label="Unidad" width="150" show="=base.tieneUnidad"}}
+    {{column field="factor" label="Factor" width="70" type="numeric" format="#,.##" required="true" show="=base.tieneUnidad"}}
+    {{column field="lote" label="Lote/Serie" width="100" required="true" show="=base.tieneLote"}}
+    {{column field="vencimiento" label="Vencimiento" validateDate="true" width="90" required="true" show="=base.tieneVencimiento"}}
+    {{column field="loteEspecifico" label="Lote Especifico" width="150" validateDuplicate="true" required="true" show="=base.esSalidaInventario"}}
+    {{column field="costoUnitario" label="Costo Presentación" width="130" type="numeric" format="#,.##" required="=true" readOnlyExpr="=base.bloquearEdicion"}}
+    {{column field="anticipo" label="% Anticipo" width="80" required="true" show="=base.tieneAnticipo&&base.esInicial"}}
+    {{column field="periodo" label="Periodo" width="101" required="true" show="=base.tienePeriodo"}}
+  {{/grid}}
+
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+
+  {{#workflow id="afectar" start="afectar"}}
+    {{#step id="afectar"}}
+      {{#user}}
+        {{validate condition="=!_name" error="Nombre Incorrecto"}}
+        {{#spAffect engine="node"}}
+          {{#update section="base"}}
+            {{set estatus="afectado"}}
+            {{set _estatus="Afectado"}}
+          {{/update}}
+        {{/spAffect}}
+      {{/user}}
+    {{/step}}
+  {{/workflow}}
+{{/define}}

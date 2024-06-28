@@ -1,0 +1,12 @@
+{{#define id="programaAnualRopa"}}
+  {{#section id="base"}}
+  	{{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+  	{{field id="tieneHorarioEspecifico" type="expr" value="=tipoHorario=='especifico'"}}
+    {{#field id="ubicacionRecoleccionRopaSucia"}}
+      {{#editor}}
+        {{param tipoUbicacion="almacen,deposito"}}
+        {{param subTipoUbicacion="ropaSucia"}}
+     {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

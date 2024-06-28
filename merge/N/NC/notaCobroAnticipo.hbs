@@ -1,0 +1,43 @@
+{{#define id="notaCobroAnticipo"}}
+  {{param attribute1="=_.first(base.formaPago).base._formaPago"}}
+
+  {{#view id="cobrosAnticipos"}}
+    {{#find limit="-1"}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{include field="base"}}
+      {{include field="persona"}}
+      {{sort field="_id" direction="asc"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{filter condition="=tipoExpediente" field="persona.tipoExpediente" eq="=tipoExpediente"}}
+      {{filter condition="=desde" field="_created.date" gt="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=hasta"}}      
+    {{/find}}
+    {{calc field="_formaPago" value="=calc.first(base.formaPago).base._formaPago"}}
+  {{/view}}
+
+  {{#transform id="copiarFactura"}}
+    {{update section="aplicacion" type="array" transform="copiarConceptoAnticipo"}}
+    {{update section="persona" transform="copiarPersona2"}}
+    {{#update section="base"}}
+      {{set formaPago="=calc.first(base.anticipo).base.formaPago.base.formaPago"}}
+      {{set datosFacturacion="=fn('datosFacturacion', _params.join)"}}
+      {{set _datosFacturacion="=fn('_datosFacturacion', _params.join)"}}
+    {{/update}}
+  {{/transform}}
+
+  {{action id="notaFactura" source="notaFactura" label="Facturar" transform="copiarFactura" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+
+  {{#section id="base"}}
+    {{field id="totalFormasPago" type="calc" value="=calc.sumRef(anticipo, 'base.totalFormasPago')"}}
+    {{field id="importeEfectivo" type="calc" value="=calc.sumRef(anticipo, 'base.importeEfectivo')"}}
+    {{field id="cambio" type="calc" value="=(totalFormasPago>importeTotal)?(totalFormasPago-importeTotal):0"}}
+    {{field id="totalEfectivo" type="calc" value="=importeEfectivo-cambio"}}
+    {{field id="totalTarjetas" type="calc" value="=calc.sumRef(anticipo, 'base.totalTarjetas')"}}
+    {{field id="totalCheques" type="calc" value="=calc.sumRef(anticipo, 'base.totalCheques')"}}
+    {{field id="totalTransferencias" type="calc" value="=calc.sumRef(anticipo, 'base.totalTransferencias')"}}
+    {{field id="totalDepositos" type="calc" value="=calc.sumRef(anticipo, 'base.totalDepositos')"}}
+    {{field id="totalPagares" type="calc" value="=calc.sumRef(anticipo, 'base.totalPagares')"}}
+    {{field id="totalCobrado" type="calc" value="=importeEfectivo-cambio+totalCheques+totalTarjetas+totalTransferencias+totalDepositos+totalPagares"}}
+  {{/section}}
+{{/define}}

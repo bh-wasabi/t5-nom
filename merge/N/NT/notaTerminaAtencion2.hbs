@@ -1,0 +1,10 @@
+{{#define id="notaTerminaAtencion2"}}
+  {{#section id="base"}}
+    {{!-- {{field id="tieneCama" type="expr" value="=!calc.in(_created.service, ['laboratorio','laboratorioMolecular','laboratorioPatologia','imagenologia','bancoSangre','patologia'])"}} --}}
+    {{#field id="cama"}}
+      {{#editor}}
+        {{param central="=_created.service"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}  
+{{/define}}

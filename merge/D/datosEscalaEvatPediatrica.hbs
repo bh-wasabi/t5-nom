@@ -1,0 +1,6 @@
+{{#define id="datosEscalaEvatPediatrica"}}
+    {{#section id="base"}}
+      {{field id="total" type="calc" value="=calc.sumArgs(calc.sumCase(comportamientoNeurologicoEvat,'comportamientoEvatPediatrica'),calc.sumCase(cardiovascularEvat,'cardiovascularEvatPediatrica'),calc.sumCase(respiratorioEvat,'respiratorioEvatPediatrica'),calc.sumCase(preocupacionEnfermera,'preocupacionEnfermeraPediatrica'),calc.sumCase(preocupacionFamilia,'preocupacionFamiliaPediatrica'),calc.sumCase(valoracionEvaPediatrico,'valoracionEvaPediatrico'))"}}
+      {{field id="resultadoTotal" type="expr" value="=total"}}
+    {{/section}}
+{{/define}}

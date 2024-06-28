@@ -1,0 +1,28 @@
+{{#define id="rechazoRopa"}}
+  {{#section id="base"}}
+    {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
+    {{#field id="ubicacionRecoleccionRopaLimpia"}}
+      {{#editor}}
+        {{param tipoUbicacion="almacen,deposito"}}
+        {{param subTipoUbicacion="ropaLimpia"}}
+      {{/editor}}
+      {{#onChange}}
+        {{set area="=persona.area"}}
+        {{set criticidadZona="=persona.criticidadZona||'z4'"}}
+        {{set vencimiento="=fn('vencimientoZona', persona.criticidadZona||'z4')"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="ubicacionEntregaRopaLimpia"}}
+      {{#editor}}
+        {{param tipoUbicacion="central"}}
+        {{param subTipoUbicacion="ropaLimpia"}}
+     {{/editor}}
+    {{/field}}
+    {{#field id="motivo"}}
+      {{#editor}}
+        {{param servicio="='ropa'"}}
+        {{param partOf="='rechazo'"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}}

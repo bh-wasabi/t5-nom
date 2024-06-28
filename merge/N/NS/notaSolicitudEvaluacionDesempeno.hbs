@@ -1,0 +1,54 @@
+{{#define id="notaSolicitudEvaluacionDesempeno"}}
+  {{param removeIfEmptySection="articulos"}}
+  {{param removeIfEmptyField="codigo"}}
+  {{action id="afectar" error="=calc.getRef(base,'evaluacionDesempeno.base.ejercicio')?null:'Ejercicio Incorrecto'"}}
+
+  {{#section id="articulos"}}
+    {{#field id="articulo"}}
+      {{#editor}}
+        {{param tipoArticulo="=base.tipoArticulo"}}
+        {{param ejercicio="=calc.getRef(base,'evaluacionDesempeno.base.ejercicio')"}}
+        {{#onChange}}
+          {{set codigo="=base.codigo"}}
+          {{set descripcion="=base.descripcion"}}
+          {{set categoria="=base.categoria"}}
+          {{!-- {{set grupo="=base.grupo"}} --}}
+          {{!-- {{set familia="=base.familia"}} --}}
+          {{set unidadEvaluacion="=base.unidadEvaluacion"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+    {{!-- {{#field id="avance"}}
+      {{#onChange}}
+        {{set nivelAvance="=fn('nivelAvanceEvaluacion', avance)"}}
+      {{/onChange}}
+    {{/field}} --}}
+    {{#onChange}}
+      {{#update section="base"}}
+        {{set cantidadTotal="=calc.round(calc.sumRef(articulos, 'cantidad'),2)"}}
+        {{set calificacionTotal="=calc.round(calc.sumExpr(articulos, '=cantidad*(cumplimiento/100)'),2)"}}
+      {{/update}}
+    {{/onChange}}
+    {{#field id="nivelCumplimiento"}}
+      {{#onChange}}
+        {{set cumplimiento="=calc.number(nivelCumplimiento)"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+
+  {{#grid id="articulos" keyField="articulo" section="articulos" disableEnter="true" allowInsert="false" allowRemove="false" fixedColumnsLeft="2" allowSort="true"}}
+    {{!-- {{column field="grupo" width="200" readOnly="true"}} --}}
+    {{column field="categoria" width="200" readOnly="true"}}
+    {{column field="descripcion" width="500" readOnly="true"}}
+    {{column field="nivelCumplimiento" width="150"}}
+  {{/grid}}
+
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

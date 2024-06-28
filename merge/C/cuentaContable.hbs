@@ -1,0 +1,45 @@
+{{#define id="cuentaContable"}}
+  {{action id="eliminar" hide="true"}}
+  {{#view id="lista"}}
+    {{#find}}
+      {{include field="base.cuenta"}}
+      {{include field="base.descripcion"}}
+      {{!-- {{include field="base.moneda"}} --}}
+      {{include field="base.mayor"}}
+      {{include field="base.estatus"}}
+      {{sort field="base.orden" direction="asc"}}
+      {{search field="_name"}}
+    {{/find}}
+  {{/view}}
+  
+  {{#view id="ctasArbol"}}
+    {{#find limit="-1" flatten="true"}}
+      {{include field="base.cuenta" as="cuenta"}}
+      {{include field="base.descripcion" as="descripcion"}}
+      {{include field="base.orden" as="orden"}}
+      {{sort field="base.orden" direction="asc"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="afectables"}}
+    {{#find}}
+      {{include field="base.cuenta"}}
+      {{include field="base.descripcion"}}
+      {{sort field="base.orden" direction="asc"}}
+      {{filter field="base.estatus" eq="activo"}}
+      {{filter field="base.acumulativa" eq="no"}}
+      {{search field="_name"}}
+    {{/find}}
+  {{/view}}
+  {{#section id="base"}}
+    {{field id="nombre" type="expr" value="=calc.concat(cuenta, descripcion)"}}
+    {{field id="orden" type="expr" value="=calc.zeroFillCode(cuenta)"}}
+  {{/section}}
+{{/define}} 
+{{#markup}}
+  {{#template id="lista"}}
+    <div>
+      {{_name}}
+      <span style="font-size:12px;float:right;">{{base._mayor}}</span>
+    </div>
+  {{/template}}
+{{/markup}}

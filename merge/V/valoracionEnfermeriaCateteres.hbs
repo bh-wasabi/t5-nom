@@ -1,0 +1,7 @@
+{{#define id="valoracionEnfermeriaCateteres"}}
+ 	{{#section id="base"}}
+  		{{field id="esOtrosHallazgosCateter" type="expr" value="=calc.in('otros', hallazgosCateter)"}}
+  		{{field id="esOtrosDatosInfeccionCateter" type="expr" value="=calc.in('otros', datosInfeccionCateter)"}}
+  		{{field id="esOtrosUsoActualCateter" type="expr" value="=calc.in('otros', usoActualCateter)"}}
+	{{/section}}
+{{/define}}

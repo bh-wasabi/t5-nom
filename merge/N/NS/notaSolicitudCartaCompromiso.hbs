@@ -1,0 +1,6 @@
+{{#define id="notaSolicitudCartaCompromiso"}}
+  {{action id="notaCancelacionNotaSolicitud" source="notaCancelacionNotaSolicitud" label="Cancelar" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{#section id="base"}}
+    {{field id="esHospitalizacion" type="expr" value="=tipoEpisodio=='hospitalizacion'"}}
+  {{/section}}
+{{/define}}

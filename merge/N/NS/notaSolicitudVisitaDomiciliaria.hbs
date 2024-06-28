@@ -1,0 +1,6 @@
+{{#define id="notaSolicitudVisitaDomiciliaria"}}
+  {{#transform id="copiar"}}
+    {{update section="persona" value="=persona"}}
+  {{/transform}}
+  {{action id="notaInformeVisitaDomiciliaria" source="notaInformeVisitaDomiciliaria" label="Informe Visita Domiciliaria" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+{{/define}}

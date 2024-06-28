@@ -1,0 +1,15 @@
+{{#define id="datosActivoFijo"}}
+  {{#section id="base"}}
+    {{field id="esOtroPropietario" type="expr" value="=propietario=='otro'"}}
+    {{#field id="proveedorCompra"}}
+      {{onChange clearFields="facturaCompra,urlCompra"}}
+    {{/field}}
+    {{#field id="facturaCompra"}}
+    	{{#editor sourceFindOne="=proveedorCompra" getSourceSection="adjuntos"}}
+        {{#onChange clearFields="urlCompra"}}
+          {{set urlCompra="=url"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+  {{/section}}
+{{/define}} 

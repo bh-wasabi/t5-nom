@@ -1,0 +1,13 @@
+{{#define id="eventoLesion"}}
+  {{#section id="base"}}
+    {{#field id="sepomex" type="text" label="SEPOMEX"}}
+      {{#onChange}}
+        {{set codigoPostal="=codigoPostal"}}
+        {{set entidad="=colonia"}}
+        {{set municipio="=municipio"}}
+        {{set localidad="=localidad"}}
+        {{set estado="=estado"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+{{/define}}

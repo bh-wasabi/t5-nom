@@ -1,0 +1,8 @@
+{{#define id="datosEmbarazoActualAvanzados"}}
+  {{#section id="base"}}
+    {{field id="inicial" type="expr" value="=atencionEmbarazada=='primeraVez'"}}
+    {{field id="subsecuente" type="expr" value="=atencionEmbarazada=='subsecuente'"}}
+    {{field id="tieneAtencion" type="expr" value="=calc.in(atencionEmbarazada,['primeraVez','subsecuente'])"}}
+    {{validator type="expr" validIf="=(@numeroConsultasRecibidas<31)" message="Las consultas no deben ser entre 0 y 30."}}
+  {{/section}}
+{{/define}}

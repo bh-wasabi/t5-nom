@@ -1,0 +1,26 @@
+{{#define id="notaRegistroEstacionamiento"}}
+  {{#view id="espaciosDisponibles"}}
+    {{#find limit="1" flatten="true"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{filter field="base.espaciosDisponibles" gte="=0"}}
+      {{include field="base.espaciosDisponibles" as="count"}}
+      {{sort field="_created.date" direction="desc"}}
+    {{/find}}
+  {{/view}}  
+
+  {{action id="afectar" error="=base.esSalida||fn('tieneAccesoEstacionamiento', base)?null:'No Tiene Acceso al Estacionamiento'"}}
+  {{#section id="base"}}
+    {{field id="esEntrada" type="expr" value="=_created.subType=='entrada'"}}
+    {{field id="esSalida" type="expr" value="=_created.subType=='salida'"}}
+    {{#field id="funcionario"}}
+      {{#onChange}}
+        {{set accesoEstacionamiento="=persona.accesoEstacionamiento"}}
+        {{set estacionamientoPatentes="=persona.estacionamientoPatentes"}}
+        {{set estacionamientoFechaDesde="=persona.estacionamientoFechaDesde"}}
+        {{set estacionamientoFechaHasta="=persona.estacionamientoFechaHasta"}}
+        {{set estacionamientoHoraDesde="=persona.estacionamientoHoraDesde"}}
+        {{set estacionamientoHoraHasta="=persona.estacionamientoHoraHasta"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+{{/define}}

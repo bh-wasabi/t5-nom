@@ -1,0 +1,266 @@
+ {{#define type="doc" id="dpi"}}
+  {{#view id="ultimaMetrica" onlyMapped="true"}}
+    {{#find limit="1"}}
+      {{filter condition="=persona" field="persona.id" eq="=persona"}}
+      {{filter condition="=tipo" field="dpi.tipo" eq="=tipo"}}
+      {{filter condition="=seccion" field="dpi.seccion" eq="=seccion"}}
+      {{filter condition="=campo" field="dpi.campo" eq="=campo"}}
+      {{filter field="nota.type" nin="notaSolicitudLaboratorio,notaSolicitudLaboratorioMolecular,notaSolicitudImagenologia,notaIndicacion"}}
+      {{sort field="dpi.fecha" direction="desc"}}
+    {{/find}}
+    {{map field="fecha" value="dpi.fecha"}}
+  {{/view}}
+  {{#view id="camposExtras"}}
+    {{#pipeline}}
+      {{filter condition="=persona" field="persona.id" eq="=persona"}}
+      {{filter condition="=tipo" field="dpi.tipo" eq="=tipo"}}
+      {{filter field="dpi.seccion" in="laboratorio,gasometria"}}
+      {{filter field="dpi._campo" neq="Laboratorio"}}
+      {{filter field="nota.type" nin="notaSolicitudLaboratorio,notaSolicitudLaboratorioMolecular,notaSolicitudImagenologia,notaIndicacion"}}
+      {{!-- {{sort field="dpi.grupo" direction="asc"}}
+      {{sort field="dpi._campo" direction="asc"}} --}}
+      {{group field="dpi.seccion" as="seccion"}}
+      {{group field="dpi.grupo" as="grupo"}}
+      {{group field="dpi.campo" as="campo"}}
+      {{group field="dpi._campo" as="_campo"}}
+    {{/pipeline}}
+  {{/view}}  
+  {{#view id="ultimos" onlyMapped="true"}}
+    {{#find limit="100"}}
+      {{filter condition="=desde" field="dpi.fecha" gte="=moment(desde).format('YYYY-MM-DD')"}}
+      {{filter condition="=hasta" field="dpi.fecha" lt="=moment(hasta).add(1,'day').format('YYYY-MM-DD')"}}
+      {{filter condition="=persona" field="persona.id" eq="=persona"}}
+      {{filter condition="=tipo" field="dpi.tipo" eq="=tipo"}}
+      {{filter condition="=seccion" field="dpi.seccion" eq="=seccion"}}
+      {{filter condition="=grupo" field="dpi.grupo" eq="=grupo"}}
+      {{filter condition="=campo" field="dpi.campo" eq="=campo"}}
+      {{filter field="nota.type" nin="notaSolicitudLaboratorio,notaSolicitudLaboratorioMolecular,notaSolicitudImagenologia,notaIndicacion"}}
+      {{sort field="dpi.fecha" direction="desc"}}
+      {{filter field="dpi.valorNumerico" exists="true"}}
+    {{/find}}
+    {{map field="orden" value="dpi.fecha"}}
+    {{!-- {{map field="fecha" value="=moment(dpi.fecha).format('DD/MMM')"}} --}}
+    {{map field="valor" value="=dpi.valorNumerico"}}
+    {{map field="valor2" value="=dpi.valorNumerico2"}}
+    {{sort field="orden"}}
+  {{/view}}
+  {{#view id="laboratorio" onlyMapped="true"}}
+    {{#find limit="100"}}
+      {{filter condition="=desde" field="dpi.fecha" gte="=moment(desde).format('YYYY-MM-DD')"}}
+      {{filter condition="=hasta" field="dpi.fecha" lt="=moment(hasta).add(1,'day').format('YYYY-MM-DD')"}}
+      {{filter condition="=persona" field="persona.id" eq="=persona"}}
+      {{filter condition="=tipo" field="dpi.tipo" eq="=tipo"}}
+      {{filter condition="=seccion" field="dpi.seccion" eq="=seccion"}}
+      {{filter condition="=grupo" field="dpi.grupo" eq="=grupo"}}
+      {{filter condition="=campo" field="dpi._campo" eq="=campo"}}
+      {{filter field="nota.type" nin="notaSolicitudLaboratorio,notaSolicitudLaboratorioMolecular,notaSolicitudImagenologia,notaIndicacion"}}
+      {{sort field="dpi.fecha" direction="desc"}}
+      {{filter field="dpi.valor" exists="true"}}
+    {{/find}}
+    {{map field="orden" value="dpi.fecha"}}
+    {{!-- {{map field="fecha" value="=moment(nota.date).format('DD/MMM')"}} --}}
+    {{map field="valor" value="=calc.forceNumber(dpi.valor)"}}
+    {{sort field="orden"}}
+  {{/view}}
+  {{#view id="resultadosTxDx" onlyMapped="true"}}
+    {{#find limit="1000"}}
+      {{filter condition="=persona" field="persona.id" eq="=persona"}}
+      {{filter condition="=tipo" field="dpi.tipo" eq="=tipo"}}
+      {{filter condition="=seccion" field="dpi.seccion" eq="=seccion"}}
+      {{filter condition="=campo" field="dpi.campo" eq="=campo"}}
+      {{filter field="dpi.valorTexto" exists="true"}}
+      {{sort field="nota.date" direction="desc"}}
+    {{/find}}
+    {{map field="fecha" value="=moment(nota.date).format('DD/MMM HH:mm')"}}
+    {{map field="grupo" value="=dpi.grupo"}}
+    {{map field="campo" value="=dpi._campo"}}
+    {{map field="valor" value="=dpi.valor"}}
+  {{/view}}
+  {{#view id="trans" onlyMapped="true"}}
+    {{#find limit="-1"}}
+      {{include field="dpi"}}
+      {{include field="nota.user"}}
+      {{include field="nota.turn"}}
+      {{sort field="nota.date" direction="asc"}}
+      {{filter field="dpi.valor" neq="=null"}}
+      {{filter field="dpi.hora" lte="=moment().add(1,'m').format('YYYY-MM-DD HH:mm')"}}
+      {{filter condition="=solicitud" field="nota.solicitud" eq="=solicitud"}}
+      {{filter condition="=persona" field="persona.id" eq="=persona"}}
+      {{filter condition="=horas" field="nota.date" gte="=moment().add(-horas, 'h').format()"}}
+      {{filter condition="=servicio" field="dpi.servicio" eq="=servicio"}}
+      {{filter condition="=momento" field="nota.momentoSolicitud" eq="=momento"}}
+    {{/find}}
+    {{map field="_user" value="=nota._user"}}
+    {{map field="_userTurn" value="=nota._turn"}}
+    {{map field="hora" value="=dpi.hora"}}
+    {{map field="turno" value="=dpi.turno"}}
+    {{map field="seccion" value="=dpi.seccion"}}
+    {{map field="grupo" value="=dpi.grupo"}}
+    {{map field="campo" value="=dpi._campo"}}
+    {{map field="valor" value="=dpi.valor"}}
+    {{map field="valorNumerico" value="=dpi.valorNumerico"}}
+
+    {{!-- copiarTrans / copiarPartograma en persona.hbs --}}
+    {{#transform}}
+      {{#update section="habitusExterior"}}
+        {{pivotText filterKey="seccion" filterValue="habitusExterior" keys="turno" pivotField="campo" values="valor" labels="A=Matutino,B=Vespertino,C=Nocturno,M=Matutino,V=Vespertino,N=Nocturno,E=Especial,AE=Especial"}}
+      {{/update}}      
+      {{#update section="valoracionAparatosSistemas"}}
+        {{pivotText filterKey="seccion" filterValue="valoracionAparatosSistemas" keys="turno" pivotField="campo" values="valor" labels="A=Matutino,B=Vespertino,C=Nocturno,M=Matutino,V=Vespertino,N=Nocturno,E=Especial,AE=Especial"}}
+      {{/update}}      
+      {{#update section="estadoSalud"}}
+        {{pivotText filterKey="seccion" filterValue="estadoSalud" keys="campo" pivotField="turno" values="valor" labels="A=Matutino,B=Vespertino,C=Nocturno,M=Matutino,V=Vespertino,N=Nocturno,E=Especial,AE=Especial"}}
+      {{/update}}      
+      {{#update section="signosVitales"}}
+        {{pivotText filterKey="seccion" filterValue="signosVitales" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}      
+      {{#update section="partograma"}}
+        {{pivotText filterKey="seccion" filterValue="partograma" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}      
+      {{#update section="informacionEmbarazoPartograma"}}
+        {{pivotText filterKey="seccion" filterValue="informacionEmbarazoPartograma" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}      
+      {{#update section="exploracionFisicaPartograma"}}
+        {{pivotText filterKey="seccion" filterValue="exploracionFisicaPartograma" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}      
+      {{#update section="parametrosVentilatorios"}}
+        {{pivotText filterKey="seccion" filterValue="parametrosVentilatorios" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}      
+      {{!-- {{#update section="perfilGasometrico"}}
+        {{pivotText filterKey="seccion" filterValue="perfilGasometrico" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}} --}}
+      {{#update section="gasometria"}}
+        {{pivotText filterKey="seccion" filterValue="gasometria" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}
+      {{#update section="tallerGasometrico"}}
+        {{pivotText filterKey="seccion" filterValue="tallerGasometrico" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}
+      {{#update section="tallerHemodinamico"}}
+        {{pivotText filterKey="seccion" filterValue="tallerHemodinamico" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}      
+      {{#update section="resultadosAuxiliaresDx"}}
+        {{pivotText filterKey="seccion" filterValue="resultadosAuxiliaresDx" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}      
+      {{#update section="controlLiquidos"}}
+        {{pivotNumber filterKey="seccion" filterValue="controlLiquidos" rowsToPivot="grupo,campo" colsToPivot="hora" aggregationDimension="valorNumerico" aggregator="sum" round="2"}}
+      {{/update}}
+      {{#update section="escalas"}}
+        {{pivotText filterKey="seccion" filterValue="escalas" keys="turno" pivotField="campo" values="valor" labels="A=Matutino,B=Vespertino,C=Nocturno,M=Matutino,V=Vespertino,N=Nocturno,E=Especial,AE=Especial"}}
+      {{/update}}      
+      {{#update section="registroEscalasPediatrica"}}
+        {{pivotText filterKey="seccion" filterValue="registroEscalasPediatrica" keys="turno" pivotField="campo" values="valor" labels="A=Matutino,B=Vespertino,C=Nocturno,M=Matutino,V=Vespertino,N=Nocturno,E=Especial,AE=Especial"}}
+      {{/update}}      
+      {{#update section="prevencionCaidasPediatrica"}}
+        {{pivotText filterKey="seccion" filterValue="prevencionCaidasPediatrica" keys="turno" pivotField="campo" values="valor" labels="A=Matutino,B=Vespertino,C=Nocturno,M=Matutino,V=Vespertino,N=Nocturno,E=Especial,AE=Especial"}}
+      {{/update}}      
+      {{#update section="prevencionUlceraDecubitoPediatrica"}}
+        {{pivotText filterKey="seccion" filterValue="prevencionUlceraDecubitoPediatrica" keys="turno" pivotField="campo" values="valor" labels="A=Matutino,B=Vespertino,C=Nocturno,M=Matutino,V=Vespertino,N=Nocturno,E=Especial,AE=Especial"}}
+      {{/update}}      
+      {{#update section="cuidadoHeridasPediatrica"}}
+        {{pivotText filterKey="seccion" filterValue="cuidadoHeridasPediatrica" keys="turno" pivotField="campo" values="valor" labels="A=Matutino,B=Vespertino,C=Nocturno,M=Matutino,V=Vespertino,N=Nocturno,E=Especial,AE=Especial"}}
+      {{/update}}      
+      {{#update section="prevencionIVUSondaVesicalPediatrica"}}
+        {{pivotText filterKey="seccion" filterValue="prevencionIVUSondaVesicalPediatrica" keys="turno" pivotField="campo" values="valor" labels="A=Matutino,B=Vespertino,C=Nocturno,M=Matutino,V=Vespertino,N=Nocturno,E=Especial,AE=Especial"}}
+      {{/update}}      
+      {{#update section="cuidadosAccesoVascularPediatrica"}}
+        {{pivotText filterKey="seccion" filterValue="cuidadosAccesoVascularPediatrica" keys="turno" pivotField="campo" values="valor" labels="A=Matutino,B=Vespertino,C=Nocturno,M=Matutino,V=Vespertino,N=Nocturno,E=Especial,AE=Especial"}}
+      {{/update}}      
+      {{#update section="procedimientosInvasivosPediatrica"}}
+        {{pivotText filterKey="seccion" filterValue="procedimientosInvasivosPediatrica" keys="turno" pivotField="campo" values="valor" labels="A=Matutino,B=Vespertino,C=Nocturno,M=Matutino,V=Vespertino,N=Nocturno,E=Especial,AE=Especial"}}
+      {{/update}}      
+      {{#update section="labstixPediatrica"}}
+        {{pivotText filterKey="seccion" filterValue="labstixPediatrica" keys="turno" pivotField="campo" values="valor" labels="A=Matutino,B=Vespertino,C=Nocturno,M=Matutino,V=Vespertino,N=Nocturno,E=Especial,AE=Especial"}}
+      {{/update}}            
+      {{#update section="eventoCardiorespiratorio"}}
+        {{pivotText filterKey="seccion" filterValue="eventoCardiorespiratorio" keys="turno" pivotField="campo" values="valor" labels="A=Matutino,B=Vespertino,C=Nocturno,M=Matutino,V=Vespertino,N=Nocturno,E=Especial,AE=Especial"}}
+      {{/update}}            
+      {{#update section="educacionAtencionPrimariaSalud"}}
+        {{pivotText filterKey="seccion" filterValue="educacionAtencionPrimariaSalud" keys="turno" pivotField="campo" values="valor" labels="A=Matutino,B=Vespertino,C=Nocturno,M=Matutino,V=Vespertino,N=Nocturno,E=Especial,AE=Especial"}}
+      {{/update}}            
+      {{#update section="nanda"}}
+        {{!-- {{pivotText filterKey="seccion" filterValue="nanda" keys="campo" pivotField="turno" values="valor" labels="A=Matutino,B=Vespertino,C=Nocturno,M=Matutino,V=Vespertino,N=Nocturno,E=Especial,AE=Especial"}} --}}
+        {{pivotText filterKey="seccion" filterValue="nanda" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}      
+      {{#update section="nic"}}
+        {{!-- {{pivotText filterKey="seccion" filterValue="nic" keys="grupo" pivotField="turno" values="valor" labels="A=Matutino,B=Vespertino,C=Nocturno,M=Matutino,V=Vespertino,N=Nocturno,E=Especial,AE=Especial"}} --}}
+        {{pivotText filterKey="seccion" filterValue="nic" keys="grupo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}      
+      {{#update section="noc"}}
+        {{!-- {{pivotText filterKey="seccion" filterValue="noc" keys="grupo" pivotField="turno" values="valor" labels="A=Matutino,B=Vespertino,C=Nocturno,M=Matutino,V=Vespertino,N=Nocturno,E=Especial,AE=Especial"}} --}}
+        {{pivotText filterKey="seccion" filterValue="noc" keys="grupo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}      
+      {{#update section="medicamentos"}}
+        {{pivotText filterKey="seccion" filterValue="medicamentos" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}      
+      {{#update section="soluciones"}}
+        {{pivotText filterKey="seccion" filterValue="soluciones" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}      
+      {{#update section="mezclas"}}
+        {{pivotText filterKey="seccion" filterValue="mezclas" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}      
+      {{#update section="dietas"}}
+        {{pivotText filterKey="seccion" filterValue="dietas" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}      
+      {{#update section="laboratorio"}}
+        {{pivotText filterKey="seccion" filterValue="laboratorio" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}      
+      {{#update section="laboratorioMolecular"}}
+        {{pivotText filterKey="seccion" filterValue="laboratorioMolecular" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}      
+      {{#update section="laboratorioPatologia"}}
+        {{pivotText filterKey="seccion" filterValue="laboratorioPatologia" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}      
+      {{#update section="imagenologia"}}
+        {{pivotText filterKey="seccion" filterValue="imagenologia" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}      
+      {{#update section="transfusiones"}}
+        {{pivotText filterKey="seccion" filterValue="transfusiones" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}      
+      {{#update section="tiemposQuirurgicos"}}
+        {{pivotText filterKey="seccion" filterValue="tiemposQuirurgicos" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}
+      {{#update section="tiemposQuirurgicosEnf"}}
+        {{pivotText filterKey="seccion" filterValue="tiemposQuirurgicosEnf" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}
+      {{#update section="tiemposIsquemia"}}
+        {{pivotText filterKey="seccion" filterValue="tiemposIsquemia" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}
+      {{#update section="tecnicaAnestesica"}}
+        {{pivotText filterKey="seccion" filterValue="tecnicaAnestesica" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}
+      {{#update section="posicionQuirugica"}}
+        {{pivotText filterKey="seccion" filterValue="posicionQuirugica" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}
+      {{#update section="cateterSondaDrenaje"}}
+        {{pivotText filterKey="seccion" filterValue="cateterSondaDrenaje" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}
+      {{#update section="cateterSondaDrenajeQuirofanoEnf"}}
+        {{pivotText filterKey="seccion" filterValue="cateterSondaDrenajeQuirofanoEnf" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}      
+      {{#update section="estudioHistopatologico"}}
+        {{pivotText filterKey="seccion" filterValue="estudioHistopatologico" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}
+      {{#update section="controlTextiles"}}
+        {{pivotText filterKey="seccion" filterValue="controlTextiles" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}
+      {{#update section="controlTextiles2"}}
+        {{pivotNumber filterKey="seccion" filterValue="controlTextiles2" rowsToPivot="grupo,campo" colsToPivot="hora" aggregationDimension="valorNumerico" aggregator="sum" totalsLabel="Balance" round="2"}}
+      {{/update}}
+      {{#update section="equipoQuirurgico"}}
+        {{pivotText filterKey="seccion" filterValue="equipoQuirurgico" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}
+      {{#update section="planesCuidado"}}
+        {{pivotText filterKey="seccion" filterValue="planesCuidado" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}
+      {{#update section="enfermeraResponsable"}}
+        {{pivotText filterKey="seccion" filterValue="enfermeraResponsable" keys="campo" pivotField="turno" values="valor" labels="A=Matutino,B=Vespertino,C=Nocturno,M=Matutino,V=Vespertino,N=Nocturno,E=Especial,AE=Especial"}}
+      {{/update}}
+      {{#update section="usuarios"}}
+        {{pivotText pivotField="_userTurn" values="_user"}}
+      {{/update}}
+      {{#update section="comentarios"}}
+        {{pivotText filterKey="seccion" filterValue="comentarios" keys="campo" pivotField="hora" pivotHours="true" values="valor"}}
+      {{/update}}
+    {{/transform}}
+  {{/view}}
+{{/define}}

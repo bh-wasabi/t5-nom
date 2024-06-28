@@ -1,0 +1,129 @@
+{{#define type="doc" id="_contabilidad" name="Contabilidad"}}
+  {{#menu id="menu"}}
+    {{#item text="Ver" icon="bookmark"}}
+      {{item text="(vistas)" type="cube-view-names"}}
+      {{item text="Guardar vista..." icon="save" beginGroup="true" type="cube-view-save"}}
+      {{item text="Ajustes..." icon="preferences" type="cube-view-preferences"}}
+    {{/item}}
+    {{item text="Refrescar" icon="refresh" type="refresh"}}
+  {{/menu}}
+  {{browser id="cubo" menu="menu"}}
+
+  {{#action id="balance" type="report-pdf" hide="true" report="balance" fileName="balance" label="Balance General" color="blue-grey" visibleMode="close"}}
+    {{ask field="desde" type="date" label="Desde" value="=moment().startOf('year').format()"}}
+    {{ask field="hasta" type="date" label="Hasta" value="=moment().endOf('year').format()"}}
+    {{!-- {{ask field="nivel" type="select" label="Nivel" keys="mayor,detalle" names="Mayor,Detalle" value="mayor"}} --}}
+    {{ask field="_export" type="select" label="Formato" keys="pdf,xlsx,csv" names="PDF,Excel,CSV" value="pdf"}}
+  {{/action}}
+
+  {{action id="menuReportes" type="menu" menu="menuReportes" label="Reportes" color="blue-grey" visibleMode="close"}}
+  {{#menu id="menuReportes" color="blue-grey"}}
+    {{item action="balance" text="Balance General"}}
+  {{/menu}}
+
+  {{#report id="preliminar-encabezado"}}
+    {{#columns margin="20" widths="0,*"}}
+      {{#column}}
+        {{row image="logo" alignment="left" imageWidth="200" margin="0,-15,0,0"}}
+      {{/column}}
+      {{#column margin="0,-10,0,0" color="grey"}}
+        {{row text="Hospital Regional de Alta Especialidad Ixtapaluca" alignment="right" fontSize="6"}}
+        {{row text="Carretera Federal México Puebla Km. 34.5" alignment="right" fontSize="6"}}
+        {{row text="Pueblo de Zoquiapan 56530, Ixtapaluca, Méx." alignment="right" fontSize="6"}}
+        {{row text="Teléfono: 55 5972 9800, CLUES: MCSSA018786" alignment="right" fontSize="6"}}
+      {{/column}}
+    {{/columns}}
+  {{/report}}
+
+  {{#report id="balance" fontSize="8" pageOrientation="landscape" header="preliminar-encabezado" showStandarFooter="true" source="movPoliza" view="balanceGeneral"}}
+    {{#stack}}
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{row text="Balance General" fontSize="10" bold="true" margin="-20,0,0,0"}}
+      {{row expr="=calc.concat('Desde:', moment(_query.desde).format('DD/MMM/YYYY'), '- Hasta:', moment(_query.hasta).format('DD/MMM/YYYY'))" fontSize="8" bold="true" margin="-20,0,0,0"}}
+      {{#columns widths="380,*"}}
+        {{#column}}
+          {{#table section="_items" where="=subGrupo=='activo'" fontSize="8" titleStyle="title" layout="headerLineOnly" headerStyle="field2" margin="-20,0,0,10" fontSize="8" widths="260,80" header="Concepto,#Saldo Final" withoutHeader="false"}}
+
+            {{column condition="=_isBeginGroup&&_level==1" bold="true" color="#223f99" left="=(_level-1)*10" fontSize="11" expr="=calc.upperCase(calc.concat('Total',_value))"}}
+            {{column condition="=_isBeginGroup&&_level==2" bold="true" color="#223f99" left="=(_level-1)*10" fontSize="10" expr="=calc.upperCase(_value)"}}
+            {{column condition="=_isBeginGroup&&_level>2"  bold="true" color="#223f99" left="=(_level-1)*10" fontSize="9" expr="=calc.removePrefix(_value, @numero)"}}
+            {{column condition="=_isBeginGroup" bold="true" color="#223f99" expr="=saldoFinal" type="number" align="right" format="currency"}}
+
+            {{column condition="=_isItem" left="=(_level-1)*10" expr="=calc.removePrefix(_value, @numero)" type="text"}}
+            {{column condition="=_isItem" expr="=saldoFinal" type="number" align="right" format="currency"}}
+
+            {{column condition="=_isEndGroup&&_level==1" expr="=' '"}}
+            {{column condition="=_isEndGroup&&_level==1" expr="=' '"}}
+          {{/table}}
+        {{/column}}
+        {{#column}}
+          {{#table section="_items" where="=subGrupo=='pasivoPatrimonio'" fontSize="8" titleStyle="title" layout="headerLineOnly" headerStyle="field2" margin="-20,0,0,10" fontSize="8" widths="260,80" header="Concepto,#Saldo Final" withoutHeader="false"}}
+
+            {{column condition="=_isBeginGroup&&_level==1" bold="true" color="#223f99" left="=(_level-1)*10" fontSize="11" expr="=calc.upperCase(calc.concat('Total',_value))"}}
+            {{column condition="=_isBeginGroup&&_level==2" bold="true" color="#223f99" left="=(_level-1)*10" fontSize="10" expr="=calc.upperCase(_value)"}}
+            {{column condition="=_isBeginGroup&&_level>2"  bold="true" color="#223f99" left="=(_level-1)*10" fontSize="9" expr="=calc.removePrefix(_value, @numero)"}}
+            {{column condition="=_isBeginGroup" bold="true" color="#223f99" expr="=-saldoFinal" type="number" align="right" format="currency"}}
+
+            {{column condition="=_isItem" left="=(_level-1)*10" expr="=calc.removePrefix(_value, @numero)" type="text"}}
+            {{column condition="=_isItem" expr="=-saldoFinal" type="number" align="right" format="currency"}}
+
+            {{column condition="=_isEndGroup&&_level==1" expr="=' '"}}
+            {{column condition="=_isEndGroup&&_level==1" expr="=' '"}}
+          {{/table}}
+        {{/column}}
+      {{/columns}}
+    {{/stack}}
+  {{/report}}
+
+{{!--   {{#report id="balance" fontSize="8" header="preliminar-encabezado" showStandarFooter="true" source="movPoliza" view="balanceGeneral"}}
+    {{#stack}}
+      {{image id="logo" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei3b.png"}}
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{row text="Balance General" fontSize="10" bold="true" margin="-20,0,0,0"}}
+      {{row expr="=calc.concat('Desde:', moment(_query.desde).format('DD/MMM/YYYY'), '- Hasta:', moment(_query.hasta).format('DD/MMM/YYYY'))" fontSize="8" bold="true" margin="-20,0,0,0"}}
+      {{#table section="_items" fontSize="8" titleStyle="title" layout="headerLineOnly" headerStyle="field2" margin="-20,0,0,10" fontSize="8" widths="230,70,70,70,70" header="Nombre,#Saldo Inicial,#Cargos,#Abonos,#Saldo Final"}}
+
+        {{column condition="=_isBeginGroup&&_level==1" bold="true" color="#223f99" left="=(_level-1)*10" fontSize="11" expr="=calc.upperCase(_value)"}}
+        {{column condition="=_isBeginGroup&&_level==2" bold="true" color="#223f99" left="=(_level-1)*10" fontSize="10" expr="=calc.upperCase(_value)"}}
+        {{column condition="=_isBeginGroup&&_level>2"  bold="true" color="#223f99" left="=(_level-1)*10" fontSize="9" expr="=calc.removePrefix(_value, @numero)"}}
+        {{column condition="=_isBeginGroup" bold="true" color="#223f99" field="saldoInicial" type="number" align="right" format="currency"}}
+        {{column condition="=_isBeginGroup" bold="true" color="#223f99" field="debe" type="number" align="right" format="currency"}}
+        {{column condition="=_isBeginGroup" bold="true" color="#223f99" field="haber" type="number" align="right" format="currency"}}
+        {{column condition="=_isBeginGroup" bold="true" color="#223f99" field="saldoFinal" type="number" align="right" format="currency"}}
+
+        {{column condition="=_isItem" left="=(_level-1)*10" expr="=calc.removePrefix(_value, @numero)" type="text"}}
+        {{column condition="=_isItem" field="saldoInicial" type="number" align="right" format="currency"}}
+        {{column condition="=_isItem" field="debe" label="Cargos" type="number" align="right" format="currency"}}
+        {{column condition="=_isItem" field="haber" label="Abonos" type="number" align="right" format="currency"}}
+        {{column condition="=_isItem" field="saldoFinal" type="number" align="right" format="currency"}}
+
+        {{column condition="=_isEndGroup&&_level==1" expr="=' '"}}
+        {{column condition="=_isEndGroup&&_level==1" expr="=' '"}}
+        {{column condition="=_isEndGroup&&_level==1" expr="=' '"}}
+        {{column condition="=_isEndGroup&&_level==1" expr="=' '"}}
+        {{column condition="=_isEndGroup&&_level==1" expr="=' '"}}
+      {{/table}}
+    {{/stack}}
+  {{/report}}
+ --}}
+{{/define}}
+
+{{#markup}}
+  {{#page}}
+    {{#row}}
+      {{#col small="100%"}}
+        {{#row}}
+          {{#widget type="cube" source="movPoliza" cube="saldos"}}
+            {{param aux="contabilidad"}}
+            {{param hasta="=moment().format('YYYY-MM-DD')"}}
+          {{/widget}}
+        {{/row}}
+      {{/col}}
+    {{/row}}
+  {{/page}}
+{{/markup}}

@@ -1,0 +1,6 @@
+{{#define id="tiempoExperiencia"}}
+  {{#section id="base"}}
+    {{field id="tieneMeritosLaborales" type="expr" value="=calc.number(meritosLaborales)>0"}}
+    {{field id="calificacion" type="calc" label="Calificación" value="=calc.sumArgs(@tiempoExperienciaPuestoAspira,@tiempoExperienciaSectorPublico,@tiempoExperienciaSectorPrivado,@tiempoOcupandoPuestoSimilar,@meritosLaborales)"}}
+  {{/section}}
+{{/define}}

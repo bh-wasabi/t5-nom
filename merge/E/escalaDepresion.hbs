@@ -1,0 +1,6 @@
+{{#define id="escalaDepresion"}}
+  {{#section id="base"}}
+    {{field id="total" type="calc" value="=calc.sumArgs(@sigoDisfrutandoCosas, @soyCapazReirme, @meSientoAlegre, @meSientoLentoTorpe, @perdidoInteresAspectoPersonal, @esperoCosasConIlusion, @capazDisfrutarConLibro)"}}
+    {{field id="nivel" type="expr" value="=fn('escalaDepresion', total)"}}
+  {{/section}}
+{{/define}} 

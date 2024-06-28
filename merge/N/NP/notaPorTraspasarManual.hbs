@@ -1,0 +1,95 @@
+{{#define id="notaPorTraspasarManual"}}
+  {{param attribute1="=_created.service"}}
+  {{!-- {{param startOnOpen="articulos"}} --}}
+  {{param removeIfEmptySection="articulos"}}
+  {{param removeIfEmptyField="cantidad"}}
+
+  {{#section id="base"}}
+    {{field id="esAlmacenOrigen" type="expr" value="=tipoAlmacenOrigen=='almacen'"}}
+    {{field id="esUbicacionOrigen" type="expr" value="=tipoAlmacenOrigen=='ubicacion'"}}
+    {{field id="esPersonaOrigen" type="expr" value="=tipoAlmacenOrigen=='persona'"}}
+    {{field id="esServicioOrigen" type="expr" value="=tipoAlmacenOrigen=='servicio'"}}
+    {{#field id="ubicacionOrigen"}}
+      {{#editor}}
+        {{param tipoExpediente="='ubicacion'"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="personaOrigen"}}
+      {{#editor}}
+        {{param tipoExpediente="='paciente'"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="servicioOrigen"}}
+      {{#editor}}
+        {{param tipoExpediente="='servicio'"}}
+      {{/editor}}
+    {{/field}}
+    {{field id="esAlmacenDestino" type="expr" value="=tipoAlmacenDestino=='almacen'"}}
+    {{field id="esUbicacionDestino" type="expr" value="=tipoAlmacenDestino=='ubicacion'"}}
+    {{field id="esPersonaDestino" type="expr" value="=tipoAlmacenDestino=='persona'"}}
+    {{field id="esServicioDestino" type="expr" value="=tipoAlmacenDestino=='servicio'"}}
+    {{#field id="ubicacionDestino"}}
+      {{#editor}}
+        {{param tipoExpediente="='ubicacion'"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="personaDestino"}}
+      {{#editor}}
+        {{param tipoExpediente="='paciente'"}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="servicioDestino"}}
+      {{#editor}}
+        {{param tipoExpediente="='servicio'"}}
+      {{/editor}}
+    {{/field}}
+    {{field id="origen"   type="expr" value="=esPersonaOrigen?personaOrigen:esUbicacionOrigen?ubicacionOrigen:esServicioOrigen?servicioOrigen:almacenOrigen"}}
+    {{field id="_origen"  type="expr" value="=esPersonaOrigen?_personaOrigen:esUbicacionOrigen?_ubicacionOrigen:esServicioOrigen?_servicioOrigen:_almacenOrigen"}}
+    {{field id="destino"  type="expr" value="=esPersonaDestino?personaDestino:esUbicacionDestino?ubicacionDestino:esServicioDestino?servicioDestino:almacenDestino"}}
+    {{field id="_destino" type="expr" value="=esPersonaDestino?_personaDestino:esUbicacionDestino?_ubicacionDestino:esServicioDestino?_servicioDestino:_almacenDestino"}}
+  {{/section}}
+
+  {{#section id="articulos"}}
+    {{#field id="articulo"}}
+      {{#editor display="base.codigo" view="bienes"}}
+        [.#if esSIC.]      
+        {{param tipoArticulo="=base.tipoArticulo"}}
+        {{param servicio="=base.servicioEspecifico"}}
+        [.else.]
+        {{param tipoArticulo="=_params.tipoArticulo"}}
+        [./if.]
+      {{/editor}}
+      {{#onChange}}
+        {{#join source="mov" view="disponible" as="existencia"}}
+          {{param aux="inv"}}
+          {{param cuenta="=_doc.base.origen"}}
+          {{param codigo="=base.codigo"}}
+        {{/join}}
+        {{set codigo="=base.codigo"}}
+        {{set descripcion="=base.descripcion"}}
+        {{set tipoArticulo="=base.tipoArticulo"}}
+        {{set unidad="=base.unidadExistencia"}}
+        {{set _unidad="=base._unidadExistencia"}}
+        {{set factor="=1"}}
+        {{set disponible="=existencia.cantidad||0"}}
+      {{/onChange}}
+    {{/field}}
+    {{!-- {{#field id="loteEspecifico"}}
+      {{#editor type="select" source="mov" view="loteEspecifico" alwaysLoad="true" sendSearchValue="true" value="lote" display="loteVencimiento"}}
+        {{param codigo="=codigo"}}
+      {{/editor}}
+    {{/field}} --}}
+  {{/section}}
+  
+  {{#grid id="articulos" section="articulos" keyField="cantidad" allowInsert="true" allowRemove="true"}}
+    {{column field="articulo" label="Código" width="150" validateDuplicate="true"}}
+    {{column field="cantidad" label="Cantidad" width="100" type="numeric" format="#,"}}  {{!-- validateExcess="disponible" --}}
+    {{column field="codigo" label="Código" width="150" readOnly="true"}}
+    {{column field="descripcion" label="Descripción" width="300" readOnly="true"}}
+    {{column field="tipoArticulo" label="Tipo Artículo" width="150" readOnly="true"}}
+    {{column field="_unidad" label="Unidad" width="200" readOnly="true"}}
+    {{column field="factor" label="Factor" width="70" type="numeric" format="#,.##" readOnly="true"}}
+    {{!-- {{column field="loteEspecifico" label="Lote Especifico" width="150" validateDuplicate="true"}} --}}
+    {{column field="disponible" label="Disponible" readOnly="true" width="80" type="numeric" format="#,"}}
+  {{/grid}}
+{{/define}}

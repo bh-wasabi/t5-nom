@@ -1,0 +1,16 @@
+{{#define id="notaSolicitudProcedimiento"}}
+  {{param attribute1="=_created.service"}}
+  {{param attribute2="=_.isEmpty(calc.filterInRef(base.procedimiento, 'base.servicioSolicitado', ['tococirugia','endourologia','hemodinamia','braquiterapia']))?null:'procedimientoQx'"}}
+  {{#view id="programados"}}
+    {{#find}}
+      {{include field="_name"}}
+      {{include field="_created"}}
+      {{sort field="_id" direction="desc"}}
+      {{search field="_name"}}
+      {{filter condition="=id" field="persona.id" eq="=id"}}
+    {{/find}}
+  {{/view}}
+  {{#section id="base"}}
+    {{field id="esHospitalizacion" type="expr" value="=tipoEpisodio=='hospitalizacion'"}}
+  {{/section}}
+{{/define}}

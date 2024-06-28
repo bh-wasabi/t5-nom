@@ -1,0 +1,15 @@
+{{#define id="notaRechazoSolicitud"}}
+  {{#section id="base"}}
+    {{field id="esDonacionTrasplanteCadaverico" type="expr" value="=_created.service=='donacionTrasplanteCadaverico'"}}
+    {{field id="esDonacionTrasplanteVivo" type="expr" value="=_created.service=='donacionTrasplanteVivo'"}}
+    {{field id="esRecepcionTrasplante" type="expr" value="=_created.service=='recepcionTrasplante'"}}
+    {{field id="esClinicaEspecial" type="expr" value="=_created.service=='clinicaEspecial'"}}
+    {{field id="esRechazoTrasplanteComite" type="expr" value="=esDonacionTrasplanteVivo||esRecepcionTrasplante"}}
+    {{field id="esRechazoTrasplanteFamiliar" type="expr" value="=esDonacionTrasplanteCadaverico"}}
+    {{field id="esTrasplante" type="expr" value="=esDonacionTrasplanteVivo||esRecepcionTrasplante||esRecepcionTrasplante"}}
+    {{field id="esGeneral" type="expr" value="=!esTrasplante&&!esClinicaEspecial"}}
+    {{field id="esOtro" type="expr" value="=calc.in('otro', @motivo)||calc.in('otro', @motivoRechazoTrasplante)"}}
+  {{/section}}  
+  {{action id="cancelar" forceReadOnly="true"}}  
+  {{action id="afectar" forceReadOnly="true"}}  
+{{/define}}

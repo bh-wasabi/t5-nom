@@ -1,0 +1,45 @@
+{{#define id="notaRegistroReubicacionActivo"}}
+  {{action id="afectar" error="=_.isEmpty(_doc.adjuntos)?'Falta Incluir el Archivo Adjunto Correspondiente':null"}}
+  {{#action id="bim" hide="true" type="bim360" label="BIM" title="=calc.concat('BIM', _items[0].persona.planta)" bim="=_items[0].persona.bim" color="grey" visibleMode="close" fromSource="persona" fromView="datosUbicacion"}}
+    {{param ubicacion="=_data.ubicacion"}}
+  {{/action}}
+  {{#action id="planta" hide="true" type="openPreview" label="Planta" title="Planta" color="grey" visibleMode="close" fromSource="persona" fromView="datosUbicacion"}}
+    {{param ubicacion="=_data.ubicacion"}}
+    {{link title="=calc.concat('Planta', _items[0].persona.planta)" href="=fn('urlPlanta', _items[0].persona.planta)"}}
+  {{/action}}
+  {{#section id="base"}}
+    {{#field id="articulo"}}
+      {{#editor alwaysLoad="true"}}
+        {{param tipoActivoFijo="=@tipoActivoFijo"}}
+        {{param ubicacion="=@ubicacion"}}
+        {{param estatus="='activo'"}}
+        {{#onChange}}
+          {{join source="persona" as="ubicacion" id="base.ubicacion"}}
+          {{set codigo="=base.codigo"}}
+          {{set descripcion="=base.descripcion"}}
+          {{set descripcionLarga="=base.descripcionLarga"}}
+          {{set datosActivoFijo="=base.datosActivoFijo"}}
+          {{set _datosActivoFijo="=base._datosActivoFijo"}}
+          {{set ubicacion="=base.ubicacion"}}
+          {{set area="=ubicacion.persona.area"}}
+          {{set criticidadZona="=ubicacion.persona.criticidadZona"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="motivo"}}
+      {{#editor}}
+        {{param servicio="=@servicio"}}
+        {{param partOf="='reubicacion'"}}
+      {{/editor}}
+    {{/field}}
+    {{validator type="expr" validIf="=ubicacion!=nuevaUbicacion" message="Ubicación Incorrecta"}}
+  {{/section}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+{{/define}}

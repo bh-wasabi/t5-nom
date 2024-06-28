@@ -1,0 +1,32 @@
+{{#define id="notaPorDevolver"}}
+  {{param attribute1="=_created.service"}}
+  {{param startOnOpen="aplicacion"}}
+  {{param removeIfEmptySection="aplicacion"}}
+  {{param removeIfEmptyField="continuar"}}
+
+  {{!-- {{#section id="aplicacion"}}
+    {{#field id="loteEspecifico"}}
+      {{#editor type="select" source="mov" view="loteEspecifico" alwaysLoad="true" sendSearchValue="true" value="lote" display="loteVencimiento"}}
+        {{param codigo="=codigo"}}
+      {{/editor}}
+    {{/field}}
+  {{/section}} --}}
+  
+  {{#grid id="aplicacion" section="aplicacion" keyField="continuar" disableEnter="true" applyTo="continuar" applyContinue="true"}}
+    {{column field="fecha" type="date" format="DD/MMM/YYYY" width="100" readOnly="true"}}
+    {{column field="solicitud" type="text" width="180" readOnly="true"}}
+    {{column field="_name" width="300" readOnly="true"}}
+    {{column field="_persona" width="180" readOnly="true"}}
+    {{column field="central" width="180" readOnly="true"}}
+    {{column field="cama" width="70" readOnly="true"}}
+    {{column field="solicitado" label="Solicitado" type="numeric" format="#," width="70" readOnly="true"}}
+    {{column field="faltante" label="Faltante" type="numeric" format="#," width="60" readOnly="true"}}
+    {{column field="utilizado" label="Utilizado" type="numeric" format="#," width="60" readOnly="true"}}
+    {{column field="neto" label="Neto" type="numeric" format="#," width="40" readOnly="true"}}
+    {{column field="codigo" label="Código" hiddenColumn="true" readOnly="true"}}
+    {{!-- {{column field="loteEspecifico" label="Lote Especifico" width="150"}} --}}
+    {{column field="comentarios" label="Comentarios" width="110"}}
+    {{column field="continuar" width="70"}}
+  {{/grid}}
+  {{action id="afectar" error="=_.findWhere(aplicacion, {continuar:'si'})?null:'Falta Seleccionar'"}}  
+{{/define}}

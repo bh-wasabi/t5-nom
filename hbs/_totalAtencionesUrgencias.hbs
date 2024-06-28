@@ -1,0 +1,36 @@
+{{#define type="doc" id="_totalAtencionesUrgencias" name="Indicadores GIA - Atenciones Urgencias"}}
+  {{#menu id="menu"}}
+    {{#item text="Ver" icon="bookmark"}}
+      {{item text="(vistas)" type="cube-view-names"}}
+      {{item text="Guardar vista..." icon="save" beginGroup="true" type="cube-view-save"}}
+      {{item text="Ajustes..." icon="preferences" type="cube-view-preferences"}}
+    {{/item}}
+    {{item text="Refrescar" icon="refresh" type="refresh"}}
+  {{/menu}}
+  {{browser id="lista" menu="menu"}}
+  {{selectBox id="ejercicio" placeHolder="Ejercicio" preset="years" refreshWidgets="true"}}
+  {{selectBox id="periodo" placeHolder="Periodo" preset="months" refreshWidgets="true"}}
+{{/define}}
+{{#markup}}
+  {{#page}}
+    {{#row}}
+      {{#col small="15%"}}
+        {{widget type="selectBox" selectBox="periodo"}}
+      {{/col}}
+      {{#col small="15%"}}
+        {{widget type="selectBox" selectBox="ejercicio"}}
+      {{/col}}
+      {{col small="70%"}}
+    {{/row}}
+    {{#row}}
+      {{#col small="100%"}}
+        {{#row}}
+          {{#widget type="grid" source="solicitud" grid="totalAtencionesUrgencias"}}
+            {{param periodo="#periodo"}}
+            {{param ejercicio="#ejercicio"}}
+          {{/widget}}
+        {{/row}}
+      {{/col}}
+    {{/row}}
+  {{/page}}
+{{/markup}}

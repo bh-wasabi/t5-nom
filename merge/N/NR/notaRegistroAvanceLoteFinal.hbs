@@ -1,0 +1,160 @@
+{{#define id="notaRegistroAvanceLoteFinal"}}
+  {{param autoPrint="=_created.service=='residuosHospitalarios'?'preliminar2':'preliminar'"}}
+  {{param attribute1="=fn('avanceFinalMoment', _created.momentRequest, base.tipoSolicitud, base.subTipoSolicitud)"}}
+  {{param attribute2="=fn('avanceFinalMomentName', _created.momentRequest, base.tipoSolicitud, base.subTipoSolicitud)"}}
+	{{!-- {{param attribute1="=_created.momentRequest=='pendienteTercero'?'cerradoTercero':'ejecutado'"}}
+  {{param attribute2="=_created.momentRequest=='Pendiente Tercero'?'Cerrado Tercero':'Ejecutado'"}} --}}
+  {{param attribute3="=calc.first(fn((base.tipoAvance||'next')+'Step', base.tipoSolicitud, base.subTipoSolicitud, base.momento, base.subMomento, base.hint||base.diagnostico||base.resolucion||base.formaEntrega), base.subDiagnostico).newSubMoment"}}
+  {{param attribute4="=calc.first(fn((base.tipoAvance||'next')+'Step', base.tipoSolicitud, base.subTipoSolicitud, base.momento, base.subMomento, base.hint||base.diagnostico||base.resolucion||base.formaEntrega), base.subDiagnostico).newSubMomentName"}}
+  {{param attribute5="=calc.first(fn((base.tipoAvance||'next')+'Step', base.tipoSolicitud, base.subTipoSolicitud, base.momento, base.subMomento, base.hint||base.diagnostico||base.resolucion||base.formaEntrega), base.subDiagnostico).newValidate"}}
+  {{param startOnOpen="aplicacion"}}
+  {{action id="afectar" error="=base.requiereAdjuntos&&_.isEmpty(adjuntos)?'Falta Incluir el Archivo Adjunto Correspondiente':null"}}
+
+  {{#section id="base"}}
+    {{field id="mensaje" type="expr" value="=calc.concatDash(base.diagnostico||base.resolucion, base.subDiagnostico)"}}
+    {{field id="_mensaje" type="expr" value="=calc.concatDash(base._diagnostico||base._resolucion, base._subDiagnostico)"}}
+  {{/section}}
+  {{#section id="aplicacion"}}
+    {{#onChange}}
+      {{#update section="base"}}
+        {{set pesoTotal="=calc.sum(calc.where(aplicacion, {continuar:'si'}), 'peso')"}}
+      {{/update}}
+    {{/onChange}}
+  {{/section}}
+
+  [.#if esRH.]
+  {{#grid id="aplicacion" disableEnter="true" applyFilter="_name,resumen" applyFilterOpen="true" applyFilterMultiple="true" section="aplicacion" applyTo="continuar" applyContinue="true" requiredCondition="=calc.isTrue(continuar)"}}
+  [.else.]
+  {{#grid id="aplicacion" disableEnter="true" applyFilter="_name" applyFilterOpen="true" applyFilterMultiple="true" section="aplicacion" applyTo="continuar" applyContinue="true" requiredCondition="=calc.isTrue(continuar)"}}  
+  [./if.]
+    {{column field="personaLink" hiddenColumn="true" readOnly="true"}}
+    {{column field="parentLink" hiddenColumn="true"}}
+    {{column field="fecha" type="date" format="DD/MMM/YYYY h:mma" width="160" readOnly="true"}}
+    {{column field="resumen" type="text" width="250" readOnly="true" show="=base.tieneResumen" link="=personaLink"}}
+    {{column field="_name" type="text" width="350" readOnly="true" link="=parentLink"}}
+    {{column field="_ubicacion" type="text" width="100" readOnly="true"}}
+    {{column field="referencia" type="text" width="180" readOnly="true"}}
+    {{!-- {{column field="referencia2" type="text" width="120" readOnly="true"}} --}}
+    {{!-- {{column field="subTipoResiduo" width="120" readOnly="true" show="=base.tieneSubTipoResiduo"}} --}}
+    {{column field="contenido" width="180" readOnly="true" show="=base.tieneContenido"}}
+    {{column field="generador" width="80" readOnly="true" show="=base.tieneGenerador"}}
+    {{column field="peso" width="80" readOnly="true" show="=base.tienePeso"}}    
+    {{column field="continuar" width="70"}}
+  {{/grid}}
+  {{#grid id="adjuntos" section="adjuntos" allowRemove="true" allowSort="true" sortBy="orden, fecha"}}
+    {{column field="nombre" width="350"}}
+    {{column field="tipo" width="200"}}
+    {{column field="fecha" width="100" readOnly="true"}}
+    {{column field="ext" width="100" readOnly="true"}}
+    {{column field="tamano" width="100" readOnly="true"}}
+    {{column field="orden" width="60"}}
+  {{/grid}}
+
+  {{action id="preliminar" condition="=_created.service!='residuosHospitalarios'"}}
+  {{action id="preliminar2" type="report-pdf" label="PDF" report="preliminar2" title="=_name" fileName="=_name" visibleMode="close" color="grey" condition="=_created.service=='residuosHospitalarios'"}}
+  {{#report id="subTipoResiduo"}}
+    {{#stack}}
+      {{row expr="=calc.concat('Residuo',_subTipoResiduo)" fontSize="10" bold="true" margin="-10,0,0,0"}}
+    {{/stack}}
+  {{/report}}
+  {{#report id="preliminar2" fontSize="8" header="preliminar-encabezado" showStandarFooter="true" pageMargins="30,120,30,40" barcode="=persona.clave"}}
+    {{#stack}}
+      {{image id="logo" url="https://his-imagenes.s3.amazonaws.com/logos/hospital-del-salvador-csso.png"}}
+      {{image id="logoSaludNess" url="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png"}}
+    {{/stack}}
+    {{#stack}}
+      {{#record title="Datos Generales" titleStyle="title" layout="lightHorizontalLines" fontSize="7" section="base" headerStyle="field" margin="-10,0,0,10" widths="100,450"}}
+        {{row expr="=calc.format('date', _updated.date||_created.date, 'DD/MMM/YYYY h:mma')" label="Fecha Emisión"}}
+        {{row expr="=_created._service" label="Servicio"}}
+        {{row field="responsableAcademico" condition="esEstudiante" align="left"}}
+        {{row field="vencimiento" condition="vencimiento" align="left"}}
+        {{row field="pesoTotal" condition="tienePeso" align="left"}}
+        {{row field="proveedor" condition="tieneProveedor" align="left"}}
+        {{row field="comentarios" align="left"}}
+      {{/record}}
+    {{/stack}}
+    {{#stack}}
+      {{!-- {{#row text="Solicitudes" fontSize="10" bold="true" margin="-10,0,0,0" condition="=!_.isEmpty(aplicacion)"}}
+      {{/row}} --}}
+      {{#table title="Solicitudes" titleStyle="title" layout="lightHorizontalLines" fontSize="7" section="aplicacion" headerStyle="field" margin="-10,0,0,10" removeEmptyCols="true" groupBy="_subTipoResiduo" beginGroup="subTipoResiduo"}}
+        {{column field="fecha"}}
+        {{column field="_name"}}
+        {{column field="_ubicacion"}}
+        {{column field="referencia"}}
+        {{column field="referencia2"}}
+        {{column field="subTipoResiduo"}}
+        {{column field="contenido"}}
+        {{column field="generador"}}
+        {{column field="peso" total="sum"}}
+        {{column field="continuar"}}
+      {{/table}}
+    {{/stack}}
+    {{#stack}}
+      {{#row text="Adjuntos" fontSize="10" bold="true" margin="-10,0,0,0" condition="=!_.isEmpty(adjuntos)"}}
+      {{/row}}
+      {{#table title="Adjuntos" titleStyle="title" layout="lightHorizontalLines" fontSize="7" section="adjuntos" headerStyle="field" margin="-10,0,0,10" removeEmptyCols="true"}}
+        {{column field="nombre"}}
+        {{column field="tipo"}}
+        {{column field="tamano"}}
+        {{column field="fecha"}}
+        {{column field="ext"}}
+      {{/table}}
+    {{/stack}}
+    {{#stack}}
+      {{#columns widths="425,25,100"}}
+        {{#column}}
+          {{#record title="Firmas" titleStyle="title" layout="lightHorizontalLines" fontSize="8" section="_stamp" headerStyle="field" margin="-10,0,0,10" widths="100,325"}}
+            {{row expr="=_created._user" label="Elabora"}}
+            {{row expr="=_created._turn" label="Turno Elabora"}}
+            {{row expr="=_created._identification" label="Especialidad Elabora"}}
+            {{row expr="=''" label="Firma Elabora"}}
+            {{row condition="=!base.esEstudiante" expr="=_created._responsable" label="Responsable"}}
+            {{row condition="=!base.esEstudiante" expr="=_created._responsableId" label="Especialidad Responsable"}}
+            {{row condition="=!base.esEstudiante" expr="=''" label="Firma Responsable"}}
+            {{row condition="=base.esEstudiante" expr="=base._responsableAcademico" label="Médico Responsable"}}
+            {{row condition="=base.esEstudiante" expr="=base._identificacionResponsableAcademico" label="Especialidad Médico Responsable"}}
+            {{row condition="=base.esEstudiante" expr="=''" label="Firma Médico Responsable"}}
+            {{row condition="=calc.in(_created.service, ['inventarios','farmacia','almacen','ceye'])" expr="=''" label="Transporte / Recibe"}}
+            {{row field="text" label="Cadena Original"}}
+            {{row field="signature" label="Sello Digital"}}
+          {{/record}}
+        {{/column}}
+        {{#column}}
+          {{row}}
+        {{/column}}
+        {{#column}}
+          {{#record title="QR's" titleStyle="title" layout="lightHorizontalLines" fontSize="6" section="_stamp" headerStyle="field" margin="-10,0,0,10" widths="50,50"}}
+            {{row qr="=calc.concatHost('doc', 'persona', persona.id)" label="=fn('_tipoExpediente', persona.tipoExpediente)" qrFit="50" condition="=(persona.id)?true:false"}}
+            {{row}}
+            {{row qr="=calc.concatHost('doc', '_user', _created.user)" label="Elabora" qrFit="50"}}
+            {{row condition="=(_created.responsable&&!base.esEstudiante)?true:false"}}
+            {{row qr="=calc.concatHost('doc', '_user', _created.responsable)" label="Responsable" qrFit="50" condition="=(_created.responsable&&!base.esEstudiante)?true:false"}}
+            {{row condition="=(_created.responsableAcademico&&base.esEstudiante)?true:false"}}
+            {{row qr="=calc.concatHost('doc', '_user', _created.responsableAcademico)" label="Médico Responsable" qrFit="50" condition="=(_created.responsableAcademico&&base.esEstudiante)?true:false"}}
+            {{row condition="=(persona.id)?true:false"}}
+            {{row qr="=calc.concatHost('doc', _type, _id)" label="Nota" qrFit="50"}}
+          {{/record}}
+        {{/column}}
+      {{/columns}}
+    {{/stack}}
+    {{#stack condition="=actualizacion"}}
+      {{#row text="Actualizaciones" fontSize="10" bold="true" margin="-10,0,0,0" condition="=!_.isEmpty(actualizacion)"}}
+      {{/row}}
+      {{#table title="Actualizaciones" titleStyle="title" layout="lightHorizontalLines" fontSize="5" section="actualizacion" headerStyle="field" margin="-10,0,0,10" removeEmptyCols="true"}}
+        {{column field="nota"}}
+        {{column field="fechaHora"}}
+        {{column field="usuario"}}
+        {{column field="nombreAnterior"}}
+        {{column field="nombreNuevo"}}
+        {{column field="claveAnterior"}}
+        {{column field="claveNueva"}}
+        {{column field="fechaNacimientoAnterior"}}
+        {{column field="fechaNacimientoNueva"}}
+        {{column field="generoAnterior"}}
+        {{column field="generoNuevo"}}
+        {{column field="entidadNacimientoAnterior"}}
+        {{column field="entidadNacimientoNueva"}}
+      {{/table}}
+    {{/stack}}
+  {{/report}}  
+{{/define}}

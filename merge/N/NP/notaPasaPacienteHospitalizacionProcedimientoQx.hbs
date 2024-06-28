@@ -1,0 +1,7 @@
+{{#define id="notaPasaPacienteHospitalizacionProcedimientoQx"}}
+	{{param attribute1="=base.subTipoOrigen"}}
+  {{#section id="base"}}
+    {{field id="esHospitalizacion" type="expr" value="=tipoEpisodio=='hospitalizacion'"}}
+    {{field id="esAmbulatorio" type="expr" value="=!esHospitalizacion"}}
+  {{/section}}
+{{/define}}

@@ -1,0 +1,7 @@
+{{#define id="notaTiemposQuirurgicosEnf"}}
+  {{#section id="base"}}
+    {{field id="tiempoTotalCirugia" type="expr" value="=fn('minutos', @iniciaCirugia, @terminaCirugia)"}}
+    {{field id="tiempoTotalAnestesia" type="expr" value="=fn('minutos', @iniciaAnestesia, @terminaAnestesia)"}}
+    {{field id="tiempoTotalSalaCirugia" type="expr" value="=fn('minutos', @ingresaPacienteSala, @salePacienteSala)"}}
+  {{/section}}    
+{{/define}}

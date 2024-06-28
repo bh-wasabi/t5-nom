@@ -1,0 +1,16 @@
+{{#define id="notaCancerBucal"}}
+  {{#update section="base"}}
+    {{set clave="=persona.clave"}}
+    {{set nombreCompleto='persona.nombreCompleto'}}
+  {{/update}}
+  {{#section id="base"}}
+    {{field id="esReferenciado" type="expr" value="=referenciado=='si'"}}
+  {{/section}}
+  {{#section id="atencionClinica"}}
+    {{field id="sitioDeMetastasis" type="expr" value="=metastasis=='m1CB'"}}
+  {{/section}}
+  {{#section id="tratamiento"}}
+    {{field id="drmc" type="expr" value="=tipoCirugia=='diseccionRadicalModificadaCuello'"}}
+    {{field id="mdi" type="expr" value="=tipoCirugia=='maxilectomiaInfraestructura'"}}
+  {{/section}}
+{{/define}}
