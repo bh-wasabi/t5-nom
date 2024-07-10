@@ -17,7 +17,7 @@
       {{/onChange}}
     {{/field}}
     {{!-- Agregar Bloque - Tarea 3966 --}}
-    {{validator type="expr" notValidIf="=@dependencia2.length>1&&(calc.in('noEspecificado',@dependencia2)||calc.in('ninguna',@dependencia2)||calc.in('seIgnora',@dependencia2))" message="Otra Dependencia Incorrecta"}}
+    {{validator type="expr" notValidIf="=calc.in(@dependencia,@dependencia2)||@dependencia2.length>1&&(calc.in('noEspecificado',@dependencia2)||calc.in('ninguna',@dependencia2)||calc.in('seIgnora',@dependencia2))" message="Otra Dependencia Incorrecta"}}
     {{validator type="expr" notValidIf="=@dependencia2.length>9" message="Máximo 9 Dependencias"}}
     {{!-- Tarea 3966 --}}
   {{/section}}

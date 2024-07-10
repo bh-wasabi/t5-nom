@@ -13,9 +13,20 @@
 
   
   {{!-- Modificar Bloque - Tarea 3966 --}}
-  {{#action id="sugerirCurp" hide="true" type="update" error="=!base.generoCurp&&'Falta Indicar Genero CURP'"}}
+  {{#action id="sugerirCurp" hide="true" type="update" error="=fn('validaSugerirCurp',base.nombres,base.fechaNacimiento,base.generoCurp,base.entidadNacimiento)"}}
     {{#update section="base"}}
-      {{set clave="=calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento, fechaNacimiento)"}}
+      {{set condition="=calc.isEmpty(base.apellidoPaterno)" apellidoPaterno="='XX'"}}
+      {{set condition="=calc.isEmpty(base.apellidoMaterno)" apellidoMaterno="='XX'"}}
+      {{set condition="=calc.isEmpty(base.generoSocial)" generoSocial="='noEspecificado'"}}
+      {{set clave="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, base.generoCurp, base.entidadNacimiento, base.fechaNacimiento)"}}
+    {{/update}}
+  {{/action}}
+
+  {{#action id="sugerirDatos" hide="true" type="update" error="=!base.clave&&'Falta Indicar CURP'"}}
+    {{#update section="base"}}
+      {{set fechaNacimiento="=fn('sugerirDesdeCurp',base.clave,'fecha')"}}
+      {{set generoCurp="=fn('sugerirDesdeCurp',base.clave,'genero')"}}
+      {{set entidadNacimiento="=fn('sugerirDesdeCurp',base.clave,'entidad')"}}
     {{/update}}
   {{/action}}
   {{!-- Tarea 3966 --}}
@@ -159,22 +170,26 @@
     {{validator type="expr" validIf="=calc.setTimeStr(@fechaNacimiento,@horaNacimiento)<moment().format()" message="Fecha Nacimiento Incorrecta"}}
     [./if.]
     {{!-- Tarea 3092 --}}
-    {{#field id="paisNacimiento" type="text" label="País Nacimiento"}}
+    {{!-- Se comenta seccion por error --}}
+    {{!-- {{#field id="paisNacimiento"}}
       {{#onChange}}
         {{set entidadNacimiento="=paisNacimiento=='MX'?entidadNacimiento:'NE'"}}
+        {{set esMexico="=paisNacimiento==''MX'"}}
+        {{set noEsMexico="=paisNacimiento!=''MX'"}}
       {{/onChange}}
-    {{/field}}
-    {{#field id="fechaNacimiento" type="text" label="Fecha Nacimiento"}}
+    {{/field}} --}}
+    {{!-- {{#field id="fechaNacimiento"}}
       {{#onChange}}
-        {{set escolaridad="=moment().diff(moment(fechaNacimiento), 'years')<3?'noAplica':''"}}
-        {{set sabeLeerEscribir="=moment().diff(moment(fechaNacimiento), 'years')<3?'no':''"}}
+        {{set escolaridad="=calc.fromNowYears(fechaNacimiento)<3?'noAplica':''"}}
+        {{set sabeLeerEscribir="=calc.fromNowYears(fechaNacimiento)<3?'no':''"}}
       {{/onChange}}
-    {{/field}}
-    {{#field id="escolaridad" type="text" label="Escolaridad"}}
+    {{/field}} --}}
+    {{!-- {{#field id="escolaridad"}}
       {{#onChange}}
         {{set sabeLeerEscribir="=!calc.in(escolaridad, ['noEspecificado','ninguna','noAplica','seIgnora'])?'si':''"}}
       {{/onChange}}
-    {{/field}}
+    {{/field}} --}}
+    {{!-- Se comenta seccion por error --}}
     {{#onChange}}
       {{#update}}
         {{set afromexicano="=esMenor5Anos&&familiarResponsable[0].base.afromexicano?familiarResponsable[0].base.afromexicano:afromexicano"}}
@@ -184,13 +199,29 @@
     {{!-- Tarea 3092 --}}
     {{!-- Tarea 3710 --}}
     {{validator type="expr" validIf="=calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'))===clave" message="CURP Incorrecto"}}
-    {{!-- Tarea 3710 --}}    
+    {{!-- Tarea 3710 --}}
 
     {{!-- Agregar Bloque - Tarea 3966 --}}
-    {{field id="noEsMexico" type="expr" value="=paisNacimiento!='MX'"}}
-    {{validator type="expr" notValidIf="=paisNacimiento=='MX'&&entidadNacimiento=='NE'" message="Entidad Nacimiento Incorrecta"}}
-    {{validator type="expr" notValidIf="=paisNacimiento!='MX'&&entidadNacimiento!='NE'" message="Entidad Nacimiento Incorrecta"}}
-    {{!-- Tarea 3966 --}}    
+    {{validator type="expr" validIf="=fn('entidadNacimientoCorrecta', paisNacimiento, entidadNacimiento)" message="Entidad Nacimiento Incorrecta"}}
+    {{!-- Tarea 3966 --}}
+
+    {{!-- Agregar Bloque - Tarea 5604 --}}
+    {{field id="esMenor3Anos" type="expr" value="=calc.fromNowYears(fechaNacimiento)<3"}}
+    {{field id="esConsultaExterna" type="expr" value="=tipoAtencion=='consultaExterna'"}}
+    {{field id="esUrgenciasHospitalizacion" type="expr" value="=tipoAtencion!='consultaExterna'"}}
+    {{field id="esMigrante" type="expr" value="=migrante=='internacional'||migrante=='retornado'"}}
+    {{#field id="tipoAtencion"}}
+      {{#onChange}}
+        {{set esConsultaExterna="=tipoAtencion=='consultaExterna'"}}
+        {{set esUrgenciasHospitalizacion="=tipoAtencion!='consultaExterna'"}}
+        {{!-- {{set grupoEtnico="={...grupoEtnico, base: {...,testing: 'testing'}}"}} --}}
+      {{/onChange}}
+    {{/field}}
+    {{validator type="expr" validIf="=fn('escolaridadCorrecta', calc.fromNowYears(fechaNacimiento), escolaridad)" message="Escolaridad Incorrecta"}}
+    {{validator type="expr" notValidIf="=sabeLeerEscribir=='si'&&calc.fromNowYears(fechaNacimiento)<3" message="Sabe Leer y Escribir Incorrecto"}}
+    {{validator type="expr" notValidIf="=sabeLeerEscribir=='no'&&!calc.in(escolaridad,['ninguna','noAplica','noEspecificado','preescolarCompleta','preescolarIncompleta','seIgnora'])" message="Sabe Leer y Escribir Incorrecto"}}
+    {{validator type="expr" notValidIf="=migrante=='internacional'&&paisProcedencia=='MX'||migrante=='retornado'&&paisProcedencia!='MX'" message="País Procedencia Inválido"}}
+    {{!-- Tarea 5604 --}}
   {{/section}}
 
 {{!--   {{#edi id="orden-trabajo"}}

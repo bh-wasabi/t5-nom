@@ -1,0 +1,11 @@
+{{#define id="datosEnfermedadDiarreicaAgudaSis"}}
+  {{!-- Tarea 5660 --}}
+  {{#section id="base"}}
+    {{field id="siEsC" type="expr" value="=planTratamientoEda=='planC'&&presentaEnfermedad!='catVezNoEspecificado'"}}
+    {{field id="noEsC" type="expr" value="=(planTratamientoEda==''||planTratamientoEda!='planC')&&presentaEnfermedad!='catVezNoEspecificado'"}}
+    {{field id="presentaEnfermedadNoAplica" type="expr" value="=presentaEnfermedad=='catVezNoEspecificado'"}}
+    {{validator type="expr" notValidIf="=presentaEnfermedad=='catVezNoEspecificado'&&planTratamientoEda!='noAplica'" message="Plan Tratamiento EDA Inválido"}}
+    {{validator type="expr" notValidIf="=presentaEnfermedad=='catVezNoEspecificado'&&recuperacionDeshidratacion!='noAplica'" message="Recuperación Deshidratación Inválido"}}
+  {{/section}}
+  {{!-- Tarea 5660 --}}
+{{/define}}

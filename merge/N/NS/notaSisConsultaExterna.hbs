@@ -1,0 +1,87 @@
+{{#define id="notaSisConsultaExterna"}}
+  {{#section id="base"}}
+    {{field id="tieneAlergia" type="expr" value="=tieneAlgunaAlergia=='si'"}}
+    {{field id="siMigrante" type="expr" value="=calc.in(@esMigrante,'internacional')"}}
+    {{!-- Tarea 5660 --}}
+    {{field id="establecimientoPrimeraUemeSaih" type="expr" value="=calc.in(user.job.cluesTipoAbreviacion,['T','UNE'])&&calc.in(user.job.cluesSubAbreviacion,['T02','UNE02','UNE04','UNE11'])"}}
+    {{field id="saludMentalAdiccionesDisponible" type="expr" value="=calc.in(user.others.tipoPersonalNom,['medicoPasante','medicoGeneral','medicoResidente','medicoEspecialista','homeopata','medicoGeneralSaludMental','medicoSaludMental'])"}}
+    {{!-- Validacion de fecha no funciona --}}
+    {{!-- {{validator type="expr" notValidIf="=calc.fromNowDays(fechaConsulta)>calc.fromNowDays(persona.fechaNacimiento)" log="=calc.fromNowDays(fechaConsulta)>calc.fromNowDays(persona.fechaNacimiento)" message="Fecha Consulta Inválida"}} --}}
+    {{!-- Tarea 5660 --}}
+  {{/section}}
+  {{#section id="mujer"}}
+    {{field id="estaEmbarazada" type="expr" value="=base.estaEmbarazada"}}
+    {{field id="siRiesgo" type="expr" value="=atencionPregestacional=='subsecuente'||atencionPregestacional=='primeraVez'"}}
+    {{#field id="fechaUltimaMenstruacion"}}
+      {{#onChange}}
+        {{set fechaProbableParto="=fn('fechaProbableParto', fechaUltimaMenstruacion)"}}
+      {{/onChange}}
+    {{/field}}
+    {{!-- Tarea 5660 --}}
+    {{field id="siPuerperio" type="expr" value="=calc.isNotEmpty(puerperaAtencion)"}}
+    {{!-- Tarea 5660 --}}
+    {{validator type="expr" notValidIf="=@registroPregestacional.length>1&&calc.in('sinAntecedentes',@registroPregestacional)" message="Error en el Riesgo Pregestacional"}}
+  {{/section}}
+  {{#section id="exploracion"}}
+    {{field id="esMujer" type="expr" value="=base.esMujer"}}
+    {{field id="estaEmbarazada" type="expr" value="=base.estaEmbarazada"}}
+    {{field id="esMenor17" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)<=10"}}
+    {{!-- Tarea 5660 --}}
+    {{field id="noPsicologo" type="expr" value="=!calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])"}}
+    {{!-- Tarea 5660 --}}
+  {{/section}}
+  {{#section id="analisis"}}
+    {{field id="esMujer" type="expr" value="=base.esMujer"}}
+    {{field id="estaEmbarazada" type="expr" value="=base.estaEmbarazada"}}
+    {{!-- Tarea 5660 --}}
+    {{field id="esMenor10" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)<10"}}
+    {{field id="esPrimeraVezSubsecuente" type="expr" value="=consultaNinoSano=='primeraVez'||consultaNinoSano=='subsecuente'"}}
+    {{field id="noEsPrimeraVezSubsecuente" type="expr" value="=consultaNinoSano=='catVezNoEspecificado'&&esMenor17"}}
+    {{field id="esMayor60" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=60&&!calc.in(user.others.tipoPersonalNom,['pasanteNutricion','nutriologa','homeopata','medicoTradicionalIndigena','taps','parteraTecnica','promotorSalud','acupunturista'])"}}
+    {{!-- Tarea 5660 --}}
+    {{field id="esMenor17" type="expr" value="=(calc.fromNowYears(persona.fechaNacimiento)<=17)" log="=esMenor17"}}
+    {{field id="esPsicologo" type="expr" value="=(calc.in(prestadorServicios._especialidad,['psicologiaAdultos','psicologiaPediatrica','psicologiaClinica']))" log="=esPsicologo"}}
+
+    {{field id="esContraEsMenor17" type="expr" value="=@contrarreferido=='no'&&esMenor17"}}
+    {{field id="esContraEsMayor60" type="expr" value="=@contrarreferido=='no'&&esMayor60"}}
+    {{field id="esContraEsPsicologo" type="expr" value="=@contrarreferido=='no'&&esPsicologo"}}
+    
+    {{!-- Tarea 5660 --}}
+    {{validator type="expr" notValidIf="=@contrarreferido=='no'&&calc.isEmpty(@referidoPor)&&calc.isEmpty(@referidoPor2)&&calc.isEmpty(@referidoPor3)" message="Error en Contrarreferido"}}
+    {{validator type="expr" notValidIf="=calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])&&@referidoPor&&@referidoPor!='otras'" message="Referido Por Inválido"}}
+    {{validator type="expr" notValidIf="=calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])&&@referidoPor2&&@referidoPor2!='otras'" message="Referido Por Inválido"}}
+    {{validator type="expr" notValidIf="=calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])&&@referidoPor3&&@referidoPor3!='otras'" message="Referido Por Inválido"}}
+    {{!-- Tarea 5660 --}}
+  {{/section}}
+  {{#view id="cubo"}}
+    {{#find limit="-1"}}
+      {{include field="_created.user"}}
+      {{include field="_created.date"}}
+      {{include field="persona.nombreCompleto"}}
+      {{include field="persona.clave"}}
+      {{include field="persona._genero"}}
+      {{!-- {{filter field="_created.date" gte="=calc.fromYearMonth(ejercicio,periodo)" required="true"}}
+      {{filter field="_created.date" lte="=calc.toYearMonth(ejercicio,periodo)" required="true"}} --}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+    {{/find}}
+  {{/view}}
+  {{#cube id="cubo" name="Historia Clínica" view="cubo" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{column field="_created.date" type="date" label="Año" groupInterval="year"}}
+    {{column field="_created.date" type="date" label="Mes" groupInterval="month"}}    
+    {{row field="persona._genero" width="100" width="100" label="Genero"}}
+    {{row field="persona.nombreCompleto" width="250" label="Persona"}}
+    {{row field="persona.clave" width="150" label="CURP"}}
+    {{count field="_id" label="Cantidad" format="#"}}
+  {{/cube}} 
+   {{!--RACC VISTA  --}}
+   {{#view id="ultima"}}
+    {{#find limit="1"}}
+      {{include field="_name"}}
+      {{sort field="_id" direction="asc"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{filter condition="=persona" field="persona.id" eq="=persona"}}
+      {{!-- {{filter condition="=desde" field="_create.date" gt="=desde"}} --}}
+    {{/find}}
+  {{/view}}
+   {{!-- RACC VISTA --}}
+{{/define}}

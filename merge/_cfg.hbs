@@ -2347,6 +2347,64 @@
     {{default return="=servicio"}}
   {{/function}}
 
+  {{!-- Tarea 5604 - Agregar Bloque --}}
+  {{#function id="contieneNulos"}}
+    {{define type="param" id="lista"}}
+    {{default return="=calc.in(null,lista)"}}
+  {{/function}}
+
+  {{#function id="entidadNacimientoCorrecta"}}
+    {{define type="param" id="pais"}}
+    {{define type="param" id="entidad"}}
+    {{default return="=pais=='MX'&&entidad!='NE'||pais!='MX'&&entidad=='NE'"}}
+  {{/function}}
+
+  {{#function id="escolaridadCorrecta"}}
+    {{define type="param" id="edad"}}
+    {{define type="param" id="escolaridad"}}
+    {{when edad="3..5" return="=calc.in(escolaridad, ['noAplica','preescolarCompleta','preescolarIncompleta'])"}}
+    {{when edad="<13" return="=calc.in(escolaridad, ['noAplica','preescolarCompleta','preescolarIncompleta','primariaCompleta','primariaIncompleta'])"}}
+    {{default return="=true"}}
+  {{/function}}
+
+  {{#function id="cedulaObligatoria"}}
+    {{define type="param" id="tipoPersonal"}}
+    {{default return="=calc.in(tipoPersonal,['medicoGeneral','medicoResidente','medicoEspecialista','enfermera','otontologa','odontologaEspecialista','psicologa','residentePsiquiatria','psiquiatra','medicoGeneralSaludMental','licenciadaEnfermeriaObstetricia','medicoSaludMental','licenciadoGerontologia','personalCapacitado','pasanteGerontologia','parteraProfesional','acupunturista','trabajadoraSocial'])??false"}}
+  {{/function}}
+
+  {{#function id="faltaCedulaEspecialidad"}}
+    {{define type="param" id="datosEspecialidad"}}
+    {{default return="=calc.isEmpty(datosEspecialidad)||fn('contieneNulos',calc.pluckRef(datosEspecialidad,'base.cedulaEspecialidad'))"}}
+  {{/function}}
+
+  {{#function id="validaSugerirCurp"}}
+    {{define type="param" id="nombres"}}
+    {{define type="param" id="fecha"}}
+    {{define type="param" id="genero"}}
+    {{define type="param" id="entidad"}}
+    {{when condition="calc.isEmpty(nombres)" return="'Falta Indicar Nombres'"}}
+    {{when condition="calc.isEmpty(fecha)" return="'Falta Indicar Fecha Nacimiento'"}}
+    {{when condition="calc.isEmpty(genero)" return="'Falta Indicar Sexo CURP'"}}
+    {{when condition="calc.isEmpty(entidad)" return="'Falta Indicar Entidad Nacimiento'"}}
+    {{when condition="calc.fromNowYears(fecha)>120" return="'Paciente Mayor a 120 Años'"}}
+    {{default return="''"}}
+  {{/function}}
+
+  {{#function id="seleccionaGenero"}}
+    {{define type="param" id="letra"}}
+    {{when letra="H" return="'hombre'"}}
+    {{when letra="M" return="'mujer'"}}
+    {{default return="'noBinario'"}}
+  {{/function}}
+
+  {{#function id="sugerirDesdeCurp"}}
+    {{define type="param" id="curp"}}
+    {{define type="param" id="dato"}}
+    {{when dato="'fecha'" return="=calc.curpDate(curp.slice(4,10))"}}
+    {{when dato="'genero'" return="=fn('seleccionaGenero',curp.substr(10,1))"}}
+    {{when dato="'entidad'" return="=curp.substr(11,2)"}}
+  {{/function}}
+  {{!-- Tarea 5604 --}}
 {{/define}}
 
 {{#markup}}
@@ -4498,7 +4556,7 @@
 
   {{#template id="signosVitales"}}
     {{#if fechaHoraRegistro}}<br>Hora Registro: {{date fechaHoraRegistro "DD/MMM/YYYY h:mma"}}{{/if}}
-    {{#if estaVivo}}
+    {{!-- {{#if estaVivo}} --}}
       {{#if temperaturaCorporal}}<br>Temperatura: {{temperaturaCorporal}} °C{{#if temperaturaTomadaEn}} - {{_temperaturaTomadaEn}}{{/if}}{{/if}}
       {{#if tensionSistolica}}<br>Presión Arterial: {{tensionSistolica}}/{{tensionDiastolica}} mmHg{{#if presionTomadaEn}} - {{_presionTomadaEn}}{{/if}}, PAM: {{number pam "#.##"}}{{/if}}
       {{#if frecuenciaCardiaca}}<br>Frecuencia Cardiaca: {{frecuenciaCardiaca}} lpm{{/if}}
@@ -4508,14 +4566,14 @@
       {{#if resultadoObtenido}}<br>Resultado Obtenido por: {{_resultadoObtenido}}{{/if}}
       <br>Toma Glicemia Capilar: {{_tomaGlicemiaCapilar}}
       {{#if tomaGlicemia}}{{#if glicemiaCapilar}}<br>Glicemia Capilar: {{glicemiaCapilar}} mg/dl{{/if}} {{#if tienePrePrandial}} (Pre Prandial){{/if}} {{/if}}
-    {{else}}
+    {{!-- {{else}}
       <br>Situación Actual: {{_situacionActual}}
       <br>Temperatura: 0°C
       <br>Presión Arterial: 0/0 mmHg
       <br>Frecuencia Cardiaca: 0 lpm
       <br>Frecuencia Respiratoria: 0 rpm
       <br>Saturación Oxigeno: 0%
-    {{/if}}
+    {{/if}} --}}
   {{/template}}
   
   {{#template id="somatometria"}} 

@@ -5047,6 +5047,12 @@
       {{set grupoEtnico="=persona.grupoEtnico"}}
       {{set _grupoEtnico="=persona._grupoEtnico"}}
       {{set primeraConsultaAno="=_items.length?'no':'si'"}}
+      {{!-- RACC --}}
+      {{set signosVitales="=detalle.signosVitales"}}
+      {{set _signosVitales="=detalle._signosVitales"}}
+      {{set somatometria="=detalle.somatometria"}}
+      {{set _somatometria="=detalle._somatometria"}}
+      {{!-- RACC --}}
       {{setRef ref="tamizaje.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
     {{/update}}
     {{#update section="analisis"}}
@@ -5363,11 +5369,15 @@
       {{set primeraConsultaAno="=_items.length?'no':'si'"}}
       {{set primerConsultaUneme="=primeraConsultaAno"}}
       {{set primeraUemeSaih="=primeraConsultaAno"}}
-      {{!-- RACC Tarea #3998 --}}
       {{set menor="=calc.fromNowYears(persona.fechaNacimiento)>=10&&calc.fromNowYears(persona.fechaNacimiento)<=19"}}
-      {{setRef ref="orientacionConsejeria.base.esMenor" value="=menor"}}{{!-- RACC Tarea #3998--}}
+      {{setRef ref="orientacionConsejeria.base.esMenor" value="=menor"}}
+      {{setRef ref="datosMetodosPlanificacion.base.esMujer" value="=esMujer"}}
     {{/update}}
     {{#update section="analisis"}}
+      {{set diagnostico="=detalle.diagnostico"}}
+      {{set _diagnostico="=detalle._diagnostico"}}
+    {{/update}}
+    {{#update section="diagnosticos"}}
       {{set diagnostico="=detalle.diagnostico"}}
       {{set _diagnostico="=detalle._diagnostico"}}
     {{/update}}
@@ -5391,6 +5401,7 @@
       {{set _antecedentesEmbarazos="=detalle.mujer._antecedentesEmbarazos"}}
       {{setRef condition="=persona.esMujer" ref="antecedentesGineco.edadActual" value="=persona.edadActual"}}
     {{/update}}
+    {{update section="tipoServicioSis" value="=calc.tipoServicioSis(user.others.tipoServicioSis,user.others.tipoPersonalNom,'','',true)" temp="true"}}
   {{/transform}}
     
   {{#transform id="copiarEmbarazo"}}
@@ -7396,6 +7407,10 @@
   {{!-- RACC --}}
 
   {{!-- CERTIFICACIONES RACC --}}
+  {{#action id="notaSisConsultaExterna" source="notaSisConsultaExterna" label="Consulta Externa" transform="copiarHistoriaClinica" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaSisConsultaExterna" fromView="ultima"}}  
+    {{param persona="=_id"}}
+    {{param desde="=moment().format('YYYY')"}}
+  {{/action}}
   {{#action id="notaPlanificacionFamiliar" source="notaPlanificacionFamiliar" label="Planificación Familiar" transform="copiarHistoriaClinica" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaPlanificacionFamiliar" fromView="ultima"}}
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
@@ -7415,6 +7430,7 @@
 
   {{action id="menuSisConsultaExterna" hide="true" type="menu" menu="menuSisConsultaExterna" label="SIS Consulta Externa" color="deep-orange"}}
   {{#menu id="menuSisConsultaExterna" color="deep-orange"}}
+    {{item action="notaSisConsultaExterna" source="notaSisConsultaExterna" text="Consulta Externa" hide="true" type="add-subdoc"}}
     {{item action="notaPlanificacionFamiliar" source="notaPlanificacionFamiliar" text="Planificación Familiar" hide="true" type="add-subdoc" }}
     {{item action="notaDetecciones" source="notaDetecciones" text="Detecciónes" hide="true" type="add-subdoc" }}
     {{item action="notaSaludMental" source="notaSaludMental" text="Salud Mental" hide="true" type="add-subdoc" }}

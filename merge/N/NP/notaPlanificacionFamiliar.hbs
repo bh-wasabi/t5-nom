@@ -1,4 +1,8 @@
 {{#define id="notaPlanificacionFamiliar"}}
+  {{#section id="base"}}
+    {{field id="fechaAtencion1" type="expr" value="=@fechaAtencion"}}
+    {{validator type="expr" validIf="=persona.fechaNacimiento<fechaAtencion1" log="=fechaAtencion1" message="Error en la fecha atención"}}
+  {{/section}}
   {{#section id="metodos"}}
     {{field id="esWoman" type="expr" value="=persona.esMujer"}}
     {{field id="esMujer" type="expr" value="=base.esMujer"}}

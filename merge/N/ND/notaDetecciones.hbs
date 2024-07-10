@@ -2,6 +2,8 @@
   {{#section id="base"}}
      {{field id="esMayor60" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=60"}}
      {{field id="esMayor19" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=19"}}
+     {{field id="fechaAtencion1" type="expr" value="=@fechaAtencion"}}
+     {{validator type="expr" validIf="=persona.fechaNacimiento<fechaAtencion1" message="Error en la fecha atención"}}
   {{/section}}
   {{#section id="enfermedades"}}
     {{field id="siVph" type="expr" value="=deteccionVPH=='realizada'"}}

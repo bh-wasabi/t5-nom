@@ -37,11 +37,14 @@
 
   {{action id="reporteListaUsuarios" hide="true" type="quickReport" source="_user" view="listaUsuarios"}}
   
+  {{!-- Modificar Bloque - Tarea 5604 --}}
   {{#action id="sugerirCurp" hide="true" type="update"}}
     {{#update section="prestadorServicios"}}
-      {{set clave="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.genero, prestadorServicios.entidadNacimiento, prestadorServicios.fechaNacimiento)"}}
+      {{set condition="=prestadorServicios.paisNacimiento=='MX'" clave="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, prestadorServicios.fechaNacimiento)"}}
+      {{set condition="=prestadorServicios.paisNacimiento!='MX'" clave="='XXXX999999XXXXXX99'"}}
     {{/update}}
   {{/action}}
+  {{!-- Tarea 5604 --}}
 
   {{browser id="lista" showActions="menuReportes,tool,tool2,tool3,preliminar,ver,ver2,cancelar,adjuntar,abrir,afectar,afectarTodo"}}
 
@@ -199,10 +202,14 @@
   
   {{!-- RACC Tarea #3580  --}}
   {{#section id="puesto"}}  
-    {{field id="tieneSsa" type="expr" value="=@cluesAdscripcionNomina.search('SSA')>0"}}
+    {{field id="cluesTieneSsa" type="expr" value="=@cluesAdscripcionNomina.search('SSA')>0"}}
     {{#field id="cluesAdscripcionNomina"}}
-      {{#onChange}}
-        {{set tieneSsa="=@cluesAdscripcionNomina.search('SSA')>0"}}
+      {{#onChange clearFields="subAbreviacion,tipAbreviacion,servicioAmigable,tieneEspirometro"}}
+        {{set cluesTieneSsa="=@cluesAdscripcionNomina.search('SSA')>0"}}
+        {{set cluesSubAbreviacion="=@sub_abreviacion"}}
+        {{set cluesTipoAbreviacion="=@tip_abreviacion"}}
+        {{set cluesServicioAmigable="=@amigable"}}
+        {{set cluesTieneEspirometro="=@espirometro"}}
       {{/onChange}}
     {{/field}}
     {{!-- {{validator type="expr" validIf="=1==0" message="Error" log="=@cluesAdscripcionNomina.search('SSA')>0"}} --}}
@@ -211,8 +218,9 @@
 
   {{!-- Tarea #3976 RACC --}}
   {{#section id="prestadorServicios"}}
-    {{validator type="expr" validIf="=calc.fromNowFloat(@fechaNacimiento)>18" message="Error, Menor a 18 Años"}}
-    {{validator type="expr" validIf="=calc.fromNowFloat(@fechaNacimiento)<90" message="Error, Mayor a 90 Años"}}{{!-- cambios 2024-05-29 --}}
+    {{validator type="expr" validIf="=calc.fromNowYears(@fechaNacimiento)>=18" message="Error, Menor a 18 Años"}}
+    {{validator type="expr" validIf="=calc.fromNowYears(@fechaNacimiento)<90" message="Error, Mayor a 90 Años"}}{{!-- cambios 2024-05-29 --}}
+    {{validator type="expr" condition="=fn('cedulaObligatoria',base.tipoPersonalNom??'')" notValidIf="=fn('faltaCedulaEspecialidad',@datosEspecialidad)" message="Falta Cédula Especialidad"}}
   {{/section}}
   {{!-- Tarea #3976 RACC --}}
 

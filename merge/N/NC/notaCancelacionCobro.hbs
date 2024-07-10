@@ -43,5 +43,9 @@
       {{filter condition="=hasta" field="_created.date" lt="=hasta"}}      
     {{/find}}
     {{union source="notaCancelacionCobroAnticipo" view="resumen"}}
+    {{calc2 field="importeTotal" value="=base.importeTotal||base.totalCobrado"}}
+    {{calc2 field="_origen1" value="=_parent.name"}}
+    {{calc2 field="_origen2" value="=base.solicitud._parent.name"}}
+    {{calc2 field="_origen" value="=@_origen2||@_origen1"}}
   {{/view}}
 {{/define}}

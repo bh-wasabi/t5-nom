@@ -1,0 +1,8 @@
+{{!-- Tarea 5660 --}}
+{{#define id="datosInfeccionesRespiratoriasAgudasSis"}}
+  {{#section id="base"}}
+    {{validator type="expr" notValidIf="=presentaInfeccionAguda=='catVezNoEspecificado'&&planTratamiento!='noAplica'" message="Plan Tratamiento Inválido"}}
+    {{validator type="expr" notValidIf="=presentaInfeccionAguda=='catVezNoEspecificado'&&neumonia!='catVezNoEspecificado'" message="Neumonia Inválido"}}
+  {{/section}}
+{{/define}}
+{{!-- Tarea 5660 --}}

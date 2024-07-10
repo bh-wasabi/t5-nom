@@ -1,6 +1,13 @@
 {{#define id="notaSaludMental"}}
+  {{#section id="base"}}
+    {{field id="tienePreconsulta" type="expr" value="=catServicios=='preconsulta'"}}
+    {{field id="fechaAtencion1" type="expr" value="@fechaAtencion"}}
+    {{validator type="expr" validIf="=persona.fechaNacimiento<fechaAtencion1" log="=user.job" message="Error en la fecha atención"}}
+  {{/section}}
   {{#section id="diagnosticos"}}
+    {{field id="esPsicologo" type="expr" value="=calc.in(Utils.getUserProfile().service[0],['psicologiaAdultos','psicologiaPediatrica','psicologiaClinica'])"}}
     {{validator type="expr" notValidIf="=calc.findDuplicates(calc.pluckRef(consumoSustanciaPsicoactivas,'base.consumoSustanciasPsicoactivas'))" message="Datos Duplicados"}}
+    {{!-- {{validator type="expr" notValidIf="=1==1" log="=calc.in(Utils.getUserProfile().service[0],['psicologiaAdultos','psicologiaPediatrica','psicologiaClinica'])" message="Es Psicologo"}} --}}
   {{/section}}
 {{!--RACC VISTA  --}}
  {{#view id="ultima"}}
