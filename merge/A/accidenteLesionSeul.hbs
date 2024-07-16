@@ -1,0 +1,7 @@
+{{#define id="accidenteLesionSeul"}}
+  {{#section id="base"}}
+    {{field id="siOtroEquipoSeguridad" type="expr" value="=equipoUtilizadoAccidenteAuto=='otro'"}}
+    {{validator type="expr" notValidIf="=@equipoUtilizadoAccidenteAuto=='sillaPortaInfante'&&@accidenteVehiculoMotor!='ocupante'" message="Equipo Utilizado Incorrecto"}}
+    {{validator type="expr" validIf="=!calc.in(calc.lowerCase(calc.normalize(@otroEquipoSeguridad)),['cinturon de seguridad','casco','silla porta infante','otro'])" message="Especifique Otro Equipo Inválido"}}
+  {{/section}}
+{{/define}}
