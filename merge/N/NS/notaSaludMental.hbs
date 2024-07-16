@@ -2,10 +2,12 @@
   {{#section id="base"}}
     {{field id="tienePreconsulta" type="expr" value="=catServicios=='preconsulta'"}}
     {{field id="fechaAtencion1" type="expr" value="@fechaAtencion"}}
-    {{validator type="expr" validIf="=persona.fechaNacimiento<fechaAtencion1" log="=user.job" message="Error en la fecha atención"}}
+    {{field id="esUneme" type="expr" value="=calc.in(user.job.cluesTipoAbreviacion,['T','UNE'])&&calc.in(user.job.cluesSubAbreviacion,['T02','UNE02','UNE04','UNE11'])"}}
+    {{validator type="expr" validIf="=persona.fechaNacimiento<fechaAtencion1" message="Error en la fecha atención"}}
+    {{validator type="expr" notValidIf="=catServicios=='PRECONSULTA'&&(!calc.in(user.job.cluesTipoAbreviacion,['T','UNE','Y'])||!calc.in(user.job.cluesSubAbreviacion,['T01','T03','CISAM','UNE01','UNE12','99']))" message="Servicio Atención Inválido"}}
   {{/section}}
   {{#section id="diagnosticos"}}
-    {{field id="esPsicologo" type="expr" value="=calc.in(Utils.getUserProfile().service[0],['psicologiaAdultos','psicologiaPediatrica','psicologiaClinica'])"}}
+    {{field id="esPsicologo" type="expr" value="=user.others.tipoPersonalNom=='psicologa'||user.others.tipoPersonalNom=='pasantePsicologia'"}}
     {{validator type="expr" notValidIf="=calc.findDuplicates(calc.pluckRef(consumoSustanciaPsicoactivas,'base.consumoSustanciasPsicoactivas'))" message="Datos Duplicados"}}
     {{!-- {{validator type="expr" notValidIf="=1==1" log="=calc.in(Utils.getUserProfile().service[0],['psicologiaAdultos','psicologiaPediatrica','psicologiaClinica'])" message="Es Psicologo"}} --}}
   {{/section}}

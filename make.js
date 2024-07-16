@@ -785,7 +785,7 @@ subProyects = 'mx,his,hraei,n3';
 // subProyects = 'his,hraei,mx,privado';
 
 
-proyectId = 'his';
+proyectId = 't5-nom';
 esIndex = 'his4';
 if (wasabiHost=='hraei-t1.saludness.com'){
   logo = logoSaludNess;

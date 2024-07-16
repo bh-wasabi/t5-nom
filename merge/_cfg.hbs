@@ -4575,6 +4575,45 @@
       <br>Saturación Oxigeno: 0%
     {{/if}} --}}
   {{/template}}
+
+  {{#template id="signosVitalesSis"}}
+      {{#if fechaHoraRegistro}}<br>Hora Registro: {{date fechaHoraRegistro "DD/MMM/YYYY h:mma"}}{{/if}}
+      {{#if temperaturaCorporal}}<br>Temperatura: {{temperaturaCorporal}} °C{{#if temperaturaTomadaEn}} - {{_temperaturaTomadaEn}}{{/if}}{{/if}}
+      {{#if tensionSistolica}}<br>Presión Arterial: {{tensionSistolica}}/{{tensionDiastolica}} mmHg{{#if presionTomadaEn}} - {{_presionTomadaEn}}{{/if}}, PAM: {{number pam "#.##"}}{{/if}}
+      {{#if frecuenciaCardiaca}}<br>Frecuencia Cardiaca: {{frecuenciaCardiaca}} lpm{{/if}}
+      {{#if frecuenciaRespiratoria}}<br>Frecuencia Respiratoria: {{frecuenciaRespiratoria}} rpm{{/if}}
+      {{#if saturacionOxigeno}}<br>Saturación Oxigeno: {{saturacionOxigeno}}%{{/if}}
+      {{#if llenadoCapilar}}<br>Llenado Capilar: {{llenadoCapilar}} seg{{/if}}
+      {{#if resultadoObtenido}}<br>Resultado Obtenido por: {{_resultadoObtenido}}{{/if}}
+      <br>Toma Glicemia Capilar: {{_tomaGlicemiaCapilar}}
+      {{#if tomaGlicemia}}{{#if glicemiaCapilar}}<br>Glicemia Capilar: {{glicemiaCapilar}} mg/dl{{/if}} {{#if tienePrePrandial}} (Pre Prandial){{/if}} {{/if}}
+  {{/template}}
+
+  {{#template id="signosVitalesSisEvolucion"}}
+      {{#if fechaHoraRegistro}}<br>Hora Registro: {{date fechaHoraRegistro "DD/MMM/YYYY h:mma"}}{{/if}}
+      {{#if temperaturaCorporal}}<br>Temperatura: {{temperaturaCorporal}} °C{{#if temperaturaTomadaEn}} - {{_temperaturaTomadaEn}}{{/if}}{{/if}}
+      {{#if tensionSistolica}}<br>Presión Arterial: {{tensionSistolica}}/{{tensionDiastolica}} mmHg{{#if presionTomadaEn}} - {{_presionTomadaEn}}{{/if}}, PAM: {{number pam "#.##"}}{{/if}}
+      {{#if frecuenciaCardiaca}}<br>Frecuencia Cardiaca: {{frecuenciaCardiaca}} lpm{{/if}}
+      {{#if frecuenciaRespiratoria}}<br>Frecuencia Respiratoria: {{frecuenciaRespiratoria}} rpm{{/if}}
+      {{#if saturacionOxigeno}}<br>Saturación Oxigeno: {{saturacionOxigeno}}%{{/if}}
+      {{#if llenadoCapilar}}<br>Llenado Capilar: {{llenadoCapilar}} seg{{/if}}
+      {{#if resultadoObtenido}}<br>Resultado Obtenido por: {{_resultadoObtenido}}{{/if}}
+      <br>Toma Glicemia Capilar: {{_tomaGlicemiaCapilar}}
+      {{#if tomaGlicemia}}{{#if glicemiaCapilar}}<br>Glicemia Capilar: {{glicemiaCapilar}} mg/dl{{/if}} {{#if tienePrePrandial}} (Pre Prandial){{/if}} {{/if}}
+  {{/template}}
+
+  {{#template id="signosVitalesSisDetecciones"}}
+      {{#if fechaHoraRegistro}}<br>Hora Registro: {{date fechaHoraRegistro "DD/MMM/YYYY h:mma"}}{{/if}}
+      {{#if temperaturaCorporal}}<br>Temperatura: {{temperaturaCorporal}} °C{{#if temperaturaTomadaEn}} - {{_temperaturaTomadaEn}}{{/if}}{{/if}}
+      {{#if tensionSistolica}}<br>Presión Arterial: {{tensionSistolica}}/{{tensionDiastolica}} mmHg{{#if presionTomadaEn}} - {{_presionTomadaEn}}{{/if}}, PAM: {{number pam "#.##"}}{{/if}}
+      {{#if frecuenciaCardiaca}}<br>Frecuencia Cardiaca: {{frecuenciaCardiaca}} lpm{{/if}}
+      {{#if frecuenciaRespiratoria}}<br>Frecuencia Respiratoria: {{frecuenciaRespiratoria}} rpm{{/if}}
+      {{#if saturacionOxigeno}}<br>Saturación Oxigeno: {{saturacionOxigeno}}%{{/if}}
+      {{#if llenadoCapilar}}<br>Llenado Capilar: {{llenadoCapilar}} seg{{/if}}
+      {{#if resultadoObtenido}}<br>Resultado Obtenido por: {{_resultadoObtenido}}{{/if}}
+      <br>Toma Glicemia Capilar: {{_tomaGlicemiaCapilar}}
+      {{#if tomaGlicemia}}{{#if glicemiaCapilar}}<br>Glicemia Capilar: {{glicemiaCapilar}} mg/dl{{/if}} {{#if tienePrePrandial}} (Pre Prandial){{/if}} {{/if}}
+  {{/template}}
   
   {{#template id="somatometria"}} 
     Peso: {{peso}} kg, Talla: {{estatura}} m, IMC: {{number imc "#.##"}}, Superficie Corporal: {{number superficieCorporal "#.##"}} m²{{#if cintura}}, Circunferencia Cintura (cm): {{cintura}}{{/if}}
@@ -9489,7 +9528,34 @@
     {{#if resultadoPruebaBattelle}}<br>Prueba Battelle: {{_resultadoPruebaBattelle}}{{/if}}
   {{/template}}
 
+  {{#template id="datosSaludNinoSis"}} 
+    {{#if pruebaEdiNino}}<br>Prueba (EDI): {{_pruebaEdiNino}}{{/if}}
+    {{#if resultadoPruebaEdi}}<br>Resultado Prueba (EDI): {{resultadoPruebaEdi}}{{/if}}
+    {{#if resultadoPruebaBattelle}}<br>Prueba Battelle: {{_resultadoPruebaBattelle}}{{/if}}
+  {{/template}}
+
   {{#template id="datosEmbarazoActualAvanzados"}} 
+    {{#if amniocentesis}}<br>Amniocentésis: {{_amniocentesis}}{{/if}}
+    {{#if tieneAmniocentesis}}{{#if desdeQueTrimestre}}<br>A partir del: {{_desdeQueTrimestre}}{{/if}}{{/if}}
+    {{#if tieneAmniocentesis}}{{#if dondeRecibioConsultas}}<br>Dónde recibió las consultas: {{dondeRecibioConsultas}}{{/if}}{{/if}}
+    {{#if inmunizada}}<br>Esta Inmunizada: {{_inmunizada}}{{/if}}
+    {{#if isoinmunizada}}<br>Esta Isoinmunizada: {{_isoinmunizada}}{{/if}}
+    {{#if medicamentosDuranteEsteEmbarazo}}<br>Toma Medicamentos Específicos para el Embarazo: {{_medicamentosDuranteEsteEmbarazo}}{{/if}}
+    {{#if tomaMedicamentosDuranteEsteEmbarazo}}{{#if medicamentosDuranteEsteEmbarazoCuales}}<br>Cuáles: {{_medicamentosDuranteEsteEmbarazoCuales}}{{/if}}{{/if}}
+    {{#if atencionEmbarazada}}<br>Atención Embarazada: {{_atencionEmbarazada}}{{/if}}
+    {{#if complicacionesEmbarazo}}<br>Complicaciones Embarazo: {{_complicacionesEmbarazo}}{{/if}}
+    {{#if numeroConsultasRecibidas}}<br>Número Consultas que ha Recibido: {{numeroConsultasRecibidas}}{{/if}}
+    {{#if patologiaMaterna}}<br>Patología Materna en Embarazo Actual: {{_patologiaMaterna}}{{/if}}
+    {{#if patologiaMaternaDetalles}}<br>Detalles Patología Materna: {{patologiaMaternaDetalles}}{{/if}}
+    {{#if pruebasRapidasRealizadas}}<br>Le han Realizado Pruebas Rápidas en este Embarazo: {{_pruebasRapidasRealizadas}}{{/if}}
+    {{#if tienePruebasRapidasRealizadas}}{{#if pruebasRapidasRealizadasCuales}}<br>Cuáles: {{_pruebasRapidasRealizadasCuales}}{{/if}}{{/if}}
+    {{#if titulacionAntiCuerpos}}<br>Titulación anticuerpos: {{_titulacionAntiCuerpos}}{{/if}}
+    {{#if vacunasDuranteEmbarazo}}<br>Ha Recibido Vacunas Durante este Embarazo: {{_vacunasDuranteEmbarazo}}{{/if}}
+    {{#if tieneVacunasDuranteEmbarazo}}{{#if vacunasDuranteEmbarazoCuales}}<br>Cuáles: {{_vacunasDuranteEmbarazoCuales}}{{/if}}{{/if}}
+    {{#if primeraVezAltoRiesgo}}<br>Primera Vez Alto Riesgo: {{_primeraVezAltoRiesgo}}{{/if}}
+  {{/template}}  
+
+  {{#template id="datosEmbarazoActualAvanzadosSis"}} 
     {{#if amniocentesis}}<br>Amniocentésis: {{_amniocentesis}}{{/if}}
     {{#if tieneAmniocentesis}}{{#if desdeQueTrimestre}}<br>A partir del: {{_desdeQueTrimestre}}{{/if}}{{/if}}
     {{#if tieneAmniocentesis}}{{#if dondeRecibioConsultas}}<br>Dónde recibió las consultas: {{dondeRecibioConsultas}}{{/if}}{{/if}}
@@ -10184,4 +10250,20 @@
   {{#template id="feto"}}
     {{#if numero}}{{numero}}.- {{/if}}{{#if situacionFetal}}Situación: {{_situacionFetal}}{{/if}}{{#if posicionFetal}}, Posición: {{_posicionFetal}}{{#if posicionFetalEspecifique}}; Especifique: {{posicionFetalEspecifique}}{{/if}} {{/if}}{{#if presentacionFetal}}, Presentación: {{_presentacionFetal}}{{/if}}
   {{/template}}  
+  {{#template id="datosDetallePuestoUser"}}
+		{{#if codigoPuesto}}<br>Código Puesto: {{codigoPuesto}}{{/if}}
+		{{#if descripcionPuesto}}<br>Descripción Puesto: {{descripcionPuesto}}{{/if}}
+		{{#if entidadFederativaPlaza}}<br>Entidad Federativa Plaza: {{_entidadFederativaPlaza}}{{/if}}
+		{{#if institucionPertenenciaPlaza}}<br>Institución Pertenencia Plaza: {{_institucionPertenenciaPlaza}}{{/if}}
+		{{#if tipoDeRecurso}}<br>Tipo Recurso: {{_tipoDeRecurso}}{{/if}}
+		{{#if actividadPrincipalDelUsuario}}<br>Actividad Principal: {{_actividadPrincipalDelUsuario}}{{/if}}
+		{{#if fechaIngresoInstitucion}}<br>Fecha Ingreso Institución: {{date fechaIngresoInstitucion "DD/MMM/YYYY"}}{{/if}}
+		{{#if cluesAdscripcionNomina}}<br>CLUES Adscripción Nómina: {{_cluesAdscripcionNomina}}{{/if}}
+		{{#if cluesAdscripcionReal}}<br>CLUES Adscripción Real: {{_cluesAdscripcionReal}}{{/if}}
+		{{#if diasLaborales}}<br>Días Laborales: {{_diasLaborales}}{{/if}}
+		{{#if tipoContratoLaboral}}<br>Tipo de Contrato: {{_tipoContratoLaboral}}{{/if}}
+		{{#if tipoPlaza}}<br>Tipo de Plaza: {{_tipoPlaza}}{{/if}}
+		{{#if horaEntrada}}<br>Hora Entrada: {{date horaEntrada "h:mma"}}{{/if}}
+		{{#if horaSalida}}<br>Hora Salida: {{date horaSalida "h:mma"}}{{/if}}
+	{{/template}}
 {{/markup}}

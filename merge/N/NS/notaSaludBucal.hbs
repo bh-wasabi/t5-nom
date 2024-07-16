@@ -1,7 +1,8 @@
 {{#define id="notaSaludBucal"}}
   {{#section id="base"}}
     {{field id="fechaAtencion1" type="expr" value="@fechaAtencion"}}
-    {{validator type="expr" validIf="=persona.fechaNacimiento<fechaAtencion1" log="=user.job" message="Error en la fecha atención"}}
+    {{validator type="expr" validIf="=persona.fechaNacimiento<fechaAtencion1" message="Error en la fecha atención"}}
+    {{validator type="expr" notValidIf="=catServicios!='ODONTOPEDIATRÍA'&&edadActual<18" message="Servicio Atención Inválido"}}
   {{/section}}
   {{#section id="diagnosticos"}}
     {{field id="tieneEdad" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=6"}}

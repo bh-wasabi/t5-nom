@@ -5037,15 +5037,10 @@
     {{#update section="base" newRef="tamizaje"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
-      {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
-      {{set esNeonatal="=calc.fromNowDays(persona.fechaNacimiento)<29"}}
-      {{set tieneAlgunaAlergia="=detalle.alergia?'si':null"}}
-      {{set alergia="=detalle.alergia"}}
-      {{set _alergia="=detalle._alergia"}}
-      {{set discapacidad="=detalle.discapacidad"}}
-      {{set _discapacidad="=detalle._discapacidad"}}
-      {{set grupoEtnico="=persona.grupoEtnico"}}
-      {{set _grupoEtnico="=persona._grupoEtnico"}}
+      {{set edadActual="persona.edadActual"}}
+      {{set _edadActual="persona._edadActual"}}
+      {{set tipoServicioSisMenor="=calc.fromNowYears(persona.fechaNacimiento)<18"}}
+      {{set tipoServicioSisMayor="=calc.fromNowYears(persona.fechaNacimiento)>=60"}}
       {{set primeraConsultaAno="=_items.length?'no':'si'"}}
       {{!-- RACC --}}
       {{set signosVitales="=detalle.signosVitales"}}
@@ -5055,28 +5050,11 @@
       {{!-- RACC --}}
       {{setRef ref="tamizaje.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
     {{/update}}
-    {{#update section="analisis"}}
-      {{set diagnostico="=detalle.diagnostico"}}
-      {{set _diagnostico="=detalle._diagnostico"}}
+    {{#update section="otrosDatos"}}
+      {{set cluesTieneEspirometro="=calc.isNotEmpty(user.job.cluesTieneEspirometro)"}}
     {{/update}}
-    {{#update section="exploracion"}}
-      {{set signosVitales="=detalle.signosVitales"}}
-      {{set _signosVitales="=detalle._signosVitales"}}
-      {{set somatometria="=detalle.somatometria"}}
-      {{set _somatometria="=detalle._somatometria"}}
-      {{set somatometriaPediatrica="=detalle.somatometriaPediatrica"}}
-      {{set _somatometriaPediatrica="=detalle._somatometriaPediatrica"}}
-      {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
-    {{/update}}
+    {{update section="tipoServicioSis" value="=calc.itemsToCode(_.intersection(calc.tipoServicioSis('detecciones','todos','',''),calc.tipoServicioSis(user.others.tipoServicioSis,user.others.tipoPersonalNom,base.esMujer?'mujer':'',base.tipoServicioSisMenor?'menor':base.tipoServicioSisMayor?'mayor':'')))" temp="true"}}
     {{update section="resumen" value="=resumen" temp="true"}}
-    {{update section="antecedentes" value="=detalle.antecedentes"}}
-    {{#update section="mujer"}}
-      {{set antecedentesGineco="=detalle.mujer.antecedentesGineco"}}
-      {{set _antecedentesGineco="=detalle.mujer._antecedentesGineco"}}
-      {{set antecedentesEmbarazos="=detalle.mujer.antecedentesEmbarazos"}}
-      {{set _antecedentesEmbarazos="=detalle.mujer._antecedentesEmbarazos"}}
-      {{setRef condition="=persona.esMujer" ref="antecedentesGineco.edadActual" value="=persona.edadActual"}}
-    {{/update}}
   {{/transform}}
 
   {{#transform id="copiarAlarmaObstetrica"}}
@@ -5351,12 +5329,156 @@
     {{update section="resumen" value="=resumen" temp="true"}}
   {{/transform}}
 
+  {{#transform id="copiarSisConsultaExterna"}}
+    {{update section="contexto" value="=contexto"}}
+    {{update section="persona" transform="copiarPersona"}}
+    {{#update section="base"}}
+      {{set esMujer="=persona.esMujer"}}
+      {{set esHombre="=!esMujer"}}
+      {{set tipoServicioSisMenor="=calc.fromNowYears(persona.fechaNacimiento)<18"}}
+      {{set tipoServicioSisMayor="=calc.fromNowYears(persona.fechaNacimiento)>=60"}}
+      {{set fechaNacimiento="=persona.fechaNacimiento"}}
+      {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
+      {{set esNeonatal="=calc.fromNowDays(persona.fechaNacimiento)<29"}}
+      {{set tieneAlgunaAlergia="=detalle.alergia?'si':null"}}
+      {{set alergia="=detalle.alergia"}}
+      {{set _alergia="=detalle._alergia"}}
+      {{set discapacidad="=detalle.discapacidad"}}
+      {{set _discapacidad="=detalle._discapacidad"}}
+      {{set grupoEtnico="=persona.grupoEtnico"}}
+      {{set _grupoEtnico="=persona._grupoEtnico"}}
+      {{set primeraConsultaAno="=_items.length?'no':'si'"}}
+      {{set primerConsultaUneme="=primeraConsultaAno"}}
+      {{set primeraUemeSaih="=primeraConsultaAno"}}
+      {{set menor="=calc.fromNowYears(persona.fechaNacimiento)>=10&&calc.fromNowYears(persona.fechaNacimiento)<=19"}}
+    {{/update}}
+    {{#update section="analisis"}}
+      {{set diagnostico="=detalle.diagnostico"}}
+      {{set _diagnostico="=detalle._diagnostico"}}
+    {{/update}}
+    {{#update section="diagnosticos"}}
+      {{set diagnostico="=detalle.diagnostico"}}
+      {{set _diagnostico="=detalle._diagnostico"}}
+    {{/update}}
+    {{#update section="exploracion"}}
+      {{!-- {{set signosVitales="=_params.info.base.signosVitales"}}
+      {{set _signosVitales="=_params.info.base.signosVitales._name"}}
+      {{set somatometria="=_params.info.base.somatometria"}}
+      {{set _somatometria="=_params.info.base.somatometria._name"}} --}}
+      {{set signosVitales="=detalle.signosVitales"}}
+      {{set _signosVitales="=detalle._signosVitales"}}
+      {{set somatometria="=detalle.somatometria"}}
+      {{set _somatometria="=detalle._somatometria"}}
+      {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
+      {{!-- {{setRef ref="signosVitales.base.esMujer" value="=persona.esMujer"}} --}}
+      {{!-- {{setRef ref="signosVitales.base.edadActual" value="=persona.edadActual"}} --}}
+    {{/update}}
+    {{update section="antecedentes" value="=detalle.antecedentes"}}
+    {{#update section="mujer"}}
+      {{set antecedentesGineco="=detalle.mujer.antecedentesGineco"}}
+      {{set _antecedentesGineco="=detalle.mujer._antecedentesGineco"}}
+      {{set antecedentesEmbarazos="=detalle.mujer.antecedentesEmbarazos"}}
+      {{set _antecedentesEmbarazos="=detalle.mujer._antecedentesEmbarazos"}}
+      {{setRef condition="=persona.esMujer" ref="antecedentesGineco.edadActual" value="=persona.edadActual"}}
+    {{/update}}
+    {{update section="tipoServicioSis" value="=calc.itemsToCode(_.intersection(calc.tipoServicioSis('consultaExterna','todos','',''),calc.tipoServicioSis(user.others.tipoServicioSis,user.others.tipoPersonalNom,base.esMujer?'mujer':'',base.tipoServicioSisMenor?'menor':base.tipoServicioSisMayor?'mayor':'')))" temp="true"}}
+    {{update section="resumen" value="=resumen" temp="true"}}
+  {{/transform}}
+
+  {{#transform id="copiarSaludMental"}}
+    {{update section="contexto" value="=contexto"}}
+    {{update section="persona" transform="copiarPersona"}}
+    {{#update section="base"}}
+      {{set esMujer="=persona.esMujer"}}
+      {{set esHombre="=!esMujer"}}
+      {{set tipoServicioSisMenor="=calc.fromNowYears(persona.fechaNacimiento)<18"}}
+      {{set tipoServicioSisMayor="=calc.fromNowYears(persona.fechaNacimiento)>=60"}}
+      {{set primeraConsultaAno="=_items.length?'no':'si'"}}
+      {{set primerConsultaUneme="=primeraConsultaAno"}}
+      {{set primeraUemeSaih="=primeraConsultaAno"}}
+    {{/update}}
+    {{#update section="diagnosticos"}}
+      {{set diagnostico="=detalle.diagnostico"}}
+      {{set _diagnostico="=detalle._diagnostico"}}
+    {{/update}}
+    {{update section="tipoServicioSis" value="=calc.itemsToCode(_.intersection(calc.tipoServicioSis('saludMental','todos','',''),calc.tipoServicioSis(user.others.tipoServicioSis,user.others.tipoPersonalNom,base.esMujer?'mujer':'',base.tipoServicioSisMenor?'menor':base.tipoServicioSisMayor?'mayor':'')))" temp="true"}}
+    {{update section="resumen" value="=resumen" temp="true"}}
+  {{/transform}}
+
+  {{#transform id="copiarPlanificacionFamiliar"}}
+    {{update section="contexto" value="=contexto"}}
+    {{update section="persona" transform="copiarPersona"}}
+    {{#update section="base"}}
+      {{set esMujer="=persona.esMujer"}}
+      {{set esHombre="=!esMujer"}}
+      {{set edadActual="persona.edadActual"}}
+      {{set _edadActual="persona._edadActual"}}
+      {{set menor="=calc.fromNowYears(persona.fechaNacimiento)>=10&&calc.fromNowYears(persona.fechaNacimiento)<=19"}}
+      {{set tipoServicioSisMenor="=calc.fromNowYears(persona.fechaNacimiento)<18"}}
+      {{set tipoServicioSisMayor="=calc.fromNowYears(persona.fechaNacimiento)>=60"}}
+      {{setRef ref="orientacionConsejeria.base.esMenor" value="=menor"}}
+      {{setRef ref="metodos.base.esMujer" value="=esMujer"}}
+      {{setRef ref="metodos.base.genero"  value="=persona.genero"}}
+      {{setRef ref="metodos.base.edad" value="=calc.fromNowYears(persona.fechaNacimiento)"}}
+    {{/update}}
+    {{update section="tipoServicioSis" value="=calc.itemsToCode(_.intersection(calc.tipoServicioSis('planificacionFamiliar','todos','',''),calc.tipoServicioSis(user.others.tipoServicioSis,user.others.tipoPersonalNom,base.esMujer?'mujer':'',base.tipoServicioSisMenor?'menor':base.tipoServicioSisMayor?'mayor':'')))" temp="true"}}
+    {{update section="resumen" value="=resumen" temp="true"}}
+  {{/transform}}
+
+  {{#transform id="copiarSaludBucal"}}
+    {{update section="contexto" value="=contexto"}}
+    {{update section="persona" transform="copiarPersona"}}
+    {{#update section="base"}}
+      {{set esMujer="=persona.esMujer"}}
+      {{set esHombre="=!esMujer"}}
+      {{set edadActual="persona.edadActual"}}
+      {{set _edadActual="persona._edadActual"}}
+      {{set tipoServicioSisMenor="=calc.fromNowYears(persona.fechaNacimiento)<18"}}
+      {{set tipoServicioSisMayor="=calc.fromNowYears(persona.fechaNacimiento)>=60"}}
+      {{set primeraConsultaAno="=_items.length?'no':'si'"}}
+    {{/update}}
+    {{#update section="diagnosticos"}}
+      {{!-- {{set diagnostico="=detalle.diagnostico"}} --}}
+      {{!-- {{set _diagnostico="=detalle._diagnostico"}} --}}
+      {{set placaBacterian=""}}
+      {{set tecnicaCepillado=""}}
+      {{set usoHiloDental=""}}
+      {{set limpiezaDental=""}}
+      {{set higieneProtesis=""}}
+      {{set examenTejidos=""}}
+      {{set autoexamenCavidad=""}}
+      {{set aplicacionTopicaFlour=""}}
+      {{set raspadoAlisado=""}}
+      {{set aplicacionBarniz=""}}
+    {{/update}}
+    {{#update section="restauracion"}}
+      {{set actividadQxMenor=""}}
+    {{/update}}
+    {{#update section="farmacos"}}
+      {{set prescripcionFarmacos=""}}
+      {{set atencionesAdicionales=""}}
+      {{set numeroRadiografiasDentales=""}}
+      {{set orientacionSaludBucal=""}}
+      {{set ConclusionTratamientoIntegral=""}}
+      {{set lineaVidaAcciones=""}}
+      {{set cartillaSalud=""}}
+      {{set esquemaVacunacion=""}}
+      {{set referidoPor=""}}
+      {{set contrarreferido=""}}
+      {{set solicitaTelemedicina=""}}
+      {{set solicitaTeleconsulta=""}}
+    {{/update}}
+    {{update section="tipoServicioSis" value="=calc.itemsToCode(_.intersection(calc.tipoServicioSis('saludBucal','todos','',''),calc.tipoServicioSis(user.others.tipoServicioSis,user.others.tipoPersonalNom,'',base.tipoServicioSisMenor?'menor':base.tipoServicioSisMayor?'mayor':'')))" temp="true"}}
+    {{update section="resumen" value="=resumen" temp="true"}}
+  {{/transform}}
+
   {{#transform id="copiarHistoriaClinica"}}
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
     {{#update section="base"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
+      {{set fechaNacimiento="=persona.fechaNacimiento"}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
       {{set esNeonatal="=calc.fromNowDays(persona.fechaNacimiento)<29"}}
       {{set tieneAlgunaAlergia="=detalle.alergia?'si':null"}}
@@ -5380,6 +5502,33 @@
     {{#update section="diagnosticos"}}
       {{set diagnostico="=detalle.diagnostico"}}
       {{set _diagnostico="=detalle._diagnostico"}}
+      {{set placaBacterian=""}}
+      {{set tecnicaCepillado=""}}
+      {{set usoHiloDental=""}}
+      {{set limpiezaDental=""}}
+      {{set higieneProtesis=""}}
+      {{set examenTejidos=""}}
+      {{set autoexamenCavidad=""}}
+      {{set aplicacionTopicaFlour=""}}
+      {{set raspadoAlisado=""}}
+      {{set aplicacionBarniz=""}}
+    {{/update}}
+    {{#update section="restauracion"}}
+      {{set actividadQxMenor=""}}
+    {{/update}}
+    {{#update section="farmacos"}}
+      {{set prescripcionFarmacos=""}}
+      {{set atencionesAdicionales=""}}
+      {{set numeroRadiografiasDentales=""}}
+      {{set orientacionSaludBucal=""}}
+      {{set ConclusionTratamientoIntegral=""}}
+      {{set lineaVidaAcciones=""}}
+      {{set cartillaSalud=""}}
+      {{set esquemaVacunacion=""}}
+      {{set referidoPor=""}}
+      {{set contrarreferido=""}}
+      {{set solicitaTelemedicina=""}}
+      {{set solicitaTeleconsulta=""}}
     {{/update}}
     {{#update section="exploracion"}}
       {{!-- {{set signosVitales="=_params.info.base.signosVitales"}}
@@ -7407,11 +7556,11 @@
   {{!-- RACC --}}
 
   {{!-- CERTIFICACIONES RACC --}}
-  {{#action id="notaSisConsultaExterna" source="notaSisConsultaExterna" label="Consulta Externa" transform="copiarHistoriaClinica" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaSisConsultaExterna" fromView="ultima"}}  
+  {{#action id="notaSisConsultaExterna" source="notaSisConsultaExterna" label="Consulta Externa" transform="copiarSisConsultaExterna" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaSisConsultaExterna" fromView="ultima"}}  
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
   {{/action}}
-  {{#action id="notaPlanificacionFamiliar" source="notaPlanificacionFamiliar" label="Planificación Familiar" transform="copiarHistoriaClinica" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaPlanificacionFamiliar" fromView="ultima"}}
+  {{#action id="notaPlanificacionFamiliar" source="notaPlanificacionFamiliar" label="Planificación Familiar" transform="copiarPlanificacionFamiliar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaPlanificacionFamiliar" fromView="ultima"}}
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
   {{/action}}
@@ -7419,11 +7568,11 @@
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
   {{/action}}
-  {{#action id="notaSaludMental" source="notaSaludMental" label="Salud Mental" transform="copiarHistoriaClinica" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaSaludMental" fromView="ultima"}}
+  {{#action id="notaSaludMental" source="notaSaludMental" label="Salud Mental" transform="copiarSaludMental" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaSaludMental" fromView="ultima"}}
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
   {{/action}}
-  {{#action id="notaSaludBucal" source="notaSaludBucal" label="Salud Bucal" transform="copiarHistoriaClinica" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaSaludBucal" fromView="ultima"}}
+  {{#action id="notaSaludBucal" source="notaSaludBucal" label="Salud Bucal" transform="copiarSaludBucal" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaSaludBucal" fromView="ultima"}}
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
   {{/action}}
@@ -11820,6 +11969,7 @@
   {{action id="notaCompatibilidadHemocomponentes" source="notaCompatibilidadHemocomponentes" label="Compatibilidad Hemocomponentes" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaRegistroHemocomponentes" source="notaRegistroHemocomponentes" label="Registro Hemocomponentes" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaRegistroLesiones" source="notaRegistroLesiones" label="Registro Lesiones" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{action id="notaSeulLesiones" source="notaSeulLesiones" label="SEUL Lesiones" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaReaccionesTransfusionales" source="notaReaccionesTransfusionales" label="Reacciones Transfusionales" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaInduccionOtorgada" source="notaInduccionOtorgada" label="Inducción Otorgada" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaInfusionCelulasProgenitoras" source="notaInfusionCelulasProgenitoras" label="Infusión Celulas Progenitoras Hematopoyéticos" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}

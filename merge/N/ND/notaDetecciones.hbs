@@ -4,6 +4,10 @@
      {{field id="esMayor19" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=19"}}
      {{field id="fechaAtencion1" type="expr" value="=@fechaAtencion"}}
      {{validator type="expr" validIf="=persona.fechaNacimiento<fechaAtencion1" message="Error en la fecha atención"}}
+     {{validator type="expr" notValidIf="=calc.in(catServicios,['PAIDOPSIQUIATRÍA','PEDIATRÍA']&&edadActual>17" message="Servicio Atención Inválido"}}
+     {{validator type="expr" notValidIf="=calc.in(catServicios,['GERIATRÍA','GERONTOLOGÍA','PSICOGERIATRÍA']&&edadActual<60" message="Servicio Atención Inválido"}}
+     {{validator type="expr" notValidIf="=catServicios=='SERVICIO AMIGABLE'&&(edadActual<10||edadActual>19)" message="Servicio Atención Inválido"}}
+     {{validator type="expr" notValidIf="=catServicios=='SERVICIO AMIGABLE'&&calc.isEmpty(user.job.cluesServicioAmigable)" message="CLUES Sin Servicio Amigable"}}
   {{/section}}
   {{#section id="enfermedades"}}
     {{field id="siVph" type="expr" value="=deteccionVPH=='realizada'"}}
@@ -21,6 +25,8 @@
     {{field id="esMayor19" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=19"}}
     {{field id="esMayorHombre" type="expr" value="!esMujer&&esMayor40"}}
     {{field id="siHiperplasia" type="expr" value="=hiperplasiaProstatica=='positivo'"}}
+    {{field id="cluesTieneEspirometro" type="expr" value="=cluesTieneEspirometro&&esMayor19"}}
+    {{validator type="expr" validIf="=resultadoEspirometria>=0&&resultadoEspirometria<=100" message="Resultado VEF1 Fuera de Rango"}}
   {{/section}}
   {{!-- Tarea 3156 --}}
   {{#view id="ultima"}}

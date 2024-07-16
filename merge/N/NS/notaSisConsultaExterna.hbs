@@ -5,8 +5,7 @@
     {{!-- Tarea 5660 --}}
     {{field id="establecimientoPrimeraUemeSaih" type="expr" value="=calc.in(user.job.cluesTipoAbreviacion,['T','UNE'])&&calc.in(user.job.cluesSubAbreviacion,['T02','UNE02','UNE04','UNE11'])"}}
     {{field id="saludMentalAdiccionesDisponible" type="expr" value="=calc.in(user.others.tipoPersonalNom,['medicoPasante','medicoGeneral','medicoResidente','medicoEspecialista','homeopata','medicoGeneralSaludMental','medicoSaludMental'])"}}
-    {{!-- Validacion de fecha no funciona --}}
-    {{!-- {{validator type="expr" notValidIf="=calc.fromNowDays(fechaConsulta)>calc.fromNowDays(persona.fechaNacimiento)" log="=calc.fromNowDays(fechaConsulta)>calc.fromNowDays(persona.fechaNacimiento)" message="Fecha Consulta Inválida"}} --}}
+    {{validator type="expr" validIf="=moment(fechaConsulta).isAfter(moment(fechaNacimiento))" message="Fecha Consulta Inválida"}}
     {{!-- Tarea 5660 --}}
   {{/section}}
   {{#section id="mujer"}}
@@ -39,8 +38,8 @@
     {{field id="noEsPrimeraVezSubsecuente" type="expr" value="=consultaNinoSano=='catVezNoEspecificado'&&esMenor17"}}
     {{field id="esMayor60" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=60&&!calc.in(user.others.tipoPersonalNom,['pasanteNutricion','nutriologa','homeopata','medicoTradicionalIndigena','taps','parteraTecnica','promotorSalud','acupunturista'])"}}
     {{!-- Tarea 5660 --}}
-    {{field id="esMenor17" type="expr" value="=(calc.fromNowYears(persona.fechaNacimiento)<=17)" log="=esMenor17"}}
-    {{field id="esPsicologo" type="expr" value="=(calc.in(prestadorServicios._especialidad,['psicologiaAdultos','psicologiaPediatrica','psicologiaClinica']))" log="=esPsicologo"}}
+    {{field id="esMenor17" type="expr" value="=(calc.fromNowYears(persona.fechaNacimiento)<=17)"}}
+    {{field id="esPsicologo" type="expr" value="=(calc.in(prestadorServicios._especialidad,['psicologiaAdultos','psicologiaPediatrica','psicologiaClinica']))"}}
 
     {{field id="esContraEsMenor17" type="expr" value="=@contrarreferido=='no'&&esMenor17"}}
     {{field id="esContraEsMayor60" type="expr" value="=@contrarreferido=='no'&&esMayor60"}}
