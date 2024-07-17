@@ -1,0 +1,200 @@
+{{#define id="notaSeulEgreso"}}
+ 	{{#section id="base"}}
+		{{field id="esVoluntadPropia" type="expr" value="=motivoEgreso=='voluntadPropia'"}}
+    {{field id="esDefuncion" type="expr" value="=motivoEgreso=='defuncion'"}}
+    {{field id="noEsDefuncion" type="expr" value="=!esDefuncion"}}
+    {{field id="esMujerMayor9Anos" type="expr" value="=esMujer&&moment().diff(moment(fechaNacimiento), 'years')>=9"}}
+    {{field id="esMenor4Meses" type="expr" value="=moment().diff(moment(fechaNacimiento), 'months')<=4"}}
+    {{field id="otraUnidad" type="expr" value="=motivoEgreso=='trasladoOtroUnidad'"}}
+    {{field id="siParcial" type="expr" value="=tipoUnidadPsiquiatrica=='hospitalParcial'"}}
+    {{field id="siOtroMetodo" type="expr" value="=metodoAnticonceptivo=='11'"}}
+    {{field id="esHospitalPsiquiatrico" type="expr" value="=calc.in(user.job.cluesTipoAbreviacion,['Y','HPSIQ','HPSIQMF'])&&calc.in(user.job.cluesSubAbreviacion,['99','NES','INP','SAP'])"}}
+    {{validator type="expr" validIf="=!calc.in(@tipoServicioPsiquiatrico, ['paidopsiquiatria','psicogeriatria'])||(@tipoServicioPsiquiatrico=='paidopsiquiatria'&&moment().diff(moment(fechaNacimiento), 'years')<18)||(@tipoServicioPsiquiatrico=='psicogeriatria'&&moment().diff(moment(fechaNacimiento), 'years')>59)" message="Tipo Servicio Incorrecto"}}
+    {{validator type="expr" notValidIf="=calc.in(@metodoAnticonceptivo,['5','8'])&&!calc.existsRefIn(@procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.procedimientosCirugiasCie9',['697X','697'])" message="Falta Procedimiento Inserción DIU"}}
+    {{validator type="expr" notValidIf="=@metodoAnticonceptivo=='10'&&!calc.existsRefIn(@procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.procedimientosCirugiasCie9',['662','6621','6622','6629','663','6631','6632','6639','665','6651','6652','6663'])" message="Falta Procedimiento Para OTB"}}
+    {{validator type="expr" notValidIf="=@cluesTraslado==user.job.cluesAdscripcionNomina" message="CLUES Procedencia Inválido"}}
+    {{#field id="motivoEgreso"}}
+      {{#onChange condition="=motivoEgreso=='defuncion'"}}
+        {{set signosVitales="={}"}}
+        {{set _signosVitales="=' '"}}
+      {{/onChange}}
+    {{/field}}
+	{{/section}}
+  {{#view id="egresosPaciente"}}
+    {{#find limit="-1"}}
+      {{include field="_created"}}
+      {{include field="base"}}
+      {{include field="persona"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{filter condition="=persona" field="persona.id" eq="=persona"}}
+    {{/find}}
+  {{/view}}
+  {{#view id="totalEgresos"}}
+    {{#pipeline}}
+      {{filter field="_created.date" gte="=calc.fromYearMonth(ejercicio,periodo)" required="true"}}
+      {{filter field="_created.date" lte="=calc.toYearMonth(ejercicio,periodo)" required="true"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{group field="base._motivoEgreso" as="_motivoEgreso"}}
+      {{group field="_id" type="count" as="conteo"}}
+    {{/pipeline}}
+  {{/view}}
+  {{#grid id="totalEgresos" view="totalEgresos" pdfFontSize="6" filters="false" exportToExcel="true" allowRefresh="true" columnChooser="false" allowSearch="true" wordWrapEnabled="true" columnAutoWidth="wordWrapEnabled"}}
+    {{column field="_motivoEgreso" label="Motivo Egreso"}}
+    {{column field="conteo" label="Conteo" summaryType="sum"}}
+  {{/grid}}  
+  {{#view id="cuboDefuncion"}}
+    {{#find limit="10000"}}
+      {{include field="_created.user"}}
+      {{include field="_created.date"}}
+      {{include field="persona.nombreCompleto"}}
+      {{include field="persona._genero"}}
+      {{include field="contexto._central"}}
+      {{include field="contexto._cama"}}
+      {{include field="base._motivoEgreso"}}
+      {{include field="base.diasEstancia"}}
+      {{include field="base.fechaHoraDefuncion"}}
+      {{filter field="_created.date" gte="=calc.fromYearMonth(ejercicio,periodo)" required="true"}}
+      {{filter field="_created.date" lte="=calc.toYearMonth(ejercicio,periodo)" required="true"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{filter field="base.motivoEgreso" eq="='defuncion'"}}
+    {{/find}}
+    {{calc field="fechaDefuncion" type="expr" value="=moment(base.fechaHoraDefuncion).format('DD/MMM/YYYY')"}}
+  {{/view}}
+  {{#cube id="cuboDefuncion" name="Egreso - Defunción" view="cuboDefuncion" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{column field="base.fechaHoraDefuncion" type="date" label="Día" groupInterval="day"}}
+    {{row field="base._motivoEgreso" width="250" label="Motivo Egreso"}}
+    {{row field="persona._genero" width="100" width="100" label="Genero"}}
+    {{row field="contexto._central" type="text" width="200" label="Central"}}
+    {{row field="contexto._cama" type="text" width="50" label="Cama"}}
+    {{row field="persona.nombreCompleto" width="250" label="Persona"}}
+    {{row field="fechaDefuncion" width="50" label="Fecha Defunción"}}
+    {{row field="base.diasEstancia" width="50" label="Días Estancia"}}
+    {{count field="_id" label="Cantidad" format="#"}}
+  {{/cube}}  
+  {{#view id="cuboOtros"}}
+    {{#find limit="10000"}}
+      {{include field="_created.user"}}
+      {{include field="_created.date"}}
+      {{include field="persona.nombreCompleto"}}
+      {{include field="persona._genero"}}
+      {{include field="contexto._central"}}
+      {{include field="contexto._cama"}}
+      {{include field="base._motivoEgreso"}}
+      {{include field="base.diasEstancia"}}
+      {{filter field="_created.date" gte="=calc.fromYearMonth(ejercicio,periodo)" required="true"}}
+      {{filter field="_created.date" lte="=calc.toYearMonth(ejercicio,periodo)" required="true"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{filter field="base.motivoEgreso" neq="='defuncion'"}}
+    {{/find}}
+  {{/view}}
+  {{#cube id="cuboOtros" name="Egreso - Otros" view="cuboOtros" allowSortingBySummary="true" allowSorting="true" allowFiltering="true" exportToExcel="true" allowExpandAll="true" showColumnGrandTotals="true"}}
+    {{column field="_created.date" type="date" label="Día" groupInterval="day"}}
+    {{row field="base._motivoEgreso" width="250" label="Motivo Egreso"}}
+    {{row field="persona._genero" width="100" width="100" label="Genero"}}
+    {{row field="contexto._central" type="text" width="200" label="Central"}}
+    {{row field="contexto._cama" type="text" width="50" label="Cama"}}
+    {{row field="persona.nombreCompleto" width="250" label="Persona"}}
+    {{row field="base.diasEstancia" width="50" label="Días Estancia"}}
+    {{count field="_id" label="Cantidad" format="#"}}
+  {{/cube}}  
+  {{#grid id="solicitudesEgreso" section="solicitudesEgreso" allowInsert="false" allowRemove="false"}}
+    {{column field="_name" width="800" readOnly="true"}}
+    {{column field="_moment" width="250" readOnly="true"}}
+    {{column field="accion" width="90"}}
+  {{/grid}}
+  {{#view id="sinbaEgresos"}}
+    {{complexView type="sinbaEgresos"}}
+  {{/view}}
+  {{#grid id="sinbaEgresos" name="SINBA - Egresos" view="sinbaEgresos" exportToExcel="true" allowRefresh="true" columnChooser="true" wordWrapEnabled="true" columnAutoWidth="wordWrapEnabled"}}
+    {{column field="clues"}}
+    {{column field="folio"}}
+    {{column field="curp"}}
+    {{column field="nombres"}}
+    {{column field="apellidoPaterno"}}
+    {{column field="apellidoMaterno"}}
+    {{column field="fechaNacimiento"}}
+    {{column field="paisOrigen"}}
+    {{column field="entidadNacimiento"}}
+    {{column field="nacioHospital"}}
+    {{column field="genero"}}
+    {{column field="peso"}}
+    {{column field="estatura"}}
+    {{column field="tieneDependencia"}}
+    {{column field="tipoBeneficiario"}}
+    {{column field="estadoCivil"}}
+    {{column field="seConsideraIndigena"}}
+    {{column field="hablaLenguaIndigena"}}
+    {{column field="lenguaIndigena"}}
+    {{column field="seAutodenominaAfromexicano"}}
+    {{column field="paisResidencia"}}
+    {{column field="entidadResidencia"}}
+    {{column field="municipioResidencia"}}
+    {{column field="localidadResidencia"}}
+    {{column field="otraLocalidad"}}
+    {{column field="codigoPostal"}}
+    {{column field="desde"}}
+    {{column field="fechaIngresoHospitalario"}}
+    {{column field="tipoServicioOtorgado"}}
+    {{column field="claveServicioAdicional"}}
+    {{column field="numeroServicio"}}
+    {{column field="claveServicioAdicional"}}
+    {{column field="diasTerapiaIntensiva"}}
+    {{column field="horasTerapiaIntensiva"}}
+    {{column field="diasTerapiaIntermedia"}}
+    {{column field="horasTerapiaIntermedia"}}
+    {{column field="procedenciaIngreso"}}
+    {{column field="especifiqueProcedencia"}}
+    {{column field="cluesDestino"}}
+    {{column field="motivoEgreso"}}
+    {{column field="cluesReferido"}}
+    {{column field="mujerFertil"}}
+    {{column field="detalle"}}
+    {{column field="diagnostico"}}
+    {{column field="primeraVezSubsecuente"}}
+    {{column field="numeroComorbilidades"}}
+    {{column field="descripcionComorbilidad"}}
+    {{column field="codigoCIEComorbilidad"}}
+    {{column field="causaExterna"}}
+    {{column field="codigoCausaExterna"}}
+    {{column field="codigoMorfologiaTumor"}}
+    {{column field="existioInfeccion"}}
+    {{column field="numerpProcedimiento"}}
+    {{column field="descripcionProcedimiento"}}
+    {{column field="codigoCIEProcedimiento"}}
+    {{column field="tipoAnestesia"}}
+    {{column field="enQuirofanoOFuera"}}
+    {{column field="tiempoQuirofano"}}
+    {{column field="cedulaProfesional"}}
+    {{column field="folioLesion"}}
+    {{column field="ministerioPublico"}}
+    {{column field="numeroCertificado"}}
+    {{column field="gestas"}}
+    {{column field="paras"}}
+    {{column field="abortos"}}
+    {{column field="cesareas"}}
+    {{column field="edadGestacionalAmenorrea"}}
+    {{column field="tipoAtencionObstetrica"}}
+    {{column field="tipoNacimiento"}}
+    {{column field="tipoProcedimientoAborto"}}
+    {{column field="tipoEmbarazo"}}
+    {{column field="totalProductos"}}
+    {{column field="metodoAnticonceptivo"}}
+    {{column field="otroMetodo"}}
+    {{column field="totalProductos"}}
+    {{column field="condicionNacimiento"}}
+    {{column field="condicionNacidoVivo"}}
+    {{column field="folioCertificadoNacimiento"}}
+    {{column field="pagar"}}
+    {{column field="reanimacionNeonatal"}}
+    {{column field="alojamientoConjunto"}}
+    {{column field="lactanciaExclusiva"}}
+    {{column field="tipoUnidadPsiquiatrica"}}
+    {{column field="tipoServicioOtorgado"}}
+    {{column field="paisNacimientoResponsable"}}
+    {{column field="curpResponsable"}}
+    {{column field="nombresResponsable"}}
+    {{column field="apellidoPaternoResponable"}}
+    {{column field="apellidoMaternoResponsable"}}
+    {{column field="cedulaResponsable"}}
+  {{/grid}}    
+{{/define}}

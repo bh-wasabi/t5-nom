@@ -12,21 +12,18 @@
   {{#section id="enfermedades"}}
     {{field id="siVph" type="expr" value="=deteccionVPH=='realizada'"}}
     {{field id="esMujer" type="expr" value="=base.esMujer"}}
-    {{!-- Tarea 3156 --}}
     {{field id="siCancerCuelloUterino" type="expr" value="=deteccionCancerCuelloUterino=='realizada'"}}
-    {{!-- Tarea 3156 --}}
+    {{field id="mayor35" type="expr" value="=siVph&&(calc.fromNowYears(persona.fechaNacimiento)>=35)"}}
   {{/section}}
   {{#section id="otrosDatos"}}
-    {{!-- Tarea 3156 --}}
     {{field id="esMujer" type="expr" value="=base.esMujer"}}
-    {{!-- Tarea 3156 --}}
     {{field id="esMayor10" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=10"}}
     {{field id="esMayor40" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=40"}}
     {{field id="esMayor19" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=19"}}
     {{field id="esMayorHombre" type="expr" value="!esMujer&&esMayor40"}}
     {{field id="siHiperplasia" type="expr" value="=hiperplasiaProstatica=='positivo'"}}
     {{field id="cluesTieneEspirometro" type="expr" value="=cluesTieneEspirometro&&esMayor19"}}
-    {{validator type="expr" validIf="=resultadoEspirometria>=0&&resultadoEspirometria<=100" message="Resultado VEF1 Fuera de Rango"}}
+    {{!-- {{validator type="expr" validIf="=resultadoEspirometria>=0.655&&resultadoEspirometria<=0.785" log="=resultadoEspirometria" message="Resultado VEF1 Fuera de Rango"}} --}}
   {{/section}}
   {{!-- Tarea 3156 --}}
   {{#view id="ultima"}}

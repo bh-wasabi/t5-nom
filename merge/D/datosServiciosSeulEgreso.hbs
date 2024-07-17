@@ -1,0 +1,11 @@
+{{#define id="datosServiciosSeulEgreso"}}
+  {{#section id="base"}}
+    {{field id="siClaveServicio" type="expr" value="=numeroServicio=='uno'"}}
+    {{field id="siOtraProcedencia" type="expr" value="=procedenciaIngreso=='5'"}}
+    {{field id="referido" type="expr" value="=procedenciaIngreso=='3'"}}
+    {{field id="siServicioAdicional" type="expr" value="=(numeroServicio=='uno'||numeroServicio=='dos')&&tipoServicioOtorgado=='normal'"}}
+    {{field id="esTerapia" type="expr" value="=calc.arrayInArray(@servicioIngreso,['unidadCoronaria','unidadTerapiaIntensivaQuirurgica','unidadTerapiaIntensiva','unidadTerapiaIntensivaQuirurgicaPediatrica','unidadTerapiaIntensivaPediatrica','unidadCuidadosIntensivosNeonatales'])||calc.in(@claveServicioAdicional,['unidadCoronaria','unidadTerapiaIntensivaQuirurgica','unidadTerapiaIntensiva','unidadTerapiaIntensivaQuirurgicaPediatrica','unidadTerapiaIntensivaPediatrica','unidadCuidadosIntensivosNeonatales'])"}}
+    {{validator type="expr" notValidIf="=procedenciaIngreso=='4'&&moment().diff(moment(fechaNacimiento), 'months')>1" message="Procedencia Ingreso Inválida"}}
+    {{validator type="expr" notValidIf="=@cluesProcedencia==user.job.cluesAdscripcionNomina" message="CLUES Procedencia Inválido"}}
+  {{/section}}
+{{/define}}

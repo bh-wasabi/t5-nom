@@ -11331,6 +11331,7 @@
   {{#menu id="menuEgreso" color="deep-orange"}}
     {{item action="notaPreAlta" text="Pre Alta"}}
     {{item action="notaEgreso" text="Egreso"}}
+    {{item action="notaSeulEgreso" text="SEUL Egreso"}}
     {{!-- {{item action="notaAltaServicio" text="Alta Servicio"}} --}}
     {{item action="notaMuerteFetal" text="Muerte Fetal"}}
     {{item action="notaDefuncion" text="Defunción"}}
@@ -11341,6 +11342,7 @@
   {{#menu id="menuEgresoCamaCensable" color="deep-orange"}}
     {{item action="notaPreAlta" text="Pre Alta"}}
     {{item action="notaEgreso" text="Egreso"}}
+    {{item action="notaSeulEgreso" text="SEUL Egreso"}}
     {{item action="notaDefuncion" text="Defunción"}}
     {{item action="notaSuspenderEgreso" text="Suspender Egreso" beginGroup="true" userRole="suspenderEgreso"}}
   {{/menu}}  
@@ -12114,6 +12116,11 @@
   {{action id="notaRegistroReferencia" source="notaRegistroReferencia" label="Registro Referencia" transform="copiarDatosReferencia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaTraslado" source="notaTraslado" label="Traslado" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{#action id="notaEgreso" source="notaEgreso" label="Egreso" transform="copiarEgreso" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="solicitudesEgreso" toSection="solicitudesEgreso"}}
+    {{param persona="=_id"}}
+    {{param tipoEpisodio="=fn('tipoEpisodio', contexto)"}}
+    {{param desde="=fn('hospitalizacionDesde', contexto)"}}    
+  {{/action}}
+  {{#action id="notaSeulEgreso" source="notaSeulEgreso" label="SEUL Egreso" transform="copiarEgreso" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="solicitudesEgreso" toSection="solicitudesEgreso"}}
     {{param persona="=_id"}}
     {{param tipoEpisodio="=fn('tipoEpisodio', contexto)"}}
     {{param desde="=fn('hospitalizacionDesde', contexto)"}}    
