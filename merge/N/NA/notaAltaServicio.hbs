@@ -3,6 +3,7 @@
     {{field id="tieneTraslado" type="expr" value="=motivoAltaServicio=='trasladoOtroUnidad'"}}
     {{!-- RACC --}}
     {{field id="defuncion" type="expr" value="=motivoAltaServicio=='defuncion'"}}
+    {{field id="esMinisterio" type="expr" value="=ministerioPublico=='no'"}}
     {{!-- RACC --}}
     {{#field id="central"}}
       {{onChange clearFields="cama"}}
@@ -13,6 +14,7 @@
         {{param central="=central"}}
       {{/editor}}
     {{/field}}
+    {{validator type="expr" notValidIf="=@CLUES==user.job.cluesAdscripcionNomina" message="CLUES Inválido"}}
   {{/section}}
   {{#grid id="solicitudesEgreso" section="solicitudesEgreso" allowInsert="false" allowRemove="false"}}
     {{column field="_name" width="800" readOnly="true"}}

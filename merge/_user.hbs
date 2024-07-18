@@ -204,12 +204,13 @@
   {{#section id="puesto"}}  
     {{field id="cluesTieneSsa" type="expr" value="=@cluesAdscripcionNomina.search('SSA')>0"}}
     {{#field id="cluesAdscripcionNomina"}}
-      {{#onChange clearFields="subAbreviacion,tipAbreviacion,servicioAmigable,tieneEspirometro"}}
+      {{#onChange clearFields="cluesSubAbreviacion,cluesTipoAbreviacion,cluesServicioAmigable,cluesTieneEspirometro,cluesTipoUnidad"}}
         {{set cluesTieneSsa="=@cluesAdscripcionNomina.search('SSA')>0"}}
         {{set cluesSubAbreviacion="=@sub_abreviacion"}}
         {{set cluesTipoAbreviacion="=@tip_abreviacion"}}
         {{set cluesServicioAmigable="=@amigable"}}
         {{set cluesTieneEspirometro="=@espirometro"}}
+        {{set cluesTipoUnidad="@tipo_unidad"}}
       {{/onChange}}
     {{/field}}
     {{!-- {{validator type="expr" validIf="=1==0" message="Error" log="=@cluesAdscripcionNomina.search('SSA')>0"}} --}}

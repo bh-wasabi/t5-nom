@@ -2404,7 +2404,31 @@
     {{when dato="'genero'" return="=fn('seleccionaGenero',curp.substr(10,1))"}}
     {{when dato="'entidad'" return="=curp.substr(11,2)"}}
   {{/function}}
-  {{!-- Tarea 5604 --}}
+
+  {{#function id="errorCluesEgreso"}}
+    {{define type="param" id="tipoUnidad"}}
+    {{define type="param" id="tipoAbreviacion"}}
+    {{when tipoUnidad="'2'" return="=''"}}
+    {{when tipoUnidad="'1'" return="=calc.in(tipoAbreviacion,['CAP','CES','T','UNE','Z'])?'':'CLUES Inválido'"}}
+    {{default return="='CLUES Inválido'"}}
+  {{/function}}
+
+  {{#function id="errorCluesUrgencias"}}
+    {{define type="param" id="tipoUnidad"}}
+    {{define type="param" id="tipoAbreviacion"}}
+    {{when tipoUnidad="'2'" return="=''"}}
+    {{when tipoUnidad="'1'" return="=calc.in(tipoAbreviacion,['CAP','CE','CES','UNE','UM','UMFH','A','D','E','F','G','H','I','J','K','L','P','Q','R','S','T','U','V','Z'])?'':'CLUES Inválido'"}}
+    {{default return="='CLUES Inválido'"}}
+  {{/function}}
+
+  {{#function id="validaCertificadoDefuncion"}}
+    {{define type="param" id="certificado"}}
+    {{when condition="=certificado.length!=9" return="true"}}
+    {{when condition="=isNaN(certificado)" return="true"}}
+    {{when condition="=moment().year()-certificado.slice(0,4)>4" return="true"}}
+    {{when condition="=certificado.slice(0,4)-moment().year()>1" return="true"}}
+    {{default return="false"}}
+  {{/function}}
 {{/define}}
 
 {{#markup}}
@@ -9641,7 +9665,27 @@
     {{#if domicilioCluesUltimaModificacion}}<br>Domicilio CLUES Última Modificación: {{_domicilioCluesUltimaModificacion}}{{/if}}
   {{/template}}
   
-    {{#template id="datosMujerEgreso"}}
+  {{#template id="datosMujerEgreso"}}
+    {{#if tipoEmbarazo}}<br>Producto único o múltiple: {{_tipoEmbarazo}}{{/if}}
+    {{#if tipoAtencionObstetrica}}<br>Tipo de Atención Obstétrica: {{_tipoAtencionObstetrica}}{{/if}}
+    {{#if esMenor4Meses}}{{#if nacioElPacienteEnEstaAtencion}}<br>Nació el(la) paciente en esta atención: {{_nacioElPacienteEnEstaAtencion}}{{/if}}{{/if}}
+    {{#if nacioEnEstaAtencion}}{{#if condicionNacimiento}}<br>Condición al Nacimiento: {{_condicionNacimiento}}{{/if}}{{/if}}
+    {{#if nacioEnEstaAtencion}}{{#if tipoNacimiento}}<br>Tipo de Nacimiento: {{_tipoNacimiento}}{{/if}}{{/if}}
+    {{#if tipoProcedimientoAborto}}<br>Tipo Procedimiento Aborto: {{_tipoProcedimientoAborto}}{{/if}}
+    {{#if totalProductos}}<br>Total de Productos: {{totalProductos}}{{/if}}
+    {{#if condicionNacimiento}}<br>Condición de Nacimiento: {{_condicionNacimiento}}{{/if}}
+    {{#if condicionNacidoVivo}}<br>Condición Nacido Vivo: {{_condicionNacidoVivo}}{{/if}}
+    {{#if folioCertificadoNacimiento}}<br>Folio Certificado: {{folioCertificadoNacimiento}}{{/if}}
+    {{#if apgar}}<br>Apgar 5 Minutos: {{apgar}}{{/if}}
+    {{#if reanimacionNeonatal}}<br>Reanimación Neonatal: {{reanimacionNeonatal}}{{/if}}
+    {{#if alojamientoConjunto}}<br>Alojamiento Conjunto: {{_alojamientoConjunto}}{{/if}}
+    {{#if lactanciaExclusiva}}<br>Lactancia Exclusiva: {{_lactanciaExclusiva}}{{/if}}
+    {{#if antecedentesEmbarazos}}<br>Antecedentes Embarazos: {{_antecedentesEmbarazos}}{{/if}}
+    {{#if estaEmbarazada}}{{#if datosEmbarazoActual}}<br>Embarazo Actual: {{_datosEmbarazoActual}}{{/if}}{{/if}}
+  {{/template}}
+  
+  {{#template id="datosMujerSeulEgreso"}}
+    {{#if edadGestacional}}<br>Edad Gestacional: {{edadGestacional}}{{/if}}
     {{#if tipoEmbarazo}}<br>Producto único o múltiple: {{_tipoEmbarazo}}{{/if}}
     {{#if tipoAtencionObstetrica}}<br>Tipo de Atención Obstétrica: {{_tipoAtencionObstetrica}}{{/if}}
     {{#if esMenor4Meses}}{{#if nacioElPacienteEnEstaAtencion}}<br>Nació el(la) paciente en esta atención: {{_nacioElPacienteEnEstaAtencion}}{{/if}}{{/if}}

@@ -1,0 +1,10 @@
+{{#define id="datosMujerSeulEgreso"}}
+ 	{{#section id="base"}}
+    {{field id="esMujer" type="expr" value="=persona.esMujer"}}
+    {{field id="siParto" type="expr" value="=tipoAtencionObstetrica=='parto'"}}
+    {{field id="siAborto" type="expr" value="=tipoAtencionObstetrica=='aborto'"}}
+    {{field id="siNacido" type="expr" value="=condicionNacimiento=='nacidoVivo'"}}
+    {{field id="siNacidoMuerto" type="expr" value="=condicionNacimiento=='nacidoMuerto'"}}
+    {{validator type="expr" validIf="=(@edadGestacional>0&&edadGestacional<=45)||@edadGestacional==88||@edadGestacional==99" message="Edad Gestacional Inválida"}}
+  {{/section}}
+{{/define}}

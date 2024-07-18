@@ -5372,9 +5372,11 @@
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
       {{!-- {{setRef ref="signosVitales.base.esMujer" value="=persona.esMujer"}} --}}
       {{!-- {{setRef ref="signosVitales.base.edadActual" value="=persona.edadActual"}} --}}
+      {{setRef ref="atencionObstetricas.base.genero" value="=persona.genero"}}
     {{/update}}
     {{update section="antecedentes" value="=detalle.antecedentes"}}
     {{#update section="mujer"}}
+      {{set esMujer="=persona.esMujer"}}
       {{set antecedentesGineco="=detalle.mujer.antecedentesGineco"}}
       {{set _antecedentesGineco="=detalle.mujer._antecedentesGineco"}}
       {{set antecedentesEmbarazos="=detalle.mujer.antecedentesEmbarazos"}}
@@ -12120,7 +12122,7 @@
     {{param tipoEpisodio="=fn('tipoEpisodio', contexto)"}}
     {{param desde="=fn('hospitalizacionDesde', contexto)"}}    
   {{/action}}
-  {{#action id="notaSeulEgreso" source="notaSeulEgreso" label="SEUL Egreso" transform="copiarEgreso" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="solicitudesEgreso" toSection="solicitudesEgreso"}}
+  {{#action id="notaSeulEgreso" source="notaSeulEgreso" label="SEUL Egreso" transform="copiarEgreso" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="solicitudesEgreso" toSection="solicitudesEgreso" error="=fn('errorCluesEgreso',user.job.cluesTipoUnidad,user.job.cluesTipoAbreviacion)" errorType="info"}}
     {{param persona="=_id"}}
     {{param tipoEpisodio="=fn('tipoEpisodio', contexto)"}}
     {{param desde="=fn('hospitalizacionDesde', contexto)"}}    
@@ -12165,7 +12167,7 @@
     {{item action="notaInicialUrgencias" text="Inicial Urgencias"}}
   {{/menu}}
   {{action id="notaActivarCodigoUrgencias" source="notaActivarCodigoUrgencias" label="Activar Código Urgencias" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
-  {{action id="notaInicialUrgencias" source="notaInicialUrgencias" label="Inicial Urgencias" transform="copiarDiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{action id="notaInicialUrgencias" source="notaInicialUrgencias" label="Inicial Urgencias" transform="copiarDiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" error="=fn('errorCluesUrgencias',user.job.cluesTipoUnidad,user.job.cluesTipoAbreviacion)" errorType="info"}}
   {{action id="notaInicialUrgenciasGinecologiaYObstetricia" source="notaInicialUrgenciasGinecologiaYObstetricia" label="Inicial Urgencias Ginecología y Obstetricia" transform="copiarAlarmaObstetrica" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaUrgencias" source="notaUrgencias" label="Urgencias" transform="copiarDiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
 

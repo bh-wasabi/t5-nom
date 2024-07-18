@@ -1,9 +1,9 @@
 {{#define id="antecedentesEmbarazos"}}
   {{#section id="base"}}
-    {{validator type="expr" validIf="=(@gestas<26)||(@gestas==99)" message="Hijos Sobrevivientes de la Madre debe ser: 1 - 25, 99 "}}
-    {{validator type="expr" validIf="=(@paras<26)||(@paras==99)" message="Hijos Sobrevivientes de la Madre debe ser: 1 - 25, 99 "}}
-    {{validator type="expr" validIf="=(@abortos<26)||(@abortos==99)" message="Hijos Sobrevivientes de la Madre debe ser: 1 - 25, 99 "}}
-    {{validator type="expr" validIf="=(@cesareas<26)||(@cesareas==99)" message="Hijos Sobrevivientes de la Madre debe ser: 1 - 25, 99 "}}
-    {{validator type="expr" validIf="=(@ectopicos<26)||(@ectopicos==99)" message="Hijos Sobrevivientes de la Madre debe ser: 1 - 25, 99 "}}
+    {{validator type="expr" validIf="=(@gestas>=0&&@gestas<26)||(@gestas==99)" message="Hijos Sobrevivientes de la Madre debe ser: 1 - 25, 99 "}}
+    {{validator type="expr" validIf="=(@paras>=0&&@paras<26)||(@paras==99)" message="Hijos Sobrevivientes de la Madre debe ser: 1 - 25, 99 "}}
+    {{validator type="expr" validIf="=(@abortos>=0&&@abortos<26)||(@abortos==99)" message="Hijos Sobrevivientes de la Madre debe ser: 1 - 25, 99 "}}
+    {{validator type="expr" validIf="=(@cesareas>=0&&@cesareas<26)||(@cesareas==99)" message="Hijos Sobrevivientes de la Madre debe ser: 1 - 25, 99 "}}
+    {{validator type="expr" validIf="=(@ectopicos>=0&&@ectopicos<26)||(@ectopicos==99)" message="Hijos Sobrevivientes de la Madre debe ser: 1 - 25, 99 "}}
   {{/section}}
 {{/define}}
