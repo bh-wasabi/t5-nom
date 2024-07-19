@@ -4,9 +4,9 @@
     {{field id="imc" type="calc" value="=fn('imc', base)" format="#.##"}}
     {{field id="superficieCorporal" type="calc" value="=fn('bsa', base)" format="#.##"}}
     {{!-- Tarea #3558 --}}
-    {{validator type="expr" validIf="=@peso==0||(@peso>=1&&@peso<=400)" message="Peso Incorrecto"}}
-    {{validator type="expr" validIf="=@estatura==0||(@estatura>=0.3&&@estatura<=2.2)" message="Talla Incorrecta"}}
-    {{validator type="expr" validIf="=@cintura==0||(@cintura>=20&&@cintura<=300)" message="Circunferencia Incorrecta"}}
+    {{validator type="expr" validIf="=(@peso>=1)||(@peso==0&&@peso==999)" message="Peso Incorrecto"}}
+    {{validator type="expr" validIf="=(@estatura>=0.3)||(@estatura==0||@estatura==999)" message="Talla Incorrecta"}}
+    {{validator type="expr" validIf="=(@cintura==0||@cintura==999)||(@cintura>=20&&@cintura<=300)" message="Circunferencia Incorrecta"}}
     {{!--  Tarea #3558 --}}
   {{/section}}
 {{/define}}

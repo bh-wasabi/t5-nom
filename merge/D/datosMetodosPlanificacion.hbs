@@ -3,10 +3,10 @@
     {{field id="esMujer" type="expr" value="=base.esMujer||_params.mainDoc.base.esMujer"}}
     {{field id="esHombre" type="expr" value="!esMujer"}}
     {{field id="esIntersexual" type="expr" value="=genero=='intersexual'"}}
-    {{field id="noAplica" type="expr" value="=revisionColocacionMetodoQuirurgico=='noAplica'&&((esMujer&&(edad>=9&&edad<=59))||((esHombre||esIntersexual)&&(edad>=9&&edad<=70))"}}
+    {{field id="noAplica" type="expr" value="=revisionColocacionMetodoQuirurgico=='noAplica'&&((esMujer&&(edad>=9&&edad<=59)))||((esHombre||esIntersexual)&&(edad>=9&&edad<=70))"}}
     {{validator type="expr" validIf="=@numeroPerservativosEntregados>=0&&@numeroPerservativosEntregados<=50" message="Error en Preservativos Entregados"}}
     {{validator type="expr" validIf="=@numeroPerservativosEntregadosFemeninos>=0&&@numeroPerservativosEntregadosFemeninos<=50" message="Error en Preservativos Entregados Femeninos"}}
-    {{validator type="expr" validIf="=(esHombre&&calc.in(@revisionColocacionMetodoQuirurgico,['intervencionQx','noAplica'])&&@altaAzoospermia!='si')||esMujer&&calc.in(@revisionColocacionMetodoQuirurgico,['revisionPosteriorQx'])" message="Error en el Campo Revisión o Colocación del Método Quirúrgico"}}
-    {{validator type="expr" validIf="=1==0" log="=((esMujer)&&(edad>=9&&edad<=59))" message="?"}}
+    {{!-- {{validator type="expr" validIf="=(esHombre&&calc.in(@revisionColocacionMetodoQuirurgico,['intervencionQx','noAplica'])&&@altaAzoospermia!='si')||esMujer&&calc.in(@revisionColocacionMetodoQuirurgico,['revisionPosteriorQx'])" message="Error en el Campo Revisión o Colocación del Método Quirúrgico"}} --}}
+    {{!-- {{validator type="expr" validIf="=1==0" log="=(revisionColocacionMetodoQuirurgico=='noAplica')&&((esMujer&&(edad>=9&&edad<=59)))" message="?"}} --}}
   {{/section}}
 {{/define}}

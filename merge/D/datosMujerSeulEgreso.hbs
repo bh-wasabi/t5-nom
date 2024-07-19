@@ -5,6 +5,7 @@
     {{field id="siAborto" type="expr" value="=tipoAtencionObstetrica=='aborto'"}}
     {{field id="siNacido" type="expr" value="=condicionNacimiento=='nacidoVivo'"}}
     {{field id="siNacidoMuerto" type="expr" value="=condicionNacimiento=='nacidoMuerto'"}}
+    {{field id="siPartoAborto" type="expr" value="=siParto||siAborto"}}
     {{validator type="expr" validIf="=(@edadGestacional>0&&edadGestacional<=45)||@edadGestacional==88||@edadGestacional==99" message="Edad Gestacional Inválida"}}
   {{/section}}
 {{/define}}

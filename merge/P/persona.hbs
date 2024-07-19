@@ -4991,9 +4991,7 @@
   {{#transform id="copiarEgreso"}}
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
-    {{!-- Tarea 2504 --}}
     {{#update section="base" newRef="servicios"}}
-    {{!-- Tarea 2504 --}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
@@ -5024,9 +5022,8 @@
       {{set fechaIngresoHospitalario="=contexto.defuncion.fechaIngreso"}}
       {{set diasEstancia="=moment(fechaHoraDefuncion).diff(moment(fechaIngresoHospitalario), 'day')"}}
       {{set evolucion="=contexto.defuncion.comentarios"}}
-      {{!-- Tarea 2504 --}}
       {{setRef ref="servicios.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
-      {{!-- Tarea 2504 --}}
+      {{setRef ref="servicios.base.genero" value="=persona.genero"}}
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
   {{/transform}}
@@ -5360,19 +5357,14 @@
       {{set diagnostico="=detalle.diagnostico"}}
       {{set _diagnostico="=detalle._diagnostico"}}
     {{/update}}
-    {{#update section="exploracion"}}
-      {{!-- {{set signosVitales="=_params.info.base.signosVitales"}}
-      {{set _signosVitales="=_params.info.base.signosVitales._name"}}
-      {{set somatometria="=_params.info.base.somatometria"}}
-      {{set _somatometria="=_params.info.base.somatometria._name"}} --}}
+    {{#update section="exploracion" newRef="atencionObstetricas"}}
       {{set signosVitales="=detalle.signosVitales"}}
       {{set _signosVitales="=detalle._signosVitales"}}
       {{set somatometria="=detalle.somatometria"}}
       {{set _somatometria="=detalle._somatometria"}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
-      {{!-- {{setRef ref="signosVitales.base.esMujer" value="=persona.esMujer"}} --}}
-      {{!-- {{setRef ref="signosVitales.base.edadActual" value="=persona.edadActual"}} --}}
-      {{setRef ref="atencionObstetricas.base.genero" value="=persona.genero"}}
+      {{setRef ref="atencionObstetricas.base.esMujer" value="=persona.genero=='mujer'"}}
+      {{setRef ref="atencionObstetricas.base.esMujerIntersexual" value="=persona.genero=='mujer'||persona.genero=='intersexual'"}}
     {{/update}}
     {{update section="antecedentes" value="=detalle.antecedentes"}}
     {{#update section="mujer"}}

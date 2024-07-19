@@ -1,11 +1,16 @@
 {{#define id="datosServiciosEgreso"}}
   {{#section id="base"}}
+    {{field id="esNormal" type="expr" value="=tipoServicioOtorgado=='normal'"}}
     {{field id="siClaveServicio" type="expr" value="=numeroServicio=='uno'"}}
     {{field id="siOtraProcedencia" type="expr" value="=procedenciaIngreso=='otraProcedencia'"}}
     {{field id="referido" type="expr" value="=procedenciaIngreso=='referido'"}}
     {{!-- Tarea 2504 --}}
     {{field id="siServicioAdicional" type="expr" value="=(numeroServicio=='uno'||numeroServicio=='dos')&&tipoServicioOtorgado=='normal'"}}
     {{validator type="expr" notValidIf="=procedenciaIngreso=='4'&&moment().diff(moment(fechaNacimiento), 'months')>1" message="Procedencia Ingreso Inválida"}}
+    {{validator type="expr" notValidIf="=calc.in(@claveServicioEgreso,['pediatria'])&&(calc.fromNowYears(fechaNacimiento)>18)" message="Servicio Egreso Incorrecto"}}
+    {{validator type="expr" notValidIf="=calc.in(@claveServicioAdicional,['pediatria'])&&(calc.fromNowYears(fechaNacimiento)>18)" message="Servicio Adicional Incorrecto"}}
+    {{validator type="expr" notValidIf="=calc.in(@claveServicioEgreso,['ginecoobstetricia'])&&(genero=='mujer'&&(calc.fromNowYears(fechaNacimiento)<=9||calc.fromNowYears(fechaNacimiento)>=59))" message="Servicio Egreso Incorrecto (Mujer)"}}
+    {{validator type="expr" notValidIf="=calc.in(@claveServicioAdicional,['ginecoobstetricia'])&&(genero=='mujer'&&(calc.fromNowYears(fechaNacimiento)<=9||calc.fromNowYears(fechaNacimiento)>=59))" message="Servicio Adicional Incorrecto (Mujer)"}}
     {{!-- Tarea 2504 --}}
   {{/section}}
 {{/define}}

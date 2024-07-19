@@ -1,0 +1,8 @@
+{{#define id="datosInformacionProducto"}}
+ 	{{#section id="base"}}
+    {{field id="siParto" type="expr" value="=tipoAtencionObstetrica=='parto'"}}
+    {{field id="siAborto" type="expr" value="=tipoAtencionObstetrica=='aborto'"}}
+    {{field id="siVivo" type="expr" value="=condicionNacimiento=='nacidoVivo'"}}
+    {{field id="siMuerto" type="expr" value="=condicionNacimiento=='nacidoMuerto'"}}
+  {{/section}}
+{{/define}}
