@@ -3,9 +3,7 @@
     {{!-- como el nombre se calcula antes, hay que agregar este campo en el excel --}}
     {{field id="estaVivo" type="expr" value="=situacionActual=='vivo'"}}
     {{field id="estaDifunto" type="expr" value="=situacionActual=='difunto'"}}
-    {{!-- {{field id="esMujer" type="expr" value="=@esMujer"}} --}}
-    {{!-- {{field id="edadActual" type="number" defaultValue="=@edadActual"}} --}}
-    {{field id="esTiraGlucosa" type="expr" value="=resultadoObtenido=='tiraGlucosaCapilar'"}}
+    {{field id="esTiraGlucosa" type="expr" value="=resultadoObtenido=='tiraGlucosaCapilar'&&((genero=='mujer'&&edadActual>=9&&edadActual<=59)||genero!='mujer')"}}
     {{field id="pam" type="calc" label="PMA" value="=fn('pam', base)" format="#.##"}}
     {{validator type="expr" validIf="=@temperaturaCorporal==0||(@temperaturaCorporal>=30&&@temperaturaCorporal<=44)" message="Temperatura Incorrecta"}}
     {{validator type="expr" validIf="=(@tensionSistolica==0||@tensionSistolica==999)||(@tensionSistolica>=50&&@tensionSistolica<=300)" message="Presión Sistólica Incorrecta"}}

@@ -8,9 +8,10 @@
     {{field id="tieneCondicionAlta" type="expr" value="=(continuaAtencionFueraUrgencias||seEnviaA)"}}
     {{!-- racc --}}
     {{field id="tienePlanHidratacion" type="expr" value="=planHidratacion=='planA'||planHidratacion=='planB'"}}
-    {{validator type="expr" validIf="=@numeroSobres>1&&@numeroSobres<=20" message="Error en Número de Sobres (1-20)"}}
+    {{validator type="expr" notValidIf="=tienePlanHidratacion&&(@numeroSobres<1||@numeroSobres>20)" message="Error en Número de Sobres (1-20)"}}
     {{!-- racc --}}
     {{validator type="expr" notValidIf="=@CLUES==user.job.cluesAdscripcionNomina" message="CLUES Inválido"}}
+    {{validator type="expr" validIf="=moment(fechaIngreso).isAfter(moment(fechaNacimiento))" message="Fecha Ingreso Urgencias Inválida"}}
   {{/section}}
   {{#view id="sinbaUrgencias"}}
     {{complexView type="sinbaUrgencias"}}

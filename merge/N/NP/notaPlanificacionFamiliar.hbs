@@ -1,7 +1,6 @@
 {{#define id="notaPlanificacionFamiliar"}}
   {{#section id="base"}}
-    {{field id="fechaAtencion1" type="expr" value="=@fechaAtencion"}}
-    {{validator type="expr" validIf="=persona.fechaNacimiento<fechaAtencion1" message="Error en la fecha atención"}}
+    {{validator type="expr" validIf="=moment(fechaAtencion).isAfter(moment(fechaNacimiento))" message="Fecha Atención Inválida"}}
     {{validator type="expr" notValidIf="=catServicios=='SERVICIO AMIGABLE'&&(edadActual<10||edadActual>19)" message="Servicio Atención Inválido"}}
     {{validator type="expr" notValidIf="=catServicios=='SERVICIO AMIGABLE'&&calc.isEmpty(user.job.cluesServicioAmigable)" message="CLUES Sin Servicio Amigable"}}
   {{/section}}

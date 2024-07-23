@@ -4984,6 +4984,8 @@
       {{set _somatometria="=detalle._somatometria"}}
       {{set somatometriaPediatrica="=detalle.somatometriaPediatrica"}}
       {{set _somatometriaPediatrica="=detalle._somatometriaPediatrica"}}
+      {{set fechaNacimiento="=persona.fechaNacimiento"}}
+      {{set fechaIngresoUrgencias="=contexto.urgencias.desde"}}
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
   {{/transform}}
@@ -5365,6 +5367,9 @@
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
       {{setRef ref="atencionObstetricas.base.esMujer" value="=persona.genero=='mujer'"}}
       {{setRef ref="atencionObstetricas.base.esMujerIntersexual" value="=persona.genero=='mujer'||persona.genero=='intersexual'"}}
+      {{setRef ref="signosVitales.base.genero" value="=persona.genero"}}
+      {{setRef ref="signosVitales.base.edadActual" value="=persona.edadActual"}}
+      {{setRef ref="signosVitales.base._edadActual" value="=persona._edadActual"}}
     {{/update}}
     {{update section="antecedentes" value="=detalle.antecedentes"}}
     {{#update section="mujer"}}
@@ -5405,6 +5410,7 @@
     {{#update section="base"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
+      {{set fechaNacimiento="=persona.fechaNacimiento"}}
       {{set edadActual="persona.edadActual"}}
       {{set _edadActual="persona._edadActual"}}
       {{set menor="=calc.fromNowYears(persona.fechaNacimiento)>=10&&calc.fromNowYears(persona.fechaNacimiento)<=19"}}
@@ -9785,6 +9791,26 @@
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
   {{/action}}
 
+  {{#action id="exportarSinbaSaludBucal" label="Exportar SINBA - Salud Bucal"  hide="true" type="save-as" fileName="sinbaSaludBucal.txt" fromApi="export/complexView/sinbaSaludBucal.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+    {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
+    {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
+  {{/action}}
+
+  {{#action id="exportarSinbaSaludMental" label="Exportar SINBA - Salud Mental"  hide="true" type="save-as" fileName="sinbaSaludMental.txt" fromApi="export/complexView/sinbaSaludMental.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+    {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
+    {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
+  {{/action}}
+
+  {{#action id="exportarSinbaPlanificacionFamiliar" label="Exportar SINBA - Planificación Familiar"  hide="true" type="save-as" fileName="sinbaPlanificacionFamiliar.txt" fromApi="export/complexView/sinbaPlanificacionFamiliar.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+    {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
+    {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
+  {{/action}}
+
+  {{#action id="exportarSinbaDetecciones" label="Exportar SINBA - Detecciones"  hide="true" type="save-as" fileName="sinbaDetecciones.txt" fromApi="export/complexView/sinbaDetecciones.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+    {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
+    {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
+  {{/action}}
+
   {{report id="reporteExportarAfiliacion" source="ver" view="exportarAfiliacion"}}
   {{#action id="exportarAfiliacion" type="report-pdf" hide="true" report="reporteExportarAfiliacion" fileName="afiliacion"}}
     {{param _export="xlsx"}}
@@ -9946,6 +9972,10 @@
     {{item action="exportarSinbaLesiones" text="SINBA - Lesiones"}}
     {{item action="exportarSinbaUrgencias" text="SINBA - Urgencias"}}
     {{item action="exportarSinbaEgresos" text="SINBA - Egresos"}}
+    {{item action="exportarSinbaSaludBucal" text="SINBA - Salud Bucal"}}
+    {{item action="exportarSinbaSaludMental" text="SINBA - Salud Mental"}}
+    {{item action="exportarSinbaPlanificacionFamiliar" text="SINBA - Planificación Familiar"}}
+    {{item action="exportarSinbaDetecciones" text="SINBA - Detecciones"}}
     {{#item text="Catálogos Maestros" beginGroup="true"}}
       {{item action="exportarAfiliacion" text="Afiliación"}}
       {{item action="exportarClues" text="Establecimiento Salud"}}

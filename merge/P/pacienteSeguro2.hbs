@@ -4,6 +4,7 @@
     {{field id="tieneBeneficiario" type="expr" value="=!tieneAfiliacion"}}
     {{field id="tieneDependencia" type="expr" value="=tieneBeneficiario&&tipoBeneficiario=='derechohabiente'"}}
     {{field id="tieneOtro" type="expr" value="=calc.in(dependencia, ['otra'])"}}
+    {{field id="ningunaDependencia" type="expr" value="=calc.in(@dependencia,['otra','imss','issste','pemex','sedena','semar','imssBienestar','issfam','opdImssBienestar'])"}}
   	{{#field id="tipoPrograma"}}
       {{#onChange}}
       	{{set listaPrecios="=fn('listaPreciosSeguro', @tipoPrograma, @tipoBeneficiario)"}}
