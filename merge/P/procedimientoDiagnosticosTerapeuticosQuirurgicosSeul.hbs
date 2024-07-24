@@ -11,5 +11,6 @@
 			{{/onChange}}
 		{{/field}}
   	{{validator type="expr" validIf="=procedimientosCirugiasCie9.length<9" message="Máximo 8 Procedimientos"}}
+		{{validator type="expr" notValidIf="=descripcionProcedimiento&&descripcionProcedimiento.length<2" message="Descripción Procedimiento Inválida"}}
   {{/section}}
 {{/define}}

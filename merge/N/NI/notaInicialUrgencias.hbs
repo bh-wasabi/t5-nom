@@ -5,13 +5,13 @@
     {{field id="noCasa" type="expr" value="=!casa"}}
     {{field id="enUrgencias" type="expr" value="=continuaAtencionEnUrgencias&&noCasa"}}
     {{field id="fueraUrgencias" type="expr" value="=!enUrgencias"}} --}}
+    {{field id="esMujerMayor9" type="expr" value="=esMujer&&calc.fromNowYears(persona.fechaNacimiento)>=9"}}
     {{field id="tieneCondicionAlta" type="expr" value="=(continuaAtencionFueraUrgencias||seEnviaA)"}}
-    {{!-- racc --}}
     {{field id="tienePlanHidratacion" type="expr" value="=planHidratacion=='planA'||planHidratacion=='planB'"}}
-    {{validator type="expr" notValidIf="=tienePlanHidratacion&&(@numeroSobres<1||@numeroSobres>20)" message="Error en Número de Sobres (1-20)"}}
-    {{!-- racc --}}
+    {{field id="esFertil" type="expr" value="=mujerFertil=='embarazo'||mujerFertil=='puerperio'"}}
+    {{validator type="expr" validIf="=(edadGestacional>=1&&edadGestacional<=45)||(edadGestacional==99)" message="Error en la Edad Gestacional"}}
+    {{validator type="expr" validIf="=@numeroSobres>1&&@numeroSobres<=20" message="Error en Número de Sobres (1-20)"}}
     {{validator type="expr" notValidIf="=@CLUES==user.job.cluesAdscripcionNomina" message="CLUES Inválido"}}
-    {{validator type="expr" validIf="=moment(fechaIngreso).isAfter(moment(fechaNacimiento))" message="Fecha Ingreso Urgencias Inválida"}}
   {{/section}}
   {{#view id="sinbaUrgencias"}}
     {{complexView type="sinbaUrgencias"}}

@@ -1,5 +1,8 @@
 {{#define id="notaSeulLesiones"}}
   {{#section id="base"}}
+    {{field id="esMujerMayor9" type="expr" value="=esMujer&&(calc.fromNowYears(persona.fechaNacimiento)>=9||calc.fromNowYears(persona.fechaNacimiento<=59))"}}
+    {{field id="esFertil" type="expr" value="=mujerFertil=='embarazo'||mujerFertil=='puerperio'"}}
+    {{field id="tieneClues" type="expr" value="=usuarioReferido=='unidadMedica'"}}
   	{{#onChange}}
   		{{#update}}
   			{{set cantidadAfectacionesTratadas="=afectacionesTratadas.length"}}
@@ -9,10 +12,16 @@
     {{validator type="expr" notValidIf="=profesionalResponsableSalud.base.responsableAtencionMedica=='medicoTratante'&&(calc.in('tratamientoPsicologo',atencionMedicaLesion.base.tipoAtencionLesion)||calc.in('consergeria',atencionMedicaLesion.base.tipoAtencionLesion))" message="Profesional Responsable Salud Inválido"}}
     {{validator type="expr" notValidIf="=(profesionalResponsableSalud.base.responsableAtencionMedica=='psicologoTratante'&&atencionMedicaLesion.base.tipoAtencionLesion.length>1)||(profesionalResponsableSalud.base.responsableAtencionMedica=='psicologoTratante'&&!calc.in('tratamientoPsicologo',atencionMedicaLesion.base.tipoAtencionLesion))" message="Profesional Responsable Salud Inválido"}}
     {{validator type="expr" notValidIf="=(profesionalResponsableSalud.base.responsableAtencionMedica=='trabajadoraSocial'&&atencionMedicaLesion.base.tipoAtencionLesion.length>1)||(profesionalResponsableSalud.base.responsableAtencionMedica=='trabajadoraSocial'&&!calc.in('consergeria',atencionMedicaLesion.base.tipoAtencionLesion))" message="Profesional Responsable Salud Inválido"}}
+    {{validator type="expr" validIf="=esMujer&&((edadGestacional>=1||edadGestacional<=45)||(edadGestacional==99))" log="=esMujer&&((edadGestacional>=1||edadGestacional<=45)||(edadGestacional==99))" message="Error en la Edad Gestacional"}}
   {{/section}}
 
   {{#section id="circunstanciasEvento"}}
-    {{field id="esViolencia" type="expr" value="=calc.in(tipoIntencionalidad, ['violenciaFamiliar','violenciaNoFamiliar'])"}}
+    {{field id="tieneTrata" type="expr" value="=tipoIntencionalidad!='trataPersonas'"}}
+    {{field id="ocultarCampos" type="expr" value="=calc.in(tipoIntencionalidad,['violenciaFamiliar','violenciaNoFamiliar'])"}}
+    {{field id="tieneOtro" type="expr" value="=agenteLesion==='otra'"}}
+    {{field id="tieneViolenciaNoFamiliar" type="expr" value="=tipoIntencionalidad=='violenciaFamiliar'"}}
+    {{field id="masUnoAgresor" type="expr"  value="=numeroAgresores=='unico'"}}
+    {{validator type="expr" notValidIf="=tipoParentesco=='conyugue'&&edadAgresor==0" message="Error en la edad del agresor"}}
     {{validator type="expr" validIf="=!@tipoDroga||@tipoDroga.length<4" message="Máximo 3 Drogas"}}
     {{validator type="expr" notValidIf="=@tipoParentesco=='conyugue'&&@edadAgresor==''" message="Edad del Agresor Requerida"}}
     {{validator type="expr" notValidIf="=@tipoDroga.length>1&&(calc.in('ninguna',@tipoDroga)||calc.in('seIgnora',@tipoDroga))" message="Drogas Incorrectas"}}

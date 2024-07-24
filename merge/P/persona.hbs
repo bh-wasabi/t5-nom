@@ -5472,6 +5472,30 @@
     {{update section="resumen" value="=resumen" temp="true"}}
   {{/transform}}
 
+  {{#transform id="copiarSeulLesiones"}}
+    {{update section="contexto" value="=contexto"}}
+    {{update section="persona" transform="copiarPersona"}}
+    {{#update section="base"}}
+      {{set esMujer="=persona.esMujer"}}
+      {{set esHombre="=!esMujer"}}
+      {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
+      {{set esNeonatal="=calc.fromNowDays(persona.fechaNacimiento)<29"}}
+      {{set nivelSocioeconomico="=fn('nivelSocioeconomico', detalle, contexto)"}}
+      {{set _nivelSocioeconomico="=fn('_nivelSocioeconomico', detalle, contexto)"}}
+      {{set listaPrecios="=fn('listaPrecios', detalle, contexto, persona)"}}
+      {{set _listaPrecios="=fn('_listaPrecios', detalle, contexto, persona)"}}
+      {{set riesgoEpidemiologico="=detalle.riesgoEpidemiologico"}}
+      {{set _riesgoEpidemiologico="=detalle._riesgoEpidemiologico"}}
+      {{set servicio="=contexto.servicio"}}
+      {{set _servicio="=contexto._servicio"}}
+      {{setRef ref="eventoLesion.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
+      {{setRef ref="eventoLesion.base.diaFestivo" value=""}}
+      {{setRef ref="atencionMedicaLesion.base.edad" value="=calc.fromNowYears(persona.fechaNacimiento)"}}
+      {{setRef ref="atencionMedicaLesion.base.esMujer" value="=persona.genero"}}
+    {{/update}}
+    {{update section="resumen" value="=resumen" temp="true"}}
+  {{/transform}}
+
   {{#transform id="copiarHistoriaClinica"}}
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
@@ -11995,7 +12019,7 @@
   {{action id="notaCompatibilidadHemocomponentes" source="notaCompatibilidadHemocomponentes" label="Compatibilidad Hemocomponentes" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaRegistroHemocomponentes" source="notaRegistroHemocomponentes" label="Registro Hemocomponentes" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaRegistroLesiones" source="notaRegistroLesiones" label="Registro Lesiones" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
-  {{action id="notaSeulLesiones" source="notaSeulLesiones" label="SEUL Lesiones" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{action id="notaSeulLesiones" source="notaSeulLesiones" label="SEUL Lesiones" transform="copiarSeulLesiones" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaReaccionesTransfusionales" source="notaReaccionesTransfusionales" label="Reacciones Transfusionales" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaInduccionOtorgada" source="notaInduccionOtorgada" label="Inducción Otorgada" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaInfusionCelulasProgenitoras" source="notaInfusionCelulasProgenitoras" label="Infusión Celulas Progenitoras Hematopoyéticos" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}

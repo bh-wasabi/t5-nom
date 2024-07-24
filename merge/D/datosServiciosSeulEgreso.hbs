@@ -12,5 +12,6 @@
     {{validator type="expr" notValidIf="=calc.in(@claveServicioAdicional,['pediatria'])&&(calc.fromNowYears(fechaNacimiento)>18)" message="Servicio Adicional Incorrecto"}}
     {{validator type="expr" notValidIf="=calc.in(@claveServicioEgreso,['ginecoobstetricia'])&&(genero=='mujer'&&(calc.fromNowYears(fechaNacimiento)<=9||calc.fromNowYears(fechaNacimiento)>=59))" message="Servicio Egreso Incorrecto (Mujer)"}}
     {{validator type="expr" notValidIf="=calc.in(@claveServicioAdicional,['ginecoobstetricia'])&&(genero=='mujer'&&(calc.fromNowYears(fechaNacimiento)<=9||calc.fromNowYears(fechaNacimiento)>=59))" message="Servicio Adicional Incorrecto (Mujer)"}}
+    {{validator type="expr" validIf="=!calc.in(calc.lowerCase(calc.normalize(@especifiqueProcedencia)),['consulta externa','urgencias','referido','cunero patologico','otro'])" message="Especifique Procedencia Inválida"}}
   {{/section}}
 {{/define}}

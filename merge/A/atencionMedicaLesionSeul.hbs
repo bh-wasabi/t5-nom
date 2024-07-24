@@ -3,6 +3,7 @@
     {{field id="esOtroServicioAtencion" type="expr" value="=@servicioAtencionLesion==='otro'"}}
     {{field id="esOtraAreaAfectada" type="expr" value="=@areaAnatomica==='otros'"}}
     {{field id="esOtraConsecuencia" type="expr" value="=@consecuenciaLesion==='otra'"}}
+    {{validator type="expr" validIf="=esMujer&&(calc.in(consecuenciaLesion,['aborto','embarazo'])&&(edad>=9||edad<=59))" message="Error en Consecuencia Lesion"}}
     {{validator type="expr" validIf="=@tipoAtencionLesion.length<6" message="Máximo 5 Tipo Atención"}}
     {{validator type="expr" validIf="=!@descripcionAfeccion||calc.matchIfPattern('^[A-z].{1,249}$', @descripcionAfeccion)" message="Verificar Descripción"}}
     {{validator type="expr" validIf="=!calc.in(calc.lowerCase(calc.normalize(@especifiqueServicioAtencion)),['consulta externa','hospitalizacion','urgencias','servicio especializado violencia','otro'])" message="Especificar Servicio Atención Inválido"}}

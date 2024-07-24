@@ -10,6 +10,9 @@
     {{field id="siOtroMetodo" type="expr" value="=metodoAnticonceptivo=='11'"}}
     {{field id="esHospitalPsiquiatrico" type="expr" value="=calc.in(user.job.cluesTipoAbreviacion,['Y','HPSIQ','HPSIQMF'])&&calc.in(user.job.cluesSubAbreviacion,['99','NES','INP','SAP'])"}}
     {{field id="tieneDefuncion" type="expr" value="=motivoEgreso=='defuncion'"}}
+    {{validator type="expr" validIf="=moment(fechaIngresoHospitalario).isAfter(fechaNacimiento)" message="Fecha Ingreso Hospitalario Inválida"}}
+    {{validator type="expr" validIf="=moment(fechaEgreso).isAfter(fechaIngresoHospitalario)" message="Fecha Egreso Inválida"}}
+    {{validator type="expr" validIf="=moment(fechaEgreso).diff(fechaIngresoHospitalario,'years',true)<5||esHospitalPsiquiatrico" message="Fecha Egreso Excede 5 Años"}}
     {{validator type="expr" validIf="=!calc.in(@tipoServicioPsiquiatrico, ['paidopsiquiatria','psicogeriatria'])||(@tipoServicioPsiquiatrico=='paidopsiquiatria'&&moment().diff(moment(fechaNacimiento), 'years')<18)||(@tipoServicioPsiquiatrico=='psicogeriatria'&&moment().diff(moment(fechaNacimiento), 'years')>59)" message="Tipo Servicio Incorrecto"}}
     {{validator type="expr" notValidIf="=calc.in(@metodoAnticonceptivo,['5','8'])&&!calc.existsRefIn(@procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.procedimientosCirugiasCie9',['697X','697'])" message="Falta Procedimiento Inserción DIU"}}
     {{validator type="expr" notValidIf="=@metodoAnticonceptivo=='10'&&!calc.existsRefIn(@procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.procedimientosCirugiasCie9',['662','6621','6622','6629','663','6631','6632','6639','665','6651','6652','6663'])" message="Falta Procedimiento Para OTB"}}
