@@ -1,5 +1,9 @@
 {{#define id="notaSolicitudInterconsulta"}}
   {{#section id="base"}}
     {{field id="esHospitalizacion" type="expr" value="=tipoEpisodio=='hospitalizacion'"}}
+    {{validator type="expr" notValidIf="=calc.in('pediatria',calc.pluckRef(interconsulta,'base.servicioInterconsultante'))&&edadActual>=18" message="Servicio Interconsultante Inválido (Pediatría)"}}
+    {{validator type="expr" notValidIf="=calc.in('pediatria',calc.pluckRef(interconsulta,'base.servicioInterconsultado'))&&edadActual>=18" message="Servicio Interconsultado Inválido (Pediatría)"}}
+    {{validator type="expr" notValidIf="=calc.in('ginecoObstetricia',calc.pluckRef(interconsulta,'base.servicioInterconsultante'))&&genero!='mujer'&&(edadActual<9||edadActual>59)" message="Servicio Interconsultante Inválido (Gineco Obstetricia)"}}
+    {{validator type="expr" notValidIf="=calc.in('ginecoObstetricia',calc.pluckRef(interconsulta,'base.servicioInterconsultado'))&&genero!='mujer'&&(edadActual<9||edadActual>59)" message="Servicio Interconsultado Inválido (Gineco Obstetricia)"}}
   {{/section}}
 {{/define}}

@@ -5490,6 +5490,7 @@
       {{set _servicio="=contexto._servicio"}}
       {{setRef ref="eventoLesion.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
       {{setRef ref="eventoLesion.base.diaFestivo" value=""}}
+      {{setRef ref="atencionMedicaLesion.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
       {{setRef ref="atencionMedicaLesion.base.edad" value="=calc.fromNowYears(persona.fechaNacimiento)"}}
       {{setRef ref="atencionMedicaLesion.base.esMujer" value="=persona.genero"}}
     {{/update}}
@@ -6580,7 +6581,8 @@
       {{set prioridad="=fn('prioridadCentral', central)"}}
       [./if.] --}}
       {{set prioridad="=fn('prioridadServicio', _params.service)"}}
-
+      {{set genero="=persona.genero"}}
+      {{set edadActual="=persona.edadActual"}}
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
   {{/transform}}

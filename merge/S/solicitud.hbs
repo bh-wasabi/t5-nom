@@ -6364,6 +6364,17 @@
     {{column field="cedulaEspecialidad"}}
   {{/grid}}  
 
+  {{#view id="interconsultaFinalizados"}}
+    {{#find limit="-1"}}
+      {{include field="_name"}}
+      {{sort field="_created.date" direction="desc"}}
+      {{!-- {{search field="_name"}} --}}
+      {{filter field="_updated.moment" eq="='finalizado'"}}
+      {{filter field="base.tipoSolicitud" eq="='interconsulta'"}}
+      {{filter condition="=persona" field="persona.id" eq="=persona"}}
+    {{/find}}
+  {{/view}}
+
   {{#transform id="copiar"}}
     {{update section="persona" value="=persona"}}
   {{/transform}}
