@@ -4,18 +4,17 @@
     {{field id="estaVivo" type="expr" value="=situacionActual=='vivo'"}}
     {{field id="estaDifunto" type="expr" value="=situacionActual=='difunto'"}}
     {{field id="pam" type="calc" label="PMA" value="=fn('pam', base)" format="#.##"}}
-    {{validator type="expr" validIf="=!@temperaturaCorporal||(@temperaturaCorporal>=30&&@temperaturaCorporal<=44)" message="Temperatura Incorrecta"}}
-    {{validator type="expr" validIf="=!@tensionSistolica||(@tensionSistolica>=0&&@tensionSistolica<=300)" message="Presión Sistólica Incorrecta"}}
-    {{validator type="expr" validIf="=!@tensionDiastolica||(@tensionDiastolica>=0&&@tensionDiastolica<=300)" message="Presión Diastólica Incorrecta"}}
-    {{validator type="expr" validIf="=!@frecuenciaCardiaca||(@frecuenciaCardiaca>=0&&@frecuenciaCardiaca<=220)" message="Frecuencia Cardíaca Incorrecta"}}
-    {{validator type="expr" validIf="=!@frecuenciaRespiratoria||(@frecuenciaRespiratoria>=10&&@frecuenciaRespiratoria<=99)" message="Frecuencia Respiratoria Incorrecta"}}
-    {{validator type="expr" validIf="=!@saturacionOxigeno||@saturacionOxigeno>=0&&@saturacionOxigeno<=100" message="Saturación Oxigeno Incorrecta"}} {{!--cambio RACC  --}}
-    {{!-- 9 Feb 2024 --}}
-    {{validator type="expr" validIf="=@tensionDiastolica>0&&@tensionSistolica>=50" message="Presión Sistólica Fuera de Rango"}}
-    {{validator type="expr" validIf="=@tensionSistolica>=@tensionDiastolica" message="Presión Sistólica Fuera de Rango 2"}} 
-    {{validator type="expr" validIf="=@tensionSistolica>0&&(@tensionDiastolica>=20&&@tensionDiastolica<=200)" message="Presión Diastólica Fuera de Rango"}}
-    {{validator type="expr" validIf="=@tensionDiastolica<=@tensionSistolica" message="Presión Diastólica Fuera de Rango 2"}}
-    {{validator type="expr" validIf="=@tomaGlicemiaCapilar=='no'||(@glicemiaCapilar>=20&&@glicemiaCapilar<=999)" message="Glicemia Capilar Incorrecta" log="=@glicemiaCapilar>=20&&@glicemiaCapilar<=999"}}
+    {{validator type="expr" validIf="=@temperaturaCorporal==0||(@temperaturaCorporal>=30&&@temperaturaCorporal<=44)" message="Temperatura Incorrecta"}}
+    {{validator type="expr" validIf="=(@tensionSistolica==0||@tensionSistolica==999)||(@tensionSistolica>=50&&@tensionSistolica<=300)" message="Presión Sistólica Incorrecta"}}
+    {{validator type="expr" validIf="=(@tensionDiastolica==0||@tensionDiastolica==999)||(@tensionDiastolica>=20&&@tensionDiastolica<=200)" message="Presión Diastólica Incorrecta"}}
+    {{validator type="expr" validIf="=@frecuenciaCardiaca==0||(@frecuenciaCardiaca>=40&&@frecuenciaCardiaca<=220)" message="Frecuencia Cardíaca Incorrecta"}}
+    {{validator type="expr" validIf="=@frecuenciaRespiratoria==0||(@frecuenciaRespiratoria>=10&&@frecuenciaRespiratoria<=99)" message="Frecuencia Respiratoria Incorrecta"}}
+    {{validator type="expr" validIf="=@saturacionOxigeno>=0&&@saturacionOxigeno<=100" message="Saturación Oxigeno Incorrecta"}}
+    {{validator type="expr" validIf="=(calc.number(@tensionDiastolica)>=0&&calc.number(@tensionSistolica)>=50)||(@tensionSistolica==0&&@tensionDiastolica==0)" message="Presión Sistólica Fuera de Rango"}}
+    {{validator type="expr" validIf="=(calc.number(@tensionSistolica)>=calc.number(@tensionDiastolica))||(@tensionSistolica==0||@tensionDiastolica==0)" message="Presión Sistólica Fuera de Rango 2"}} 
+    {{validator type="expr" validIf="=(@tensionSistolica>=0&&(@tensionDiastolica>=20&&@tensionDiastolica<=200))||(@tensionSistolica==0&&@tensionDiastolica==0)||(@tensionSistolica==999&&@tensionDiastolica==999)" message="Presión Diastólica Fuera de Rango"}}
+    {{validator type="expr" validIf="=calc.number(@tensionDiastolica)<=calc.number(@tensionSistolica)" message="Presión Diastólica Fuera de Rango 2"}}
+    {{validator type="expr" validIf="=@tomaGlicemiaCapilar=='no'||(@glicemiaCapilar>=20&&@glicemiaCapilar<=999)||(@glicemiaCapilar==0)" message="Glicemia Capilar Incorrecta" log="=@glicemiaCapilar>=20&&@glicemiaCapilar<=999"}}
     {{validator type="expr" validIf="=@tomaGlicemiaCapilar=='no'||(@glicemiaCapilar>0&&@resultadoObtenido!='')" message="Seleccione un resultado"}}
   {{/section}}
 {{/define}}

@@ -5,5 +5,6 @@
     {{field id="siVivo" type="expr" value="=condicionNacimiento=='nacidoVivo'"}}
     {{field id="siMuerto" type="expr" value="=condicionNacimiento=='nacidoMuerto'"}}
     {{validator type="expr" validIf="=@apgar>=0&&@apgar<=10" message="Apgar erroneo (0-10)"}}
+    {{validator type="expr" notValidIf="=@condicionNacimiento=='nacidoVivo'&&@condicionNacidoVivo=='muerto'" message="Error al seleccionar Condición Nacimiento"}}
   {{/section}}
 {{/define}}

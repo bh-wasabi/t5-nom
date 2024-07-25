@@ -5463,7 +5463,6 @@
       {{set lineaVidaAcciones=""}}
       {{set cartillaSalud=""}}
       {{set esquemaVacunacion=""}}
-      {{set referidoPor=""}}
       {{set contrarreferido=""}}
       {{set solicitaTelemedicina=""}}
       {{set solicitaTeleconsulta=""}}
@@ -5492,7 +5491,9 @@
       {{setRef ref="eventoLesion.base.diaFestivo" value=""}}
       {{setRef ref="atencionMedicaLesion.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
       {{setRef ref="atencionMedicaLesion.base.edad" value="=calc.fromNowYears(persona.fechaNacimiento)"}}
-      {{setRef ref="atencionMedicaLesion.base.esMujer" value="=persona.genero"}}
+      {{setRef ref="atencionMedicaLesion.base.esMujer" value="=esMujer"}}
+      {{setRef ref="atencionMedicaLesion.base.esHombre" value="=esHombre"}}
+      {{setRef ref="accidenteLesion.base.edad" value="=calc.fromNowYears(persona.fechaNacimiento)"}}
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
   {{/transform}}

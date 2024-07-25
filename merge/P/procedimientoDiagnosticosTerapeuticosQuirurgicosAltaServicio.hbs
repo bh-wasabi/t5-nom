@@ -1,0 +1,15 @@
+{{#define id="procedimientoDiagnosticosTerapeuticosQuirurgicosAltaServicio"}}
+  {{#section id="base"}}
+    {{#field id="procedimientosRealizados"}}
+      {{#editor}}
+        {{param persona="=_mainDoc.persona.id"}}
+      {{/editor}}
+    {{/field}}
+		{{#field id="cirujano"}}
+			{{#onChange}}
+				{{set cedulaCirujano="=_.first(prestadorServicios.datosEspecialidad).base.cedulaEspecialidad"}}
+			{{/onChange}}
+		{{/field}}
+  	{{validator type="expr" validIf="=procedimientosRealizados.length<=6" message="Máximo 6 Procedimientos"}}
+  {{/section}}
+{{/define}}

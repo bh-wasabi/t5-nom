@@ -6368,10 +6368,19 @@
     {{#find limit="-1"}}
       {{include field="_name"}}
       {{sort field="_created.date" direction="desc"}}
-      {{!-- {{search field="_name"}} --}}
       {{filter field="_updated.moment" eq="='finalizado'"}}
       {{filter field="base.tipoSolicitud" eq="='interconsulta'"}}
       {{filter condition="=persona" field="persona.id" eq="=persona"}}
+    {{/find}}
+  {{/view}}
+
+  {{#view id="procedimientosFinalizados"}}
+    {{#find limit="-1"}}
+      {{include field="_name"}}
+      {{sort field="_created.date" direction="desc"}}
+      {{filter field="_updated.moment" eq="='finalizado'"}}
+      {{filter field="base.tipoSolicitud" eq="='procedimiento'"}}
+      {{filter field="persona.id" eq="=persona"}}
     {{/find}}
   {{/view}}
 

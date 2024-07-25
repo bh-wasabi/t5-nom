@@ -7408,6 +7408,15 @@
     {{!-- Tarea 2504 --}}
     {{#if descripcionProcedimiento}}<br>Descripción del Procedimiento: {{descripcionProcedimiento}}{{/if}}
   {{/template}}
+  {{#template id="procedimientoDiagnosticosTerapeuticosQuirurgicos"}}
+		{{#if procedimientosRealizados}}<br>Procedimientos Realizados: {{_procedimientosRealizados}}{{/if}}
+		{{#if enQuirofanoOFuera}}<br>En quirófano o Fuera: {{_enQuirofanoOFuera}}{{/if}}
+		{{#if tipoAnestesia}}<br>Tipo Anestesia: {{_tipoAnestesia}}{{/if}}
+		{{#if tiempoProcedimientoCie9}}<br>Tiempo: {{date tiempoProcedimientoCie9 "hh:mm"}}{{/if}}
+		{{#if cirujano}}<br>Cirujano: {{_cirujano}}{{/if}}
+		{{#if cedulaCirujano}}<br>Cédula Profesional: {{cedulaCirujano}}{{/if}}
+		{{#if descripcionProcedimiento}}<br>Descripción del Procedimiento: {{descripcionProcedimiento}}{{/if}}
+  {{/template}}
   {{#template id="hito"}}
     {{#if suspender}}(Suspendido) {{/if}}
     {{#if fechaHoraRegistro}}<br>{{date fechaHoraRegistro "DD/MMM/YYYY h:mma"}}{{/if}}
