@@ -7408,8 +7408,8 @@
     {{!-- Tarea 2504 --}}
     {{#if descripcionProcedimiento}}<br>Descripción del Procedimiento: {{descripcionProcedimiento}}{{/if}}
   {{/template}}
-  {{#template id="procedimientoDiagnosticosTerapeuticosQuirurgicos"}}
-		{{#if procedimientosRealizados}}<br>Procedimientos Realizados: {{_procedimientosRealizados}}{{/if}}
+  {{#template id="procedimientoDiagnosticosTerapeuticosQuirurgicosAltaServicio"}}
+		{{#if procedimientosRealizados}}<br>Procedimiento Realizado: {{_procedimientosRealizados}}{{/if}}
 		{{#if enQuirofanoOFuera}}<br>En quirófano o Fuera: {{_enQuirofanoOFuera}}{{/if}}
 		{{#if tipoAnestesia}}<br>Tipo Anestesia: {{_tipoAnestesia}}{{/if}}
 		{{#if tiempoProcedimientoCie9}}<br>Tiempo: {{date tiempoProcedimientoCie9 "hh:mm"}}{{/if}}
@@ -8511,6 +8511,12 @@
     {{#if accidenteVehiculoMotor}}<br>Accidente por Vehiculo de Motor: {{_accidenteVehiculoMotor}}{{/if}}
     {{#if usoEquipoSeguridad}}<br>Uso de equpo de seguridad: {{_usoEquipoSeguridad}}{{/if}}
     {{#if equipoUtilizadoAccidenteAuto}}<br>Equipo Utlizado: {{_equipoUtilizadoAccidenteAuto}}{{/if}}
+    {{#if otroEquipoSeguridad}}<br>Especifique Otro Equipo: {{otroEquipoSeguridad}}{{/if}}
+  {{/template}}
+  {{#template id="accidenteLesionSeul"}}
+    {{#if accidenteVehiculoMotor}}<br>Accidente por Vehiculo de Motor: {{_accidenteVehiculoMotor}}{{/if}}
+    {{#if usoEquipoSeguridad}}<br>Uso de equpo de seguridad: {{_usoEquipoSeguridad}}{{/if}}
+    {{#if equipoUtilizadoAccidenteAuto}}<br>Equipo Utilizado: {{_equipoUtilizadoAccidenteAuto}}{{/if}}
     {{#if otroEquipoSeguridad}}<br>Especifique Otro Equipo: {{otroEquipoSeguridad}}{{/if}}
   {{/template}}
   {{#template id="accidenteViolencia"}}

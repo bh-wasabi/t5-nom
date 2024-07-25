@@ -9,7 +9,7 @@
     {{field id="tieneCondicionAlta" type="expr" value="=(continuaAtencionFueraUrgencias||seEnviaA)"}}
     {{field id="tienePlanHidratacion" type="expr" value="=planHidratacion=='planA'||planHidratacion=='planB'"}}
     {{field id="esFertil" type="expr" value="=mujerFertil=='embarazo'||mujerFertil=='puerperio'"}}
-    {{validator type="expr" validIf="=(edadGestacional>=1||edadGestacional<=45)||(edadGestacional==99)" message="Error en la Edad Gestacional"}}
+    {{validator type="expr" validIf="=(calc.number(@edadGestacional)>=0&&calc.number(@edadGestacional)<=45)||(calc.number(@edadGestacional)==99)" message="Error en la Edad Gestacional"}}
     {{validator type="expr" validIf="=@numeroSobres>1||@numeroSobres<=20" message="Error en Número de Sobres (1-20)"}}
     {{validator type="expr" notValidIf="=@CLUES==user.job.cluesAdscripcionNomina" message="CLUES Inválido"}}
   {{/section}}

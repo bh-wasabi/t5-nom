@@ -6,7 +6,7 @@
   			{{set cantidadAfectacionesTratadas="=afectacionesTratadas.length"}}
   		{{/update}}
   	{{/onChange}}
-    {{validator type="expr" notValidIf="=atencionMedicaLesion.base.consecuenciaLesion=='defuncion'&&afectacionesTratadas[0].base.destinoAtencionLesion!='defuncion'" log="=atencionMedicaLesion.base.consecuenciaLesion=='defuncion'&&afectacionesTratadas[0].base.destinoAtencionLesion!='defuncion'" message="Verificar Destino en Afectaciones Tratadas"}}
+    {{validator type="expr" notValidIf="=atencionMedicaLesion.base.consecuenciaLesion=='defuncion'&&afectacionesTratadas[0].base.destinoAtencionLesion!='defuncion'" message="Verificar Destino en Afectaciones Tratadas"}}
   {{/section}}
   {{#section id="circunstanciasEvento"}}
     {{field id="esViolencia" type="expr" value="=calc.in(tipoIntencionalidad, ['violenciaFamiliar','violenciaNoFamiliar'])"}}

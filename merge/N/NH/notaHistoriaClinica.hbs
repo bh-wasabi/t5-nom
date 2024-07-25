@@ -22,9 +22,9 @@
   {{#section id="analisis"}}
     {{field id="esMujer" type="expr" value="=base.esMujer"}}
     {{field id="estaEmbarazada" type="expr" value="=base.estaEmbarazada"}}
-    {{field id="esMenor17" type="expr" value="=(calc.fromNowYears(persona.fechaNacimiento)<=17)" log="=esMenor17"}}
-    {{field id="esMayor60" type="expr" value="=(calc.fromNowYears(persona.fechaNacimiento)>=60)" log="=esMayor60"}}
-    {{field id="esPsicologo" type="expr" value="=(calc.in(prestadorServicios._especialidad,['psicologiaAdultos','psicologiaPediatrica','psicologiaClinica']))" log="=esPsicologo"}}
+    {{field id="esMenor17" type="expr" value="=(calc.fromNowYears(persona.fechaNacimiento)<=17)"}}
+    {{field id="esMayor60" type="expr" value="=(calc.fromNowYears(persona.fechaNacimiento)>=60)"}}
+    {{field id="esPsicologo" type="expr" value="=(calc.in(prestadorServicios._especialidad,['psicologiaAdultos','psicologiaPediatrica','psicologiaClinica']))"}}
 
     {{field id="esContraEsMenor17" type="expr" value="=@contrarreferido=='no'&&esMenor17"}}
     {{field id="esContraEsMayor60" type="expr" value="=@contrarreferido=='no'&&esMayor60"}}

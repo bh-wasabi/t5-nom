@@ -17,12 +17,14 @@
     {{#field id="interconsultas"}}
       {{#editor}}
         {{param persona="=persona.id"}}
+        {{param tipoSolicitud="interconsulta"}}
       {{/editor}}
     {{/field}}
     {{validator type="expr" notValidIf="=@CLUES==user.job.cluesAdscripcionNomina" message="CLUES Inválido"}}
     {{validator type="expr" validIf="=moment(@fechaIngreso).isAfter(@fechaIngresoUrgencias)" message="Fecha Desde Inválida"}}
     {{validator type="expr" validIf="=moment(@fechaEgreso).isAfter(@fechaIngresoUrgencias)" message="Fecha Hasta Inválida"}}
     {{validator type="expr" validIf="=calc.isEmpty(@interconsultas)||@interconsultas.length<=3" message="Máximo 3 Interconsultas"}}
+    {{validator type="expr" validIf="=calc.isEmpty(@procedimientoDiagnosticosTerapeuticosQuirurgicos)||@procedimientoDiagnosticosTerapeuticosQuirurgicos.length<=6" message="Máximo 6 Procedimientos"}}
   {{/section}}
   {{#grid id="solicitudesEgreso" section="solicitudesEgreso" allowInsert="false" allowRemove="false"}}
     {{column field="_name" width="800" readOnly="true"}}

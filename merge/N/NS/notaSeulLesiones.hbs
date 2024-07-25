@@ -14,7 +14,7 @@
     {{validator type="expr" notValidIf="=(profesionalResponsableSalud.base.responsableAtencionMedica=='trabajadoraSocial'&&atencionMedicaLesion.base.tipoAtencionLesion.length>1)||(profesionalResponsableSalud.base.responsableAtencionMedica=='trabajadoraSocial'&&!calc.in('consergeria',atencionMedicaLesion.base.tipoAtencionLesion))" message="Profesional Responsable Salud Inválido"}}
     {{validator type="expr" validIf="=(calc.number(@edadGestacional)>=1||calc.number(@edadGestacional)<=45)||(calc.number(@edadGestacional)==99)" message="Error en la Edad Gestacional"}}
     {{validator type="expr" validIf="=calc.isEmpty(afectacionesTratadas)||afectacionesTratadas.length<7" message="Máximo 6 Afectaciones Tratadas"}}
-    {{validator type="expr" notValidIf="=moment(atencionMedicaLesion.base.fechaAtencion).isBefore(eventoLesion.base.fechaOcurreEvento)" message="Fecha Atención Médica Inválida"}}
+    {{validator type="expr" notValidIf="=!calc.isEmpty(atencionMedicaLesion.base.fechaAtencion)&&!calc.isEmpty(eventoLesion.base.fechaOcurreEvento)&&moment(atencionMedicaLesion.base.fechaAtencion).isBefore(eventoLesion.base.fechaOcurreEvento)" message="Fecha Atención Médica Inválida"}}
   {{/section}}
 
   {{#section id="circunstanciasEvento"}}
@@ -28,8 +28,8 @@
     {{validator type="expr" notValidIf="=@tipoParentesco=='conyugue'&&@edadAgresor==''" message="Edad del Agresor Requerida"}}
     {{validator type="expr" notValidIf="=@tipoDroga.length>1&&(calc.in('ninguna',@tipoDroga)||calc.in('seIgnora',@tipoDroga))" message="Drogas Incorrectas"}}
     {{validator type="expr" notValidIf="=@tipoIntencionalidad=='violenciaFamiliar'&&calc.in(@tipoParentesco,['sinParentesco','desconocido'])" message="Parentesco Agresor Inválido"}}
-    {{validator type="expr" validIf="=!@edadAgresor||(@edadAgresor>=3&&@edadAgresor<=99)||edadAgresor==999" message="Edad Agresor Inválida"}}
-    {{validator type="expr" validIf="=!otroAgente||calc.lowerCase(calc.normalize(@otroAgente))!=calc.lowerCase(calc.normalize(@_agenteLesion))" message="Otro Agente Inválido"}}
+    {{validator type="expr" validIf="=!@edadAgresor||(@edadAgresor>=3&&@edadAgresor<=99)" message="Edad Agresor Inválida"}}
+    {{validator type="expr" validIf="=calc.isEmpty(@otroAgente)||!calc.in(calc.lowerCase(calc.normalize(@otroAgente)),['fuego','flama','sustancia caliente','vapor','intoxicacion por drogas o medicamentos','pie','mano','caida','objeto contundente','objeto punzo cortante','golpe contra piso','golpe contra pared','cuerpo extraño','explosion','asfixia','sofocacion','multiples agentes','proyectil arma de fuego','ahorcamiento','radiacion','sustancias quimicas','corriente electrica','herramienta','maquina','sacudidas','desastre natural','vehiculo de motor','ahorcamiento por sumersion','piquete','mordedura de animal','fuerzas de la naturaleza','intoxicacion por plantas hongos venenosos','otra','se ignora','no aplica'])" message="Otro Agente Inválido"}}
   {{/section}}
   
   {{#view id="sinbaLesiones"}}

@@ -3,6 +3,7 @@
     {{#field id="procedimientosRealizados"}}
       {{#editor}}
         {{param persona="=_mainDoc.persona.id"}}
+        {{param tipoSolicitud="procedimiento,cirugia"}}
       {{/editor}}
     {{/field}}
 		{{#field id="cirujano"}}
@@ -10,6 +11,5 @@
 				{{set cedulaCirujano="=_.first(prestadorServicios.datosEspecialidad).base.cedulaEspecialidad"}}
 			{{/onChange}}
 		{{/field}}
-  	{{validator type="expr" validIf="=procedimientosRealizados.length<=6" message="Máximo 6 Procedimientos"}}
   {{/section}}
 {{/define}}

@@ -2,6 +2,5 @@
   {{#section id="base"}}
     {{field id="tieneGas" type="expr" value="=calc.in(@estadoSustancia,['gaseoso'])"}}
     {{field id="tieneSustancia" type="expr" value="=calc.in(@tipoSustancia,['comburentes'])"}}
-    {{!-- {{validator type="expr" validIf="=1==0" message="Error" log="=calc.isEmpty(@aspectosBioseguridad)"}} --}}
   {{/section}} 
 {{/define}}

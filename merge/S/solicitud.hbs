@@ -374,6 +374,7 @@
       {{filter condition="=servicio" field="base.servicio" eq="=servicio"}}
       {{filter condition="=desde" field="_moment.finalizado.date" gt="=desde"}}
       {{filter condition="=hasta" field="_moment.finalizado.date" lt="=moment(hasta).add(1,'day').format('YYYY-MM-DD')"}}
+      {{filter condition="=tipoSolicitud" field="base.tipoSolicitud" in="=tipoSolicitud"}}
       {{sort field="_moment.finalizado.date" direction="desc"}}
     {{/find}}
   {{/view}}
@@ -6371,16 +6372,6 @@
       {{filter field="_updated.moment" eq="='finalizado'"}}
       {{filter field="base.tipoSolicitud" eq="='interconsulta'"}}
       {{filter condition="=persona" field="persona.id" eq="=persona"}}
-    {{/find}}
-  {{/view}}
-
-  {{#view id="procedimientosFinalizados"}}
-    {{#find limit="-1"}}
-      {{include field="_name"}}
-      {{sort field="_created.date" direction="desc"}}
-      {{filter field="_updated.moment" eq="='finalizado'"}}
-      {{filter field="base.tipoSolicitud" eq="='procedimiento'"}}
-      {{filter field="persona.id" eq="=persona"}}
     {{/find}}
   {{/view}}
 

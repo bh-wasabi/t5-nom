@@ -17,7 +17,12 @@
     {{/field}}
     {{#field id="estudiosTeleconsulta"}}
       {{#onChange}}
-        {{set modalidad="=(@solicitaTeleconsulta=='si'&&calc.isNotEmpty(estudiosTeleconsulta))?'Diferida':''"}}
+        {{set modalidad="=(@solicitaTeleconsulta=='no'&&calc.isNotEmpty(estudiosTeleconsulta))?'Diferida':'Tiempo Real'"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="contrarreferido"}}
+      {{#onChange}}
+        {{set referidoPor="=@referidoPor='otras'"}}
       {{/onChange}}
     {{/field}}
   {{/section}}

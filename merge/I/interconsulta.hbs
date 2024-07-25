@@ -3,8 +3,8 @@
     {{field id="suspender" type="expr" value="=@estatus==='suspender'"}}
     {{!-- {{field id="medicoInterconsultante" defaultValue="=user.id"}} --}}
     {{field id="servicioInterconsultante" defaultValue="=_.first(user.service)"}}
-    {{field id="otroConsultante" type="expr" value="="}}
-    {{field id="otroInterconsultante" type="expr" value="="}}
+    {{field id="otroConsultante" type="expr" value="=@servicioInterconsultante=='otra'"}}
+    {{field id="otroInterconsultante" type="expr" value="=@servicioInterconsultado=='otra'"}}
 
     {{#field id="medicoInterconsultante"}}
       {{#onChange}}
