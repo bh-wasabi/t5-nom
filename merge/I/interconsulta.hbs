@@ -23,5 +23,8 @@
         {{set curpMedicoInterconsultado="=prestadorServicios.clave"}}
       {{/onChange}}
     {{/field}}
+
+    {{validator type="expr" notValidIf="=calc.capitalize(@otroServicioConsultante)==calc.lookupInPreset('cfg.servicioEspecialidad', 'nombre', calc.capitalize(@otroServicioConsultante)).nombre" message="Error al Seleccionar Otro Servicio Consultante"}}
+    {{validator type="expr" notValidIf="=calc.capitalize(@otroServicioInterconsultante)==calc.lookupInPreset('cfg.servicioEspecialidad', 'nombre', calc.capitalize(@otroServicioInterconsultante)).nombre" message="Error al Seleccionar Otro Servicio Consultante"}}
   {{/section}}
 {{/define}}

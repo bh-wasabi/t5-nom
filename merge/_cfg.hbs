@@ -9460,13 +9460,16 @@
  {{/template}}
 
   {{#template id="datosPuerperaPlanificacion"}}
-    <br>Número Ciclos Entregados Oral: {{numeroCicloEntregadosOral}}
-    <br>Número Ciclos Entregados Inyectable Mensual: {{numeroCiclosEntregadosInyectableMensual}}
-    <br>Número Ciclos Entregados Inyectable Bimestral: {{numeroCiclosEntregadosInyectableBimestral}}
-    <br>Implante Subdermico: {{_implanteSubdermico}}
-    <br>Número Ciclos Entregados Parche Dérmico: {{numeroCiclosEntregadosParcheDermico}}
-    <br>DIU: {{_DIU}}
-    <br>DIU Medicado: {{_DIUMedicado}}
+		{{#if puerperaAceptaFamiliar}}<br>Puérpera Acepta Planificación Familiar: {{_puerperaAceptaFamiliar}}{{/if}}
+		{{#if puerperaMetodoPlanificacion}}<br>Método Planificación: {{_puerperaMetodoPlanificacion}}{{/if}}
+		{{#if esOral}}{{#if numeroCicloEntregadosOral}}<br>Número Ciclos Entregados Oral: {{numeroCicloEntregadosOral}}{{/if}}{{/if}}
+		{{#if esInyectableMensual}}{{#if numeroCiclosEntregadosInyectableMensual}}<br>Número Ciclos Entregados Inyectable Mensual: {{numeroCiclosEntregadosInyectableMensual}}{{/if}}{{/if}}
+		{{#if esInyectableBimestral}}{{#if numeroCiclosEntregadosInyectableBimestral}}<br>Número Ciclos Entregados Inyectable Bimestral: {{numeroCiclosEntregadosInyectableBimestral}}{{/if}}{{/if}}
+		{{#if esInyectableTrimestral}}{{#if numeroCiclosEntregadosInyectableTrimestral}}<br>Número Ciclos Entregados Inyectable Trimestral: {{numeroCiclosEntregadosInyectableTrimestral}}{{/if}}{{/if}}
+		{{#if esImplanteSubdermico}}{{#if implanteSubdermico}}<br>Implante Subdérmico: {{_implanteSubdermico}}{{/if}}{{/if}}
+		{{#if esParcheDermico}}{{#if numeroCiclosEntregadosParcheDermico}}<br>Número Ciclos Entregados Parche Dérmico: {{numeroCiclosEntregadosParcheDermico}}{{/if}}{{/if}}
+		{{#if esDiu}}{{#if diu}}<br>DIU: {{_diu}}{{/if}}{{/if}}
+		{{#if esDiuMedicado}}{{#if diuMedicado}}<br>DIU Medicado: {{_diuMedicado}}{{/if}}{{/if}}
   {{/template}}
 
   {{#template id="datosSustanciasSis"}}

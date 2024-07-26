@@ -1,0 +1,24 @@
+{{#define id="datosPuerperaPlanificacion"}}
+  {{#section id="base"}}
+    {{#field id="puerperaMetodoPlanificacion"}}
+      {{#onChange clearFields="numeroCicloEntregadosOral,numeroCiclosEntregadosInyectableMensual,numeroCiclosEntregadosInyectableBimestral,numeroCiclosEntregadosInyectableTrimestral,implanteSubdermico,numeroCiclosEntregadosParcheDermico,diu,diuMedicado"}}
+        {{set implanteSubdermico="='noAplica'"}}
+        {{set diu="='noAplica'"}}
+        {{set diuMedicado="='noAplica'"}}
+      {{/onChange}}
+    {{/field}}
+    {{field id="esOral" type="expr" value="=puerperaMetodoPlanificacion=='oral'&&puerperaAceptaFamiliar=='si'"}}
+    {{field id="esInyectableMensual" type="expr" value="=puerperaMetodoPlanificacion=='inyectableMensual'&&puerperaAceptaFamiliar=='si'"}}
+    {{field id="esInyectableBimestral" type="expr" value="=puerperaMetodoPlanificacion=='inyectableBimestral'&&puerperaAceptaFamiliar=='si'"}}
+    {{field id="esInyectableTrimestral" type="expr" value="=puerperaMetodoPlanificacion=='inyectableTrimestral'&&puerperaAceptaFamiliar=='si'"}}
+    {{field id="esImplanteSubdermico" type="expr" value="=puerperaMetodoPlanificacion=='implanteSubdermico'"}}
+    {{field id="esParcheDermico" type="expr" value="=puerperaMetodoPlanificacion=='parcheDermico'"}}
+    {{field id="esDiu" type="expr" value="=puerperaMetodoPlanificacion=='diu'"}}
+    {{field id="esDiuMedicado" type="expr" value="=puerperaMetodoPlanificacion=='diuMedicado'"}}
+    {{validator type="expr" notValidIf="=esOral&&!numeroCicloEntregadosOral" message="Falta Indicar Número Ciclos"}}
+    {{validator type="expr" notValidIf="=esInyectableMensual&&!numeroCiclosEntregadosInyectableMensual" message="Falta Indicar Número Ciclos"}}
+    {{validator type="expr" notValidIf="=esInyectableBimestral&&!numeroCiclosEntregadosInyectableBimestral" message="Falta Indicar Número Ciclos"}}
+    {{validator type="expr" notValidIf="=esInyectableTrimestral&&!numeroCiclosEntregadosInyectableTrimestral" message="Falta Indicar Número Ciclos"}}
+    {{validator type="expr" notValidIf="=esParcheDermico&&!numeroCiclosEntregadosParcheDermico" message="Falta Indicar Número Ciclos"}}
+  {{/section}}
+{{/define}}

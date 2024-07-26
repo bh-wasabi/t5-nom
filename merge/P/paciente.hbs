@@ -217,6 +217,8 @@
         {{!-- {{set grupoEtnico="={...grupoEtnico, base: {...,testing: 'testing'}}"}} --}}
       {{/onChange}}
     {{/field}}
+    {{validator type="expr" notValidIf="=!calc.in(sabeLeerEscribir,['si','no','noAplica'])&&calc.fromNowYears(fechaNacimiento)>=3" message="Falta Indicar Sabe Leer y Escribir"}}
+    {{validator type="expr" notValidIf="=sabeLeerEscribir!='no'&&calc.fromNowYears(fechaNacimiento)<3" message="Sabe Leer y Escribir Incorrecto"}}
     {{validator type="expr" validIf="=fn('escolaridadCorrecta', calc.fromNowYears(fechaNacimiento), escolaridad)" message="Escolaridad Incorrecta"}}
     {{validator type="expr" notValidIf="=sabeLeerEscribir=='si'&&calc.fromNowYears(fechaNacimiento)<3" message="Sabe Leer y Escribir Incorrecto"}}
     {{validator type="expr" notValidIf="=sabeLeerEscribir=='no'&&!calc.in(escolaridad,['ninguna','noAplica','noEspecificado','preescolarCompleta','preescolarIncompleta','seIgnora'])" message="Sabe Leer y Escribir Incorrecto"}}
