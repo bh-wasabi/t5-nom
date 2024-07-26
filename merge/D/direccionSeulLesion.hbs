@@ -1,0 +1,55 @@
+{{#define id="direccionSeulLesion"}}
+  {{#section id="base"}}
+    {{field id="noEsMexico" type="expr" value="=pais!='MX'"}}
+    {{field id="entidadNoEspecificada" type="expr" value="=entidadFederativa=='00'"}}
+    {{field id="entidadSeIgnora" type="expr" value="=entidadFederativa=='99'"}}
+    {{#field id="pais"}}
+      {{#onChange}}
+        {{set entidadFederativa="=pais!='MX'?'88':null"}}
+        {{set delegacion="=pais!='MX'?'No Aplica':null"}}
+        {{set codigoPostal="=pais!='MX'?'99999':null"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="entidadFederativa"}}
+      {{#onChange clearFields="correosMexico,localidad,codigoPostal,colonia,delegacion,ciudad,estado,codigoOficina,codigoDelegacion,codigoCiudad,codigoEstado,zona,tipoAsentamiento"}}
+        {{set delegacion="=entidadFederativa=='00'?'No Especificado':entidadFederativa=='99'?'Se Ignora':null"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="correosMexico"}}
+      {{#editor}}
+        {{param estado="=entidadFederativa"}}
+        {{#onChange clearFields="localidad"}}
+          {{set codigoPostal="=d_codigo"}}
+          {{set colonia="=d_asenta"}}
+          {{set delegacion="=D_mnpio"}}
+          {{set ciudad="=d_ciudad"}}
+          {{set estado="=d_estado"}}
+          {{set codigoOficina="=c_oficina"}}
+          {{set codigoDelegacion="=c_mnpio"}}
+          {{set codigoCiudad="=c_cve_ciudad"}}
+          {{set codigoEstado="=c_estado"}}
+          {{set zona="=d_zona"}}
+          {{set tipoAsentamiento="=d_tipo_asenta"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="localidad"}}
+      {{#editor}}
+        {{param estado="=@codigoEstado||entidadFederativa"}}
+        {{param municipio="=codigoDelegacion"}}
+        {{#onChange}}
+          {{set codigoLocalidad="=c_localidad"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+    {{!-- {{#field id="sepomex" type="text" label="SEPOMEX"}}
+      {{#onChange}}
+        {{set codigoPostal="=codigoPostal"}}
+        {{set colonia="=colonia"}}
+        {{set delegacion="=municipio"}}
+        {{set ciudad="=localidad"}}
+        {{set estado="=estado"}}
+      {{/onChange}}
+    {{/field}} --}}
+  {{/section}}
+{{/define}}

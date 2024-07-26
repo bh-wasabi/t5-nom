@@ -9,15 +9,19 @@
     {{!-- Tarea 5660 --}}
   {{/section}}
   {{#section id="mujer"}}
-    {{field id="estaEmbarazada" type="expr" value="=embarazada"}}
+    {{field id="estaEmbarazada" type="expr" value="=condicion=='embarazada'"}}
+    {{field id="esPregestacional" type="expr" value="=condicion=='pregestacional'"}}
+    {{field id="esPuerpera" type="expr" value="=condicion=='puerpera'"}}
     {{field id="siRiesgo" type="expr" value="=atencionPregestacional=='subsecuente'||atencionPregestacional=='primeraVez'"}}
     {{#field id="fechaUltimaMenstruacion"}}
       {{#onChange}}
         {{set fechaProbableParto="=fn('fechaProbableParto', fechaUltimaMenstruacion)"}}
       {{/onChange}}
     {{/field}}
-    {{field id="puerperioEmbarazo" type="expr" value="=mujer.estaEmbarazada=='no'"}}
     {{field id="siPuerperio" type="expr" value="=calc.isNotEmpty(puerperaAtencion)"}}
+    {{#field id="condicion"}}
+      {{onChange clearFields="atencionPregestacional,registroPregestacional,puerperaAtencion,infeccionPuerperio"}}
+    {{/field}}
     {{validator type="expr" notValidIf="=@registroPregestacional.length>1&&calc.in('sinAntecedentes',@registroPregestacional)" message="Error en el Riesgo Pregestacional"}}
   {{/section}}
   {{#section id="exploracion"}}
