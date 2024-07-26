@@ -16,7 +16,7 @@
         {{set fechaProbableParto="=fn('fechaProbableParto', fechaUltimaMenstruacion)"}}
       {{/onChange}}
     {{/field}}
-    {{field id="puerperioEmbarazo" type="expr" value="=mujer.estaEmbarazada=='false'"}}
+    {{field id="puerperioEmbarazo" type="expr" value="=mujer.estaEmbarazada=='no'"}}
     {{field id="siPuerperio" type="expr" value="=calc.isNotEmpty(puerperaAtencion)"}}
     {{validator type="expr" notValidIf="=@registroPregestacional.length>1&&calc.in('sinAntecedentes',@registroPregestacional)" message="Error en el Riesgo Pregestacional"}}
   {{/section}}
