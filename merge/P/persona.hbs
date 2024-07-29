@@ -7578,7 +7578,6 @@
     {{item action="notaRecomendacionesElectrodiagnostico" source="notaRecomendacionesElectrodiagnostico" text="Recomendaciones Electrodiagnostico" hide="true" type="add-subdoc"}}
     {{item action="notaHistoriaClinicaEstomatologia" source="notaHistoriaClinicaEstomatologia" text="Historia Clínica Estomatologia" hide="true" type="add-subdoc"}}
     {{item action="notaOdontograma" source="notaOdontograma" text="Odontograma" hide="true" type="add-subdoc"}}
-
   {{/menu}}
   {{!-- RACC --}}
 
@@ -7603,15 +7602,6 @@
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
   {{/action}}
-
-  {{action id="menuSisConsultaExterna" hide="true" type="menu" menu="menuSisConsultaExterna" label="SIS Consulta Externa" color="deep-orange"}}
-  {{#menu id="menuSisConsultaExterna" color="deep-orange"}}
-    {{item action="notaSisConsultaExterna" source="notaSisConsultaExterna" text="Consulta Externa" hide="true" type="add-subdoc"}}
-    {{item action="notaPlanificacionFamiliar" source="notaPlanificacionFamiliar" text="Planificación Familiar" hide="true" type="add-subdoc" }}
-    {{item action="notaDetecciones" source="notaDetecciones" text="Detecciónes" hide="true" type="add-subdoc" }}
-    {{item action="notaSaludMental" source="notaSaludMental" text="Salud Mental" hide="true" type="add-subdoc" }}
-    {{item action="notaSaludBucal" source="notaSaludBucal" text="Salud Bucal" hide="true" type="add-subdoc" }}
-  {{/menu}}
   {{!-- CERTIFICACIONES RACC --}}  
 
   {{!-- MLO --}}
@@ -10079,6 +10069,36 @@
 [./if.]
   {{/menu}}
 
+  {{action id="menuSisConsultaExterna" hide="true" type="menu" menu="menuSisConsultaExterna" label="Notas Consulta Externa" color="deep-orange"}}
+  {{#menu id="menuSisConsultaExterna" color="deep-orange"}}
+    {{item action="notaSisConsultaExterna" source="notaSisConsultaExterna" text="Nota Consulta Externa" hide="true" type="add-subdoc"}}
+    {{item action="notaDetecciones" source="notaDetecciones" text="Nota Detecciónes" hide="true" type="add-subdoc" }}
+    {{item action="notaSaludBucal" source="notaSaludBucal" text="Nota Salud Bucal" hide="true" type="add-subdoc" }}
+    {{item action="notaSaludMental" source="notaSaludMental" text="Nota Salud Mental" hide="true" type="add-subdoc" }}
+    {{item action="notaPlanificacionFamiliar" source="notaPlanificacionFamiliar" text="Nota Planificación Familiar" hide="true" type="add-subdoc" }}
+    {{item action="notaRegistroSignosVitalesSomatometria" text="Nota Signos Vitales y Somatometría"}}
+  {{/menu}}
+
+  {{action id="menuNotasHospitalizacion" hide="true" type="menu" menu="menuNotasHospitalizacion" label="Notas Hospitalización" color="deep-orange"}}
+  {{#menu id="menuNotasHospitalizacion" color="deep-orange"}}
+    {{item action="notaSeulEgreso" text="Nota Egreso Hospitalario"}}
+    {{item action="notaRegistroSignosVitalesSomatometria" text="Nota Signos Vitales y Somatometría"}}
+    {{item action="notaSolicitudCirugia" text="Solicitud Programación Cirugía"}}
+    {{item action="notaSolicitudCirugiaAmbulatoria" text="Solicitud Programación Cirugía Ambulatoria"}}
+    {{item action="notaSolicitudInterconsulta" text="Solicitud Interconsulta"}}
+  {{/menu}}
+
+  {{action id="menuNotasUrgencias" hide="true" type="menu" menu="menuNotasUrgencias" label="Notas Urgencias" color="deep-orange"}}
+  {{#menu id="menuNotasUrgencias" color="deep-orange"}}
+    {{item action="notaInicialUrgencias" text="Nota Inicial Urgencias"}}
+    {{item action="notaAltaServicio" text="Nota Alta Servicio"}}
+    {{item action="notaSeulLesiones" text="Nota Registro Lesiones"}}
+    {{item action="notaRegistroSignosVitalesSomatometria" text="Nota Signos Vitales y Somatometría"}}
+    {{item action="notaPlanAltaEnfermeria" text="Nota Plan Alta Enfermería"}}
+    {{item action="notaSolicitudCirugia" text="Solicitud Programación Cirugía"}}
+    {{item action="notaSolicitudCirugiaAmbulatoria" text="Solicitud Programación Cirugía Ambulatoria"}}
+    {{item action="notaSolicitudInterconsulta" text="Solicitud Interconsulta"}}
+  {{/menu}}
 
   {{action id="menuUtilizacion" hide="true" type="menu" menu="menuUtilizacion" label="Aplicación" color="deep-orange"}}
   {{#menu id="menuUtilizacion" color="deep-orange"}}
@@ -11382,7 +11402,6 @@
   {{#menu id="menuEgreso" color="deep-orange"}}
     {{item action="notaPreAlta" text="Pre Alta"}}
     {{item action="notaEgreso" text="Egreso"}}
-    {{item action="notaSeulEgreso" text="SEUL Egreso"}}
     {{!-- {{item action="notaAltaServicio" text="Alta Servicio"}} --}}
     {{item action="notaMuerteFetal" text="Muerte Fetal"}}
     {{item action="notaDefuncion" text="Defunción"}}
@@ -11393,7 +11412,6 @@
   {{#menu id="menuEgresoCamaCensable" color="deep-orange"}}
     {{item action="notaPreAlta" text="Pre Alta"}}
     {{item action="notaEgreso" text="Egreso"}}
-    {{item action="notaSeulEgreso" text="SEUL Egreso"}}
     {{item action="notaDefuncion" text="Defunción"}}
     {{item action="notaSuspenderEgreso" text="Suspender Egreso" beginGroup="true" userRole="suspenderEgreso"}}
   {{/menu}}  
