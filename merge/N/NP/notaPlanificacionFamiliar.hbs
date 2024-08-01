@@ -3,6 +3,7 @@
     {{validator type="expr" validIf="=moment(fechaAtencion).isAfter(fechaNacimiento)" message="Fecha Atención Inválida"}}
     {{validator type="expr" notValidIf="=catServicios=='SERVICIO AMIGABLE'&&(edadActual<10||edadActual>19)" message="Servicio Atención Inválido"}}
     {{validator type="expr" notValidIf="=catServicios=='SERVICIO AMIGABLE'&&calc.isEmpty(user.job.cluesServicioAmigable)" message="CLUES Sin Servicio Amigable"}}
+    {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')),'R69X')" message="Tiene Diagnósticos Duplicados"}}
   {{/section}}
   {{#section id="metodos"}}
     {{field id="esWoman" type="expr" value="=persona.esMujer"}}

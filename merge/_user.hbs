@@ -165,6 +165,11 @@
     {{#field id="horaFinDia"}}
       {{editor interval="60"}}
     {{/field}}
+    {{#field id="tipoPersonalNom"}}
+      {{#onChange clearFields="tipoPersonalCE"}}
+        {{set tipoPersonalCE="=fn('sugerirTipoPersonal',tipoPersonalNom)"}}
+      {{/onChange}}
+    {{/field}}
 {{!--     {{#field id="establecimiento"}}
       {{onChange clearFields="almacenGeneral,almacenFarmacia,almacenFarmaciaGratuita,almacenMateriales,almacenCeyeEsterilizado,almacenCeyeSucio"}}
     {{/field}}

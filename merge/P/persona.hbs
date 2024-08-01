@@ -10996,6 +10996,14 @@
     {{item action="notaSolicitudVisitaDomiciliaria" text="Solicitud Visita Domiciliaria"}}  
   {{/menu}}
 
+  {{action id="notaTempConsultaExterna" source="notaTempConsultaExterna" label="Consulta Externa" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+  {{action id="notaTempSaludMental" source="notaTempSaludMental" label="Salud Mental" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+  {{action id="notaTempSaludBucal" source="notaTempSaludBucal" label="Salud Bucal" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+  {{action id="notaTempPlanificacionFamiliar" source="notaTempPlanificacionFamiliar" label="Planificación Familiar" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+  {{action id="notaTempEgresos" source="notaTempEgresos" label="Egresos" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+  {{action id="notaTempUrgencias" source="notaTempUrgencias" label="Urgencias" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+  {{action id="notaTempLesiones" source="notaTempLesiones" label="Lesiones" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+
   {{action id="letraT" hide="true" type="menu" menu="letraT" label="T" color="deep-orange"}}
   {{#menu id="letraT" color="deep-orange"}}
     {{item action="notaTallerGasometrico" text="Taller Gasométrico"}}
@@ -11020,6 +11028,13 @@
     {{item action="notaTriageObstetrico" text="Triage Obstétrico"}}
     {{item action="notaTriagePediatrico" text="Triage Pediatríco"}}
     {{item action="notaTriageRespiratorio" text="Triage Respiratorio"}}
+    {{item action="notaTempConsultaExterna" text="Consulta Externa (Temporal)" beginGroup="true"}}
+    {{item action="notaTempSaludMental" text="Salud Mental (Temporal)"}}
+    {{item action="notaTempSaludBucal" text="Salud Bucal (Temporal)"}}
+    {{item action="notaTempPlanificacionFamiliar" text="Planificación Familiar (Temporal)"}}
+    {{item action="notaTempEgresos" text="Egresos (Temporal)" beginGroup="true"}}
+    {{item action="notaTempUrgencias" text="Urgencias (Temporal)"}}
+    {{item action="notaTempLesiones" text="Lesiones (Temporal)"}}
   {{/menu}}
 
   {{action id="letraU" hide="true" type="menu" menu="letraU" label="U" color="deep-orange"}}

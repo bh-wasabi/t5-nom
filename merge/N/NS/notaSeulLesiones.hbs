@@ -5,7 +5,7 @@
     {{field id="tieneClues" type="expr" value="=usuarioReferido=='unidadMedica'"}}
   	{{#onChange}}
   		{{#update}}
-  			{{set cantidadAfectacionesTratadas="=afectacionesTratadas.length"}}
+  			{{set cantidadAfectacionesTratadas="=otrosDiagnosticos.length"}}
   		{{/update}}
   	{{/onChange}}
     {{validator type="expr" notValidIf="=atencionMedicaLesion.base.consecuenciaLesion=='defuncion'&&afectacionesTratadas[0].base.destinoAtencionLesion!='defuncion'" message="Verificar Destino en Afectaciones Tratadas"}}
@@ -13,8 +13,10 @@
     {{validator type="expr" notValidIf="=(profesionalResponsableSalud.base.responsableAtencionMedica=='psicologoTratante'&&atencionMedicaLesion.base.tipoAtencionLesion.length>1)||(profesionalResponsableSalud.base.responsableAtencionMedica=='psicologoTratante'&&!calc.in('tratamientoPsicologo',atencionMedicaLesion.base.tipoAtencionLesion))" message="Profesional Responsable Salud Inválido"}}
     {{validator type="expr" notValidIf="=(profesionalResponsableSalud.base.responsableAtencionMedica=='trabajadoraSocial'&&atencionMedicaLesion.base.tipoAtencionLesion.length>1)||(profesionalResponsableSalud.base.responsableAtencionMedica=='trabajadoraSocial'&&!calc.in('consergeria',atencionMedicaLesion.base.tipoAtencionLesion))" message="Profesional Responsable Salud Inválido"}}
     {{validator type="expr" validIf="=calc.isEmpty(@edadGestacional)||(calc.number(@edadGestacional)>=1&&calc.number(@edadGestacional)<=45)||(calc.number(@edadGestacional)==99)" message="Error en la Edad Gestacional"}}
-    {{validator type="expr" validIf="=calc.isEmpty(afectacionesTratadas)||afectacionesTratadas.length<7" message="Máximo 6 Afectaciones Tratadas"}}
+    {{validator type="expr" validIf="=calc.isEmpty(otrosDiagnosticos)||otrosDiagnosticos.length<7" message="Máximo 6 Afecciones Tratadas"}}
     {{validator type="expr" notValidIf="=!calc.isEmpty(atencionMedicaLesion.base.fechaAtencion)&&!calc.isEmpty(eventoLesion.base.fechaOcurreEvento)&&moment(atencionMedicaLesion.base.fechaAtencion).isBefore(eventoLesion.base.fechaOcurreEvento)" message="Fecha Atención Médica Inválida"}}
+    {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')))" message="Tiene Diagnósticos Duplicados"}}
+    {{validator type="expr" notValidIf="=calc.in('DEFUNCION', calc.mergeArrays(afeccionPrincipal.base.validoSeul, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.validoSeul, calc.pluckRef(@otrosDiagnosticos, 'base.validoSeul')))&&(calc.getRef(@atencionMedicaLesion, 'base.consecuenciaLesion')!='defuncion'||calc.getRef(@destinoDespuesLesion, 'base.destinoAtencionLesion')!='defuncion')" message="DEFUNCIÓN Mal Configurada"}}
   {{/section}}
 
   {{#section id="circunstanciasEvento"}}

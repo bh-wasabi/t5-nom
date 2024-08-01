@@ -1,0 +1,33 @@
+{{#define id="diagnosticoSeulOtro"}}
+  {{#section id="base"}}
+    {{field id="tieneCausaExterna" type="expr" value="=calc.in('CAUSA',calc.splitAndTrim(requiereCampos))&&calc.in(docType, ['notaTempEgresos','notaTempLesiones'])"}}  
+    {{field id="tieneMorfologia" type="expr" value="=calc.in('MORFOLOGIA',calc.splitAndTrim(requiereCampos))&&docType=='notaTempEgresos'"}}  
+    {{field id="tieneFolioLesion" type="expr" value="=calc.in('FOLIO_LESION',calc.splitAndTrim(requiereCampos))&&docType=='notaTempEgresos'"}}  
+    {{field id="tienePlanHidratacion" type="expr" value="=calc.in('PLAN_HIDRATACION',calc.splitAndTrim(requiereCampos))&&edadActual<5&&docType=='notaTempUrgencias'"}}  
+    {{field id="tienePlanInfeccionesRespiratorias" type="expr" value="=calc.in('PLAN_RESPIRATORIAS',calc.splitAndTrim(requiereCampos))&&edadActual<5&&docType=='notaTempUrgencias'"}}  
+    {{#field id="diagnostico"}}
+      {{#editor}}
+        {{param esSeul="=true"}}
+        {{param esOtro="=true"}}
+        {{param _type="=_parentDoc._type"}}
+        {{param edadActual="=_parentDoc.persona.edadActual"}}
+      {{/editor}}
+      {{#onChange clearFields="subDiagnostico,causaExterna,morfoligia,folioLesion"}}
+        {{set letra="=LETRA"}}
+        {{set limiteSexo="=LSEX"}}
+        {{set limiteInferior="=LINF"}}
+        {{set limiteSuperior="=LSUP"}}
+        {{set validoLesiones="=VALIDO_LESIONES"}}
+        {{set validoEgresos="=VALIDO_EGRESOS"}}
+        {{set validoSeul="=VALIDO_SEUL"}}
+        {{set tipoProducto="=TIPO_PRODUCTO"}}
+        {{set tipoNacimiento="=TIPO_NACIMIENTO"}}
+        {{set edadActual="=_parentDoc.persona.edadActual"}}
+        {{set requiereCampos="=REQUIERE_CAMPOS"}}
+      {{/onChange}}
+    {{/field}}    
+    {{validator type="expr" validIf="=calc.meetsSexLimit(limiteSexo, _parentDoc.persona.genero)" message="No Corresponde el Sexo del Paciente"}}
+    {{validator type="expr" validIf="=calc.meetsAgeLimit(limiteInferior, desde, _parentDoc.persona.fechaNacimiento, true)" message="No Corresponde la Edad del Paciente con el Límite Inferior"}}
+    {{validator type="expr" validIf="=calc.meetsAgeLimit(limiteSuperior, desde, _parentDoc.persona.fechaNacimiento, false)" message="No Corresponde la Edad del Paciente con el Límite Superior"}}
+  {{/section}}
+{{/define}}

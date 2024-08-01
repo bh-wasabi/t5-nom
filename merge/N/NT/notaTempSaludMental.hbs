@@ -1,0 +1,5 @@
+{{#define id="notaTempSaludMental"}}
+  {{#section id="base"}}
+    {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')),'R69X')" message="Tiene Diagnósticos Duplicados"}}
+  {{/section}}
+{{/define}}

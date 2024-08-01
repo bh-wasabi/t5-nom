@@ -2430,6 +2430,41 @@
     {{when condition="=certificado.slice(2,3)!='0'&&!calc.in(certificado.slice(0,2),['21','22'])" return="true"}}
     {{default return="false"}}
   {{/function}}
+
+  {{#function id="sugerirTipoPersonal"}}
+    {{define type="param" id="tipoPersonal"}}
+    {{when tipoPersonal="'medicoPasante'" return="'1'"}}
+    {{when tipoPersonal="'medicoGeneral'" return="'2'"}}
+    {{when tipoPersonal="'medicoResidente'" return="'3'"}}
+    {{when tipoPersonal="'medicoEspecialista'" return="'4'"}}
+    {{when tipoPersonal="'pasanteEnfermeria'" return="'5'"}}
+    {{when tipoPersonal="'enfermera'" return="'6'"}}
+    {{when tipoPersonal="'pasanteNutricion'" return="'7'"}}
+    {{when tipoPersonal="'nutriologa'" return="'8'"}}
+    {{when tipoPersonal="'homeopata'" return="'9'"}}
+    {{when tipoPersonal="'medicoTradicionalIndigena'" return="'10'"}}
+    {{when tipoPersonal="'taps'" return="'11'"}}
+    {{when tipoPersonal="'pasanteOdontologia'" return="'12'"}}
+    {{when tipoPersonal="'otontologa'" return="'13'"}}
+    {{when tipoPersonal="'odontologaEspecialista'" return="'14'"}}
+    {{when tipoPersonal="'pasantePsicologia'" return="'15'"}}
+    {{when tipoPersonal="'psicologa'" return="'16'"}}
+    {{when tipoPersonal="'residentePsiquiatria'" return="'17'"}}
+    {{when tipoPersonal="'psiquiatra'" return="'18'"}}
+    {{when tipoPersonal="'medicoGeneralSaludMental'" return="'19'"}}
+    {{when tipoPersonal="'licenciadaEnfermeriaObstetricia'" return="'20'"}}
+    {{when tipoPersonal="'parteraTecnica'" return="'21'"}}
+    {{when tipoPersonal="'promotorSalud'" return="'22'"}}
+    {{when tipoPersonal="'tecnicaOdontologia'" return="'23'"}}
+    {{when tipoPersonal="'medicoSaludMental'" return="'24'"}}
+    {{when tipoPersonal="'licenciadoGerontologia'" return="'25'"}}
+    {{when tipoPersonal="'personalCapacitado'" return="'26'"}}
+    {{when tipoPersonal="'pasanteGerontologia'" return="'27'"}}
+    {{when tipoPersonal="'parteraProfesional'" return="'28'"}}
+    {{when tipoPersonal="'acupunturista'" return="'29'"}}
+    {{when tipoPersonal="'trabajadoraSocial'" return="'30'"}}
+    {{default return="'0'"}}
+  {{/function}}
 {{/define}}
 
 {{#markup}}
@@ -2808,6 +2843,26 @@
     {{#if tieneComorbilidad}}{{#if diagnosticoComorbilidad}}<br>Diagnóstico Comorbilidad: {{_diagnosticoComorbilidad}} ({{diagnosticoComorbilidad}}){{/if}}{{/if}}
     {{#if tieneComorbilidad}}{{#if numeroComorbilidades}}<br>Número Comorbilidades: {{numeroComorbilidades}}{{/if}}{{/if}}
     {{#if afeccionPrincipalReseleccionada}}<br>Afección Principal Reseleccionada{{/if}}
+    {{#if detalle}}<br>{{detalle}}{{/if}}
+  {{/template}}
+
+  {{#template id="diagnosticoSis"}}
+    <br>{{_diagnostico}} ({{diagnostico}})
+    {{#if tieneSubDiagnostico}}{{#if subDiagnostico}}<br>{{_subDiagnostico}}{{/if}}{{/if}}
+    {{#if relacionTemporal}}<br>Relación Temporal: {{_relacionTemporal}}{{/if}}
+    {{#if primeraVez}}<br>Primera Vez: {{_primeraVez}}{{/if}}
+    {{#if tieneConfirmacionDiagnostica}}{{#if confirmacionDiagnostica}}<br>Confirmación Diagnostica: {{_confirmacionDiagnostica}}{{/if}}{{/if}}
+    {{#if desde}}<br>Desde: {{date desde "DD/MMM/YYYY"}}{{/if}}
+    {{#if detalle}}<br>{{detalle}}{{/if}}
+  {{/template}}
+
+  {{#template id="diagnosticoSeul"}}
+    {{_diagnostico}} ({{diagnostico}})
+    {{#if tieneSubDiagnostico}}{{#if subDiagnostico}}<br>{{_subDiagnostico}}{{/if}}{{/if}}
+    {{#if tieneCausaExterna}}{{#if causaExterna}}<br>Causa Externa: {{_causaExterna}}{{/if}}{{/if}}
+    {{#if tieneMorfologia}}{{#if morfologia}}<br>Morfología: {{_morfologia}}{{/if}}{{/if}}
+    {{#if tieneFolioLesion}}{{#if folioLesion}}<br>Folio Lesión: {{folioLesion}}{{/if}}{{/if}}    
+    {{#if desde}}<br>Desde: {{date desde "DD/MMM/YYYY"}}{{/if}}
     {{#if detalle}}<br>{{detalle}}{{/if}}
   {{/template}}
 
@@ -10371,4 +10426,10 @@
 		{{#if siVivo}}{{#if folioCertificadoNacimiento}}<br>Folio Certificado Nacimiento: {{folioCertificadoNacimiento}}{{/if}}{{/if}}
 		{{#if siMuerto}}{{#if folioCertificadoDefuncion}}<br>Folio Certificado Defunción: {{folioCertificadoDefuncion}}{{/if}}{{/if}}
 	{{/template}}
+  {{#template id="destinoDespuesLesion"}}
+    {{#if destinoAtencionLesion}}<br>Destino después de la Atención: {{_destinoAtencionLesion}}{{/if}}
+    {{#if esOtroDestino}}{{#if especificarDestino}}<br>Especificar Destino: {{especificarDestino}}{{/if}}{{/if}}
+    {{#if envioMinisterioPublico}}<br>Envio a Ministerio Público: {{_envioMinisterioPublico}}{{/if}}
+    {{#if folioCertificadoDefuncion}}<br>Fólio del Certificado de Defunción: {{folioCertificadoDefuncion}}{{/if}}
+  {{/template}}
 {{/markup}}

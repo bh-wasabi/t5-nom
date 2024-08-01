@@ -6,6 +6,7 @@
   {{/section}}
   {{#section id="diagnosticos"}}
     {{field id="tieneEdad" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=6"}}
+    {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')),'R69X')" message="Tiene Diagnósticos Duplicados"}}
   {{/section}}
   {{#section id="farmacos"}}
     {{field id="telemedicina" type="expr" value="=@solicitaTelemedicina=='si'?'En Tiempo Real':''"}}
