@@ -37,7 +37,7 @@
       {{#editor}}
         {{param estado="=@codigoEstado||entidadFederativa"}}
         {{param municipio="=codigoDelegacion"}}
-        {{#onChange}}
+        {{#onChange refresh="true"}}
           {{set codigoLocalidad="=c_localidad"}}
         {{/onChange}}
       {{/editor}}
@@ -51,5 +51,6 @@
         {{set estado="=estado"}}
       {{/onChange}}
     {{/field}} --}}
+    {{validator type="expr" notValidIf="=codigoLocalidad=='9999'&&calc.isEmpty(@otraLocalidad)" message="Falta Indicar Otra Localidad"}}
   {{/section}}
 {{/define}}

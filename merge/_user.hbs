@@ -226,6 +226,12 @@
     {{validator type="expr" validIf="=calc.fromNowYears(@fechaNacimiento)>=18" message="Error, Menor a 18 Años"}}
     {{validator type="expr" validIf="=calc.fromNowYears(@fechaNacimiento)<90" message="Error, Mayor a 90 Años"}}{{!-- cambios 2024-05-29 --}}
     {{validator type="expr" condition="=fn('cedulaObligatoria',base.tipoPersonalNom??'')" notValidIf="=fn('faltaCedulaEspecialidad',@datosEspecialidad)" message="Falta Cédula Especialidad"}}
+    {{field id="nacidoExtranjero" type="expr" value="=paisNacimiento!='MX'"}}
+    {{#field id="paisNacimiento"}}
+      {{#onChange condition="=paisNacimiento!='MX'" clearFields="entidadNacimiento"}}
+        {{set entidadNacimiento="='NE'"}}
+      {{/onChange}}
+    {{/field}}
   {{/section}}
   {{!-- Tarea #3976 RACC --}}
 

@@ -42,6 +42,7 @@
         {{/onChange}}
       {{/editor}}
     {{/field}}
+    {{validator type="expr" notValidIf="=codigoLocalidad=='9999'&&calc.isEmpty(@otraLocalidad)" message="Falta Indicar Otra Localidad"}}
     {{!-- {{#field id="sepomex" type="text" label="SEPOMEX"}}
       {{#onChange}}
         {{set codigoPostal="=codigoPostal"}}

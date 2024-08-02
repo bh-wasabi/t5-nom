@@ -21,7 +21,7 @@
         {{set modalidad="=@solicitaTeleconsulta=='si'?'Diferida':'En Tiempo Real'"}}
       {{/onChange}}
     {{/field}}
-    {{validator type="expr" notValidIf="=calc.findDuplicates(calc.pluckRef(consumoSustanciaPsicoactivas,'base.consumoSustanciasPsicoactivas'))" message="Datos Duplicados"}}
+    {{validator type="expr" notValidIf="=calc.findDuplicates(calc.pluckRef(consumoSustanciaPsicoactivas,'base.consumoSustanciasPsicoactivas'))" message="Duplicidad en Consumo Sustancias"}}
   {{/section}}
 {{!--RACC VISTA  --}}
  {{#view id="ultima"}}

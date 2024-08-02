@@ -209,12 +209,17 @@
     {{field id="esMenor3Anos" type="expr" value="=calc.fromNowYears(fechaNacimiento)<3"}}
     {{field id="esConsultaExterna" type="expr" value="=tipoAtencion=='consultaExterna'"}}
     {{field id="esUrgenciasHospitalizacion" type="expr" value="=tipoAtencion!='consultaExterna'"}}
-    {{field id="esMigrante" type="expr" value="=migrante=='internacional'||migrante=='retornado'"}}
+    {{field id="esMigrante" type="expr" value="=migrante=='internacional'||migrante=='retornado'||migrante=='nacional'"}}
+    {{field id="bloquearProcedencia" type="expr" value="=migrante=='nacional'||migrante=='retornado'"}}
     {{#field id="tipoAtencion"}}
       {{#onChange}}
         {{set esConsultaExterna="=tipoAtencion=='consultaExterna'"}}
         {{set esUrgenciasHospitalizacion="=tipoAtencion!='consultaExterna'"}}
-        {{!-- {{set grupoEtnico="={...grupoEtnico, base: {...,testing: 'testing'}}"}} --}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="migrante"}}
+      {{#onChange}}
+        {{set paisProcedencia="MX"}}
       {{/onChange}}
     {{/field}}
     {{validator type="expr" notValidIf="=!calc.in(sabeLeerEscribir,['si','no','noAplica'])&&calc.fromNowYears(fechaNacimiento)>=3" message="Falta Indicar Sabe Leer y Escribir"}}
@@ -222,7 +227,7 @@
     {{validator type="expr" validIf="=fn('escolaridadCorrecta', calc.fromNowYears(fechaNacimiento), escolaridad)" message="Escolaridad Incorrecta"}}
     {{validator type="expr" notValidIf="=sabeLeerEscribir=='si'&&calc.fromNowYears(fechaNacimiento)<3" message="Sabe Leer y Escribir Incorrecto"}}
     {{validator type="expr" notValidIf="=sabeLeerEscribir=='no'&&!calc.in(escolaridad,['ninguna','noAplica','noEspecificado','preescolarCompleta','preescolarIncompleta','seIgnora'])" message="Sabe Leer y Escribir Incorrecto"}}
-    {{validator type="expr" notValidIf="=migrante=='internacional'&&paisProcedencia=='MX'||migrante=='retornado'&&paisProcedencia!='MX'" message="País Procedencia Inválido"}}
+    {{validator type="expr" notValidIf="=migrante=='internacional'&&paisProcedencia=='MX'" message="País Procedencia Inválido"}}
     {{!-- Tarea 5604 --}}
   {{/section}}
 

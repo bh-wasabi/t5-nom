@@ -9,7 +9,7 @@
     {{field id="siParcial" type="expr" value="=tipoUnidadPsiquiatrica=='hospitalParcial'"}}
     {{field id="siOtroMetodo" type="expr" value="=metodoAnticonceptivo=='11'"}}
     {{field id="esHospitalPsiquiatrico" type="expr" value="=calc.in(user.job.cluesTipoAbreviacion,['Y','HPSIQ','HPSIQMF'])&&calc.in(user.job.cluesSubAbreviacion,['99','NES','INP','SAP'])"}}
-    {{field id="tieneDefuncion" type="expr" value="=motivoEgreso=='defuncion'"}}
+    {{field id="noNotificoMP" type="expr" value="=motivoEgreso=='defuncion'&&notificoMP=='no'"}}
     {{validator type="expr" validIf="=moment(fechaIngresoHospitalario).isAfter(fechaNacimiento)" message="Fecha Ingreso Hospitalario Inválida"}}
     {{validator type="expr" validIf="=moment(fechaEgreso).isAfter(fechaIngresoHospitalario)" message="Fecha Egreso Inválida"}}
     {{validator type="expr" validIf="=moment(fechaEgreso).diff(fechaIngresoHospitalario,'years',true)<5||esHospitalPsiquiatrico" message="Fecha Egreso Excede 5 Años"}}

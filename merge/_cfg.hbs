@@ -10432,4 +10432,13 @@
     {{#if envioMinisterioPublico}}<br>Envio a Ministerio Público: {{_envioMinisterioPublico}}{{/if}}
     {{#if folioCertificadoDefuncion}}<br>Fólio del Certificado de Defunción: {{folioCertificadoDefuncion}}{{/if}}
   {{/template}}
+  {{#template id="procedimientoEgresos"}}
+    {{#if procedimientoCie9}}<br>Procedimientos Realizados (CIE-9): {{_procedimientoCie9}}{{/if}}
+    {{#if codigoCie9}}<br>Código (CIE-9): {{codigoCie9}}{{/if}}
+    {{#if enQuirofanoOFuera}}<br>En quirófano o Fuera: {{_enQuirofanoOFuera}}{{/if}}
+    {{#if tipoAnestesia}}<br>Tipo Anestesia: {{_tipoAnestesia}}{{/if}}
+    {{#if tiempoProcedimientoCie9}}<br>Tiempo: {{date tiempoProcedimientoCie9 "hh:mm"}}{{/if}}
+    {{#if cirujano}}<br>Cirujano: {{_cirujano}}{{/if}}
+    {{#if descripcionProcedimiento}}<br>Descripción del Procedimiento: {{descripcionProcedimiento}}{{/if}}
+  {{/template}}
 {{/markup}}
