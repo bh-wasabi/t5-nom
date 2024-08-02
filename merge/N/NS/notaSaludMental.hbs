@@ -21,7 +21,16 @@
         {{set modalidad="=@solicitaTeleconsulta=='si'?'Diferida':'En Tiempo Real'"}}
       {{/onChange}}
     {{/field}}
+    {{field id="noContrarreferido" type="expr" value="=contrarreferido=='no'"}}
+    {{#field id="contrarreferido"}}
+      {{#onChange condition="=contrarreferido=='no'" clearFields="referidoPor"}}
+        {{set referidoPor="otras"}}
+      {{/onChange}}
+    {{/field}}
     {{validator type="expr" notValidIf="=calc.findDuplicates(calc.pluckRef(consumoSustanciaPsicoactivas,'base.consumoSustanciasPsicoactivas'))" message="Duplicidad en Consumo Sustancias"}}
+    {{validator type="expr" notValidIf="=calc.in('noAplica',calc.pluckRef(consumoSustanciaPsicoactivas,'base.consumoSustanciasPsicoactivas'))&&calc.pluckRef(consumoSustanciaPsicoactivas,'base.consumoSustanciasPsicoactivas').length>1" message="Sustancias Psicoactivas 'No Aplica' debe ser único"}}
+    {{validator type="expr" notValidIf="=calc.in('noAplica',calc.pluckRef(identificacionViolencia,'base.ambitoViolencia'))&&calc.pluckRef(identificacionViolencia,'base.ambitoViolencia').length>1" message="Identificación Violencia 'No Aplica' debe ser único"}}
+    {{validator type="expr" notValidIf="=calc.in(base.catServicios,['GERONTOLOGÍA','PSICOGERIATRÍA'])&&edadActual<60&&!calc.in(seRealizoPsicoterapia,['grupal','pareja','familiar'])" message="Psicoterapia Individual Inválida"}}
   {{/section}}
 {{!--RACC VISTA  --}}
  {{#view id="ultima"}}

@@ -5399,6 +5399,8 @@
     {{#update section="diagnosticos"}}
       {{set diagnostico="=detalle.diagnostico"}}
       {{set _diagnostico="=detalle._diagnostico"}}
+      {{set edadActual="=persona.edadActual"}}
+      {{set _edadActual="=persona._edadActual"}}
     {{/update}}
     {{update section="tipoServicioSis" value="=calc.itemsToCode(_.intersection(calc.tipoServicioSis('saludMental','todos','',''),calc.tipoServicioSis(user.others.tipoServicioSis,user.others.tipoPersonalNom,base.esMujer?'mujer':'',base.tipoServicioSisMenor?'menor':base.tipoServicioSisMayor?'mayor':'')))" temp="true"}}
     {{update section="resumen" value="=resumen" temp="true"}}

@@ -1,5 +1,6 @@
 {{#define id="datosIdentificacionViolenciaMental"}}
   {{#section id="base"}}
     {{field id="tieneViolencia" type="expr" value="=ambitoViolencia!='noAplica'"}}
+    {{validator type="expr" notValidIf="=calc.in('noAplica',tipoViolencia)&&tipoViolencia.length>1"  message="Tipo Violencia 'No Aplica' debe ser único"}}
   {{/section}}
 {{/define}}

@@ -3,6 +3,7 @@
     {{field id="noEsMexico" type="expr" value="=pais!='MX'"}}
     {{field id="entidadNoEspecificada" type="expr" value="=entidadFederativa=='00'"}}
     {{field id="entidadSeIgnora" type="expr" value="=entidadFederativa=='99'"}}
+    {{field id="siDesconoceCalle" type="expr" value="=desconoceCalle=='si'"}}
     {{#field id="pais"}}
       {{#onChange}}
         {{set entidadFederativa="=pais!='MX'?'88':null"}}
@@ -42,15 +43,11 @@
         {{/onChange}}
       {{/editor}}
     {{/field}}
-    {{!-- {{#field id="sepomex" type="text" label="SEPOMEX"}}
-      {{#onChange}}
-        {{set codigoPostal="=codigoPostal"}}
-        {{set colonia="=colonia"}}
-        {{set delegacion="=municipio"}}
-        {{set ciudad="=localidad"}}
-        {{set estado="=estado"}}
+    {{#field id="desconoceCalle"}}
+      {{#onChange condition="=desconoceCalle=='si'" clearFields="calle,numeroExterior,numeroInterior"}}
+        {{set calle="SIN INFORMACIÓN"}}
       {{/onChange}}
-    {{/field}} --}}
+    {{/field}}
     {{validator type="expr" notValidIf="=codigoLocalidad=='9999'&&calc.isEmpty(@otraLocalidad)" message="Falta Indicar Otra Localidad"}}
   {{/section}}
 {{/define}}
