@@ -6,7 +6,7 @@
     {{!-- Tarea #3558 --}}
     {{validator type="expr" validIf="=(@peso>=1&&@peso<=400)||@peso==999" message="Peso Incorrecto"}}
     {{validator type="expr" validIf="=(@estatura>=0.3&&@estatura<=2.2)||@estatura==999" message="Talla Incorrecta"}}
-    {{validator type="expr" validIf="=!calc.isEmpty(@cintura)&&(@cintura==0||(@cintura>=20&&@cintura<=300))" message="Circunferencia Incorrecta"}}
+    {{validator type="expr" validIf="=!calc.isEmpty(@cintura)&&(@cintura==0||(@cintura>=20&&@cintura<=300))&&@cintura!='000'&&@cintura!='00'" message="Circunferencia Incorrecta"}}
     {{!--  Tarea #3558 --}}
   {{/section}}
 {{/define}}

@@ -2369,7 +2369,7 @@
 
   {{#function id="cedulaObligatoria"}}
     {{define type="param" id="tipoPersonal"}}
-    {{default return="=calc.in(tipoPersonal,['medicoGeneral','medicoResidente','medicoEspecialista','enfermera','otontologa','odontologaEspecialista','psicologa','residentePsiquiatria','psiquiatra','medicoGeneralSaludMental','licenciadaEnfermeriaObstetricia','medicoSaludMental','licenciadoGerontologia','personalCapacitado','pasanteGerontologia','parteraProfesional','acupunturista','trabajadoraSocial'])??false"}}
+    {{default return="=calc.in(tipoPersonal,['medicoGeneral','medicoResidente','medicoEspecialista','enfermera','otontologa','odontologaEspecialista','psicologa','residentePsiquiatria','psiquiatra','medicoGeneralSaludMental','licenciadaEnfermeriaObstetricia','medicoSaludMental','licenciadoGerontologia','parteraProfesional','acupunturista','trabajadoraSocial'])??false"}}
   {{/function}}
 
   {{#function id="faltaCedulaEspecialidad"}}
@@ -2419,6 +2419,12 @@
     {{when tipoUnidad="'2'" return="=''"}}
     {{when tipoUnidad="'1'" return="=calc.in(tipoAbreviacion,['CAP','CE','CES','UNE','UM','UMFH','A','D','E','F','G','H','I','J','K','L','P','Q','R','S','T','U','V','Z'])?'':'CLUES Inválido'"}}
     {{default return="='CLUES Inválido'"}}
+  {{/function}}
+
+  {{#function id="errorPacientePlanificacionFamiliar"}}
+    {{define type="param" id="genero"}}
+    {{define type="param" id="edad"}}
+    {{default return="=(genero=='mujer'&&edad>=9&&edad<60)||(calc.in(genero,['hombre','intersexual'])&&edad>=10&&edad<71)?'':'Verificar Sexo y Edad Paciente'"}}
   {{/function}}
 
   {{#function id="validaCertificadoDefuncion"}}
@@ -9467,22 +9473,24 @@
     {{#if siGanglionar}}{{#if fechaGanglionar}}<br>Fecha Ganglionar: {{fechaGanglionar}}{{/if}}{{/if}}
   {{/template}}
 
-  {{#template id="datosTamizajeDetecciones"}}
-    {{#if tamizajeTristeDeprimido}}<br>Tamizaje ¿Se siente usted frecuentemente Triste o Deprimido?: {{_tamizajeTristeDeprimido}}{{/if}}
-    {{#if siDepresion}}{{#if deteccionDepresion}}<br>Detección de Depresion: {{_deteccionDepresion}}{{/if}}{{/if}}
-    {{#if olvidaCosasCostumbre}}<br>¿Ha olvidado más cosas que de costumbre?: {{_olvidaCosasCostumbre}}{{/if}}
-    {{#if siMemoria}}{{#if deteccionAlteracionMemorai}}<br>Detección de Alteracion de la Memoria: {{_deteccionAlteracionMemorai}}{{/if}}{{/if}}
-    {{#if tamizajeFugaOringa}}<br>Tamizaje ¿Ha tenido fuga de Orina?: {{_tamizajeFugaOringa}}{{/if}}
-    {{#if siOrina}}{{#if deteccionIncontinenciaUrinaria}}<br>Deteccion de Incontinencia Urinaria: {{_deteccionIncontinenciaUrinaria}}{{/if}}{{/if}}
-    {{#if tamizajeCaidas}}<br>Tamizaje ¿Ha tenido una o más caídas?: {{_tamizajeCaidas}}{{/if}}
-    {{#if siCaida}}{{#if caida60Mas}}<br>Caída 60 y Más: {{_caida60Mas}}{{/if}}{{/if}}
-    {{#if estabilidadMarcha}}<br>Estabilidad de la Marcha: {{_estabilidadMarcha}}{{/if}}
-    {{#if estadoNutricional}}<br>Estado Nutricional: {{_estadoNutricional}}{{/if}}
-    {{#if tamizajeActividadesBasicas}}<br>Tamizaje Actividades Básicas de la Vida Diaria: {{_tamizajeActividadesBasicas}}{{/if}}
-    {{#if siActividadBasicas}}{{#if numeroActividadesBasicas}}<br>Número de Actividades: {{numeroActividadesBasicas}}{{/if}}{{/if}}
-    {{#if tamizajeActividadesInstrumental}}<br>Tamizaje Actividades Instrumentales de la Vida Diaria: {{_tamizajeActividadesInstrumental}}{{/if}}
-    {{#if siActividadInstrumental}}{{#if numeroActividadesInstrumental}}<br>Número de Actividades: {{numeroActividadesInstrumental}}{{/if}}{{/if}}
-  {{/template}}
+	{{#template id="datosTamizajeDetecciones"}}
+		{{#if esMayor10}}{{#if tamizajeTristeDeprimido}}<br>Tamizaje ¿Se siente usted frecuentemente Triste o Deprimido?: {{_tamizajeTristeDeprimido}}{{/if}}{{/if}}
+		{{#if deteccionDepresion}}<br>Detección de Depresión: {{_deteccionDepresion}}{{/if}}
+		{{#if esMayor10}}{{#if deteccionAnsiedad}}<br>Detección de Ansiedad: {{_deteccionAnsiedad}}{{/if}}{{/if}}
+		{{#if esMayor60}}{{#if olvidaCosasCostumbre}}<br>¿Ha olvidado más cosas que de costumbre?: {{_olvidaCosasCostumbre}}{{/if}}{{/if}}
+		{{#if siMemoria}}{{#if deteccionAlteracionMemorai}}<br>Detección de Alteración de la Memoria: {{_deteccionAlteracionMemorai}}{{/if}}{{/if}}
+		{{#if esMayor50}}{{#if demencia}}<br>Demencia: {{_demencia}}{{/if}}{{/if}}
+		{{#if esMayor60}}{{#if tamizajeFugaOringa}}<br>Tamizaje ¿Ha tenido fuga de Orina?: {{_tamizajeFugaOringa}}{{/if}}{{/if}}
+		{{#if siOrina}}{{#if deteccionIncontinenciaUrinaria}}<br>Detección de Incontinencia Urinaria: {{_deteccionIncontinenciaUrinaria}}{{/if}}{{/if}}
+		{{#if esMayor60}}{{#if tamizajeCaidas}}<br>Tamizaje ¿Ha tenido una o más caídas?: {{_tamizajeCaidas}}{{/if}}{{/if}}
+		{{#if siCaida}}{{#if caida60Mas}}<br>Caída 60 y Más: {{_caida60Mas}}{{/if}}{{/if}}
+		{{#if esMayor60}}{{#if estabilidadMarcha}}<br>Estabilidad de la Marcha: {{_estabilidadMarcha}}{{/if}}{{/if}}
+		{{#if esMayor60}}{{#if estadoNutricional}}<br>Estado Nutricional: {{_estadoNutricional}}{{/if}}{{/if}}
+		{{#if esMayor60}}{{#if tamizajeActividadesBasicas}}<br>Tamizaje Actividades Básicas de la Vida Diaria: {{_tamizajeActividadesBasicas}}{{/if}}{{/if}}
+		{{#if siActividadBasicas}}{{#if evaluacionActividadesBasicas}}<br>Evaluación Actividades Básica de la Vida Diaria: {{_evaluacionActividadesBasicas}}{{/if}}{{/if}}
+		{{#if esMayor60}}{{#if tamizajeActividadesInstrumental}}<br>Tamizaje Actividades Instrumentales de la Vida Diaria: {{_tamizajeActividadesInstrumental}}{{/if}}{{/if}}
+		{{#if siActividadInstrumental}}{{#if evaluacionActividadesInstrumental}}<br>Evaluación Actividades Instrumentales de la Vida Diaria: {{_evaluacionActividadesInstrumental}}{{/if}}{{/if}}
+	{{/template}}
 
   {{#template id="datosCondicionPlanificacion"}}
     {{#if esHombre}}{{#if altaConAzoospermiaSinBisturi}}<br>Alta con azoospermia por Vasectomía sin bisturí.: {{_altaConAzoospermiaSinBisturi}}{{/if}}{{/if}}
@@ -9591,6 +9599,16 @@
     {{#if complicacionTraslado}}<br>Traslado Embarazada: {{_complicacionTraslado}}{{/if}}
     {{#if accionesTraslado}}<br>Otras Acciones Traslado AME: {{_accionesTraslado}}{{/if}}
   {{/template}}
+
+	{{#template id="datosComplicacionesEmbarazoSis"}}
+		<br>Complicaciones Diabetes: {{_complicacionDiabetes}}
+		<br>Complicaciones Infección Urinaria: {{_complicacionInfeccionUrinaria}}
+		<br>Complicación Preeclampsia o Eclampsia: {{_complicacionPreeclampsiaEclampsia}}
+		<br>Complicación Hemorragia: {{_complicacionHemorragia}}
+		<br>Complicación Sospecha Covid: {{_complicacionSospechaCovid}}
+		<br>Complicación Covid: {{_complicacionCovid}}
+		<br>Complicación Hipertensión Arterial Preexistente: {{_complicacionHipertensionArterial}}
+	{{/template}}
 
   {{#template id="datosCancerMenores"}} 
     {{#if aplicacionCedulaCancer}}<br>Aplicación Cédula Cáncer: {{_aplicacionCedulaCancer}}{{/if}}
@@ -9822,16 +9840,16 @@
     {{#if colposcopia}}<br>Colposcopía: {{_colposcopia}}{{/if}}
     {{#if consultaCancerCervicouterino}}<br>Consultas Cáncer Cervicouterino: {{_consultaCancerCervicouterino}}{{/if}}
   {{/template}}
-  {{#template id="datosGeneralesDetecciones"}}
-    <br>Edad del Cuidador: {{_edadCuidador}}
-    <br>Sexo del Cuidador: {{_sexoCuidador}}
-    <br>Sobrecarga del Cuidador: {{_sobrecargaCuidado}}
-    <br>Riesgo de Fractura por Osteoporosis: {{_riesgoFracturaOsteoporosis}}
-    <br>Diabetes Mellitus: {{_diabetesMellitus}}
-    <br>Hipertensión Arterial: {{_hipertensionArterial}}
-    <br>Obesidad: {{_obesidad}}
-    <br>Dislipidemias: {{_dislipidemias}}
-  {{/template}}  
+	{{#template id="datosGeneralesDetecciones"}}
+		{{#if edadCuidador}}<br>Edad del Cuidador: {{_edadCuidador}}{{/if}}
+		{{#if siEdadCuidador}}{{#if sexoCuidador}}<br>Sexo del Cuidador: {{_sexoCuidador}}{{/if}}{{/if}}
+		{{#if esMayor60}}{{#if sobrecargaCuidado}}<br>Sobrecarga del Cuidador: {{_sobrecargaCuidado}}{{/if}}{{/if}}
+		{{#if riesgoFracturaOsteoporosis}}<br>Riesgo Fractura Osteoporosis: {{_riesgoFracturaOsteoporosis}}{{/if}}
+		{{#if diabetesMellitus}}<br>Diabetes Mellitus: {{_diabetesMellitus}}{{/if}}
+		{{#if hipertensionArterial}}<br>Hipertensión Arterial: {{_hipertensionArterial}}{{/if}}
+		{{#if obesidad}}<br>Obesidad: {{_obesidad}}{{/if}}
+		{{#if dislipidemias}}<br>Dislipidemias: {{_dislipidemias}}{{/if}}
+	{{/template}}
   {{#template id="datosComplicacionesCoronario"}}
     {{#if seleccionComplicaciones}}<br>Complicaciones: {{_seleccionComplicaciones}}{{/if}}
     {{#if siDisfuncion}}{{#if tipoDisfuncionVentricular}}<br>Tipo Disfunción Ventricular: {{_tipoDisfuncionVentricular}}{{/if}}{{/if}}

@@ -8,6 +8,17 @@
     {{field id="tieneEdad" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=6"}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')),'R69X')" message="Tiene Diagnósticos Duplicados"}}
   {{/section}}
+  {{#section id="restauracion"}}
+    {{validator type="expr" validIf="=!@numeroFosetasSelladas||(@numeroFosetasSelladas>=0&&@numeroFosetasSelladas<=32)" message="Fosetas o Fisuras Selladas Inválido"}}
+    {{validator type="expr" validIf="=!@numeroObturacionesAmalgamas||(@numeroObturacionesAmalgamas>=0&&@numeroObturacionesAmalgamas<=32)" message="Obturaciones Amalgamas Inválido"}}
+    {{validator type="expr" validIf="=!@numeroObturacionesResinas||(@numeroObturacionesResinas>=0&&@numeroObturacionesResinas<=32)" message="Obturaciones Resinas Inválido"}}
+    {{validator type="expr" validIf="=!@numeroObturacionesIonomeros||(@numeroObturacionesIonomeros>=0&&@numeroObturacionesIonomeros<=32)" message="Obturaciones Ionómeros de Vidrio Inválido"}}
+    {{validator type="expr" validIf="=!@numeroObturacionesAlcasite||(@numeroObturacionesAlcasite>=0&&@numeroObturacionesAlcasite<=32)" message="Obturaciones con Alcasite Inválido"}}
+    {{validator type="expr" validIf="=!@numeroObturacionesTemporales||(@numeroObturacionesTemporales>=0&&@numeroObturacionesTemporales<=32)" message="Obturaciones Temporales Inválido"}}
+    {{validator type="expr" validIf="=!@numeroExtraccionesTemporales||(@numeroExtraccionesTemporales>=0&&@numeroExtraccionesTemporales<=9)" message="Extracciones Dientes Temporales Inválido"}}
+    {{validator type="expr" validIf="=!@numeroEstraccionesPermanentes||(@numeroEstraccionesPermanentes>=0&&@numeroEstraccionesPermanentes<=9)" message="Extracciones Dientes Permanentes Inválido"}}
+    {{validator type="expr" validIf="=!@numeroPiezasTerapiaPulpar||(@numeroPiezasTerapiaPulpar>=0&&@numeroPiezasTerapiaPulpar<=9)" message="Piezas Dentales Terapia Pulpar Inválido"}}
+  {{/section}}
   {{#section id="farmacos"}}
     {{field id="telemedicina" type="expr" value="=@solicitaTelemedicina=='si'?'En Tiempo Real':''"}}
     {{field id="teleconsulta" type="expr" value="=(@solicitaTeleconsulta=='si'&&calc.isNotEmpty(estudiosTeleconsulta))?'Diferida':''"}}

@@ -9,6 +9,7 @@
     {{!-- Tarea 5660 --}}
   {{/section}}
   {{#section id="mujer"}}
+    {{field id="entre9y59" type="expr" value="=edadActual>=9&&edadActual<60"}}
     {{field id="estaEmbarazada" type="expr" value="=condicion=='embarazada'"}}
     {{field id="esPregestacional" type="expr" value="=condicion=='pregestacional'"}}
     {{field id="esPuerpera" type="expr" value="=condicion=='puerpera'"}}
@@ -35,27 +36,22 @@
   {{#section id="analisis"}}
     {{field id="esMujer" type="expr" value="=base.esMujer"}}
     {{field id="estaEmbarazada" type="expr" value="=mujer.estaEmbarazada"}}
-    {{!-- Tarea 5660 --}}
+    {{field id="esMenor6" type="expr" value="calc.fromNowYears(persona.fechaNacimiento)<6"}}
     {{field id="esMenor10" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)<10"}}
-    {{field id="esPrimeraVezSubsecuente" type="expr" value="=consultaNinoSano=='primeraVez'||consultaNinoSano=='subsecuente'"}}
+    {{field id="esPrimeraVezSubsecuente" type="expr" value="=consultaNinoSano=='primeraVez'||consultaNinoSano=='subsecuente'&&esMenor6"}}
     {{field id="noEsPrimeraVezSubsecuente" type="expr" value="=consultaNinoSano=='catVezNoEspecificado'&&esMenor17"}}
     {{field id="esMayor60" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=60&&!calc.in(user.others.tipoPersonalNom,['pasanteNutricion','nutriologa','homeopata','medicoTradicionalIndigena','taps','parteraTecnica','promotorSalud','acupunturista'])"}}
-    {{!-- Tarea 5660 --}}
     {{field id="esMenor17" type="expr" value="=(calc.fromNowYears(persona.fechaNacimiento)<=17)"}}
     {{field id="esPsicologo" type="expr" value="=(calc.in(prestadorServicios._especialidad,['psicologiaAdultos','psicologiaPediatrica','psicologiaClinica']))"}}
-
     {{field id="esContraEsMenor17" type="expr" value="=@contrarreferido=='no'&&esMenor17"}}
     {{field id="esContraEsMayor60" type="expr" value="=@contrarreferido=='no'&&esMayor60"}}
     {{field id="esContraEsPsicologo" type="expr" value="=@contrarreferido=='no'&&esPsicologo"}}
-    
-    {{!-- Tarea 5660 --}}
     {{validator type="expr" notValidIf="=@contrarreferido=='no'&&calc.isEmpty(@referidoPor)&&calc.isEmpty(@referidoPor2)&&calc.isEmpty(@referidoPor3)" message="Error en Contrarreferido"}}
     {{validator type="expr" notValidIf="=calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])&&@referidoPor&&@referidoPor!='otras'" message="Referido Por Inválido"}}
     {{validator type="expr" notValidIf="=calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])&&@referidoPor2&&@referidoPor2!='otras'" message="Referido Por Inválido"}}
     {{validator type="expr" notValidIf="=calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])&&@referidoPor3&&@referidoPor3!='otras'" message="Referido Por Inválido"}}
-    {{!-- Tarea 5660 --}}
-
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')),'R69X')" message="Tiene Diagnósticos Duplicados"}}
+    {{validator type="expr" validIf="=!@promocionSobres||(@promocionSobres>=0&&@promocionSobres<=9)" message="Número Sobres Promoción Vida Suero Oral Inválido"}}
   {{/section}}
   {{#view id="cubo"}}
     {{#find limit="-1"}}

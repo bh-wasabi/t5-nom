@@ -10,19 +10,23 @@
      {{validator type="expr" notValidIf="=catServicios=='SERVICIO AMIGABLE'&&calc.isEmpty(user.job.cluesServicioAmigable)" message="CLUES Sin Servicio Amigable"}}
   {{/section}}
   {{#section id="enfermedades"}}
-    {{field id="siVph" type="expr" value="=deteccionVPH=='realizada'"}}
     {{field id="esMujer" type="expr" value="=base.esMujer"}}
-    {{field id="siCancerCuelloUterino" type="expr" value="=deteccionCancerCuelloUterino=='realizada'"}}
-    {{field id="mayor35" type="expr" value="=siVph&&(calc.fromNowYears(persona.fechaNacimiento)>=35)"}}
+    {{field id="mostrarResultadoVph" type="expr" value="=deteccionVPH=='realizada'&&base.edadActual>=35&&base.edadActual<64"}}
+    {{field id="mostrarDeteccionCancerCuelloUterino" type="expr" value="=base.edadActual>=25&&base.edadActual<64"}}
+    {{field id="mostrarResultadoCancerUterino" type="expr" value="=deteccionCancerCuelloUterino=='realizada'&&base.edadActual>=35&&base.edadActual<64"}}
   {{/section}}
   {{#section id="otrosDatos"}}
-    {{field id="esMujer" type="expr" value="=base.esMujer"}}
+    {{field id="esMujerIntersexual" type="expr" value="genero=='mujer'||genero=='intersexual'"}}
     {{field id="esMayor10" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=10"}}
     {{field id="esMayor40" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=40"}}
     {{field id="esMayor19" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=19"}}
-    {{field id="esMayorHombre" type="expr" value="!esMujer&&esMayor40"}}
+    {{field id="esMayorHombre" type="expr" value="!base.esMujer&&esMayor40"}}
     {{field id="siHiperplasia" type="expr" value="=hiperplasiaProstatica=='positivo'"}}
+    {{field id="esMujerMayor15" type="expr" value="=base.esMujer&&base.edadActual>=15"}}
     {{field id="cluesTieneEspirometro" type="expr" value="=cluesTieneEspirometro&&esMayor19"}}
+    {{field id="tieneResultadoEspirometria" type="expr" value="=calc.isNotEmpty(resultadoEspirometria)"}}
+    {{validator type="expr" validIf="=!@resultadoEspirometria||(@resultadoEspirometria>=0&&@resultadoEspirometria<=100)" message="Resultado Espirometría Fuera de Rango (0-100)"}}
+    {{validator type="expr" validIf="=!@resultadoEspirometria||((@limiteInferiorNormalidadEspirometria>=0.655&&@limiteInferiorNormalidadEspirometria<=0.785)||@limiteInferiorNormalidadEspirometria==0.999)" message="Límite Inferior Normalidad Espirometría Fuera de Rango"}}
   {{/section}}
   {{!-- Tarea 3156 --}}
   {{#view id="ultima"}}

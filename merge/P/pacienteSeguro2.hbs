@@ -3,7 +3,7 @@
     {{field id="tieneAfiliacion" type="expr" value="=calc.in(tipoPrograma, ['insabi','fonsabi','sadmi'])"}}
     {{field id="tieneBeneficiario" type="expr" value="=!tieneAfiliacion"}}
     {{field id="tieneDependencia" type="expr" value="=tieneBeneficiario&&tipoBeneficiario=='derechohabiente'"}}
-    {{field id="tieneOtro" type="expr" value="=calc.in(dependencia, ['otra'])"}}
+    {{field id="tieneOtro" type="expr" value="=calc.in(dependencia,['otra'])&&user.job.cluesIdEntidad=='09'"}}
     {{field id="ningunaDependencia" type="expr" value="=calc.in(@dependencia,['otra','imss','issste','pemex','sedena','semar','imssBienestar','issfam','opdImssBienestar'])"}}
   	{{#field id="tipoPrograma"}}
       {{#onChange}}

@@ -5036,21 +5036,23 @@
     {{#update section="base" newRef="tamizaje"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
-      {{set edadActual="persona.edadActual"}}
-      {{set _edadActual="persona._edadActual"}}
+      {{set edadActual="=persona.edadActual"}}
+      {{set _edadActual="=persona._edadActual"}}
       {{set tipoServicioSisMenor="=calc.fromNowYears(persona.fechaNacimiento)<18"}}
       {{set tipoServicioSisMayor="=calc.fromNowYears(persona.fechaNacimiento)>=60"}}
       {{set primeraConsultaAno="=_items.length?'no':'si'"}}
       {{!-- RACC --}}
-      {{set signosVitales="=detalle.signosVitales"}}
-      {{set _signosVitales="=detalle._signosVitales"}}
-      {{set somatometria="=detalle.somatometria"}}
-      {{set _somatometria="=detalle._somatometria"}}
+      {{!-- {{set signosVitales="=detalle.signosVitales"}} --}}
+      {{!-- {{set _signosVitales="=detalle._signosVitales"}} --}}
+      {{!-- {{set somatometria="=detalle.somatometria"}} --}}
+      {{!-- {{set _somatometria="=detalle._somatometria"}} --}}
       {{!-- RACC --}}
       {{setRef ref="tamizaje.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
+      {{setRef ref="datosGenerales.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
     {{/update}}
     {{#update section="otrosDatos"}}
       {{set cluesTieneEspirometro="=calc.isNotEmpty(user.job.cluesTieneEspirometro)"}}
+      {{set genero="=persona.genero"}}
     {{/update}}
     {{update section="tipoServicioSis" value="=calc.itemsToCode(_.intersection(calc.tipoServicioSis('detecciones','todos','',''),calc.tipoServicioSis(user.others.tipoServicioSis,user.others.tipoPersonalNom,base.esMujer?'mujer':'',base.tipoServicioSisMenor?'menor':base.tipoServicioSisMayor?'mayor':'')))" temp="true"}}
     {{update section="resumen" value="=resumen" temp="true"}}
@@ -5360,10 +5362,10 @@
       {{set _diagnostico="=detalle._diagnostico"}}
     {{/update}}
     {{#update section="exploracion" newRef="atencionObstetricas"}}
-      {{set signosVitales="=detalle.signosVitales"}}
-      {{set _signosVitales="=detalle._signosVitales"}}
-      {{set somatometria="=detalle.somatometria"}}
-      {{set _somatometria="=detalle._somatometria"}}
+      {{!-- {{set signosVitales="=detalle.signosVitales"}} --}}
+      {{!-- {{set _signosVitales="=detalle._signosVitales"}} --}}
+      {{!-- {{set somatometria="=detalle.somatometria"}} --}}
+      {{!-- {{set _somatometria="=detalle._somatometria"}} --}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
       {{setRef ref="atencionObstetricas.base.esMujer" value="=persona.genero=='mujer'"}}
       {{setRef ref="atencionObstetricas.base.esMujerIntersexual" value="=persona.genero=='mujer'||persona.genero=='intersexual'"}}
@@ -5378,6 +5380,8 @@
       {{set _antecedentesGineco="=detalle.mujer._antecedentesGineco"}}
       {{set antecedentesEmbarazos="=detalle.mujer.antecedentesEmbarazos"}}
       {{set _antecedentesEmbarazos="=detalle.mujer._antecedentesEmbarazos"}}
+      {{set edadActual="=persona.edadActual"}}
+      {{set _edadActual="=persona._edadActual"}}
       {{setRef condition="=persona.esMujer" ref="antecedentesGineco.edadActual" value="=persona.edadActual"}}
     {{/update}}
     {{update section="tipoServicioSis" value="=calc.itemsToCode(_.intersection(calc.tipoServicioSis('consultaExterna','todos','',''),calc.tipoServicioSis(user.others.tipoServicioSis,user.others.tipoPersonalNom,base.esMujer?'mujer':'',base.tipoServicioSisMenor?'menor':base.tipoServicioSisMayor?'mayor':'')))" temp="true"}}
@@ -5413,8 +5417,8 @@
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
       {{set fechaNacimiento="=persona.fechaNacimiento"}}
-      {{set edadActual="persona.edadActual"}}
-      {{set _edadActual="persona._edadActual"}}
+      {{set edadActual="=persona.edadActual"}}
+      {{set _edadActual="=persona._edadActual"}}
       {{set menor="=calc.fromNowYears(persona.fechaNacimiento)>=10&&calc.fromNowYears(persona.fechaNacimiento)<=19"}}
       {{set tipoServicioSisMenor="=calc.fromNowYears(persona.fechaNacimiento)<18"}}
       {{set tipoServicioSisMayor="=calc.fromNowYears(persona.fechaNacimiento)>=60"}}
@@ -5433,8 +5437,8 @@
     {{#update section="base"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
-      {{set edadActual="persona.edadActual"}}
-      {{set _edadActual="persona._edadActual"}}
+      {{set edadActual="=persona.edadActual"}}
+      {{set _edadActual="=persona._edadActual"}}
       {{set tipoServicioSisMenor="=calc.fromNowYears(persona.fechaNacimiento)<18"}}
       {{set tipoServicioSisMayor="=calc.fromNowYears(persona.fechaNacimiento)>=60"}}
       {{set primeraConsultaAno="=_items.length?'no':'si'"}}
@@ -7588,7 +7592,7 @@
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
   {{/action}}
-  {{#action id="notaPlanificacionFamiliar" source="notaPlanificacionFamiliar" label="Planificación Familiar" transform="copiarPlanificacionFamiliar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaPlanificacionFamiliar" fromView="ultima"}}
+  {{#action id="notaPlanificacionFamiliar" source="notaPlanificacionFamiliar" label="Planificación Familiar" transform="copiarPlanificacionFamiliar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaPlanificacionFamiliar" fromView="ultima" error="=fn('errorPacientePlanificacionFamiliar', persona.genero, calc.fromNowFloat(persona.fechaNacimiento, persona.horaNacimiento))" errorType="info"}}
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
   {{/action}}
@@ -9790,42 +9794,42 @@
     {{item action="importarSMC" text="Importar SCM"}}
   {{/menu}}  
 
-  {{#action id="exportarSinbaConsultaExterna" label="Exportar SINBA - Consulta Externa"  hide="true" type="save-as" fileName="sinbaConsultaExterna.txt" fromApi="export/complexView/sinbaConsultaExterna.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaConsultaExterna" label="Exportar SINBA - Consulta Externa"  hide="true" type="save-as" fileName="='CEX-'+user.job.cluesAdscripcionNomina+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fromApi="export/complexView/sinbaConsultaExterna.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
   {{/action}}
 
-  {{#action id="exportarSinbaLesiones" label="Exportar SINBA - Lesiones"  hide="true" type="save-as" fileName="sinbaLesiones.txt" fromApi="export/complexView/sinbaLesiones.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaLesiones" label="Exportar SINBA - Lesiones"  hide="true" type="save-as" fileName="='LES-'+user.job.cluesAdscripcionNomina+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fromApi="export/complexView/sinbaLesiones.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
   {{/action}}
 
-  {{#action id="exportarSinbaUrgencias" label="Exportar SINBA - Urgencias"  hide="true" type="save-as" fileName="sinbaUrgencias.txt" fromApi="export/complexView/sinbaUrgencias.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaUrgencias" label="Exportar SINBA - Urgencias"  hide="true" type="save-as" fileName="='URG-'+user.job.cluesAdscripcionNomina+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fromApi="export/complexView/sinbaUrgencias.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
   {{/action}}
 
-  {{#action id="exportarSinbaEgresos" label="Exportar SINBA - Egresos"  hide="true" type="save-as" fileName="sinbaEgresos.txt" fromApi="export/complexView/sinbaLesiones.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaEgresos" label="Exportar SINBA - Egresos"  hide="true" type="save-as" fileName="='EGR-'+user.job.cluesAdscripcionNomina+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fromApi="export/complexView/sinbaLesiones.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
   {{/action}}
 
-  {{#action id="exportarSinbaSaludBucal" label="Exportar SINBA - Salud Bucal"  hide="true" type="save-as" fileName="sinbaSaludBucal.txt" fromApi="export/complexView/sinbaSaludBucal.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaSaludBucal" label="Exportar SINBA - Salud Bucal"  hide="true" type="save-as" fileName="='CSB-'+user.job.cluesAdscripcionNomina+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fromApi="export/complexView/sinbaSaludBucal.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
   {{/action}}
 
-  {{#action id="exportarSinbaSaludMental" label="Exportar SINBA - Salud Mental"  hide="true" type="save-as" fileName="sinbaSaludMental.txt" fromApi="export/complexView/sinbaSaludMental.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaSaludMental" label="Exportar SINBA - Salud Mental"  hide="true" type="save-as" fileName="='CSM-'+user.job.cluesAdscripcionNomina+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fromApi="export/complexView/sinbaSaludMental.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
   {{/action}}
 
-  {{#action id="exportarSinbaPlanificacionFamiliar" label="Exportar SINBA - Planificación Familiar"  hide="true" type="save-as" fileName="sinbaPlanificacionFamiliar.txt" fromApi="export/complexView/sinbaPlanificacionFamiliar.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaPlanificacionFamiliar" label="Exportar SINBA - Planificación Familiar"  hide="true" type="save-as" fileName="='CPF-'+user.job.cluesAdscripcionNomina+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fromApi="export/complexView/sinbaPlanificacionFamiliar.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
   {{/action}}
 
-  {{#action id="exportarSinbaDetecciones" label="Exportar SINBA - Detecciones"  hide="true" type="save-as" fileName="sinbaDetecciones.txt" fromApi="export/complexView/sinbaDetecciones.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaDetecciones" label="Exportar SINBA - Detecciones"  hide="true" type="save-as" fileName="='CDT-'+user.job.cluesAdscripcionNomina+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fromApi="export/complexView/sinbaDetecciones.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
   {{/action}}
