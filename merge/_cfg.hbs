@@ -9645,11 +9645,12 @@
     {{#if resultadoPruebaBattelle}}<br>Prueba Battelle: {{_resultadoPruebaBattelle}}{{/if}}
   {{/template}}
 
-  {{#template id="datosSaludNinoSis"}} 
-    {{#if pruebaEdiNino}}<br>Prueba (EDI): {{_pruebaEdiNino}}{{/if}}
-    {{#if resultadoPruebaEdi}}<br>Resultado Prueba (EDI): {{resultadoPruebaEdi}}{{/if}}
-    {{#if resultadoPruebaBattelle}}<br>Prueba Battelle: {{_resultadoPruebaBattelle}}{{/if}}
-  {{/template}}
+	{{#template id="datosSaludNinoSis"}}
+		{{#if pruebaEdiNino}}<br>Prueba (EDI): {{_pruebaEdiNino}}{{/if}}
+		{{#if pruebaEdiInicial}}{{#if resultadoPruebaEdiInicial}}<br>Resultado Prueba (EDI): {{_resultadoPruebaEdiInicial}}{{/if}}{{/if}}
+		{{#if pruebaEdiSubsecuente}}{{#if resultadoPruebaEdiSubsecuente}}<br>Resultado Prueba (EDI): {{_resultadoPruebaEdiSubsecuente}}{{/if}}{{/if}}
+		{{#if muestraResultadoBatelle}}{{#if resultadoPruebaBattelle}}<br>Prueba Battelle: {{_resultadoPruebaBattelle}}{{/if}}{{/if}}
+	{{/template}}
 
   {{#template id="datosEmbarazoActualAvanzados"}} 
     {{#if amniocentesis}}<br>Amniocentésis: {{_amniocentesis}}{{/if}}

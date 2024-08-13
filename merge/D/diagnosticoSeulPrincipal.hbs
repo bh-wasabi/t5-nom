@@ -1,10 +1,10 @@
 {{#define id="diagnosticoSeulPrincipal"}}
   {{#section id="base"}}
-    {{field id="tieneCausaExterna" type="expr" value="=calc.in('CAUSA',calc.splitAndTrim(requiereCampos))&&calc.in(docType, ['notaEgresos','notaTempEgresos','notaLesiones','notaTempLesiones'])"}}  
-    {{field id="tieneMorfologia" type="expr" value="=calc.in('MORFOLOGIA',calc.splitAndTrim(requiereCampos))&&calc.in(docType, ['notaTempEgresos','notaEgresos'])"}}  
-    {{field id="tieneFolioLesion" type="expr" value="=calc.in('FOLIO_LESION',calc.splitAndTrim(requiereCampos))&&calc.in(docType, ['notaTempEgresos','notaEgresos'])"}}  
-    {{field id="tienePlanHidratacion" type="expr" value="=calc.in('PLAN_HIDRATACION',calc.splitAndTrim(requiereCampos))&&edadActual<5&&calc.in(docType, ['notaTempUrgencias','notaUrgencias'])"}}  
-    {{field id="tienePlanInfeccionesRespiratorias" type="expr" value="=calc.in('PLAN_RESPIRATORIAS',calc.splitAndTrim(requiereCampos))&&edadActual<5&&calc.in(docType, ['notaTempUrgencias','notaUrgencias'])"}}  
+    {{field id="tieneCausaExterna" type="expr" value="=calc.in('CAUSA',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaEgresos','notaTempEgresos','notaSeulEgreso','notaLesiones','notaTempLesiones','notaSeulLesiones'])"}}
+    {{field id="tieneMorfologia" type="expr" value="=calc.in('MORFOLOGIA',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaEgresos','notaSeulEgreso'])"}}
+    {{field id="tieneFolioLesion" type="expr" value="=calc.in('FOLIO_LESION',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaEgresos','notaSeulEgreso'])"}}
+    {{field id="tienePlanHidratacion" type="expr" value="=calc.in('PLAN_HIDRATACION',calc.splitAndTrim(requiereCampos))&&edadActual<5&&calc.in(docType,['notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaUrgencias'])"}}
+    {{field id="tienePlanInfeccionesRespiratorias" type="expr" value="=calc.in('PLAN_RESPIRATORIAS',calc.splitAndTrim(requiereCampos))&&edadActual<5&&calc.in(docType,['notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaUrgencias'])"}}
     {{#field id="diagnostico"}}
       {{#editor}}
         {{param esSeul="=true"}}
@@ -30,5 +30,6 @@
     {{validator type="expr" validIf="=calc.meetsSexLimit(limiteSexo, _parentDoc.persona.genero)" message="No Corresponde el Sexo del Paciente"}}
     {{validator type="expr" validIf="=calc.meetsAgeLimit(limiteInferior, desde, _parentDoc.persona.fechaNacimiento, true)" message="No Corresponde la Edad del Paciente con el Límite Inferior"}}
     {{validator type="expr" validIf="=calc.meetsAgeLimit(limiteSuperior, desde, _parentDoc.persona.fechaNacimiento, false)" message="No Corresponde la Edad del Paciente con el Límite Superior"}}
+    {{validator type="expr" validIf="=calc.isEmpty(@detalle)||@detalle.length>1" message="Descripción (Mínimo 2 Caracteres)"}}
   {{/section}}
 {{/define}}

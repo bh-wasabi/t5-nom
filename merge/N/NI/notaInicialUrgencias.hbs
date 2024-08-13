@@ -8,13 +8,14 @@
     {{field id="esMujerMayor9" type="expr" value="=esMujer&&calc.fromNowYears(persona.fechaNacimiento)>=9"}}
     {{field id="tieneCondicionAlta" type="expr" value="=(continuaAtencionFueraUrgencias||seEnviaA)"}}
     {{field id="tienePlanHidratacion" type="expr" value="=planHidratacion=='planA'||planHidratacion=='planB'"}}
-    {{field id="esFertil" type="expr" value="=mujerFertil=='embarazo'||mujerFertil=='puerperio'"}}
+    {{field id="esFertil" type="expr" value="=mujerFertil=='embarazo'"}}
     {{validator type="expr" validIf="=(calc.number(@edadGestacional)>=0&&calc.number(@edadGestacional)<=45)||(calc.number(@edadGestacional)==99)" message="Error en la Edad Gestacional"}}
     {{validator type="expr" validIf="=!@numeroSobres||(@numeroSobres>=1&&@numeroSobres<=20)" message="Error en Número de Sobres (1-20)"}}
     {{validator type="expr" notValidIf="=@CLUES==user.job.cluesAdscripcionNomina" message="CLUES Inválido"}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')))" message="Tiene Diagnósticos Duplicados"}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.validoSeul, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.validoSeul, calc.pluckRef(@otrosDiagnosticos, 'base.validoSeul')), null, 'PARTO')" message="Tiene Diagnósticos de tipo PARTO Duplicados"}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.validoSeul, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.validoSeul, calc.pluckRef(@otrosDiagnosticos, 'base.validoSeul')), null, 'ABORTO')" message="Tiene Diagnósticos de tipo ABORTO Duplicados"}}
+    {{validator type="expr" notValidIf="=moment().diff(@fechaIngreso,'days')>40" message="Fecha Ingreso no debe pasar 40 días"}}
   {{/section}}
   {{#view id="sinbaUrgencias"}}
     {{complexView type="sinbaUrgencias"}}

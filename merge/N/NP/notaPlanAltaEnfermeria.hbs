@@ -1,8 +1,10 @@
 {{#define id="notaPlanAltaEnfermeria"}}
   {{#section id="base"}}
     {{#field id="medicamentosMinistrados"}}
-      {{editor display="base.codigo"}}
+      {{!-- {{editor display="base.codigo"}} --}}
+      {{editor display="base.subclave"}}
     {{/field}}
     {{field id="cantidadMedicamentosMinistrados" type="calc" value="=medicamentosMinistrados.length"}}
+    {{validator type="expr" notValidIf="=medicamentosMinistrados.length>6" message="Máximo 6 Medicamentos Ministrados"}}
   {{/section}}
 {{/define}}

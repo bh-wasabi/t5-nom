@@ -47,10 +47,10 @@
     {{editor display="nombre"}}
     {{#search index="cie10-23" type="_doc" filterParamsOnlySearch="true"}}
       {{param RUBRICA_TYPE="='NOT B'"}}
-      {{param AF_PRIN="=calc.in(_type, ['notaUrgencias','notaTempUrgencias','notaEgresos','notaTempEgresos'])&&esPrincipal?'SI':null"}}
-      {{param CLAVE_CAPITULO="=calc.in(_type, ['notaUrgencias','notaTempUrgencias','notaEgresos','notaTempEgresos'])&&esOtro?'NOT XX':null"}}
-      {{param VALIDO_LESIONES_AF="=calc.in(_type, ['notaLesiones','notaTempLesiones'])&&esPrincipal?'SI':null"}}
-      {{param VALIDO_LESIONES_AT="=calc.in(_type, ['notaLesiones','notaTempLesiones'])&&esOtro?'SI':null"}}
+      {{param AF_PRIN="=calc.in(_type, ['notaUrgencias','notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaEgresos','notaTempEgresos','notaSeulEgreso'])&&esPrincipal?'SI':null"}}
+      {{param CLAVE_CAPITULO="=calc.in(_type, ['notaUrgencias','notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaEgresos','notaTempEgresos','notaSeulEgreso'])&&esOtro?'NOT XX':null"}}
+      {{param VALIDO_LESIONES_AF="=calc.in(_type, ['notaLesiones','notaTempLesiones','notaSeulLesiones'])&&esPrincipal?'SI':null"}}
+      {{param VALIDO_LESIONES_AT="=calc.in(_type, ['notaLesiones','notaTempLesiones','notaSeulLesiones'])&&esOtro?'SI':null"}}
     {{/search}}
   {{/view}}  
   {{#view id="cie10causa"}}

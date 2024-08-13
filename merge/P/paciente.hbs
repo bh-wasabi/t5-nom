@@ -170,31 +170,6 @@
     {{validator type="expr" validIf="=calc.setTimeStr(@fechaNacimiento,@horaNacimiento)<moment().format()" message="Fecha Nacimiento Incorrecta"}}
     [./if.]
     {{!-- Tarea 3092 --}}
-    {{!-- Se comenta seccion por error --}}
-    {{!-- {{#field id="paisNacimiento"}}
-      {{#onChange}}
-        {{set entidadNacimiento="=paisNacimiento=='MX'?entidadNacimiento:'NE'"}}
-        {{set esMexico="=paisNacimiento==''MX'"}}
-        {{set noEsMexico="=paisNacimiento!=''MX'"}}
-      {{/onChange}}
-    {{/field}} --}}
-    {{!-- {{#field id="fechaNacimiento"}}
-      {{#onChange}}
-        {{set escolaridad="=calc.fromNowYears(fechaNacimiento)<3?'noAplica':''"}}
-        {{set sabeLeerEscribir="=calc.fromNowYears(fechaNacimiento)<3?'no':''"}}
-      {{/onChange}}
-    {{/field}} --}}
-    {{!-- {{#field id="escolaridad"}}
-      {{#onChange}}
-        {{set sabeLeerEscribir="=!calc.in(escolaridad, ['noEspecificado','ninguna','noAplica','seIgnora'])?'si':''"}}
-      {{/onChange}}
-    {{/field}} --}}
-    {{!-- Se comenta seccion por error --}}
-    {{#onChange}}
-      {{#update}}
-        {{set afromexicano="=esMenor5Anos&&familiarResponsable[0].base.afromexicano?familiarResponsable[0].base.afromexicano:afromexicano"}}
-      {{/update}}
-    {{/onChange}}
     {{validator type="expr" validIf="=moment().diff(moment(@fechaNacimiento), 'years')<120" message="Paciente Mayor a 120 años"}}
     {{!-- Tarea 3092 --}}
     {{!-- Tarea 3710 --}}
@@ -222,11 +197,12 @@
         {{set paisProcedencia="MX"}}
       {{/onChange}}
     {{/field}}
-    {{validator type="expr" notValidIf="=!calc.in(sabeLeerEscribir,['si','no','noAplica'])&&calc.fromNowYears(fechaNacimiento)>=3" message="Falta Indicar Sabe Leer y Escribir"}}
-    {{validator type="expr" notValidIf="=sabeLeerEscribir!='no'&&calc.fromNowYears(fechaNacimiento)<3" message="Sabe Leer y Escribir Incorrecto"}}
+    {{validator type="expr" notValidIf="=esMenor3Anos&&ocupacion!='9990'" message="Ocupación Inválida"}}
     {{validator type="expr" validIf="=fn('escolaridadCorrecta', calc.fromNowYears(fechaNacimiento), escolaridad)" message="Escolaridad Incorrecta"}}
-    {{validator type="expr" notValidIf="=sabeLeerEscribir=='si'&&calc.fromNowYears(fechaNacimiento)<3" message="Sabe Leer y Escribir Incorrecto"}}
+    {{validator type="expr" notValidIf="=!calc.in(sabeLeerEscribir,['si','no','noAplica'])&&calc.fromNowYears(fechaNacimiento)>=3" message="Falta Indicar Sabe Leer y Escribir"}}
+    {{validator type="expr" notValidIf="=esMenor3Anos&&sabeLeerEscribir!='noAplica'" message="Sabe Leer y Escribir Incorrecto"}}
     {{validator type="expr" notValidIf="=sabeLeerEscribir=='no'&&!calc.in(escolaridad,['ninguna','noAplica','noEspecificado','preescolarCompleta','preescolarIncompleta','seIgnora'])" message="Sabe Leer y Escribir Incorrecto"}}
+    {{validator type="expr" notValidIf="=esMenor5Anos&&afromexicano!=calc.pluckRef(familiarResponsable,'base.afromexicano')[0]" message="Se Considera Afromexicano Inválido"}}
     {{validator type="expr" notValidIf="=migrante=='internacional'&&paisProcedencia=='MX'" message="País Procedencia Inválido"}}
     {{!-- Tarea 5604 --}}
   {{/section}}

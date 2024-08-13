@@ -46,6 +46,7 @@
     {{field id="esContraEsMenor17" type="expr" value="=@contrarreferido=='no'&&esMenor17"}}
     {{field id="esContraEsMayor60" type="expr" value="=@contrarreferido=='no'&&esMayor60"}}
     {{field id="esContraEsPsicologo" type="expr" value="=@contrarreferido=='no'&&esPsicologo"}}
+    {{field id="noEsContrarreferido" type="expr" value="=@contrarreferido=='no'&&!esMenor17&&!esPsicologo"}}
     {{validator type="expr" notValidIf="=@contrarreferido=='no'&&calc.isEmpty(@referidoPor)&&calc.isEmpty(@referidoPor2)&&calc.isEmpty(@referidoPor3)" message="Error en Contrarreferido"}}
     {{validator type="expr" notValidIf="=calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])&&@referidoPor&&@referidoPor!='otras'" message="Referido Por Inválido"}}
     {{validator type="expr" notValidIf="=calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])&&@referidoPor2&&@referidoPor2!='otras'" message="Referido Por Inválido"}}

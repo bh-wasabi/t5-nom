@@ -4990,6 +4990,40 @@
     {{update section="resumen" value="=resumen" temp="true"}}
   {{/transform}}
 
+  {{#transform id="copiarDiagnosticoUrgencias"}}
+    {{update section="contexto" value="=contexto"}}
+    {{update section="persona" transform="copiarPersona"}}
+    {{#update section="base"}}
+      {{set esMujer="=persona.esMujer"}}
+      {{set esHombre="=!esMujer"}}
+      {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
+      {{set esNeonatal="=calc.fromNowDays(persona.fechaNacimiento)<29"}}
+      {{set diagnostico="=detalle.diagnostico"}}
+      {{set _diagnostico="=detalle._diagnostico"}}
+      {{set alergia="=detalle.alergia"}}
+      {{set _alergia="=detalle._alergia"}}
+      {{set discapacidad="=detalle.discapacidad"}}
+      {{set _discapacidad="=detalle._discapacidad"}}
+      {{set medico="=contexto.medico||contexto.ingreso.medico"}}
+      {{set _medico="=contexto._medico||contexto.ingreso._medico"}}     
+      {{set especialidad="=contexto.especialidad||contexto.ingreso.especialidad"}}
+      {{set _especialidad="=contexto._especialidad||contexto.ingreso._especialidad"}}
+      {{set servicio="=contexto.servicio||contexto.ingreso.servicio"}}
+      {{set _servicio="=contexto._servicio||contexto.ingreso.servicio"}}
+      {{set antecedenteFamiliar="=detalle.antecedentes.antecedenteFamiliar"}}
+      {{set _antecedenteFamiliar="=detalle.antecedentes._antecedenteFamiliar"}}
+      {{!-- {{set signosVitales="=detalle.signosVitales"}}
+      {{set _signosVitales="=detalle._signosVitales"}}
+      {{set somatometria="=detalle.somatometria"}}
+      {{set _somatometria="=detalle._somatometria"}} --}}
+      {{set somatometriaPediatrica="=detalle.somatometriaPediatrica"}}
+      {{set _somatometriaPediatrica="=detalle._somatometriaPediatrica"}}
+      {{set fechaNacimiento="=persona.fechaNacimiento"}}
+      {{set fechaIngresoUrgencias="=contexto.urgencias.desde"}}
+    {{/update}}
+    {{update section="resumen" value="=resumen" temp="true"}}
+  {{/transform}}
+
   {{#transform id="copiarEgreso"}}
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
@@ -5019,6 +5053,46 @@
       {{set _signosVitales="=detalle._signosVitales"}}
       {{set somatometria="=detalle.somatometria"}}
       {{set _somatometria="=detalle._somatometria"}}
+      {{set motivoEgreso="=(contexto.estaDifunto)?'defuncion':null"}}
+      {{set fechaHoraDefuncion="=contexto.defuncion.fechaHoraDefuncion"}}
+      {{set fechaIngresoHospitalario="=contexto.defuncion.fechaIngreso"}}
+      {{set diasEstancia="=moment(fechaHoraDefuncion).diff(moment(fechaIngresoHospitalario), 'day')"}}
+      {{set evolucion="=contexto.defuncion.comentarios"}}
+      {{setRef ref="servicios.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
+      {{setRef ref="servicios.base.genero" value="=persona.genero"}}
+    {{/update}}
+    {{update section="resumen" value="=resumen" temp="true"}}
+  {{/transform}}
+
+  {{#transform id="copiarSeulEgreso"}}
+    {{update section="contexto" value="=contexto"}}
+    {{update section="persona" transform="copiarPersona"}}
+    {{#update section="base" newRef="servicios"}}
+      {{set esMujer="=persona.esMujer"}}
+      {{set esHombre="=!esMujer"}}
+      {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
+      {{set esNeonatal="=calc.fromNowDays(persona.fechaNacimiento)<29"}}
+      {{set procedenciaIngreso="=contexto.ingreso.procedenciaIngreso"}}
+      {{set _procedenciaIngreso="=contexto.ingreso._procedenciaIngreso"}}
+      {{set fechaNacimiento="=persona.fechaNacimiento"}}
+      {{set diagnostico="=detalle.diagnostico"}}
+      {{set _diagnostico="=detalle._diagnostico"}}
+      {{set alergia="=detalle.alergia"}}
+      {{set _alergia="=detalle._alergia"}}
+      {{set discapacidad="=detalle.discapacidad"}}
+      {{set _discapacidad="=detalle._discapacidad"}}
+      {{set medico="=contexto.medico||contexto.ingreso.medico"}}
+      {{set _medico="=contexto._medico||contexto.ingreso._medico"}}     
+      {{set especialidad="=contexto.especialidad||contexto.ingreso.especialidad"}}
+      {{set _especialidad="=contexto._especialidad||contexto.ingreso._especialidad"}}
+      {{set servicio="=contexto.servicio||contexto.ingreso.servicio"}}
+      {{set _servicio="=contexto._servicio||contexto.ingreso.servicio"}}
+      {{set antecedenteFamiliar="=detalle.antecedentes.antecedenteFamiliar"}}
+      {{set _antecedenteFamiliar="=detalle.antecedentes._antecedenteFamiliar"}}
+      {{!-- {{set signosVitales="=detalle.signosVitales"}}
+      {{set _signosVitales="=detalle._signosVitales"}}
+      {{set somatometria="=detalle.somatometria"}}
+      {{set _somatometria="=detalle._somatometria"}} --}}
       {{set motivoEgreso="=(contexto.estaDifunto)?'defuncion':null"}}
       {{set fechaHoraDefuncion="=contexto.defuncion.fechaHoraDefuncion"}}
       {{set fechaIngresoHospitalario="=contexto.defuncion.fechaIngreso"}}
@@ -5356,6 +5430,7 @@
     {{#update section="analisis"}}
       {{set diagnostico="=detalle.diagnostico"}}
       {{set _diagnostico="=detalle._diagnostico"}}
+      {{setRef ref="saludNino.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
     {{/update}}
     {{#update section="diagnosticos"}}
       {{set diagnostico="=detalle.diagnostico"}}
@@ -10079,31 +10154,33 @@
   {{#menu id="menuSisConsultaExterna" color="deep-orange"}}
     {{item action="notaSisConsultaExterna" source="notaSisConsultaExterna" text="Nota Consulta Externa" hide="true" type="add-subdoc"}}
     {{item action="notaDetecciones" source="notaDetecciones" text="Nota Detecciónes" hide="true" type="add-subdoc" }}
+    {{item action="notaPlanificacionFamiliar" source="notaPlanificacionFamiliar" text="Nota Planificación Familiar" hide="true" type="add-subdoc" }}
+    {{item action="notaSeulLesiones" text="Nota Registro Lesiones"}}
     {{item action="notaSaludBucal" source="notaSaludBucal" text="Nota Salud Bucal" hide="true" type="add-subdoc" }}
     {{item action="notaSaludMental" source="notaSaludMental" text="Nota Salud Mental" hide="true" type="add-subdoc" }}
-    {{item action="notaPlanificacionFamiliar" source="notaPlanificacionFamiliar" text="Nota Planificación Familiar" hide="true" type="add-subdoc" }}
     {{item action="notaRegistroSignosVitalesSomatometria" text="Nota Signos Vitales y Somatometría"}}
   {{/menu}}
 
   {{action id="menuNotasHospitalizacion" hide="true" type="menu" menu="menuNotasHospitalizacion" label="Notas Hospitalización" color="deep-orange"}}
   {{#menu id="menuNotasHospitalizacion" color="deep-orange"}}
     {{item action="notaSeulEgreso" text="Nota Egreso Hospitalario"}}
+    {{item action="notaSeulLesiones" text="Nota Registro Lesiones"}}
     {{item action="notaRegistroSignosVitalesSomatometria" text="Nota Signos Vitales y Somatometría"}}
+    {{item action="notaSolicitudInterconsulta" text="Solicitud Interconsulta"}}
     {{item action="notaSolicitudCirugia" text="Solicitud Programación Cirugía"}}
     {{item action="notaSolicitudCirugiaAmbulatoria" text="Solicitud Programación Cirugía Ambulatoria"}}
-    {{item action="notaSolicitudInterconsulta" text="Solicitud Interconsulta"}}
   {{/menu}}
 
   {{action id="menuNotasUrgencias" hide="true" type="menu" menu="menuNotasUrgencias" label="Notas Urgencias" color="deep-orange"}}
   {{#menu id="menuNotasUrgencias" color="deep-orange"}}
-    {{item action="notaInicialUrgencias" text="Nota Inicial Urgencias"}}
     {{item action="notaAltaServicio" text="Nota Alta Servicio"}}
+    {{item action="notaInicialUrgencias" text="Nota Inicial Urgencias"}}
+    {{item action="notaPlanAltaEnfermeria" text="Nota Plan Alta Enfermería"}}
     {{item action="notaSeulLesiones" text="Nota Registro Lesiones"}}
     {{item action="notaRegistroSignosVitalesSomatometria" text="Nota Signos Vitales y Somatometría"}}
-    {{item action="notaPlanAltaEnfermeria" text="Nota Plan Alta Enfermería"}}
+    {{item action="notaSolicitudInterconsulta" text="Solicitud Interconsulta"}}
     {{item action="notaSolicitudCirugia" text="Solicitud Programación Cirugía"}}
     {{item action="notaSolicitudCirugiaAmbulatoria" text="Solicitud Programación Cirugía Ambulatoria"}}
-    {{item action="notaSolicitudInterconsulta" text="Solicitud Interconsulta"}}
   {{/menu}}
 
   {{action id="menuUtilizacion" hide="true" type="menu" menu="menuUtilizacion" label="Aplicación" color="deep-orange"}}
@@ -12110,7 +12187,7 @@
   {{action id="notaReceta" source="notaReceta" label="Receta" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaSesionMedicoQuirurgica" source="notaSesionMedicoQuirurgica" label="Sesión Médico Quirurgica" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaReporteProcedimiento" source="notaReporteProcedimiento" label="Reporte Procedimiento" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
-  {{#action id="notaAltaServicio" source="notaAltaServicio" label="Alta Servicio" transform="copiarDiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="solicitudesEgreso" toSection="solicitudesEgreso"}}
+  {{#action id="notaAltaServicio" source="notaAltaServicio" label="Alta Servicio" transform="copiarDiagnosticoUrgencias" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="solicitudesEgreso" toSection="solicitudesEgreso"}}
     {{param persona="=_id"}}
     {{param tipoEpisodio="=fn('tipoEpisodio', contexto)"}}
     {{param desde="=fn('hospitalizacionDesde', contexto)"}}    
@@ -12210,7 +12287,7 @@
     {{param tipoEpisodio="=fn('tipoEpisodio', contexto)"}}
     {{param desde="=fn('hospitalizacionDesde', contexto)"}}    
   {{/action}}
-  {{#action id="notaSeulEgreso" source="notaSeulEgreso" label="SEUL Egreso" transform="copiarEgreso" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="solicitudesEgreso" toSection="solicitudesEgreso" error="=fn('errorCluesEgreso',user.job.cluesTipoUnidad,user.job.cluesTipoAbreviacion)" errorType="info"}}
+  {{#action id="notaSeulEgreso" source="notaSeulEgreso" label="SEUL Egreso" transform="copiarSeulEgreso" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="solicitudesEgreso" toSection="solicitudesEgreso" error="=fn('errorCluesEgreso',user.job.cluesTipoUnidad,user.job.cluesTipoAbreviacion)" errorType="info"}}
     {{param persona="=_id"}}
     {{param tipoEpisodio="=fn('tipoEpisodio', contexto)"}}
     {{param desde="=fn('hospitalizacionDesde', contexto)"}}    
@@ -12255,7 +12332,7 @@
     {{item action="notaInicialUrgencias" text="Inicial Urgencias"}}
   {{/menu}}
   {{action id="notaActivarCodigoUrgencias" source="notaActivarCodigoUrgencias" label="Activar Código Urgencias" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
-  {{action id="notaInicialUrgencias" source="notaInicialUrgencias" label="Inicial Urgencias" transform="copiarDiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" error="=fn('errorCluesUrgencias',user.job.cluesTipoUnidad,user.job.cluesTipoAbreviacion)" errorType="info"}}
+  {{action id="notaInicialUrgencias" source="notaInicialUrgencias" label="Inicial Urgencias" transform="copiarDiagnosticoUrgencias" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" error="=fn('errorCluesUrgencias',user.job.cluesTipoUnidad,user.job.cluesTipoAbreviacion)" errorType="info"}}
   {{action id="notaInicialUrgenciasGinecologiaYObstetricia" source="notaInicialUrgenciasGinecologiaYObstetricia" label="Inicial Urgencias Ginecología y Obstetricia" transform="copiarAlarmaObstetrica" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaUrgencias" source="notaUrgencias" label="Urgencias" transform="copiarDiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
 
