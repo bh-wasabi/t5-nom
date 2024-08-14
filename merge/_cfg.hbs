@@ -2872,6 +2872,17 @@
     {{#if detalle}}<br>{{detalle}}{{/if}}
   {{/template}}
 
+  {{#template id="diagnosticoSeulReseleccionado"}}
+    {{_diagnostico}} ({{diagnostico}})
+    {{#if tipoAtencion}}<br>Tipo Atención: {{_tipoAtencion}}{{/if}}
+    {{#if tieneSubDiagnostico}}{{#if subDiagnostico}}<br>{{_subDiagnostico}}{{/if}}{{/if}}
+    {{#if tieneCausaExterna}}{{#if causaExterna}}<br>Causa Externa: {{_causaExterna}}{{/if}}{{/if}}
+    {{#if tieneMorfologia}}{{#if morfologia}}<br>Morfología: {{_morfologia}}{{/if}}{{/if}}
+    {{#if tieneFolioLesion}}{{#if folioLesion}}<br>Folio Lesión: {{folioLesion}}{{/if}}{{/if}}    
+    {{#if desde}}<br>Desde: {{date desde "DD/MMM/YYYY"}}{{/if}}
+    {{#if detalle}}<br>{{detalle}}{{/if}}
+  {{/template}}
+
   {{#template id="direccion"}}
     {{#if noEsMexico}}
       {{calle}} {{numeroExterior}} {{numeroInterior}}
@@ -9820,6 +9831,16 @@
     {{#if siTerapiaIntermedia}}{{#if diasTerapiaIntermedia}}<br>Días en Terapia Intermedia: {{diasTerapiaIntermedia}}{{/if}}{{/if}}
     {{#if siTerapiaIntermedia}}{{#if horasTerapiaIntermedia}}<br>Horas en Terapia Intermedia: {{horasTerapiaIntermedia}}{{/if}}{{/if}}
   {{/template}}
+
+	{{#template id="datosTerapiaIntensiva"}}
+		<br>Días en Terapia Intensiva: {{diasTerapiaIntensiva}}
+		<br>Horas en Terapia Intensiva: {{horasTerapiaIntensiva}}
+	{{/template}}
+
+	{{#template id="datosTerapiaIntermedia"}}
+		<br>Días en Terapia Intermedia: {{diasTerapiaIntermedia}}
+		<br>Horas en Terapia Intermedia: {{horasTerapiaIntermedia}}
+	{{/template}}
 
   {{#template id="datosTerapiaSeulEgreso"}}
     Terapia Intensiva: {{_terapiaIntensiva}}

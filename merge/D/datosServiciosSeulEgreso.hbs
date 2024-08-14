@@ -4,8 +4,10 @@
     {{field id="siClaveServicio" type="expr" value="=numeroServicio=='uno'"}}
     {{field id="siOtraProcedencia" type="expr" value="=procedenciaIngreso=='5'"}}
     {{field id="siReferido" type="expr" value="=procedenciaIngreso=='3'"}}
-    {{field id="siServicioAdicional" type="expr" value="=(numeroServicio=='uno'||numeroServicio=='dos')&&tipoServicioOtorgado=='normal'"}}
-    {{field id="esTerapia" type="expr" value="=calc.arrayInArray(@servicioIngreso,['unidadCoronaria','unidadTerapiaIntensivaQuirurgica','unidadTerapiaIntensiva','unidadTerapiaIntensivaQuirurgicaPediatrica','unidadTerapiaIntensivaPediatrica','unidadCuidadosIntensivosNeonatales'])||calc.in(@claveServicioAdicional,['unidadCoronaria','unidadTerapiaIntensivaQuirurgica','unidadTerapiaIntensiva','unidadTerapiaIntensivaQuirurgicaPediatrica','unidadTerapiaIntensivaPediatrica','unidadCuidadosIntensivosNeonatales'])"}}
+    {{field id="tieneServicioIngreso" type="expr" value="=calc.isNotEmpty(servicioIngreso)"}}
+    {{field id="siServicioAdicional" type="expr" value="=numeroServicio=='uno'||numeroServicio=='dos'"}}
+    {{field id="tieneTerapiaIntensiva" type="expr" value="=calc.in(@claveServicioAdicional,['unidadCoronaria','unidadTerapiaIntensivaQuirurgica','unidadTerapiaIntensiva','unidadTerapiaIntensivaQuirurgicaPediatrica','unidadTerapiaIntensivaPediatrica','unidadCuidadosIntensivosNeonatales'])"}}
+    {{field id="tieneTerapiaIntermedia" type="expr" value="=calc.in(@claveServicioAdicional,['unidadTerapiaIntermedia','crecimientoDesarrollo','unidadCuidadosIntermediosNeonatales'])"}}
     {{validator type="expr" notValidIf="=procedenciaIngreso=='4'&&moment().diff(moment(fechaNacimiento), 'months')>1" message="Procedencia Ingreso Inválida"}}
     {{validator type="expr" notValidIf="=@cluesProcedencia==user.job.cluesAdscripcionNomina" message="CLUES Procedencia Inválido"}}
     {{validator type="expr" notValidIf="=calc.in(@claveServicioEgreso,['pediatria'])&&(calc.fromNowYears(fechaNacimiento)>18)" message="Servicio Egreso Incorrecto"}}
@@ -15,3 +17,7 @@
     {{validator type="expr" validIf="=!calc.in(calc.lowerCase(calc.normalize(@especifiqueProcedencia)),['consulta externa','urgencias','referido','cunero patologico','otro'])" message="Especifique Procedencia Inválida"}}
   {{/section}}
 {{/define}}
+
+
+
+

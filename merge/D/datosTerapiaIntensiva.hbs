@@ -1,0 +1,7 @@
+{{#define id="datosTerapiaIntensiva"}}
+  {{#section id="base"}}
+    {{validator type="expr" validIf="=!@diasTerapiaIntensiva||(@diasTerapiaIntensiva>=0&&@diasTerapiaIntensiva<=90)||@diasTerapiaIntensiva==99" message="Días Terapia Intensiva Inválidos"}}
+    {{validator type="expr" validIf="=!@horasTerapiaIntensiva||(@horasTerapiaIntensiva>=0&&@horasTerapiaIntensiva<=23)||@horasTerapiaIntensiva==99" message="Horas Terapia Intensiva Inválidas"}}
+    {{validator type="expr" notValidIf="@diasTerapiaIntensiva=='0'&&@horasTerapiaIntensiva<1" message="Horas Terapia Intensiva Inválidas"}}
+  {{/section}}
+{{/define}}

@@ -11,9 +11,10 @@
   {{/section}}
   {{#section id="enfermedades"}}
     {{field id="esMujer" type="expr" value="=base.esMujer"}}
-    {{field id="mostrarResultadoVph" type="expr" value="=deteccionVPH=='realizada'&&base.edadActual>=35&&base.edadActual<64"}}
-    {{field id="mostrarDeteccionCancerCuelloUterino" type="expr" value="=base.edadActual>=25&&base.edadActual<64"}}
-    {{field id="mostrarResultadoCancerUterino" type="expr" value="=deteccionCancerCuelloUterino=='realizada'&&base.edadActual>=35&&base.edadActual<64"}}
+    {{field id="edadActual" type="expr" value="=base.edadActual"}}
+    {{field id="mostrarResultadoVph" type="expr" value="=deteccionVPH=='realizada'&&edadActual>=35&&edadActual<64"}}
+    {{field id="mostrarDeteccionCancerCuelloUterino" type="expr" value="=edadActual>=25&&edadActual<64&&esMujer"}}
+    {{field id="mostrarResultadoCancerUterino" type="expr" value="=deteccionCancerCuelloUterino=='realizada'"}}
   {{/section}}
   {{#section id="otrosDatos"}}
     {{field id="esMujerIntersexual" type="expr" value="genero=='mujer'||genero=='intersexual'"}}
