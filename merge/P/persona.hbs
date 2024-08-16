@@ -9884,7 +9884,7 @@
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
   {{/action}}
 
-  {{#action id="exportarSinbaEgresos" label="Exportar SINBA - Egresos"  hide="true" type="download-text" fileName="='EGR-'+user.job.cluesAdscripcionNomina+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/complexView/sinbaLesiones.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaEgresos" label="Exportar SINBA - Egresos"  hide="true" type="download-text" fileName="='EGR-'+user.job.cluesAdscripcionNomina+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/complexView/sinbaEgresos.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
   {{/action}}
