@@ -60,7 +60,21 @@
   {{param confirmUnSaved="true"}}
 
 [.#if esHRAEI.]
-  {{#menu id="menu-principal" name="HRAEI" showUserName="true" showTurnName="true"}}
+  [.#if MCSMP014640.]
+    {{#menu id="menu-principal" name="MCSMP014640" showUserName="true" showTurnName="true"}}
+  [./if.]
+  [.#if MCSSA018354.]
+    {{#menu id="menu-principal" name="MCSSA018354" showUserName="true" showTurnName="true"}}
+  [./if.]
+  [.#if CLSSA000815.]
+    {{#menu id="menu-principal" name="CLSSA000815" showUserName="true" showTurnName="true"}}
+  [./if.]
+  [.#if DFSSA004072.]
+    {{#menu id="menu-principal" name="DFSSA004072" showUserName="true" showTurnName="true"}}
+  [./if.]
+  [.#if DFSSA005146.]
+    {{#menu id="menu-principal" name="DFSSA005146" showUserName="true" showTurnName="true"}}
+  [./if.]
 [./if.]
 [.#if esCRAE.]
   {{#menu id="menu-principal" name="CRAE" showUserName="true" showTurnName="true"}}
@@ -2417,11 +2431,8 @@ x        {{item text="Cajas" href="/_caja/cubo" newTab="true"}}
             <tbody>
               <tr>
 [.#if esHRAEI.]
-                <td style="width:15%;">
-                  <img src="https://his-imagenes.s3-accelerate.amazonaws.com/logos/salud2.png" class="banner-imagen-tamano-chica">
-                </td>
-                <td style="width:15%;">
-                  <img src="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei2.png" class="banner-logo-hospital-tamano-chica"><br>
+                <td style="width:30%;">
+                  <img src="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png">
                 </td>
   [.#if MCSMP014640.]
                 <td style="width:70%;" class="banner-texto-fijo">
@@ -2433,8 +2444,27 @@ x        {{item text="Cajas" href="/_caja/cubo" newTab="true"}}
   [.#if MCSSA018354.]
                 <td style="width:70%;" class="banner-texto-fijo">
                   Av. Mario Colin Sanchez S/N<br>
-                  Plazas de San Buenaventura, C.P. 50110, Toluca, México<br>
-                  Teléfono: (722) 917 4809, CLUES: MCSMP014640
+                  Col. La Mora. C.P. 50450, Atlacomulco, México<br>
+                  Teléfono: (712) 195 5563, CLUES: MCSSA018354
+                </td>
+  [./if.]
+  [.#if CLSSA000815.]
+                <td style="width:70%;" class="banner-texto-fijo">
+                  16 de Septiembre<br>
+                  Fraccionamiento Estrella, C.P. 27980, Parras de la Fuente, Coahuila<br>
+                  Teléfono: (842) 422 0151, CLUES: CLSSA000815
+                </td>
+  [./if.]
+  [.#if DFSSA004072.]
+                <td style="width:70%;" class="banner-texto-fijo">
+                  Calz. México-Xochimilco 101<br>
+                  Col. Huipulco, C.P. 14370, Tlalpan, Ciudad de México, CDMX<br>
+                  Teléfono: (55) 4160 5000, CLUES: DFSSA004072
+                </td>
+  [./if.]
+  [.#if DFSSA005146.]
+                <td style="width:70%;" class="banner-texto-fijo">
+                  CLUES: DFSSA005146
                 </td>
   [./if.]
 [./if.]
@@ -2454,11 +2484,8 @@ x        {{item text="Cajas" href="/_caja/cubo" newTab="true"}}
             <tbody>
               <tr>
 [.#if esHRAEI.]
-                <td style="width:15%;">
-                  <img src="https://his-imagenes.s3-accelerate.amazonaws.com/logos/salud2.png" class="banner-imagen-tamano-chica">
-                </td>
-                <td style="width:15%;">
-                  <img src="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei2.png" class="banner-logo-hospital-tamano-chica"><br>
+                <td style="width:30%;">
+                  <img src="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png">
                 </td>
   [.#if MCSMP014640.]
                 <td style="width:70%;" class="banner-texto-fijo">
@@ -2470,8 +2497,27 @@ x        {{item text="Cajas" href="/_caja/cubo" newTab="true"}}
   [.#if MCSSA018354.]
                 <td style="width:70%;" class="banner-texto-fijo">
                   Av. Mario Colin Sanchez S/N<br>
-                  Plazas de San Buenaventura, C.P. 50110, Toluca, México<br>
-                  Teléfono: (722) 917 4809, CLUES: MCSMP014640
+                  Col. La Mora. C.P. 50450, Atlacomulco, México<br>
+                  Teléfono: (712) 195 5563, CLUES: MCSSA018354
+                </td>
+  [./if.]
+  [.#if CLSSA000815.]
+                <td style="width:70%;" class="banner-texto-fijo">
+                  16 de Septiembre<br>
+                  Fraccionamiento Estrella, C.P. 27980, Parras de la Fuente, Coahuila<br>
+                  Teléfono: (842) 422 0151, CLUES: CLSSA000815
+                </td>
+  [./if.]
+  [.#if DFSSA004072.]
+                <td style="width:70%;" class="banner-texto-fijo">
+                  Calz. México-Xochimilco 101<br>
+                  Col. Huipulco, C.P. 14370, Tlalpan, Ciudad de México, CDMX<br>
+                  Teléfono: (55) 4160 5000, CLUES: DFSSA004072
+                </td>
+  [./if.]
+  [.#if DFSSA005146.]
+                <td style="width:70%;" class="banner-texto-fijo">
+                  CLUES: DFSSA005146
                 </td>
   [./if.]
 [./if.]
@@ -2494,26 +2540,49 @@ x        {{item text="Cajas" href="/_caja/cubo" newTab="true"}}
             <tbody>
               <tr>
 [.#if esHRAEI.]
-                  <td style="width:30%;">
-                    <img src="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png">
-                  </td>
+                <td style="width:30%;">
+                  <img src="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png">
+                </td>
   [.#if MCSMP014640.]
-                  <td style="width:70%;" class="banner-texto-fijo">
-                    San Juan 201<br>
-                    Plazas de San Buenaventura, 50110<br>
-                    Toluca, Méx.<br>
-                    Teléfono: (722) 917 4809<br>
-                    CLUES: MCSMP014640<br>
-                  </td>
+                <td style="width:70%;" class="banner-texto-fijo">
+                  San Juan 201<br>
+                  Plazas de San Buenaventura, 50110<br>
+                  Toluca, Méx.<br>
+                  Teléfono: (722) 917 4809<br>
+                  CLUES: MCSMP014640<br>
+                </td>
   [./if.]
   [.#if MCSSA018354.]
-                  <td style="width:70%;" class="banner-texto-fijo">
-                    Av. Mario Colin Sanchez S/N<br>
-                    La Mora, 50450<br>
-                    Atlacomulco, Méx.<br>
-                    Teléfono: (712) 195 5563<br>
-                    CLUES: MCSSA018354<br>
-                  </td>
+                <td style="width:70%;" class="banner-texto-fijo">
+                  Av. Mario Colin Sanchez S/N<br>
+                  La Mora, 50450<br>
+                  Atlacomulco, Méx.<br>
+                  Teléfono: (712) 195 5563<br>
+                  CLUES: MCSSA018354<br>
+                </td>
+  [./if.]
+  [.#if CLSSA000815.]
+                <td style="width:70%;" class="banner-texto-fijo">
+                  16 de Septiembre<br>
+                  Fraccionamiento Estrella, 27980<br>
+                  Parras de la Fuente, Coah.<br>
+                  Teléfono: (842) 422 0151<br>
+                  CLUES: CLSSA000815<br>
+                </td>
+  [./if.]
+  [.#if DFSSA004072.]
+                <td style="width:70%;" class="banner-texto-fijo">
+                  Calz. México-Xochimilco 101<br>
+                  Col. Huipulco, 14370<br>
+                  Tlalpan, CDMX<br>
+                  Teléfono: (55) 4160 5000<br>
+                  CLUES: DFSSA004072<br>
+                </td>
+  [./if.]
+  [.#if DFSSA005146.]
+                <td style="width:70%;" class="banner-texto-fijo">
+                  CLUES: DFSSA005146
+                </td>
   [./if.]
 [./if.]
               </tr>
@@ -2587,8 +2656,7 @@ x        {{item text="Cajas" href="/_caja/cubo" newTab="true"}}
               <tr>
 [.#if esHRAEI.]
                 <td style="width:45%;">
-                  <img src="https://his-imagenes.s3-accelerate.amazonaws.com/logos/salud2.png" class="banner-imagen-tamano-chica">
-                  <img src="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei2.png" class="banner-logo-hospital-tamano-chica"><br>
+                  <img src="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png">
                 </td>
   [.#if MCSMP014640.]
                 <td style="width:55%;" class="banner-texto-fijo">
@@ -2606,6 +2674,29 @@ x        {{item text="Cajas" href="/_caja/cubo" newTab="true"}}
                   50450, Atlacomulco, Méx.<br>
                   Teléfono: (712) 195 5563<br>
                   CLUES: MCSSA018354<br>
+                </td>
+  [./if.]
+  [.#if CLSSA000815.]
+                <td style="width:70%;" class="banner-texto-fijo">
+                  16 de Septiembre<br>
+                  Fraccionamiento Estrella<br>
+                  27980, Parras de la Fuente, Coah.<br>
+                  Teléfono: (842) 422 0151<br>
+                  CLUES: CLSSA000815<br>
+                </td>
+  [./if.]
+  [.#if DFSSA004072.]
+                <td style="width:70%;" class="banner-texto-fijo">
+                  Calz. México-Xochimilco 101<br>
+                  Col. Huipulco<br>
+                  14370, Tlalpan, CDMX<br>
+                  Teléfono: (55) 4160 5000<br>
+                  CLUES: DFSSA004072<br>
+                </td>
+  [./if.]
+  [.#if DFSSA005146.]
+                <td style="width:70%;" class="banner-texto-fijo">
+                  CLUES: DFSSA005146
                 </td>
   [./if.]
 [./if.]
@@ -2698,25 +2789,41 @@ x        {{item text="Cajas" href="/_caja/cubo" newTab="true"}}
                 </td>
 [.else.]
   [.#if esHRAEI.]
-                  <td style="width:15%;">
-                    <img src="https://his-imagenes.s3-accelerate.amazonaws.com/logos/salud2.png" class="banner-imagen-tamano-chica">
-                  </td>
-                  <td style="width:15%;">
-                    <img src="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei2.png" class="banner-logo-hospital-tamano-chica"><br>
-                  </td>
+                <td style="width:30%;">
+                  <img src="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png">
+                </td>
     [.#if MCSMP014640.]
-                  <td style="width:70%;" class="banner-texto-fijo">
-                    San Juan 201<br>
-                    Plazas de San Buenaventura, C.P. 50110, Toluca, México<br>
-                    Teléfono: (722) 917 4809, CLUES: MCSMP014640
-                  </td>
+                <td style="width:70%;" class="banner-texto-fijo">
+                  San Juan 201<br>
+                  Plazas de San Buenaventura, C.P. 50110, Toluca, México<br>
+                  Teléfono: (722) 917 4809, CLUES: MCSMP014640
+                </td>
     [./if.]
     [.#if MCSSA018354.]
-                  <td style="width:70%;" class="banner-texto-fijo">
-                    Av. Mario Colin Sanchez S/N<br>
-                    Plazas de San Buenaventura, C.P. 50110, Toluca, México<br>
-                    Teléfono: (722) 917 4809, CLUES: MCSMP014640
-                  </td>
+                <td style="width:70%;" class="banner-texto-fijo">
+                  Av. Mario Colin Sanchez S/N<br>
+                  Col. La Mora. C.P. 50450, Atlacomulco, México<br>
+                  Teléfono: (712) 195 5563, CLUES: MCSSA018354
+                </td>
+    [./if.]
+    [.#if CLSSA000815.]
+                <td style="width:70%;" class="banner-texto-fijo">
+                  16 de Septiembre<br>
+                  Fraccionamiento Estrella, C.P. 27980, Parras de la Fuente, Coahuila<br>
+                  Teléfono: (842) 422 0151, CLUES: CLSSA000815
+                </td>
+    [./if.]
+    [.#if DFSSA004072.]
+                <td style="width:70%;" class="banner-texto-fijo">
+                  Calz. México-Xochimilco 101<br>
+                  Col. Huipulco, C.P. 14370, Tlalpan, Ciudad de México, CDMX<br>
+                  Teléfono: (55) 4160 5000, CLUES: DFSSA004072
+                </td>
+    [./if.]
+    [.#if DFSSA005146.]
+                <td style="width:70%;" class="banner-texto-fijo">
+                  CLUES: DFSSA005146
+                </td>
     [./if.]
   [./if.]
 [./if.]
@@ -2765,8 +2872,7 @@ x        {{item text="Cajas" href="/_caja/cubo" newTab="true"}}
               <tr>
 [.#if esHRAEI.]
                 <td style="width:30%;">
-                  <img src="https://his-imagenes.s3-accelerate.amazonaws.com/logos/salud2.png" class="banner-imagen-tamano-chica">
-                  <img src="https://his-imagenes.s3-accelerate.amazonaws.com/logos/hraei2.png" class="banner-logo-hospital-tamano-chica"><br>
+                  <img src="https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png">
                 </td>
   [.#if MCSMP014640.]
                 <td style="width:70%;" class="banner-texto-fijo">
@@ -2784,6 +2890,29 @@ x        {{item text="Cajas" href="/_caja/cubo" newTab="true"}}
                   Atlacomulco, Méx.<br>
                   Teléfono: (712) 195 5563<br>
                   CLUES: MCSSA018354<br>
+                </td>
+  [./if.]
+  [.#if CLSSA000815.]
+                <td style="width:70%;" class="banner-texto-fijo">
+                  16 de Septiembre<br>
+                  Fraccionamiento Estrella, 27980<br>
+                  Parras de la Fuente, Coah.<br>
+                  Teléfono: (842) 422 0151<br>
+                  CLUES: CLSSA000815<br>
+                </td>
+  [./if.]
+  [.#if DFSSA004072.]
+                <td style="width:70%;" class="banner-texto-fijo">
+                  Calz. México-Xochimilco 101<br>
+                  Col. Huipulco, 14370<br>
+                  Tlalpan, CDMX<br>
+                  Teléfono: (55) 4160 5000<br>
+                  CLUES: DFSSA004072<br>
+                </td>
+  [./if.]
+  [.#if DFSSA005146.]
+                <td style="width:70%;" class="banner-texto-fijo">
+                  CLUES: DFSSA005146
                 </td>
   [./if.]
 [./if.]

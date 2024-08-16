@@ -3,7 +3,7 @@
     {{field id="esMujer" type="expr" value="=base.esMujer||_params.mainDoc.base.esMujer"}}
     {{field id="esHombre" type="expr" value="!esMujer"}}
     {{field id="esIntersexual" type="expr" value="=genero=='intersexual'"}}
-    {{field id="noAplica" type="expr" value="=revisionColocacionMetodoQuirurgico=='noAplica'&&((esMujer&&(edad>=9&&edad<=59)))||((esHombre||esIntersexual)&&(edad>=9&&edad<=70))"}}
+    {{field id="noAplica" type="expr" value="=revisionColocacionMetodoQuirurgico=='noAplica'&&esMujer&&edad>=9&&edad<=59"}}
     {{validator type="expr" validIf="=@numeroPerservativosEntregados>=0&&@numeroPerservativosEntregados<=50" message="Error en Preservativos Entregados"}}
     {{validator type="expr" validIf="=@numeroPerservativosEntregadosFemeninos>=0&&@numeroPerservativosEntregadosFemeninos<=50" message="Error en Preservativos Entregados Femeninos"}}
     {{validator type="expr" notValidIf="=revisionColocacionMetodoQuirurgico=='intervencionQx'&&altaAzoospermia=='si'" message="Alta Azoospermia Inválida"}}

@@ -3,6 +3,9 @@
     {{field id="esMujerMayor9" type="expr" value="=esMujer&&(calc.fromNowYears(persona.fechaNacimiento)>=9||calc.fromNowYears(persona.fechaNacimiento<=59))"}}
     {{field id="esFertil" type="expr" value="=mujerFertil=='embarazo'||mujerFertil=='puerperio'"}}
     {{field id="tieneClues" type="expr" value="=usuarioReferido=='unidadMedica'"}}
+    {{#field id="mujerFertil"}}
+      {{onChange clearFields="edadGestacional"}}
+    {{/field}}
   	{{#onChange}}
   		{{#update}}
   			{{set cantidadAfectacionesTratadas="=otrosDiagnosticos.length"}}
@@ -15,7 +18,7 @@
     {{validator type="expr" validIf="=calc.isEmpty(@edadGestacional)||(calc.number(@edadGestacional)>=1&&calc.number(@edadGestacional)<=45)||(calc.number(@edadGestacional)==99)" message="Error en la Edad Gestacional"}}
     {{validator type="expr" validIf="=calc.isEmpty(otrosDiagnosticos)||otrosDiagnosticos.length<7" message="Máximo 6 Afecciones Tratadas"}}
     {{validator type="expr" notValidIf="=!calc.isEmpty(atencionMedicaLesion.base.fechaAtencion)&&!calc.isEmpty(eventoLesion.base.fechaOcurreEvento)&&moment(atencionMedicaLesion.base.fechaAtencion).isBefore(eventoLesion.base.fechaOcurreEvento)" message="Fecha Atención Médica Inválida"}}
-    {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')))" message="Tiene Diagnósticos Duplicados"}}
+    {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')), @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico)" message="Tiene Diagnósticos Duplicados"}}
     {{validator type="expr" notValidIf="=calc.in('DEFUNCION', calc.mergeArrays(afeccionPrincipal.base.validoSeul, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.validoSeul, calc.pluckRef(@otrosDiagnosticos, 'base.validoSeul')))&&(calc.getRef(@atencionMedicaLesion, 'base.consecuenciaLesion')!='defuncion'||calc.getRef(@destinoDespuesLesion, 'base.destinoAtencionLesion')!='defuncion')" message="DEFUNCIÓN Mal Configurada"}}
   {{/section}}
 
@@ -23,8 +26,36 @@
     {{field id="tieneTrata" type="expr" value="=tipoIntencionalidad!='trataPersonas'"}}
     {{field id="ocultarCampos" type="expr" value="=calc.in(tipoIntencionalidad,['violenciaFamiliar','violenciaNoFamiliar'])"}}
     {{field id="tieneOtro" type="expr" value="=agenteLesion==='otra'"}}
-    {{field id="tieneViolenciaNoFamiliar" type="expr" value="=tipoIntencionalidad=='violenciaFamiliar'"}}
+    {{field id="tieneViolenciaNoFamiliar" type="expr" value="=tipoIntencionalidad=='violenciaFamiliar'&&numeroAgresores=='unico'"}}
     {{field id="masUnoAgresor" type="expr"  value="=numeroAgresores=='unico'"}}
+    {{field id="esAccidente" type="expr" value="=agenteLesion=='vehiculoMotor'"}}
+    {{#field id="tipoIntencionalidad"}}
+      {{onChange clearFields="agenteLesion,otroAgente,accidenteLesion,eventoRepetido,numeroAgresores,tipoParentesco,genero,edadAgresor,agresorEfectoTipoDroga,tipoDroga"}}
+    {{/field}}
+    {{#field id="agenteLesion"}}
+      {{onChange clearFields="otroAgente,accidenteLesion,eventoRepetido,numeroAgresores,tipoParentesco,genero,edadAgresor,agresorEfectoTipoDroga,tipoDroga"}}
+    {{/field}}
+    {{#field id="otroAgente"}}
+      {{onChange clearFields="accidenteLesion,eventoRepetido,numeroAgresores,tipoParentesco,genero,edadAgresor,agresorEfectoTipoDroga,tipoDroga"}}
+    {{/field}}
+    {{#field id="eventoRepetido"}}
+      {{onChange clearFields="numeroAgresores,tipoParentesco,genero,edadAgresor,agresorEfectoTipoDroga,tipoDroga"}}
+    {{/field}}
+    {{#field id="numeroAgresores"}}
+      {{onChange clearFields="tipoParentesco,genero,edadAgresor,agresorEfectoTipoDroga,tipoDroga"}}
+    {{/field}}
+    {{#field id="tipoParentesco"}}
+      {{onChange clearFields="genero,edadAgresor,agresorEfectoTipoDroga,tipoDroga"}}
+    {{/field}}
+    {{#field id="genero"}}
+      {{onChange clearFields="edadAgresor,agresorEfectoTipoDroga,tipoDroga"}}
+    {{/field}}
+    {{#field id="edadAgresor"}}
+      {{onChange clearFields="agresorEfectoTipoDroga,tipoDroga"}}
+    {{/field}}
+    {{#field id="agresorEfectoTipoDroga"}}
+      {{onChange clearFields="tipoDroga"}}
+    {{/field}}
     {{validator type="expr" notValidIf="=tipoParentesco=='conyugue'&&edadAgresor==0" message="Error en la edad del agresor"}}
     {{validator type="expr" validIf="=!@tipoDroga||@tipoDroga.length<4" message="Máximo 3 Drogas"}}
     {{validator type="expr" notValidIf="=@tipoParentesco=='conyugue'&&@edadAgresor==''" message="Edad del Agresor Requerida"}}

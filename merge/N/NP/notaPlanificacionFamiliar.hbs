@@ -4,6 +4,7 @@
     {{validator type="expr" notValidIf="=catServicios=='SERVICIO AMIGABLE'&&(edadActual<10||edadActual>19)" message="Servicio Atención Inválido"}}
     {{validator type="expr" notValidIf="=catServicios=='SERVICIO AMIGABLE'&&calc.isEmpty(user.job.cluesServicioAmigable)" message="CLUES Sin Servicio Amigable"}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')),'R69X')" message="Tiene Diagnósticos Duplicados"}}
+    {{validator type="expr" notValidIf="=calc.isEmpty(@afeccionPrincipal)&&calc.isFalse(@orientacionConsejeria.base.orientacionPlanificacionFamiliar)&&calc.isFalse(@orientacionConsejeria.base.orientacionIts)&&calc.isFalse(@orientacionConsejeria.base.orientacionPrevencionEmbarazo)&&calc.isFalse(@orientacionConsejeria.base.orientacionSaludSexual)&&calc.isEmpty(@metodos.base.revisionColocacionMetodoQuirurgico)" message="Se debe registrar Afección Principal, Orientación Consejería y/o Metodos"}}
   {{/section}}
   {{#section id="metodos"}}
     {{field id="esWoman" type="expr" value="=persona.esMujer"}}

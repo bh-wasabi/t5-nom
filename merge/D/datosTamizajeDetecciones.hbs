@@ -9,5 +9,12 @@
     {{field id="esMayor10" type="expr" value="=calc.fromNowYears(fechaNacimiento)>=10"}}
     {{field id="esMayor50" type="expr" value="=calc.fromNowYears(fechaNacimiento)>=50"}}
     {{field id="esMayor60" type="expr" value="=calc.fromNowYears(fechaNacimiento)>=60"}}
+    {{field id="noDepresion" type="expr" value="=calc.in(@tamizajeTristeDeprimido,['no','noAplica'])"}}
+    {{#field id="tamizajeTristeDeprimido"}}
+      {{#onChange clearFields="deteccionDepresion"}}
+        {{set deteccionDepresion="=calc.in(@tamizajeTristeDeprimido,['no','noAplica'])?'seDesconoce':''"}}
+      {{/onChange}}
+    {{/field}}
+    {{validator type="expr" notValidIf="=noDepresion&&@deteccionDepresion!='seDesconoce'" message="Detección Depresión Inválido"}}
   {{/section}}
 {{/define}}

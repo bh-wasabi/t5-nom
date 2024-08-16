@@ -4,16 +4,22 @@
     {{field id="teleconsulta" type="expr" value="=(@solicitaTeleconsulta=='si'&&calc.isNotEmpty(estudiosTeleconsulta))?'Diferida':''"}}
     {{field id="noContra" type="expr" value="=contrarreferido=='no'"}}
     {{#field id="solicitaTelemedicina"}}
-      {{#onChange}}
-        {{!-- {{onchange clearFields="modalidad"}} --}}
+      {{#onChange clearFields="solicitaTeleconsulta,estudiosTeleconsulta,modalidad"}}
         {{set modalidad="=@solicitaTelemedicina=='si'?'En Tiempo Real':''"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="solicitaTeleconsulta"}}
+      {{#onChange}}
+        {{set modalidad="=@solicitaTeleconsulta=='si'?'Tiempo Real':calc.isNotEmpty(estudiosTeleconsulta)?'Diferida':''"}}
       {{/onChange}}
     {{/field}}
     {{#field id="estudiosTeleconsulta"}}
       {{#onChange}}
-        {{!-- {{onchange clearFields="modalidad"}} --}}
-        {{set modalidad="=(@solicitaTeleconsulta=='si'&&calc.isNotEmpty(estudiosTeleconsulta))?'Diferida':''"}}
+        {{set modalidad="=@solicitaTeleconsulta=='si'?'Tiempo Real':calc.isNotEmpty(estudiosTeleconsulta)?'Diferida':''"}}
       {{/onChange}}
+    {{/field}}
+    {{#field id="contrarreferido"}}
+      {{onChange clearFields="referidoPor"}}
     {{/field}}
   {{/section}}
 {{/define}}
