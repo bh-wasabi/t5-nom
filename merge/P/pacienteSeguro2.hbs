@@ -6,7 +6,7 @@
     {{field id="tieneOtro" type="expr" value="=calc.in(dependencia,['otra'])&&user.job.cluesIdEntidad=='09'"}}
     {{field id="ningunaDependencia" type="expr" value="=calc.in(@dependencia,['otra','imss','issste','pemex','sedena','semar','imssBienestar','issfam','opdImssBienestar'])"}}
   	{{#field id="tipoPrograma"}}
-      {{#onChange}}
+      {{#onChange clearFields="datosAfiliacion"}}
       	{{set listaPrecios="=fn('listaPreciosSeguro', @tipoPrograma, @tipoBeneficiario)"}}
         {{set vigencia="=vigencia||moment().add(3,'months').format('YYYY-MM-DD')"}}
       {{/onChange}}

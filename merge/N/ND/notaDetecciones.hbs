@@ -15,7 +15,7 @@
     {{field id="mostrarResultadoVph" type="expr" value="=deteccionVPH=='realizada'&&edadActual>=35&&edadActual<64"}}
     {{field id="mostrarDeteccionCancerCuelloUterino" type="expr" value="=edadActual>=25&&edadActual<64&&esMujer"}}
     {{field id="mostrarResultadoCancerUterino" type="expr" value="=edadActual>=25&&edadActual<64&&esMujer"}}
-    {{validator type="expr" notValidIf="=calc.in(@deteccionCancerCuelloUterino,['seDesconoce','noRealizada'])&&calc.in(@resultadoCancerCuelloUterino,['positivo','negativo'])" message="Resultado Cáncer Cuello Uterino Inválido"}}
+    {{validator type="expr" notValidIf="=calc.in(@deteccionCancerCuelloUterino,['realizada','noRealizada'])&&calc.in(@resultadoCancerCuelloUterino,['positivo','negativo'])" message="Resultado Cáncer Cuello Uterino Inválido"}}
   {{/section}}
   {{#section id="otrosDatos"}}
     {{field id="esMujerIntersexual" type="expr" value="genero=='mujer'||genero=='intersexual'"}}

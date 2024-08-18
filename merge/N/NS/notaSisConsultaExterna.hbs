@@ -5,6 +5,9 @@
     {{!-- Tarea 5660 --}}
     {{field id="esUneme" type="expr" value="=calc.in(user.job.cluesTipoAbreviacion,['T','UNE'])&&calc.in(user.job.cluesSubAbreviacion,['T02','UNE02','UNE04','UNE11'])"}}
     {{field id="saludMentalAdiccionesDisponible" type="expr" value="=calc.in(user.others.tipoPersonalNom,['medicoPasante','medicoGeneral','medicoResidente','medicoEspecialista','homeopata','medicoGeneralSaludMental','medicoSaludMental'])"}}
+    {{#field id="tieneAlgunaAlergia"}}
+      {{onChange clearFields="alergia"}}
+    {{/field}}
     {{validator type="expr" validIf="=moment(fechaConsulta).isAfter(moment(fechaNacimiento))" message="Fecha Consulta Inválida"}}
     {{!-- Tarea 5660 --}}
   {{/section}}
@@ -14,6 +17,9 @@
     {{field id="esPregestacional" type="expr" value="=condicion=='pregestacional'"}}
     {{field id="esPuerpera" type="expr" value="=condicion=='puerpera'"}}
     {{field id="siRiesgo" type="expr" value="=atencionPregestacional=='subsecuente'||atencionPregestacional=='primeraVez'"}}
+    {{#field id="condicion"}}
+      {{onChange clearFields="datosEmbarazoActual,datosEmbarazoActualAvanzados"}}
+    {{/field}}
     {{#field id="fechaUltimaMenstruacion"}}
       {{#onChange}}
         {{set fechaProbableParto="=fn('fechaProbableParto', fechaUltimaMenstruacion)"}}
@@ -47,6 +53,9 @@
     {{field id="esContraEsMayor60" type="expr" value="=@contrarreferido=='no'&&esMayor60"}}
     {{field id="esContraEsPsicologo" type="expr" value="=@contrarreferido=='no'&&esPsicologo"}}
     {{field id="noEsContrarreferido" type="expr" value="=@contrarreferido=='no'&&!esMenor17&&!esPsicologo"}}
+    {{#field id="consultaNinoSano"}}
+      {{onChange clearFields="saludNino,cancerMenores,enfermedadesDiarreicasAgudas,infeccionesRespiratoriasAgudas"}}
+    {{/field}}
     {{#field id="telemedicina"}}
       {{#onChange clearFields="teleconsulta,estudiosTeleconsulta,modalidad"}}
         {{set modalidad="=@telemedicina=='si'?'En Tiempo Real':''"}}

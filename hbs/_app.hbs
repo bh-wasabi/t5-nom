@@ -137,6 +137,10 @@
           {{item text="Últimos 15 días" name="Bitácora General - Notas (Últimos 15 días)" href="/nota/15"}}
           {{item text="Últimos 30 días" name="Bitácora General - Notas (Últimos 30 días)" href="/nota/30" beginGroup="true"}}
           {{item text="Últimos 60 días" name="Bitácora General - Notas (Últimos 60 días)" href="/nota/60"}}
+          {{#item text="por Rango Fechas y Horas" name="Bitácora General - Notas" href="/nota/rango"}}
+            {{ask field="desde" type="datetime" label="Desde" required="true" value="=moment().add(-3,'hour').format()"}}
+            {{ask field="hasta" type="datetime" label="Hasta" required="true" value="=moment().format()"}}
+          {{/item}}
           {{#item text="por Tipo Nota" beginGroup="true"}}
             {{item text="Indicación" name="Bitácora General - Indicación" href="/nota/lista?tipo=notaIndicacion"}}
             {{item text="Solicitud Material o Insumo" name="Bitácora General - Solicitud Material o Insumo" href="/nota/lista?tipo=notaSolicitudMaterial"}}

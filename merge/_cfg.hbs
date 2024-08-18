@@ -2434,6 +2434,14 @@
     {{when condition="=moment().year().toString().slice(2,4)-certificado.slice(0,2)>4" return="true"}}
     {{when condition="=certificado.slice(0,2)-moment().year().toString().slice(2,4)>1" return="true"}}
     {{when condition="=certificado.slice(2,3)!='0'&&!calc.in(certificado.slice(0,2),['21','22'])" return="true"}}
+    {{when condition="=!calc.in(certificado.slice(2,3),['0','1','2'])&&calc.in(certificado.slice(0,2),['21','22'])" return="true"}}
+    {{default return="false"}}
+  {{/function}}
+
+  {{#function id="validaCertificadoNacimiento"}}
+    {{define type="param" id="certificado"}}
+    {{when condition="=certificado.length!=9&&certificado.length!=14" return="true"}}
+    {{when condition="=certificado.length==14&&calc.upperCase(certificado.slice(5,6))!='E'" return="true"}}
     {{default return="false"}}
   {{/function}}
 
@@ -10452,9 +10460,9 @@
 		{{#if tipoProcedimientoAborto}}<br>Tipo Procedimiento Aborto: {{_tipoProcedimientoAborto}}{{/if}}
 		{{#if condicionNacidoVivo}}<br>Condición Nacido Vivo: {{_condicionNacidoVivo}}{{/if}}
 		{{#if siVivo}}{{#if folioCertificadoNacimiento}}<br>Folio Certificado Nacimiento: {{folioCertificadoNacimiento}}{{/if}}{{/if}}
-		{{#if siMuerto}}{{#if folioCertificadoDefuncion}}<br>Folio Certificado Defunción: {{folioCertificadoDefuncion}}{{/if}}{{/if}}
+		{{#if siCondicionMuerto}}{{#if folioCertificadoDefuncion}}<br>Folio Certificado Defunción: {{folioCertificadoDefuncion}}{{/if}}{{/if}}
 		{{#if apgar}}<br>Apgar 5 Minutos: {{apgar}}{{/if}}
-		{{#if reanimacionNeonatal}}<br>Reanimación Neonatal: {{reanimacionNeonatal}}{{/if}}
+		{{#if reanimacionNeonatal}}<br>Reanimación Neonatal: {{_reanimacionNeonatal}}{{/if}}
 		{{#if alojamientoConjunto}}<br>Alojamiento Conjunto: {{_alojamientoConjunto}}{{/if}}
 		{{#if lactanciaExclusiva}}<br>Lactancia Exclusiva: {{_lactanciaExclusiva}}{{/if}}
 	{{/template}}

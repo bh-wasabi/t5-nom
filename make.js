@@ -51,7 +51,7 @@ params = '&esHRAEI=true&esHIS=true&n3=true&MCSMP014640=true';
 
 // MCSSA018354
 // var headers = ['MATERNIDAD ATLACOMULCO','Av. Mario Colin Sanchez S/N','Col. La Mora. C.P. 50450, Atlacomulco, México','Teléfono: (712) 195 5563, CLUES: MCSSA018354']
-// params = '&esHRAEI=true&esHIS=true&n3=true&MCSSA018354';
+// params = '&esHRAEI=true&esHIS=true&n3=true&MCSSA018354=true';
 
 // CLSSA000815
 // var headers = ['HOSPITAL INTEGRAL PARRAS DE LA FUENTE','16 de Septiembre','Fraccionamiento Estrella, C.P. 27980, Parras de la Fuente, Coahuila','Teléfono: (842) 422 0151, CLUES: CLSSA000815']

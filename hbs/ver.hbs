@@ -46,6 +46,7 @@
   {{#view id="cie10seul"}}
     {{editor display="nombre"}}
     {{#search index="cie10-23" type="_doc" filterParamsOnlySearch="true"}}
+      {{param NUM_CARACTERES="4"}}
       {{param RUBRICA_TYPE="='NOT B'"}}
       {{param AF_PRIN="=calc.in(_type, ['notaUrgencias','notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaEgresos','notaTempEgresos','notaSeulEgreso'])&&esPrincipal?'SI':null"}}
       {{param CLAVE_CAPITULO="=calc.in(_type, ['notaUrgencias','notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaEgresos','notaTempEgresos','notaSeulEgreso'])&&esOtro?'NOT XX':null"}}
@@ -56,6 +57,7 @@
   {{#view id="cie10causa"}}
     {{editor display="nombre"}}
     {{#search index="cie10-23" type="_doc" filterParamsOnlySearch="true"}}
+      {{param NUM_CARACTERES="4"}}
       {{param CLAVE_CAPITULO="='XX'"}}
     {{/search}}
   {{/view}}  

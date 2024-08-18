@@ -1,13 +1,21 @@
 {{#define id="datosServiciosSeulEgreso"}}
   {{#section id="base"}}
-    {{field id="esNormal" type="expr" value="=tipoServicioOtorgado=='normal'"}}
+    {{field id="tieneServicioIngreso" type="expr" value="=tipoServicioOtorgado=='normal'"}}
     {{field id="siClaveServicio" type="expr" value="=numeroServicio=='uno'"}}
     {{field id="siOtraProcedencia" type="expr" value="=procedenciaIngreso=='5'"}}
     {{field id="siReferido" type="expr" value="=procedenciaIngreso=='3'"}}
-    {{field id="tieneServicioIngreso" type="expr" value="=calc.isNotEmpty(servicioIngreso)"}}
     {{field id="siServicioAdicional" type="expr" value="=numeroServicio=='uno'||numeroServicio=='dos'"}}
     {{field id="tieneTerapiaIntensiva" type="expr" value="=calc.in(@claveServicioAdicional,['unidadCoronaria','unidadTerapiaIntensivaQuirurgica','unidadTerapiaIntensiva','unidadTerapiaIntensivaQuirurgicaPediatrica','unidadTerapiaIntensivaPediatrica','unidadCuidadosIntensivosNeonatales'])"}}
     {{field id="tieneTerapiaIntermedia" type="expr" value="=calc.in(@claveServicioAdicional,['unidadTerapiaIntermedia','crecimientoDesarrollo','unidadCuidadosIntermediosNeonatales'])"}}
+    {{#field id="tipoServicioOtorgado"}}
+      {{onChange clearFields="numeroServicio,claveServicioAdicional,terapiaIntensiva,terapiaIntermedia"}}
+    {{/field}}
+    {{#field id="claveServicioAdicional"}}
+      {{onChange clearFields="terapiaIntensiva,terapiaIntermedia"}}
+    {{/field}}
+    {{#field id="procedenciaIngreso"}}
+      {{onChange clearFields="especifiqueProcedencia,cluesProcedencia"}}
+    {{/field}}
     {{validator type="expr" notValidIf="=procedenciaIngreso=='4'&&moment().diff(moment(fechaNacimiento), 'months')>1" message="Procedencia Ingreso Inválida"}}
     {{validator type="expr" notValidIf="=@cluesProcedencia==user.job.cluesAdscripcionNomina" message="CLUES Procedencia Inválido"}}
     {{validator type="expr" notValidIf="=calc.in(@claveServicioEgreso,['pediatria'])&&(calc.fromNowYears(fechaNacimiento)>18)" message="Servicio Egreso Incorrecto"}}

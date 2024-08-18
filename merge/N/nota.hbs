@@ -377,7 +377,9 @@
       {{search field="_created.date" type="date"}}
       {{search field="_created.folio" type="number"}}
       {{search field="_created._user"}}
-      {{filter field="_created.date" gt="=moment().add(-dias,'d').format('YYYY-MM-DD')"}}
+      {{filter condition="=dias" field="_created.date" gt="=moment().add(-dias,'d').format('YYYY-MM-DD')"}}
+      {{filter condition="=desde" field="_created.date" gte="=moment(desde).format()"}}
+      {{filter condition="=hasta" field="_created.date" lt="=moment(hasta).add(1,'day').format()"}}
 [.#if esSIC.]            
       {{filter field="_created.service" in="=(user.service||[]).concat('usuario')"}}      {{!-- para que se vean las notas que se generan fuera del servicio --}}
 [./if.]      
@@ -887,6 +889,9 @@
   {{#browser id="60" view="porDias" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green"}}
     {{list itemTemplate="persona" allowSearch="true" allowRefresh="true"}}
     {{param dias="60"}}
+  {{/browser}}
+  {{#browser id="rango" view="porDias" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green"}}
+    {{list itemTemplate="persona" allowSearch="true" allowRefresh="true"}}
   {{/browser}}
   {{!-- {{#browser id="90" view="porDias" showDoc="true" docOrientation="vertical" docPosition="75%" zoom="80%" color="green"}}
     {{list itemTemplate="persona" allowSearch="true" allowRefresh="true"}}
