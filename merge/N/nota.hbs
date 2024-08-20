@@ -815,6 +815,16 @@
     {{/pipeline}}  
   {{/view}}
 
+  {{#view id="ultima"}}
+    {{#find limit="1"}}
+      {{include field="_name"}}
+      {{sort field="_id" direction="asc"}}
+      {{filter field="_isAffected" eq="true"}}
+      {{filter field="_type" in="notaPlanificacionFamiliar,notaSisConsultaExterna,notaSaludBucal,notaSaludMental,notaDetecciones"}}
+      {{filter condition="=persona" field="persona.id" eq="=persona"}}
+    {{/find}}
+  {{/view}}
+
   {{!-- {{#view id="totalDefunciones"}}
     {{#pipeline}}
       {{filter field="_created.date" gte="=calc.fromYearMonth(ejercicio,periodo)" required="true"}}

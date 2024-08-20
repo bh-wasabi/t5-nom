@@ -2641,15 +2641,12 @@
     {{#if comentarios}}<br>{{comentarios}}{{/if}}
   {{/template}}
 
-  {{#template id="grupoEtnico"}}
-    {{#if esIndigena}}
-      {{_grupoEtnico}}<br>{{_lenguasIndigenas}}
-    {{else}}
-      {{!-- Tarea 3092 - Bloque modificado --}}
-      {{_indigena}}
-      {{!-- Tarea 3092 - Bloque modificado --}}
-    {{/if}}
-  {{/template}}
+	{{#template id="grupoEtnico"}}
+		<br>Se Considera Indígena: {{_indigena}}
+		{{#if esIndigena}}<br>Grupo Étnico: {{_grupoEtnico}}{{/if}}
+		<br>Habla Lengua Indígena: {{_hablaLenguaIndigena}}
+		{{#if siHablaLenguaIndigena}}<br>Lenguas Indígenas: {{_lenguasIndigenas}}{{/if}}
+	{{/template}}
 
   {{#template id="datosVacunacion"}}
     {{#if tieneEsquemaVacunacionCompleto}}

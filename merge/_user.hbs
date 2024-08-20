@@ -38,10 +38,10 @@
   {{action id="reporteListaUsuarios" hide="true" type="quickReport" source="_user" view="listaUsuarios"}}
   
   {{!-- Modificar Bloque - Tarea 5604 --}}
-  {{#action id="sugerirCurp" hide="true" type="update"}}
+  {{#action id="sugerirCurp" hide="true" type="update" error="=fn('validaSugerirCurp',base.nombres,prestadorServicios.fechaNacimiento,prestadorServicios.generoCurp,prestadorServicios.entidadNacimiento)"}}
     {{#update section="prestadorServicios"}}
-      {{set condition="=prestadorServicios.paisNacimiento=='MX'" clave="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, prestadorServicios.fechaNacimiento)"}}
-      {{set condition="=prestadorServicios.paisNacimiento!='MX'" clave="='XXXX999999XXXXXX99'"}}
+      {{set condition="=prestadorServicios.paisNacimiento=='MX'" clave="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'), 16)"}}
+      {{set condition="=prestadorServicios.paisNacimiento!='MX'" clave="='XXXX999999XXXXXX'"}}
     {{/update}}
   {{/action}}
   {{!-- Tarea 5604 --}}
@@ -227,6 +227,7 @@
     {{validator type="expr" validIf="=calc.fromNowYears(@fechaNacimiento)>=18" message="Error, Menor a 18 Años"}}
     {{validator type="expr" validIf="=calc.fromNowYears(@fechaNacimiento)<90" message="Error, Mayor a 90 Años"}}{{!-- cambios 2024-05-29 --}}
     {{validator type="expr" condition="=fn('cedulaObligatoria',base.tipoPersonalNom??'')" notValidIf="=fn('faltaCedulaEspecialidad',@datosEspecialidad)" message="Falta Cédula Especialidad"}}
+    {{validator type="expr" condition="=paisNacimiento=='MX'" validIf="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'))===prestadorServicios.clave" message="CURP Incorrecto"}}
     {{field id="nacidoExtranjero" type="expr" value="=paisNacimiento!='MX'"}}
     {{#field id="paisNacimiento"}}
       {{#onChange condition="=paisNacimiento!='MX'" clearFields="entidadNacimiento"}}

@@ -5497,6 +5497,7 @@
       {{set menor="=calc.fromNowYears(persona.fechaNacimiento)>=10&&calc.fromNowYears(persona.fechaNacimiento)<=19"}}
       {{set tipoServicioSisMenor="=calc.fromNowYears(persona.fechaNacimiento)<18"}}
       {{set tipoServicioSisMayor="=calc.fromNowYears(persona.fechaNacimiento)>=60"}}
+      {{set primeraConsultaAno="=_items.length?'no':'si'"}}
       {{setRef ref="orientacionConsejeria.base.esMenor" value="=menor"}}
       {{setRef ref="metodos.base.esMujer" value="=esMujer"}}
       {{setRef ref="metodos.base.genero"  value="=persona.genero"}}
@@ -7663,23 +7664,23 @@
   {{!-- RACC --}}
 
   {{!-- CERTIFICACIONES RACC --}}
-  {{#action id="notaSisConsultaExterna" source="notaSisConsultaExterna" label="Consulta Externa" transform="copiarSisConsultaExterna" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaSisConsultaExterna" fromView="ultima"}}  
+  {{#action id="notaSisConsultaExterna" source="notaSisConsultaExterna" label="Consulta Externa" transform="copiarSisConsultaExterna" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="nota" fromView="ultima"}}
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
   {{/action}}
-  {{#action id="notaPlanificacionFamiliar" source="notaPlanificacionFamiliar" label="Planificación Familiar" transform="copiarPlanificacionFamiliar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaPlanificacionFamiliar" fromView="ultima" error="=fn('errorPacientePlanificacionFamiliar', persona.genero, calc.fromNowFloat(persona.fechaNacimiento, persona.horaNacimiento))" errorType="info"}}
+  {{#action id="notaPlanificacionFamiliar" source="notaPlanificacionFamiliar" label="Planificación Familiar" transform="copiarPlanificacionFamiliar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="nota" fromView="ultima" error="=fn('errorPacientePlanificacionFamiliar', persona.genero, calc.fromNowFloat(persona.fechaNacimiento, persona.horaNacimiento))" errorType="info"}}
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
   {{/action}}
-  {{#action id="notaDetecciones" source="notaDetecciones" label="Detecciónes" transform="copiarDetecciones" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaDetecciones" fromView="ultima"}}
+  {{#action id="notaDetecciones" source="notaDetecciones" label="Detecciónes" transform="copiarDetecciones" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="nota" fromView="ultima"}}
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
   {{/action}}
-  {{#action id="notaSaludMental" source="notaSaludMental" label="Salud Mental" transform="copiarSaludMental" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaSaludMental" fromView="ultima"}}
+  {{#action id="notaSaludMental" source="notaSaludMental" label="Salud Mental" transform="copiarSaludMental" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="nota" fromView="ultima"}}
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
   {{/action}}
-  {{#action id="notaSaludBucal" source="notaSaludBucal" label="Salud Bucal" transform="copiarSaludBucal" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaSaludBucal" fromView="ultima"}}
+  {{#action id="notaSaludBucal" source="notaSaludBucal" label="Salud Bucal" transform="copiarSaludBucal" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="nota" fromView="ultima"}}
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
   {{/action}}
@@ -12140,7 +12141,7 @@
   {{action id="notaCompatibilidadHemocomponentes" source="notaCompatibilidadHemocomponentes" label="Compatibilidad Hemocomponentes" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaRegistroHemocomponentes" source="notaRegistroHemocomponentes" label="Registro Hemocomponentes" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaRegistroLesiones" source="notaRegistroLesiones" label="Registro Lesiones" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
-  {{action id="notaSeulLesiones" source="notaSeulLesiones" label="SEUL Lesiones" transform="copiarSeulLesiones" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{action id="notaSeulLesiones" source="notaSeulLesiones" label="SEUL Lesiones" transform="copiarSeulLesiones" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" error="=fn('errorDatosSeguro', persona, contexto, detalle)" errorType="info"}}
   {{action id="notaReaccionesTransfusionales" source="notaReaccionesTransfusionales" label="Reacciones Transfusionales" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaInduccionOtorgada" source="notaInduccionOtorgada" label="Inducción Otorgada" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaInfusionCelulasProgenitoras" source="notaInfusionCelulasProgenitoras" label="Infusión Celulas Progenitoras Hematopoyéticos" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
@@ -12189,7 +12190,7 @@
   {{action id="notaReceta" source="notaReceta" label="Receta" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaSesionMedicoQuirurgica" source="notaSesionMedicoQuirurgica" label="Sesión Médico Quirurgica" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaReporteProcedimiento" source="notaReporteProcedimiento" label="Reporte Procedimiento" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
-  {{#action id="notaAltaServicio" source="notaAltaServicio" label="Alta Servicio" transform="copiarDiagnosticoUrgencias" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="solicitudesEgreso" toSection="solicitudesEgreso"}}
+  {{#action id="notaAltaServicio" source="notaAltaServicio" label="Alta Servicio" transform="copiarDiagnosticoUrgencias" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="solicitudesEgreso" toSection="solicitudesEgreso" error="=fn('errorDatosSeguro', persona, contexto, detalle)" errorType="info"}}
     {{param persona="=_id"}}
     {{param tipoEpisodio="=fn('tipoEpisodio', contexto)"}}
     {{param desde="=fn('hospitalizacionDesde', contexto)"}}    
@@ -12215,7 +12216,7 @@
   {{action id="notaPrevencionUlcerasPresion" source="notaPrevencionUlcerasPresion" label="Prevención Ulceras Presión" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaPrevencionInfeccionesUrinariasPacientesSonda" source="notaPrevencionInfeccionesUrinariasPacientesSonda" label="Prevención Infecciones Urinarias" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaSolicitudApoyo" source="notaSolicitudApoyo" label="Solicitud Apoyo" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
-  {{action id="notaPlanAltaEnfermeria" source="notaPlanAltaEnfermeria" label="Plan Alta Enfermería" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{action id="notaPlanAltaEnfermeria" source="notaPlanAltaEnfermeria" label="Plan Alta Enfermería" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" error="=fn('errorDatosSeguro', persona, contexto, detalle)" errorType="info"}}
   {{action id="notaCedulaEvaluacionEnfermeriaPlanAlta" source="notaCedulaEvaluacionEnfermeriaPlanAlta" label="Cédula Evaluación Plan Alta" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaEnfermeriaPacientesHospitalizadasCREHER" source="notaEnfermeriaPacientesHospitalizadasCREHER" label="CREHER" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaValidaViabilidadCirugia" source="notaValidaViabilidadCirugia" label="Valida Viabilidad Cirugía" transform="copiarSolicitudTipoCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
@@ -12289,7 +12290,7 @@
     {{param tipoEpisodio="=fn('tipoEpisodio', contexto)"}}
     {{param desde="=fn('hospitalizacionDesde', contexto)"}}    
   {{/action}}
-  {{#action id="notaSeulEgreso" source="notaSeulEgreso" label="SEUL Egreso" transform="copiarSeulEgreso" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="solicitudesEgreso" toSection="solicitudesEgreso" error="=fn('errorCluesEgreso',user.job.cluesTipoUnidad,user.job.cluesTipoAbreviacion)" errorType="info"}}
+  {{#action id="notaSeulEgreso" source="notaSeulEgreso" label="SEUL Egreso" transform="copiarSeulEgreso" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="solicitudesEgreso" toSection="solicitudesEgreso" error="=fn('errorCluesEgreso',user.job.cluesTipoUnidad,user.job.cluesTipoAbreviacion)||fn('errorDatosSeguro', persona, contexto, detalle)" errorType="info"}}
     {{param persona="=_id"}}
     {{param tipoEpisodio="=fn('tipoEpisodio', contexto)"}}
     {{param desde="=fn('hospitalizacionDesde', contexto)"}}    

@@ -18,7 +18,7 @@
       {{set condition="=calc.isEmpty(base.apellidoPaterno)" apellidoPaterno="='XX'"}}
       {{set condition="=calc.isEmpty(base.apellidoMaterno)" apellidoMaterno="='XX'"}}
       {{set condition="=calc.isEmpty(base.generoSocial)" generoSocial="='noEspecificado'"}}
-      {{set clave="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, base.generoCurp, base.entidadNacimiento, base.fechaNacimiento)"}}
+      {{set clave="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, base.generoCurp, base.entidadNacimiento, moment(base.fechaNacimiento).format('YYYY-MM-DD'),16)"}}
     {{/update}}
   {{/action}}
 
@@ -205,6 +205,8 @@
     {{validator type="expr" notValidIf="=esMenor5Anos&&afromexicano!=calc.pluckRef(familiarResponsable,'base.afromexicano')[0]" message="Se Considera Afromexicano Inválido"}}
     {{validator type="expr" notValidIf="=migrante=='internacional'&&paisProcedencia=='MX'" message="País Procedencia Inválido"}}
     {{!-- Tarea 5604 --}}
+    {{validator type="expr" notValidIf="=clave==user.serviceProvider.clave" message="No puede tener el mismo CURP que el Usuario"}}
+    {{validator type="expr" notValidIf="=calc.isEmpty(@estadoCivil)&&calc.fromNowYears(fechaNacimiento)>10" message="Falta Indicar Estado Civil"}}
   {{/section}}
 
 {{!--   {{#edi id="orden-trabajo"}}
