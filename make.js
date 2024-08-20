@@ -46,8 +46,8 @@ var logo3 = 'https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.pn
 subProyects = 'mx,his,hraei,n3';
 
 // MCSMP014640
-// var headers = ['SERVICIOS ESPECIALIZADOS EN NEFROLOGÍA TOLUCA, S.C.','San Juan 201','Plazas de San Buenaventura, C.P. 50110, Toluca, México','Teléfono: (722) 917 4809, CLUES: MCSMP014640']
-// params = '&esHRAEI=true&esHIS=true&n3=true&MCSMP014640=true';
+var headers = ['SERVICIOS ESPECIALIZADOS EN NEFROLOGÍA TOLUCA, S.C.','San Juan 201','Plazas de San Buenaventura, C.P. 50110, Toluca, México','Teléfono: (722) 917 4809, CLUES: MCSMP014640']
+params = '&esHRAEI=true&esHIS=true&n3=true&MCSMP014640=true';
 
 // MCSSA018354
 // var headers = ['MATERNIDAD ATLACOMULCO','Av. Mario Colin Sanchez S/N','Col. La Mora. C.P. 50450, Atlacomulco, México','Teléfono: (712) 195 5563, CLUES: MCSSA018354']
@@ -62,8 +62,8 @@ subProyects = 'mx,his,hraei,n3';
 // params = '&esHRAEI=true&esHIS=true&n3=true&DFSSA004072=true';
 
 // DFSSA005146
-var headers = ['SERVICIO AMIGABLE ITINERANTE EDUSEX', 'CLUES: DFSSA005146']
-params = '&esHRAEI=true&esHIS=true&n3=true&DFSSA005146=true';
+// var headers = ['SERVICIO AMIGABLE ITINERANTE EDUSEX', 'CLUES: DFSSA005146']
+// params = '&esHRAEI=true&esHIS=true&n3=true&DFSSA005146=true';
 
 proyectId = 't5-nom';
 esIndex = 'his4';
