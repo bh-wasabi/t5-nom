@@ -1,7 +1,5 @@
 {{#define id="datosServiciosSeulEgreso"}}
   {{#section id="base"}}
-    {{field id="tieneServicioIngreso" type="expr" value="=tipoServicioOtorgado=='normal'"}}
-    {{field id="siClaveServicio" type="expr" value="=numeroServicio=='uno'"}}
     {{field id="siOtraProcedencia" type="expr" value="=procedenciaIngreso=='5'"}}
     {{field id="siReferido" type="expr" value="=procedenciaIngreso=='3'"}}
     {{field id="siServicioAdicional" type="expr" value="=numeroServicio=='uno'||numeroServicio=='dos'"}}

@@ -4658,6 +4658,7 @@
 
   {{#template id="signosVitales"}}
     {{#if fechaHoraRegistro}}<br>Hora Registro: {{date fechaHoraRegistro "DD/MMM/YYYY h:mma"}}{{/if}}
+    {{#if situacionActual}}<br>Situación Actual: {{_situacionActual}}{{/if}}
     {{!-- {{#if estaVivo}} --}}
       {{#if temperaturaCorporal}}<br>Temperatura: {{temperaturaCorporal}} °C{{#if temperaturaTomadaEn}} - {{_temperaturaTomadaEn}}{{/if}}{{/if}}
       {{#if tensionSistolica}}<br>Presión Arterial: {{tensionSistolica}}/{{tensionDiastolica}} mmHg{{#if presionTomadaEn}} - {{_presionTomadaEn}}{{/if}}, PAM: {{number pam "#.##"}}{{/if}}
@@ -4666,7 +4667,7 @@
       {{#if saturacionOxigeno}}<br>Saturación Oxigeno: {{saturacionOxigeno}}%{{/if}}
       {{#if llenadoCapilar}}<br>Llenado Capilar: {{llenadoCapilar}} seg{{/if}}
       {{#if resultadoObtenido}}<br>Resultado Obtenido por: {{_resultadoObtenido}}{{/if}}
-      <br>Toma Glicemia Capilar: {{_tomaGlicemiaCapilar}}
+      {{#if tomaGlicemiaCapilar}}<br>Toma Glicemia Capilar: {{_tomaGlicemiaCapilar}}{{/if}}
       {{#if tomaGlicemia}}{{#if glicemiaCapilar}}<br>Glicemia Capilar: {{glicemiaCapilar}} mg/dl{{/if}} {{#if tienePrePrandial}} (Pre Prandial){{/if}} {{/if}}
     {{!-- {{else}}
       <br>Situación Actual: {{_situacionActual}}
@@ -4687,7 +4688,7 @@
       {{#if saturacionOxigeno}}<br>Saturación Oxigeno: {{saturacionOxigeno}}%{{/if}}
       {{#if llenadoCapilar}}<br>Llenado Capilar: {{llenadoCapilar}} seg{{/if}}
       {{#if resultadoObtenido}}<br>Resultado Obtenido por: {{_resultadoObtenido}}{{/if}}
-      <br>Toma Glicemia Capilar: {{_tomaGlicemiaCapilar}}
+      {{#if tomaGlicemiaCapilar}}<br>Toma Glicemia Capilar: {{_tomaGlicemiaCapilar}}{{/if}}
       {{#if tomaGlicemia}}{{#if glicemiaCapilar}}<br>Glicemia Capilar: {{glicemiaCapilar}} mg/dl{{/if}} {{#if tienePrePrandial}} (Pre Prandial){{/if}} {{/if}}
   {{/template}}
 
@@ -4700,7 +4701,7 @@
       {{#if saturacionOxigeno}}<br>Saturación Oxigeno: {{saturacionOxigeno}}%{{/if}}
       {{#if llenadoCapilar}}<br>Llenado Capilar: {{llenadoCapilar}} seg{{/if}}
       {{#if resultadoObtenido}}<br>Resultado Obtenido por: {{_resultadoObtenido}}{{/if}}
-      <br>Toma Glicemia Capilar: {{_tomaGlicemiaCapilar}}
+      {{#if tomaGlicemiaCapilar}}<br>Toma Glicemia Capilar: {{_tomaGlicemiaCapilar}}{{/if}}
       {{#if tomaGlicemia}}{{#if glicemiaCapilar}}<br>Glicemia Capilar: {{glicemiaCapilar}} mg/dl{{/if}} {{#if tienePrePrandial}} (Pre Prandial){{/if}} {{/if}}
   {{/template}}
 

@@ -5085,8 +5085,8 @@
       {{set _medico="=contexto._medico||contexto.ingreso._medico"}}     
       {{set especialidad="=contexto.especialidad||contexto.ingreso.especialidad"}}
       {{set _especialidad="=contexto._especialidad||contexto.ingreso._especialidad"}}
-      {{set servicio="=contexto.servicio||contexto.ingreso.servicio"}}
-      {{set _servicio="=contexto._servicio||contexto.ingreso.servicio"}}
+      {{!-- {{set servicio="=contexto.servicio||contexto.ingreso.servicio"}} --}}
+      {{!-- {{set _servicio="=contexto._servicio||contexto.ingreso.servicio"}} --}}
       {{set antecedenteFamiliar="=detalle.antecedentes.antecedenteFamiliar"}}
       {{set _antecedenteFamiliar="=detalle.antecedentes._antecedenteFamiliar"}}
       {{!-- {{set signosVitales="=detalle.signosVitales"}}
@@ -5499,9 +5499,11 @@
       {{set tipoServicioSisMayor="=calc.fromNowYears(persona.fechaNacimiento)>=60"}}
       {{set primeraConsultaAno="=_items.length?'no':'si'"}}
       {{setRef ref="orientacionConsejeria.base.esMenor" value="=menor"}}
-      {{setRef ref="metodos.base.esMujer" value="=esMujer"}}
-      {{setRef ref="metodos.base.genero"  value="=persona.genero"}}
+      {{setRef ref="metodos.base.esMujer" value="=persona.genero=='mujer'"}}
+      {{setRef ref="metodos.base.esHombre" value="=persona.genero=='hombre'"}}
       {{setRef ref="metodos.base.edad" value="=calc.fromNowYears(persona.fechaNacimiento)"}}
+      {{setRef ref="metodos.base.noPsicologo" value="=!calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])"}}
+      {{setRef ref="metodos.base.noPsicologoEsHombre" value="=!calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])&&persona.genero=='hombre'"}}
     {{/update}}
     {{update section="tipoServicioSis" value="=calc.itemsToCode(calc.tipoServicioSis(calc.in('planificacionFamiliar',user.others.tipoServicioSis)?'planificacionFamiliar':'',user.others.tipoPersonalNom,base.esMujer?'mujer':'',base.tipoServicioSisMenor?'menor':base.tipoServicioSisMayor?'mayor':''))" temp="true"}}
     {{update section="resumen" value="=resumen" temp="true"}}

@@ -15,7 +15,9 @@
       {{onChange clearFields="tipoUnidadPsiquiatrica,tipoServicioPsiquiatrico,HospitalParcial"}}
     {{/field}}
     {{#field id="motivoEgreso"}}
-      {{onChange clearFields="notificoMP,folioCertificadoDefuncion"}}
+      {{#onChange clearFields="notificoMP,folioCertificadoDefuncion,signosVitales,fechaHoraDefuncion"}}
+        {{!-- {{set condition="=motivoEgreso=='defuncion'" signosVitales="={base:{situacionActual:'difunto',_situacionActual:'Difunto'}}" _signosVitales="='Situacion Actual: Difunto'"}} --}}
+      {{/onChange}}
     {{/field}}
     {{#field id="mujerFertil"}}
       {{onChange clearFields="datosMujer"}}
@@ -44,12 +46,9 @@
     {{validator type="expr" notValidIf="=calc.in(@metodoAnticonceptivo, ['10'])&&(!calc.in('Z302', calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')))||!calc.in('697X', calc.pluckRef(@procedimientoEgresos, 'base.procedimientoCie9')))" message="Método de Planificación Familiar OTB No Corresponde con el Diagnóstico (Z302) y/o Procedimiento (697X)"}}
     {{validator type="expr" validIf="=calc.isAllTrueFalse(calc.in('Z302', calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico'))), calc.in('ESTERILIZACION', calc.pluckRef(@procedimientoEgresos, 'base.otrasValidaciones')))" message="El Procedimiento Tipo ESTERILIZACIÓN No Corresponde con los Diagnósticos"}}
     {{validator type="expr" notValidIf="=_.last(calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico'))=='P95X'" message="Código P95X no puede ser seleccionado como última Comorbilidad"}}
-    {{#field id="motivoEgreso"}}
-      {{#onChange condition="=motivoEgreso=='defuncion'"}}
-        {{set signosVitales="={}"}}
-        {{set _signosVitales="=' '"}}
-      {{/onChange}}
-    {{/field}}
+    {{validator type="expr" notValidIf="=calc.isEmpty(@servicios.base.tipoServicioOtorgado)" message="Campo Servicios Requerido"}}
+    {{validator type="expr" notValidIf="=noEsDefuncion&&calc.isEmpty(@signosVitales)" message="Campo Signos Vitales Requerido"}}
+    {{validator type="expr" notValidIf="=noEsDefuncion&&calc.isEmpty(@somatometria)" message="Campo Somatometría Requerido"}}
 	{{/section}}
   {{#view id="egresosPaciente"}}
     {{#find limit="-1"}}
