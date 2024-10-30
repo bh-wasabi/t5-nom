@@ -1,13 +1,9 @@
 {{#define id="datosMujerSeulEgreso"}}
  	{{#section id="base"}}
-    {{field id="esMujer" type="expr" value="=persona.esMujer"}}
     {{field id="siParto" type="expr" value="=tipoAtencionObstetrica=='parto'"}}
     {{field id="siAborto" type="expr" value="=tipoAtencionObstetrica=='aborto'"}}
-    {{field id="siNacido" type="expr" value="=condicionNacimiento=='nacidoVivo'"}}
-    {{field id="siNacidoMuerto" type="expr" value="=condicionNacimiento=='nacidoMuerto'"}}
-    {{field id="siPartoAborto" type="expr" value="=siParto||siAborto"}}
     {{#field id="tipoAtencionObstetrica"}}
-      {{onChange clearFields="datosInformacionProducto,datosInformacionProductoAborto"}}
+      {{onChange clearFields="tipoEmbarazo,nacioElPacienteEnEstaAtencion,totalProductos,tipoNacimiento,tipoProcedimientoAborto,datosInformacionProducto,datosInformacionProductoAborto"}}
     {{/field}}
     {{validator type="expr" validIf="=(@edadGestacional>0&&edadGestacional<=45)||@edadGestacional==88||@edadGestacional==99" message="Edad Gestacional Inválida"}}
     {{validator type="expr" validIf="=@siAborto||(@tipoEmbarazo=='unico'&&@totalProductos==1)||(@tipoEmbarazo=='gemelar'&&@totalProductos==2)||(@tipoEmbarazo=='tresMas'&&(@totalProductos>=3&&@totalProductos<=6))" message="Error en Número de Productos"}}

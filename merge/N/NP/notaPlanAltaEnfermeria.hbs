@@ -7,4 +7,12 @@
     {{field id="cantidadMedicamentosMinistrados" type="calc" value="=medicamentosMinistrados.length"}}
     {{validator type="expr" notValidIf="=medicamentosMinistrados.length>6" message="Máximo 6 Medicamentos Ministrados"}}
   {{/section}}
+
+  {{#view id="buscarPlanAltaEnfermeria"}}
+    {{#find limit="-1"}}
+      {{include field="base"}}
+      {{sort field="_created.date" direction="desc"}}
+      {{filter field="_created.request" eq="=request"}}
+    {{/find}}
+  {{/view}}
 {{/define}}

@@ -17,12 +17,13 @@
         {{set limiteSexo="=LSEX"}}
         {{set limiteInferior="=LINF"}}
         {{set limiteSuperior="=LSUP"}}
+        {{set excedeLimiteEdad="=calc.meetsAgeLimit(LINF, desde, _parentDoc.persona.fechaNacimiento, true)&&calc.meetsAgeLimit(LSUP, desde, _parentDoc.persona.fechaNacimiento, false)?'NO':'SI'"}}
         {{set cronicos="=DIA_CRONICOS"}}
         {{set cancerInfantil="=DIA_CAINFANTIL"}}
       {{/onChange}}
     {{/field}}    
     {{validator type="expr" validIf="=calc.meetsSexLimit(limiteSexo, _parentDoc.persona.genero)" message="No Corresponde el Sexo del Paciente"}}
-    {{validator type="expr" validIf="=calc.meetsAgeLimit(limiteInferior, desde, _parentDoc.persona.fechaNacimiento, true)" message="No Corresponde la Edad del Paciente con el Límite Inferior"}}
-    {{validator type="expr" validIf="=calc.meetsAgeLimit(limiteSuperior, desde, _parentDoc.persona.fechaNacimiento, false)" message="No Corresponde la Edad del Paciente con el Límite Superior"}}
+    {{!-- {{validator type="expr" validIf="=calc.meetsAgeLimit(limiteInferior, desde, _parentDoc.persona.fechaNacimiento, true)" message="No Corresponde la Edad del Paciente con el Límite Inferior"}} --}}
+    {{!-- {{validator type="expr" validIf="=calc.meetsAgeLimit(limiteSuperior, desde, _parentDoc.persona.fechaNacimiento, false)" message="No Corresponde la Edad del Paciente con el Límite Superior"}} --}}
   {{/section}}
 {{/define}}

@@ -2,5 +2,12 @@
   {{param name="=fn('folioServiceName', fn('finalizaAtencion', @_created.service), @_created)"}}
   {{#section id="base"}}
     {{field id="nombre" value="=fn('folioServiceName', fn('finalizaAtencion', @_created.service), @_created)"}}
-  {{/section}} 
+  {{/section}}
+  {{#view id="buscarFinalizaAtencion"}}
+    {{#find limit="-1"}}
+      {{include field="base"}}
+      {{sort field="_created.date" direction="desc"}}
+      {{filter field="_created.request" eq="=request"}}
+    {{/find}}
+  {{/view}}
 {{/define}}

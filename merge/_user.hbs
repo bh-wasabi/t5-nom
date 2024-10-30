@@ -2,6 +2,8 @@
   {{param name="=_params.service==='tesoreria'?'Cajero':'Usuario'"}}
   {{action id="eliminar" hide="true"}}
 
+  {{action id="afectar" confirm="=calc.contieneMalaPalabra(prestadorServicios.clave)" confirmWidth="500" confirmHeight="290" confirmMessage="='CURP contiene palabra altisonante (' + prestadorServicios.clave.substr(0,4) + ')<br><br>Si desea continuar presione Si.<br>De lo contrario presione No y modifique el dato colocando una X en el segundo caracter.'"}}
+
   {{!-- {{action id="afectarTodo" condition="=true" type="affect-all" label="Procesar Todo..." color="red" btnSolid="true" visibleMode="close" confirm="true" confirmMessage="¿Desea Procesar en Lote?" superUser="true"}} --}}
 
   {{#action id="tool" condition="=true" label="Bandeja Entrada" type="sub-link" btnSolid="false" color="grey" visibleMode="close"}}
@@ -40,8 +42,8 @@
   {{!-- Modificar Bloque - Tarea 5604 --}}
   {{#action id="sugerirCurp" hide="true" type="update" error="=fn('validaSugerirCurp',base.nombres,prestadorServicios.fechaNacimiento,prestadorServicios.generoCurp,prestadorServicios.entidadNacimiento)"}}
     {{#update section="prestadorServicios"}}
-      {{set condition="=prestadorServicios.paisNacimiento=='MX'" clave="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'), 16)"}}
-      {{set condition="=prestadorServicios.paisNacimiento!='MX'" clave="='XXXX999999XXXXXX'"}}
+      {{set condition="=prestadorServicios.paisNacimiento=='MX'" clave="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'), 16, true)"}}
+      {{set condition="=prestadorServicios.paisNacimiento!='MX'" clave="=fn('CURP_GENERICO')"}}
     {{/update}}
   {{/action}}
   {{!-- Tarea 5604 --}}
@@ -152,6 +154,9 @@
       {{#onChange}}
         {{set hash="=calc.sha1(calc.text(contrasena))"}}
         {{set contrasena="=calc.mask(contrasena)"}}
+        {{#update section="_access"}}
+          {{set changePassword="=true"}}
+        {{/update}}
       {{/onChange}}
     {{/field}}
     {{#field id="perfilAcceso"}}
@@ -209,7 +214,7 @@
   {{#section id="puesto"}}  
     {{field id="cluesTieneSsa" type="expr" value="=@cluesAdscripcionNomina.search('SSA')>0"}}
     {{#field id="cluesAdscripcionNomina"}}
-      {{#onChange clearFields="cluesSubAbreviacion,cluesTipoAbreviacion,cluesServicioAmigable,cluesTieneEspirometro,cluesTipoUnidad,cluesIdEntidad"}}
+      {{#onChange clearFields="programaSMyMG,cluesSubAbreviacion,cluesTipoAbreviacion,cluesServicioAmigable,cluesTieneEspirometro,cluesTipoUnidad,cluesIdEntidad"}}
         {{set cluesTieneSsa="=@cluesAdscripcionNomina.search('SSA')>0"}}
         {{set cluesSubAbreviacion="=@sub_abreviacion"}}
         {{set cluesTipoAbreviacion="=@tip_abreviacion"}}
@@ -224,16 +229,17 @@
 
   {{!-- Tarea #3976 RACC --}}
   {{#section id="prestadorServicios"}}
-    {{validator type="expr" validIf="=calc.fromNowYears(@fechaNacimiento)>=18" message="Error, Menor a 18 Años"}}
-    {{validator type="expr" validIf="=calc.fromNowYears(@fechaNacimiento)<90" message="Error, Mayor a 90 Años"}}{{!-- cambios 2024-05-29 --}}
-    {{validator type="expr" condition="=fn('cedulaObligatoria',base.tipoPersonalNom??'')" notValidIf="=fn('faltaCedulaEspecialidad',@datosEspecialidad)" message="Falta Cédula Especialidad"}}
-    {{validator type="expr" condition="=paisNacimiento=='MX'" validIf="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'))===prestadorServicios.clave" message="CURP Incorrecto"}}
     {{field id="nacidoExtranjero" type="expr" value="=paisNacimiento!='MX'"}}
     {{#field id="paisNacimiento"}}
       {{#onChange condition="=paisNacimiento!='MX'" clearFields="entidadNacimiento"}}
         {{set entidadNacimiento="='NE'"}}
       {{/onChange}}
     {{/field}}
+    {{validator type="expr" notValidIf="=calc.in(@entidadNacimiento,['99','00'])" message="Entidad Nacimiento Inválida"}}
+    {{validator type="expr" validIf="=calc.fromNowYears(@fechaNacimiento)>=18" message="Error, Menor a 18 Años"}}
+    {{validator type="expr" validIf="=calc.fromNowYears(@fechaNacimiento)<90" message="Error, Mayor a 90 Años"}}{{!-- cambios 2024-05-29 --}}
+    {{validator type="expr" condition="=fn('cedulaObligatoria',base.tipoPersonalNom??'')" notValidIf="=fn('faltaCedulaEspecialidad',@datosEspecialidad)" message="Falta Cédula Especialidad"}}
+    {{validator type="expr" condition="=paisNacimiento=='MX'" validIf="=(calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'),16,false)===prestadorServicios.clave.substr(0,16)||calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'),16,true)===prestadorServicios.clave.substr(0,16)||prestadorServicios.clave===fn('CURP_GENERICO'))&&prestadorServicios.clave.length===18" message="CURP Incorrecto"}}
   {{/section}}
   {{!-- Tarea #3976 RACC --}}
 

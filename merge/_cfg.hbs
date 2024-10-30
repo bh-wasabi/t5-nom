@@ -141,6 +141,39 @@
     {{set subTotal="=base.totalCobrado"}}
   {{/transform}}
 
+  {{#transform id="copiarNomDatos"}}
+    {{set clues="=user.establishmentData.clues"}}
+    {{set cluesIdEntidad="=user.establishmentData.cluesIdEntidad"}}
+    {{set paisNacimiento="=user.serviceProvider.paisNacimiento"}}
+    {{set curpPrestador="=user.serviceProvider.clave"}}
+    {{set nombrePrestador="=user.firstName"}}
+    {{set primerApellidoPrestador="=user.lastName"}}
+    {{set segundoApellidoPrestador="=user.lastName2"}}
+    {{set tipoPersonal="=user.others.tipoPersonalNom"}}
+    {{set programaSMyMG="=user.job.programaSMyMG"}}
+    {{set cedulaResponsable="=_.first(user.identification).base.cedulaEspecialidad"}}
+    {{set paisNacPaciente="=persona.paisNacimiento"}}
+    {{set entidadNacimiento="=persona.entidadNacimiento"}}
+    {{set sexoBiologico="=persona.genero"}}
+    {{set sexoCurp="=persona.generoCurp"}}
+    {{set seAutodenominaAfromexicano="=persona.afromexicano||persona.afromexicanoUrgenciasHospitalizacion"}}
+    {{set seConsideraIndigena="=persona.grupoEtnico.base.indigena"}}
+    {{set hablaLenguaIndigena="=persona.grupoEtnico.base.hablaLenguaIndigena"}}
+    {{set cualLengua="=persona.grupoEtnico.base.lenguasIndigenas"}}
+    {{set migrante="=persona.migrante"}}
+    {{set paisProcedencia="=persona.paisProcedencia"}}
+    {{set genero="=persona.generoSocial"}}
+    {{set datosSeguro="=persona.seguro"}}
+    {{set escolaridad="=persona.escolaridad"}}
+    {{set sabeLeerEscribir="=persona.sabeLeerEscribir"}}
+    {{set desconoceFechaNacimiento="=persona.desconoceFechaNacimiento"}}
+    {{set entidadResidencia="=_.first(persona.direccion).base.entidadFederativa"}}
+    {{set municipioResidencia="=_.first(persona.direccion).base.codigoDelegacion"}}
+    {{set localidadResidencia="=_.first(persona.direccion).base.codigoLocalidad"}}
+    {{set otraLocalidad="=_.first(persona.direccion).base.otraLocalidad"}}
+    {{set codigoPostal="=_.first(persona.direccion).base.codigoPostal"}}
+  {{/transform}}
+
   {{#function id="listaEstatus"}}
     {{define type="param" id="tipo"}}
     {{when tipo="activos" return="nuevo,instalar,continuar,activo-controlado,activo-no-controlado,no-realizado"}}
@@ -2362,9 +2395,10 @@
   {{#function id="escolaridadCorrecta"}}
     {{define type="param" id="edad"}}
     {{define type="param" id="escolaridad"}}
-    {{when edad="3..5" return="=calc.in(escolaridad, ['noAplica','preescolarCompleta','preescolarIncompleta'])"}}
-    {{when edad="<13" return="=calc.in(escolaridad, ['noAplica','preescolarCompleta','preescolarIncompleta','primariaCompleta','primariaIncompleta'])"}}
-    {{default return="=true"}}
+    {{when edad="0..2" return="=escolaridad=='noAplica'"}}
+    {{when edad="3..5" return="=calc.in(escolaridad, ['ninguna','preescolarCompleta','preescolarIncompleta'])"}}
+    {{when edad="<13" return="=calc.in(escolaridad, ['ninguna','preescolarCompleta','preescolarIncompleta','primariaCompleta','primariaIncompleta'])"}}
+    {{when edad=">=13" return="=escolaridad!='noAplica'"}}
   {{/function}}
 
   {{#function id="cedulaObligatoria"}}
@@ -2388,6 +2422,13 @@
     {{when condition="calc.isEmpty(entidad)" return="'Falta Indicar Entidad Nacimiento'"}}
     {{when condition="calc.fromNowYears(fecha)>120" return="'Paciente Mayor a 120 Años'"}}
     {{default return="''"}}
+  {{/function}}
+
+  {{#function id="validaCaracter17Curp"}}
+    {{define type="param" id="curp"}}
+    {{define type="param" id="fechaNacimiento"}}
+    {{when condition="moment(fechaNacimiento).year()<2000" return="calc.in(curp.substr(16,1),[0,1,2,3,4,5,6,7,8,9])"}}
+    {{when condition="moment(fechaNacimiento).year()>=2000" return="calc.in(curp.substr(16,1),['A','B','C','D','E','F','G','H','I','J'])"}}
   {{/function}}
 
   {{#function id="seleccionaGenero"}}
@@ -2424,7 +2465,7 @@
   {{#function id="errorPacientePlanificacionFamiliar"}}
     {{define type="param" id="genero"}}
     {{define type="param" id="edad"}}
-    {{default return="=(genero=='mujer'&&edad>=9&&edad<60)||(calc.in(genero,['hombre','intersexual'])&&edad>=10&&edad<71)?'':'Verificar Sexo y Edad Paciente'"}}
+    {{default return="=(genero==='mujer'&&edad>=9&&edad<=59)||(calc.in(genero,['hombre','intersexual'])&&edad>=9&&edad<=70)?'':'Verificar Sexo y Edad Paciente'"}}
   {{/function}}
 
   {{#function id="validaCertificadoDefuncion"}}
@@ -2443,6 +2484,27 @@
     {{when condition="=certificado.length!=9&&certificado.length!=14" return="true"}}
     {{when condition="=certificado.length==14&&calc.upperCase(certificado.slice(5,6))!='E'" return="true"}}
     {{default return="false"}}
+  {{/function}}
+
+  {{#function id="validaCertificadoMuerteFetal"}}
+    {{define type="param" id="certificado"}}
+    {{when condition="=certificado==='999999999'" return="false"}}
+    {{when condition="=certificado.length!=9" return="true"}}
+    {{when condition="=isNaN(certificado)" return="true"}}
+    {{when condition="=certificado.slice(2,3)!=='1'" return="true"}}
+    {{default return="false"}}
+  {{/function}}
+
+  {{#function id="calcularGestas"}}
+    {{define type="param" id="paras"}}
+    {{define type="param" id="abortos"}}
+    {{define type="param" id="cesareas"}}
+    {{define type="param" id="embarazo"}}
+    {{default return="=calc.number(paras)+calc.number(abortos)+calc.number(cesareas)+calc.number(embarazo)"}}
+  {{/function}}
+
+  {{#function id="CURP_GENERICO"}}
+    {{default return="XXXX999999XXXXXX99"}}
   {{/function}}
 
   {{#function id="sugerirTipoPersonal"}}
@@ -2679,11 +2741,10 @@
   {{/template}}
 
   {{#template id="antecedentesEmbarazos"}}
-    Gestas: {{gestas}}
-    {{#if paras}}, Paras: {{paras}}{{/if}}
-    {{#if abortos}}, Abortos: {{abortos}}{{/if}}
-    {{#if cesareas}}, Cesáreas: {{cesareas}}{{/if}}
-    {{#if ectopicos}}, Ectópicos: {{ectopicos}}{{/if}}
+    {{!-- Gestas: {{gestas}} --}}
+    Paras: {{paras}}
+    Abortos: {{abortos}}
+    Cesáreas: {{cesareas}}
     {{#if comentarios}}<br>{{comentarios}}{{/if}}
   {{/template}}
 
@@ -9595,6 +9656,18 @@
     {{#if nombreAsentamiento}}<br>Nombre del Asentamiento: {{nombreAsentamiento}}{{/if}}
   {{/template}}
 
+	{{#template id="eventoLesionSeul"}}
+		{{#if fechaOcurreEvento}}<br>Fecha en que ocurre el evento: {{date fechaOcurreEvento "DD/MMM/YYYY"}}{{/if}}
+		{{#if horaEvento}}<br>Hora del Evento: {{horaEvento}}{{/if}}
+		{{#if diaFestivo}}<br>¿Se considera día Festivo?: {{_diaFestivo}}{{/if}}
+		{{#if sitioLesion}}<br>Sitio Ocurrencia: {{_sitioLesion}}{{/if}}
+		{{#if direccion}}<br>Dirección: {{_direccion}}{{/if}}
+		{{#if tipoVialidad}}<br>Tipo Vialidad: {{_tipoVialidad}}{{/if}}
+		{{#if nombreVialidad}}<br>Nombre Vialidad: {{nombreVialidad}}{{/if}}
+		{{#if tipoAsentamiento}}<br>Tipo de asentamiento donde ocurrió el evento: {{_tipoAsentamiento}}{{/if}}
+		{{#if nombreAsentamiento}}<br>Nombre del Asentamiento: {{nombreAsentamiento}}{{/if}}
+	{{/template}}
+
   {{#template id="circunstanciasEventoLesion"}}
     <br>Intencionalidad Evento: {{_intencionalidadEventoLesion}}
     {{#if tipoIntencionalidad}}<br>Tipo Intencionalidad: {{_tipoIntencionalidad}}{{/if}}
@@ -9635,7 +9708,7 @@
   {{#template id="datosEnfermedadDiarreicaAguda"}} 
     {{#if presentaEnfermedad}}<br>Presenta Enfermedad: {{_presentaEnfermedad}}{{/if}}
     {{#if planTratamientoEda}}<br>Plan Tratamiento EDA: {{_planTratamientoEda}}{{/if}}
-    {{#if recuperacionDeshidratacion}}<br>Recuperacion Deshidratacon: {{_recuperacionDeshidratacion}}{{/if}}
+    {{#if recuperacionDeshidratacion}}<br>Recuperación Deshidratación: {{_recuperacionDeshidratacion}}{{/if}}
     {{#if sobresSueroOral}}<br>Sobres Vida Suero Oral: {{sobresSueroOral}}{{/if}}
     {{#if sobresPromocion}}<br>Sobres Promocion: {{sobresPromocion}}{{/if}}
   {{/template}}
@@ -9828,6 +9901,19 @@
     {{#if terapia}}<br>Terapias: {{_terapia}}{{/if}}
     {{#if tipoServicioOtorgado}}<br>Tipo de Servicio Otorgado: {{_tipoServicioOtorgado}}{{/if}}
   {{/template}}
+
+	{{#template id="datosServiciosSeulEgreso"}}
+		{{#if tipoServicioOtorgado}}<br>Tipo de Servicio Otorgado: {{_tipoServicioOtorgado}}{{/if}}
+		{{#if siServicioNormal}}{{#if servicioIngreso}}<br>Servicio Ingreso: {{_servicioIngreso}}{{/if}}{{/if}}
+		{{#if claveServicioEgreso}}<br>Clave Servicio Egreso: {{_claveServicioEgreso}}{{/if}}
+		{{#if numeroServicio}}<br>Número de Servicios Adicionales: {{numeroServicio}}{{/if}}
+		{{#if claveServicioAdicional}}<br>Clave Servicio Adicional: {{_claveServicioAdicional}}{{/if}}
+		{{#if procedenciaIngreso}}<br>Procedencia del Ingreso: {{_procedenciaIngreso}}{{/if}}
+		{{#if siOtraProcedencia}}{{#if especifiqueProcedencia}}<br>Especifique Procedencia: {{especifiqueProcedencia}}{{/if}}{{/if}}
+		{{#if siReferido}}{{#if cluesProcedencia}}<br>CLUES Procedencia: {{_cluesProcedencia}}{{/if}}{{/if}}
+		{{#if tieneTerapiaIntensiva}}{{#if terapiaIntensiva}}<br>Terapia Intensiva: {{_terapiaIntensiva}}{{/if}}{{/if}}
+		{{#if tieneTerapiaIntermedia}}{{#if terapiaIntermedia}}<br>Terapia Intermedia: {{_terapiaIntermedia}}{{/if}}{{/if}}
+	{{/template}}
 
   {{#template id="datosTerapiaEgreso"}}
     {{#if terapiaIntensiva}}<br>Terapia Intensiva: {{_terapiaIntensiva}}{{/if}}

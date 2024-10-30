@@ -1,36 +1,55 @@
 {{#define id="notaDetecciones"}}
   {{#section id="base"}}
-     {{field id="esMayor60" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=60"}}
-     {{field id="esMayor19" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=19"}}
-     {{field id="fechaAtencion1" type="expr" value="=@fechaAtencion"}}
-     {{validator type="expr" validIf="=persona.fechaNacimiento<fechaAtencion1" message="Error en la fecha atención"}}
-     {{validator type="expr" notValidIf="=calc.in(catServicios,['PAIDOPSIQUIATRÍA','PEDIATRÍA']&&edadActual>17" message="Servicio Atención Inválido"}}
-     {{validator type="expr" notValidIf="=calc.in(catServicios,['GERIATRÍA','GERONTOLOGÍA','PSICOGERIATRÍA']&&edadActual<60" message="Servicio Atención Inválido"}}
-     {{validator type="expr" notValidIf="=catServicios=='SERVICIO AMIGABLE'&&(edadActual<10||edadActual>19)" message="Servicio Atención Inválido"}}
-     {{validator type="expr" notValidIf="=catServicios=='SERVICIO AMIGABLE'&&calc.isEmpty(user.job.cluesServicioAmigable)" message="CLUES Sin Servicio Amigable"}}
+    {{field id="fechaAtencion1" type="expr" value="=@fechaAtencion"}}
+    {{field id="entre10y19" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=10&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')<=19"}}
+    {{validator type="expr" validIf="=persona.fechaNacimiento<fechaAtencion1" message="Error en la fecha atención"}}
+    {{validator type="expr" notValidIf="=calc.in(catServicios,['PAIDOPSIQUIATRÍA','PEDIATRÍA'])&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>17" message="Servicio Atención Inválido"}}
+    {{validator type="expr" notValidIf="=calc.in(catServicios,['GERIATRÍA','GERONTOLOGÍA','PSICOGERIATRÍA'])&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')<60" message="Servicio Atención Inválido"}}
+    {{validator type="expr" notValidIf="=catServicios=='SERVICIO AMIGABLE'&&!entre10y19" message="Servicio Atención Inválido"}}
+    {{validator type="expr" notValidIf="=catServicios=='SERVICIO AMIGABLE'&&calc.isEmpty(user.establishmentData.cluesServicioAmigable)" message="CLUES Sin Servicio Amigable"}}
+  {{/section}}
+  {{#section id="tamizaje"}}
+    {{field id="siDepresion" type="expr" value="=calc.isTrue(tamizajeTristeDeprimido)"}}
+    {{field id="siMemoria" type="expr" value="=calc.isTrue(olvidaCosasCostumbre)"}}
+    {{field id="siOrina" type="expr" value="=calc.isTrue(tamizajeFugaOringa)"}}
+    {{field id="siCaida" type="expr" value="=calc.isTrue(tamizajeCaidas)"}}
+    {{field id="siActividadBasicas" type="expr" value="=calc.isTrue(tamizajeActividadesBasicas)"}}
+    {{field id="siActividadInstrumental" type="expr" value="=calc.isTrue(tamizajeActividadesInstrumental)"}}
+    {{field id="esMayor10" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=10"}}
+    {{field id="esMayor50" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=50"}}
+    {{field id="esMayor60" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=60"}}
+  {{/section}}
+  {{#section id="datosGenerales"}}
+    {{field id="siEdadCuidador" type="expr" value="=calc.in(@edadCuidador,['20edad','2059edad','60mas'])"}}
+    {{field id="esMayor19" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=19"}}
+    {{field id="esMayor20" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=20"}}
+    {{field id="esMayor50" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=50"}}
+    {{field id="esMayor60" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=60"}}
+    {{#field id="edadCuidador"}}
+      {{onChange clearFields="sexoCuidador"}}
+    {{/field}}
+    {{validator type="expr" notValidIf="=!esMayor60&&siEdadCuidador" message="Edad Cuidador Inválida (Sólo Mayores de 60 Años)"}}
   {{/section}}
   {{#section id="enfermedades"}}
     {{field id="esMujer" type="expr" value="=base.esMujer"}}
-    {{field id="edadActual" type="expr" value="=base.edadActual"}}
-    {{field id="mostrarResultadoVph" type="expr" value="=deteccionVPH=='realizada'&&edadActual>=35&&edadActual<64"}}
-    {{field id="mostrarDeteccionCancerCuelloUterino" type="expr" value="=edadActual>=25&&edadActual<64&&esMujer"}}
-    {{field id="mostrarResultadoCancerUterino" type="expr" value="=edadActual>=25&&edadActual<64&&esMujer"}}
+    {{field id="mostrarResultadoVph" type="expr" value="=deteccionVPH==='realizada'&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=35&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')<=64&&esMujer"}}
+    {{field id="mostrarDeteccionCancerCuelloUterino" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=25&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')<=64&&esMujer"}}
+    {{field id="mostrarResultadoCancerUterino" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=25&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')<=64&&esMujer"}}
     {{validator type="expr" notValidIf="=calc.in(@deteccionCancerCuelloUterino,['realizada','noRealizada'])&&calc.in(@resultadoCancerCuelloUterino,['positivo','negativo'])" message="Resultado Cáncer Cuello Uterino Inválido"}}
   {{/section}}
   {{#section id="otrosDatos"}}
     {{field id="esMujerIntersexual" type="expr" value="genero=='mujer'||genero=='intersexual'"}}
-    {{field id="esMayor10" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=10"}}
-    {{field id="esMayor40" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=40"}}
-    {{field id="esMayor19" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=19"}}
+    {{field id="esMayor10" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=10"}}
+    {{field id="esMayor19" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=19"}}
+    {{field id="esMayor40" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=40"}}
     {{field id="esMayorHombre" type="expr" value="!base.esMujer&&esMayor40"}}
     {{field id="siHiperplasia" type="expr" value="=hiperplasiaProstatica=='positivo'"}}
-    {{field id="esMujerMayor15" type="expr" value="=base.esMujer&&base.edadActual>=15"}}
+    {{field id="esMujerMayor15" type="expr" value="=base.esMujer&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=15"}}
     {{field id="cluesTieneEspirometro" type="expr" value="=cluesTieneEspirometro&&esMayor19"}}
     {{field id="tieneResultadoEspirometria" type="expr" value="=calc.isNotEmpty(resultadoEspirometria)"}}
     {{validator type="expr" validIf="=!@resultadoEspirometria||(@resultadoEspirometria>=0&&@resultadoEspirometria<=100)" message="Resultado Espirometría Fuera de Rango (0-100)"}}
     {{validator type="expr" validIf="=!@resultadoEspirometria||((@limiteInferiorNormalidadEspirometria>=0.655&&@limiteInferiorNormalidadEspirometria<=0.785)||@limiteInferiorNormalidadEspirometria==0.999)" message="Límite Inferior Normalidad Espirometría Fuera de Rango"}}
   {{/section}}
-  {{!-- Tarea 3156 --}}
   {{#view id="ultima"}}
     {{#find limit="1"}}
       {{include field="_name"}}
@@ -40,5 +59,4 @@
       {{filter condition="=desde" field="_created.date" gt="=desde"}}
     {{/find}}
  {{/view}}
- {{!-- Tarea 3156 --}}
 {{/define}}

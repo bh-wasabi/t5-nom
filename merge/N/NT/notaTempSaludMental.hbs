@@ -1,4 +1,10 @@
 {{#define id="notaTempSaludMental"}}
+  {{#action id="afectar" confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))" confirmMessage="Diagnóstico Excede Límite Edad<br>¿Desea continuar?"}}
+    {{#update section="base"}}
+      {{set excedeLimiteEdad="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))?'SI':'NO'"}}
+    {{/update}}
+  {{/action}}
+  
   {{#section id="base"}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')),'R69X')" message="Tiene Diagnósticos Duplicados"}}
   {{/section}}

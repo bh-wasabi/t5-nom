@@ -6,4 +6,12 @@
     {{validator type="expr" notValidIf="=calc.in('ginecoObstetricia',calc.pluckRef(interconsulta,'base.servicioInterconsultante'))&&genero!='mujer'&&(edadActual<9||edadActual>59)" message="Servicio Interconsultante Inválido (Gineco Obstetricia)"}}
     {{validator type="expr" notValidIf="=calc.in('ginecoObstetricia',calc.pluckRef(interconsulta,'base.servicioInterconsultado'))&&genero!='mujer'&&(edadActual<9||edadActual>59)" message="Servicio Interconsultado Inválido (Gineco Obstetricia)"}}
   {{/section}}
+
+  {{#view id="buscarInterconsulta"}}
+    {{#find limit="-1"}}
+      {{include field="base"}}
+      {{sort field="_created.date" direction="desc"}}
+      {{filter field="_created.request" eq="=request"}}
+    {{/find}}
+  {{/view}}
 {{/define}}

@@ -1,5 +1,5 @@
 {{#define id="datosEspecialidad"}}
   {{#section id="base"}}
-    {{validator type="expr" notValidIf="=@cedulaEspecialidad.length!=14" message="Cédula Especialidad Inválida"}}
+    {{validator type="expr" notValidIf="=@cedulaEspecialidad.length<6" message="Cédula Especialidad Inválida (Mínimo 6 caracteres)"}}
   {{/section}}
 {{/define}} 

@@ -1,14 +1,23 @@
 {{#define id="notaSaludMental"}}
+  {{#action id="afectar" confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))" confirmMessage="Diagnóstico Excede Límite Edad<br>¿Desea continuar?"}}
+    {{#update section="base"}}
+      {{set excedeLimiteEdad="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))?'SI':'NO'"}}
+    {{/update}}
+  {{/action}}
+
   {{#section id="base"}}
-    {{field id="tienePreconsulta" type="expr" value="=catServicios=='preconsulta'"}}
+    {{field id="tienePreconsulta" type="expr" value="=catServicios=='PRECONSULTA'"}}
     {{field id="fechaAtencion1" type="expr" value="@fechaAtencion"}}
-    {{field id="esUneme" type="expr" value="=calc.in(user.job.cluesTipoAbreviacion,['T','UNE'])&&calc.in(user.job.cluesSubAbreviacion,['T02','UNE02','UNE04','UNE11'])"}}
-    {{validator type="expr" validIf="=persona.fechaNacimiento<fechaAtencion1" message="Error en la fecha atención"}}
-    {{validator type="expr" notValidIf="=catServicios=='PRECONSULTA'&&(!calc.in(user.job.cluesTipoAbreviacion,['T','UNE','Y'])||!calc.in(user.job.cluesSubAbreviacion,['T01','T03','CISAM','UNE01','UNE12','99']))" message="Servicio Atención Inválido"}}
+    {{field id="esUneme" type="expr" value="=calc.in(user.establishmentData.cluesTipoAbreviacion,['T','UNE'])&&calc.in(user.establishmentData.cluesSubAbreviacion,['T02','UNE02','UNE04','UNE11'])"}}
+    {{field id="esMayor18" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=18"}}
+    {{validator type="expr" validIf="=persona.fechaNacimiento<fechaAtencion1" message="Error en la fecha atención"}} 
+    {{!-- {{validator type="expr" notValidIf="=catServicios==='PAIDOPSIQUIATRÍA'&&esMayor18" message="Servicio Atención Inválido (Mayor de 18 Años)"}} --}} {{!-- Esta validación no debe estar porque si es posible seleccionar la opción si la terapia es grupal --}}
+    {{validator type="expr" notValidIf="=catServicios=='PRECONSULTA'&&(!calc.in(user.establishmentData.cluesTipoAbreviacion,['T','UNE','Y'])||!calc.in(user.establishmentData.cluesSubAbreviacion,['T01','T03','CISAM','UNE01','UNE12','99']))" message="Servicio Atención Inválido"}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')),'R69X')" message="Tiene Diagnósticos Duplicados"}}
   {{/section}}
   {{#section id="diagnosticos"}}
-    {{field id="esPsicologo" type="expr" value="=user.others.tipoPersonalNom=='psicologa'||user.others.tipoPersonalNom=='pasantePsicologia'"}}
+    {{field id="esPsicologo" type="expr" value="=calc.in(user.others.tipoPersonalNom,['psicologa','pasantePsicologia'])"}}
+    {{field id="esPsicologoPsiquiatra" type="expr" value="=calc.in(user.others.tipoPersonalNom,['psicologa','pasantePsicologia','psiquiatra'])"}}
     {{!-- {{field id="telemedicina" type="expr" value="=@solicitaTelemedicina=='si'?'En Tiempo Real':''"}}
     {{field id="teleconsulta" type="expr" value="=(@solicitaTeleconsulta=='si'&&calc.isNotEmpty(estudiosTeleconsulta))?'Diferida':''"}} --}}
     {{#field id="solicitaTelemedicina"}}
@@ -30,12 +39,14 @@
     {{#field id="contrarreferido"}}
       {{onChange clearFields="referidoPor"}}
     {{/field}}
+    {{validator type="expr" notValidIf="=!calc.in(@seRealizoPsicoterapia,['grupal','pareja','familiar'])&&base.catServicios==='PAIDOPSIQUIATRÍA'&&user.others.tipoPersonalNom==='residentePsiquiatria'" message="Servicio Atención PAIDOPSIQUIATRÍA válido para terapia GRUPAL, PAREJA o FAMILIAR"}}
     {{validator type="expr" notValidIf="=calc.findDuplicates(calc.pluckRef(consumoSustanciaPsicoactivas,'base.consumoSustanciasPsicoactivas'))" message="Duplicidad en Consumo Sustancias"}}
     {{validator type="expr" notValidIf="=calc.in('noAplica',calc.pluckRef(consumoSustanciaPsicoactivas,'base.consumoSustanciasPsicoactivas'))&&calc.pluckRef(consumoSustanciaPsicoactivas,'base.consumoSustanciasPsicoactivas').length>1" message="Sustancias Psicoactivas 'No Aplica' debe ser único"}}
     {{validator type="expr" notValidIf="=calc.in('noAplica',calc.pluckRef(identificacionViolencia,'base.ambitoViolencia'))&&calc.pluckRef(identificacionViolencia,'base.ambitoViolencia').length>1" message="Identificación Violencia 'No Aplica' debe ser único"}}
-    {{validator type="expr" notValidIf="=calc.in(base.catServicios,['GERONTOLOGÍA','PSICOGERIATRÍA'])&&edadActual<60&&!calc.in(seRealizoPsicoterapia,['grupal','pareja','familiar'])" message="Psicoterapia Individual Inválida"}}
-    {{validator type="expr" notValidIf="=calc.in(base.catServicios,['PAIDOPSIQUIATRÍA'])&&edadActual>=18&&!calc.in(seRealizoPsicoterapia,['grupal','pareja','familiar'])" message="Psicoterapia Individual Inválida"}}
+    {{validator type="expr" notValidIf="=calc.in(base.catServicios,['GERONTOLOGÍA','PSICOGERIATRÍA'])&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')<60&&!calc.in(diagnosticos.seRealizoPsicoterapia,['grupal','pareja','familiar'])" message="Psicoterapia Individual Inválida"}}
+    {{validator type="expr" notValidIf="=calc.in(base.catServicios,['PAIDOPSIQUIATRÍA'])&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=18&&!calc.in(diagnosticos.seRealizoPsicoterapia,['grupal','pareja','familiar'])" message="Psicoterapia Individual Inválida"}}
     {{validator type="expr" notValidIf="=contrarreferido=='no'&&!calc.in(@referidoPor,['otras','noAplica'])" message="Referido Por Inválido"}}
+    {{validator type="expr" notValidIf="=calc.in('noAplica',@estudiosTeleconsulta)&&@estudiosTeleconsulta.length>1" message="Estudios Teleconsulta 'No Aplica' debe ser único"}}
   {{/section}}
 {{!--RACC VISTA  --}}
  {{#view id="ultima"}}

@@ -1,24 +1,17 @@
 {{#define id="direccionSeulLesion"}}
   {{#section id="base"}}
-    {{field id="noEsMexico" type="expr" value="=pais!='MX'"}}
     {{field id="entidadNoEspecificada" type="expr" value="=entidadFederativa=='00'"}}
     {{field id="entidadSeIgnora" type="expr" value="=entidadFederativa=='99'"}}
     {{field id="siDesconoceCalle" type="expr" value="=desconoceCalle=='si'"}}
-    {{#field id="pais"}}
-      {{#onChange}}
-        {{set entidadFederativa="=pais!='MX'?'88':null"}}
-        {{set delegacion="=pais!='MX'?'No Aplica':null"}}
-        {{set codigoPostal="=pais!='MX'?'99999':null"}}
-      {{/onChange}}
-    {{/field}}
     {{#field id="entidadFederativa"}}
       {{#onChange clearFields="correosMexico,localidad,codigoPostal,colonia,delegacion,ciudad,estado,codigoOficina,codigoDelegacion,codigoCiudad,codigoEstado,zona,tipoAsentamiento"}}
-        {{set delegacion="=entidadFederativa=='00'?'No Especificado':entidadFederativa=='99'?'Se Ignora':null"}}
+        {{set delegacion="=calc.in(entidadFederativa,['00','88'])?'No Especificado':entidadFederativa=='99'?'Se Ignora':null"}}
+        {{set otraLocalidad="=calc.in(entidadFederativa,['00','88'])?'No Especificado':entidadFederativa=='99'?'Se Ignora':null"}}
       {{/onChange}}
     {{/field}}
     {{#field id="correosMexico"}}
       {{#editor}}
-        {{param estado="=entidadFederativa"}}
+        {{param estado="=entidadFederativa=='00'?'88':entidadFederativa"}}
         {{#onChange clearFields="localidad"}}
           {{set codigoPostal="=d_codigo"}}
           {{set colonia="=d_asenta"}}
@@ -38,7 +31,7 @@
       {{#editor}}
         {{param estado="=@codigoEstado||entidadFederativa"}}
         {{param municipio="=codigoDelegacion"}}
-        {{#onChange}}
+        {{#onChange refresh="true"}}
           {{set codigoLocalidad="=c_localidad"}}
         {{/onChange}}
       {{/editor}}

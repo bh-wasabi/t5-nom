@@ -3,9 +3,16 @@
     {{!-- como el nombre se calcula antes, hay que agregar este campo en el excel --}}
     {{field id="estaVivo" type="expr" value="=situacionActual=='vivo'"}}
     {{field id="estaDifunto" type="expr" value="=situacionActual=='difunto'"}}
-    {{field id="esTiraGlucosa" type="expr" value="=resultadoObtenido=='tiraGlucosaCapilar'&&((genero=='mujer'&&edadActual>=9&&edadActual<60)||genero!='mujer')"}}
+    {{field id="esTiraGlucosa" type="expr" value="=@glicemiaCapilar>0&&@resultadoObtenido=='tiraGlucosaCapilar'&&genero=='mujer'&&edadActual>=9&&edadActual<60"}}
     {{field id="mostrarEmbarazadaSinDiabetes" type="expr" value="=genero=='mujer'&&edadActual>=9&&edadActual<60&&@glicemiaCapilar!=0&&resultadoObtenido=='tiraGlucosaCapilar'"}}
     {{field id="pam" type="calc" label="PMA" value="=fn('pam', base)" format="#.##"}}
+    {{field id="glicemiaMayorACero" type="expr" value="=@glicemiaCapilar>0"}}
+    {{#field id="tomaGlicemiaCapilar"}}
+      {{onChange clearFields="glicemiaCapilar,resultadoObtenido,tirasControl,embarazadaSinDiabetes,prePrandial"}}
+    {{/field}}
+    {{#field id="glicemiaCapilar"}}
+      {{onChange clearFields="resultadoObtenido,tirasControl,embarazadaSinDiabetes,prePrandial"}}
+    {{/field}}
     {{validator type="expr" validIf="=@temperaturaCorporal==0||(@temperaturaCorporal>=30&&@temperaturaCorporal<=44)" message="Temperatura Incorrecta"}}
     {{validator type="expr" validIf="=(@tensionSistolica==0||@tensionSistolica==999)||(@tensionSistolica>=50&&@tensionSistolica<=300)" message="Presión Sistólica Incorrecta"}}
     {{validator type="expr" validIf="=(@tensionDiastolica==0||@tensionDiastolica==999)||(@tensionDiastolica>=20&&@tensionDiastolica<=200)" message="Presión Diastólica Incorrecta"}}

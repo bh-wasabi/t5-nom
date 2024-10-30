@@ -10,6 +10,14 @@
       {{filter condition="=id" field="persona.id" eq="=id"}}
     {{/find}}
   {{/view}}
+
+  {{#view id="buscarSolicitudProcedimiento"}}
+    {{#find limit="-1"}}
+      {{include field="base"}}
+      {{sort field="_created.date" direction="desc"}}
+      {{filter field="_created.request" eq="=request"}}
+    {{/find}}
+  {{/view}}
   {{#section id="base"}}
     {{field id="esHospitalizacion" type="expr" value="=tipoEpisodio=='hospitalizacion'"}}
   {{/section}}

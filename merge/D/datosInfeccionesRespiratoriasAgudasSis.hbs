@@ -1,8 +1,12 @@
-{{!-- Tarea 5660 --}}
 {{#define id="datosInfeccionesRespiratoriasAgudasSis"}}
   {{#section id="base"}}
-    {{validator type="expr" notValidIf="=presentaInfeccionAguda=='catVezNoEspecificado'&&planTratamiento!='noAplica'" message="Plan Tratamiento Inválido"}}
-    {{validator type="expr" notValidIf="=presentaInfeccionAguda=='catVezNoEspecificado'&&neumonia!='catVezNoEspecificado'" message="Neumonia Inválido"}}
+    {{#field id="presentaInfeccionAguda"}}
+      {{onChange clearFields="planTratamiento,neumonia"}}
+    {{/field}}
+    {{#field id="planTratamiento"}}
+      {{onChange clearFields="neumonia"}}
+    {{/field}}
+    {{validator type="expr" notValidIf="=presentaInfeccionAguda=='noAplica'&&planTratamiento!='noAplica'" message="Plan Tratamiento Inválido"}}
+    {{validator type="expr" notValidIf="=presentaInfeccionAguda=='noAplica'&&neumonia!='noAplica'" message="Neumonia Inválido"}}
   {{/section}}
 {{/define}}
-{{!-- Tarea 5660 --}}

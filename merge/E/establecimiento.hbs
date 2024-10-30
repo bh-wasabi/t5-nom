@@ -47,6 +47,17 @@
         {{param establecimiento="=_id"}}
       {{/editor}}
     {{/field}}
+    {{#field id="clues"}}
+      {{#onChange clearFields="cluesSubAbreviacion,cluesTipoAbreviacion,cluesServicioAmigable,cluesTieneEspirometro,cluesTipoUnidad,cluesIdEntidad"}}
+        {{set cluesTieneSsa="=@clues.search('SSA')>0"}}
+        {{set cluesSubAbreviacion="=@sub_abreviacion"}}
+        {{set cluesTipoAbreviacion="=@tip_abreviacion"}}
+        {{set cluesServicioAmigable="=@amigable"}}
+        {{set cluesTieneEspirometro="=@espirometro"}}
+        {{set cluesTipoUnidad="@tipo_unidad"}}
+        {{set cluesIdEntidad="@id_entidad_federativa"}}
+      {{/onChange}}
+    {{/field}}
   {{/section}}
   {{#grid id="nivelesAlerta" section="nivelesAlerta" allowInsert="true" allowRemove="true"}}
     {{column field="servicio" width="900"}}

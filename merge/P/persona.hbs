@@ -4762,6 +4762,7 @@
       {{set _direccion="=persona._direccion"}}
       {{set familiarResponsable="=persona.familiarResponsable"}}
       {{set _familiarResponsable="=persona._familiarResponsable"}}
+      {{set tieneMovimientos="=_items.length>0"}}
     {{/update}}
   {{/transform}}
 
@@ -4990,9 +4991,45 @@
     {{update section="resumen" value="=resumen" temp="true"}}
   {{/transform}}
 
+  {{#transform id="copiarDiagnosticoAltaUrgencias"}}
+    {{update section="contexto" value="=contexto"}}
+    {{update section="persona" transform="copiarPersona"}}
+    {{update section="nomDatos" transform="copiarNomDatos"}}
+    {{#update section="base"}}
+      {{set esMujer="=persona.esMujer"}}
+      {{set esHombre="=!esMujer"}}
+      {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
+      {{set esNeonatal="=calc.fromNowDays(persona.fechaNacimiento)<29"}}
+      {{set diagnostico="=detalle.diagnostico"}}
+      {{set _diagnostico="=detalle._diagnostico"}}
+      {{set alergia="=detalle.alergia"}}
+      {{set _alergia="=detalle._alergia"}}
+      {{set discapacidad="=detalle.discapacidad"}}
+      {{set _discapacidad="=detalle._discapacidad"}}
+      {{set medico="=contexto.medico||contexto.ingreso.medico"}}
+      {{set _medico="=contexto._medico||contexto.ingreso._medico"}}     
+      {{set especialidad="=contexto.especialidad||contexto.ingreso.especialidad"}}
+      {{set _especialidad="=contexto._especialidad||contexto.ingreso._especialidad"}}
+      {{set servicio="=contexto.servicio||contexto.ingreso.servicio"}}
+      {{set _servicio="=contexto._servicio||contexto.ingreso.servicio"}}
+      {{set antecedenteFamiliar="=detalle.antecedentes.antecedenteFamiliar"}}
+      {{set _antecedenteFamiliar="=detalle.antecedentes._antecedenteFamiliar"}}
+      {{set signosVitales="=detalle.signosVitales"}}
+      {{set _signosVitales="=detalle._signosVitales"}}
+      {{set somatometria="=detalle.somatometria"}}
+      {{set _somatometria="=detalle._somatometria"}}
+      {{set somatometriaPediatrica="=detalle.somatometriaPediatrica"}}
+      {{set _somatometriaPediatrica="=detalle._somatometriaPediatrica"}}
+      {{set fechaNacimiento="=persona.fechaNacimiento"}}
+      {{!-- {{set fechaIngresoUrgencias="=contexto.urgencias.desde"}} --}}
+    {{/update}}
+    {{update section="resumen" value="=resumen" temp="true"}}
+  {{/transform}}
+
   {{#transform id="copiarDiagnosticoUrgencias"}}
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
+    {{update section="nomDatos" transform="copiarNomDatos"}}
     {{#update section="base"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
@@ -5067,6 +5104,7 @@
   {{#transform id="copiarSeulEgreso"}}
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
+    {{update section="nomDatos" transform="copiarNomDatos"}}
     {{#update section="base" newRef="servicios"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
@@ -5107,7 +5145,8 @@
   {{#transform id="copiarDetecciones"}}
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
-    {{#update section="base" newRef="tamizaje"}}
+    {{update section="nomDatos" transform="copiarNomDatos"}}
+    {{#update section="base"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
       {{set edadActual="=persona.edadActual"}}
@@ -5115,17 +5154,9 @@
       {{set tipoServicioSisMenor="=calc.fromNowYears(persona.fechaNacimiento)<18"}}
       {{set tipoServicioSisMayor="=calc.fromNowYears(persona.fechaNacimiento)>=60"}}
       {{set primeraConsultaAno="=_items.length?'no':'si'"}}
-      {{!-- RACC --}}
-      {{!-- {{set signosVitales="=detalle.signosVitales"}} --}}
-      {{!-- {{set _signosVitales="=detalle._signosVitales"}} --}}
-      {{!-- {{set somatometria="=detalle.somatometria"}} --}}
-      {{!-- {{set _somatometria="=detalle._somatometria"}} --}}
-      {{!-- RACC --}}
-      {{setRef ref="tamizaje.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
-      {{setRef ref="datosGenerales.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
     {{/update}}
     {{#update section="otrosDatos"}}
-      {{set cluesTieneEspirometro="=calc.isNotEmpty(user.job.cluesTieneEspirometro)"}}
+      {{set cluesTieneEspirometro="=calc.isNotEmpty(user.establishmentData.cluesTieneEspirometro)"}}
       {{set genero="=persona.genero"}}
     {{/update}}
     {{update section="tipoServicioSis" value="=calc.itemsToCode(calc.tipoServicioSis(calc.in('detecciones',user.others.tipoServicioSis)?'detecciones':'',user.others.tipoPersonalNom,base.esMujer?'mujer':'',base.tipoServicioSisMenor?'menor':base.tipoServicioSisMayor?'mayor':''))" temp="true"}}
@@ -5407,6 +5438,7 @@
   {{#transform id="copiarSisConsultaExterna"}}
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
+    {{update section="nomDatos" transform="copiarNomDatos"}}
     {{#update section="base"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
@@ -5466,6 +5498,7 @@
   {{#transform id="copiarSaludMental"}}
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
+    {{update section="nomDatos" transform="copiarNomDatos"}}
     {{#update section="base"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
@@ -5481,29 +5514,26 @@
       {{set edadActual="=persona.edadActual"}}
       {{set _edadActual="=persona._edadActual"}}
     {{/update}}
-    {{update section="tipoServicioSis" value="=calc.itemsToCode(calc.tipoServicioSis(calc.in('saludMental',user.others.tipoServicioSis)?'saludMental':'',user.others.tipoPersonalNom,base.esMujer?'mujer':'',base.tipoServicioSisMenor?'menor':base.tipoServicioSisMayor?'mayor':''))" temp="true"}}
+    {{update section="tipoServicioSis" value="=calc.itemsToCode(calc.tipoServicioSis(calc.in('saludMental',user.others.tipoServicioSis)?'saludMental':'',user.others.tipoPersonalNom,base.esMujer?'mujer':'',base.tipoServicioSisMenor?'menor':base.tipoServicioSisMayor?'mayor':''))" temp="true"}}  
     {{update section="resumen" value="=resumen" temp="true"}}
   {{/transform}}
 
   {{#transform id="copiarPlanificacionFamiliar"}}
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
+    {{update section="nomDatos" transform="copiarNomDatos"}}
     {{#update section="base"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
       {{set fechaNacimiento="=persona.fechaNacimiento"}}
       {{set edadActual="=persona.edadActual"}}
       {{set _edadActual="=persona._edadActual"}}
-      {{set menor="=calc.fromNowYears(persona.fechaNacimiento)>=10&&calc.fromNowYears(persona.fechaNacimiento)<=19"}}
       {{set tipoServicioSisMenor="=calc.fromNowYears(persona.fechaNacimiento)<18"}}
       {{set tipoServicioSisMayor="=calc.fromNowYears(persona.fechaNacimiento)>=60"}}
       {{set primeraConsultaAno="=_items.length?'no':'si'"}}
-      {{setRef ref="orientacionConsejeria.base.esMenor" value="=menor"}}
-      {{setRef ref="metodos.base.esMujer" value="=persona.genero=='mujer'"}}
-      {{setRef ref="metodos.base.esHombre" value="=persona.genero=='hombre'"}}
-      {{setRef ref="metodos.base.edad" value="=calc.fromNowYears(persona.fechaNacimiento)"}}
-      {{setRef ref="metodos.base.noPsicologo" value="=!calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])"}}
-      {{setRef ref="metodos.base.noPsicologoEsHombre" value="=!calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])&&persona.genero=='hombre'"}}
+      {{set edad="=calc.fromNowYears(persona.fechaNacimiento)"}}
+      {{set noPsicologoEsHombre="=!calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])&&persona.genero=='hombre'"}}
+      {{set noPsicologo="=!calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])"}}
     {{/update}}
     {{update section="tipoServicioSis" value="=calc.itemsToCode(calc.tipoServicioSis(calc.in('planificacionFamiliar',user.others.tipoServicioSis)?'planificacionFamiliar':'',user.others.tipoPersonalNom,base.esMujer?'mujer':'',base.tipoServicioSisMenor?'menor':base.tipoServicioSisMayor?'mayor':''))" temp="true"}}
     {{update section="resumen" value="=resumen" temp="true"}}
@@ -5512,6 +5542,7 @@
   {{#transform id="copiarSaludBucal"}}
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
+    {{update section="nomDatos" transform="copiarNomDatos"}}
     {{#update section="base"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
@@ -5558,6 +5589,7 @@
   {{#transform id="copiarSeulLesiones"}}
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
+    {{update section="nomDatos" transform="copiarNomDatos"}}
     {{#update section="base"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
@@ -5577,7 +5609,7 @@
       {{setRef ref="atencionMedicaLesion.base.edad" value="=calc.fromNowYears(persona.fechaNacimiento)"}}
       {{setRef ref="atencionMedicaLesion.base.esMujer" value="=esMujer"}}
       {{setRef ref="atencionMedicaLesion.base.esHombre" value="=esHombre"}}
-      {{setRef ref="accidenteLesion.base.edad" value="=calc.fromNowYears(persona.fechaNacimiento)"}}
+      {{setRef ref="accidenteLesion.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
   {{/transform}}
@@ -7677,6 +7709,7 @@
   {{#action id="notaDetecciones" source="notaDetecciones" label="Detecciónes" transform="copiarDetecciones" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="nota" fromView="ultima"}}
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
+    {{!-- {{ask field="fechaAtencion" type="date" label="Fecha Atención" min="=moment(persona.fechaNacimiento).format()" max="=moment().format()" required="true"}} --}}
   {{/action}}
   {{#action id="notaSaludMental" source="notaSaludMental" label="Salud Mental" transform="copiarSaludMental" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="nota" fromView="ultima"}}
     {{param persona="=_id"}}
@@ -9872,42 +9905,42 @@
     {{item action="importarSMC" text="Importar SCM"}}
   {{/menu}}  
 
-  {{#action id="exportarSinbaConsultaExterna" label="Exportar SINBA - Consulta Externa"  hide="true" type="download-text" fileName="='CEX-'+user.job.cluesAdscripcionNomina+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/complexView/sinbaConsultaExterna.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaConsultaExterna" label="Exportar SINBA - Consulta Externa"  hide="true" type="download-text" fileName="='CEX-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/sinba/notaSisConsultaExterna" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
   {{/action}}
 
-  {{#action id="exportarSinbaLesiones" label="Exportar SINBA - Lesiones"  hide="true" type="download-text" fileName="='LES-'+user.job.cluesAdscripcionNomina+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/complexView/sinbaLesiones.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaLesiones" label="Exportar SINBA - Lesiones"  hide="true" type="download-text" fileName="='LES-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/sinba/notaSeulLesiones" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
   {{/action}}
 
-  {{#action id="exportarSinbaUrgencias" label="Exportar SINBA - Urgencias"  hide="true" type="download-text" fileName="='URG-'+user.job.cluesAdscripcionNomina+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/complexView/sinbaUrgencias.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaUrgencias" label="Exportar SINBA - Urgencias"  hide="true" type="download-text" fileName="='URG-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/sinba/notaAltaServicio" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
   {{/action}}
 
-  {{#action id="exportarSinbaEgresos" label="Exportar SINBA - Egresos"  hide="true" type="download-text" fileName="='EGR-'+user.job.cluesAdscripcionNomina+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/complexView/sinbaEgresos.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaEgresos" label="Exportar SINBA - Egresos"  hide="true" type="download-text" fileName="='EGR-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/sinba/notaSeulEgreso" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
   {{/action}}
 
-  {{#action id="exportarSinbaSaludBucal" label="Exportar SINBA - Salud Bucal"  hide="true" type="download-text" fileName="='CSB-'+user.job.cluesAdscripcionNomina+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/complexView/sinbaSaludBucal.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaSaludBucal" label="Exportar SINBA - Salud Bucal"  hide="true" type="download-text" fileName="='CSB-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/sinba/notaSaludBucal" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
   {{/action}}
 
-  {{#action id="exportarSinbaSaludMental" label="Exportar SINBA - Salud Mental"  hide="true" type="download-text" fileName="='CSM-'+user.job.cluesAdscripcionNomina+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/complexView/sinbaSaludMental.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaSaludMental" label="Exportar SINBA - Salud Mental"  hide="true" type="download-text" fileName="='CSM-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/sinba/notaSaludMental" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
   {{/action}}
 
-  {{#action id="exportarSinbaPlanificacionFamiliar" label="Exportar SINBA - Planificación Familiar"  hide="true" type="download-text" fileName="='CPF-'+user.job.cluesAdscripcionNomina+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/complexView/sinbaPlanificacionFamiliar.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaPlanificacionFamiliar" label="Exportar SINBA - Planificación Familiar"  hide="true" type="download-text" fileName="='CPF-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/sinba/notaPlanificacionFamiliar" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
   {{/action}}
 
-  {{#action id="exportarSinbaDetecciones" label="Exportar SINBA - Detecciones"  hide="true" type="download-text" fileName="='CDT-'+user.job.cluesAdscripcionNomina+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/complexView/sinbaDetecciones.txt" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaDetecciones" label="Exportar SINBA - Detecciones"  hide="true" type="download-text" fileName="='CDT-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/sinba/notaDetecciones" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
   {{/action}}
@@ -11084,10 +11117,10 @@
     {{item action="notaSolicitudVisitaDomiciliaria" text="Solicitud Visita Domiciliaria"}}  
   {{/menu}}
 
-  {{action id="notaTempConsultaExterna" source="notaTempConsultaExterna" label="Consulta Externa" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
-  {{action id="notaTempSaludMental" source="notaTempSaludMental" label="Salud Mental" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
-  {{action id="notaTempSaludBucal" source="notaTempSaludBucal" label="Salud Bucal" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
-  {{action id="notaTempPlanificacionFamiliar" source="notaTempPlanificacionFamiliar" label="Planificación Familiar" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+  {{action id="notaTempConsultaExterna" source="notaTempConsultaExterna" label="Consulta Externa" transform="copiarSisConsultaExterna" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+  {{action id="notaTempSaludMental" source="notaTempSaludMental" label="Salud Mental" transform="copiarSaludMental" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+  {{action id="notaTempSaludBucal" source="notaTempSaludBucal" label="Salud Bucal" transform="copiarSaludBucal" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
+  {{action id="notaTempPlanificacionFamiliar" source="notaTempPlanificacionFamiliar" label="Planificación Familiar" transform="copiarPlanificacionFamiliar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
   {{action id="notaTempEgresos" source="notaTempEgresos" label="Egresos" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
   {{action id="notaTempUrgencias" source="notaTempUrgencias" label="Urgencias" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
   {{action id="notaTempLesiones" source="notaTempLesiones" label="Lesiones" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}
@@ -11229,7 +11262,9 @@
   {{action id="notaDatosFinancieros" source="notaDatosFinancieros" label="Datos Financieros" transform="copiarDatos" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaDatosNacionalidad" source="notaDatosNacionalidad" label="Datos Nacionalidad" transform="copiarDatos" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaDatosPersonales" source="notaDatosPersonales" label="Datos Personales" transform="copiarDatosPersonales" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
-  {{action id="notaModificacionDatosPersonales" source="notaDatosPersonales" subType="modificacion" subTypeName="Modificacion Datos Personales" label="Modificacion Datos Personales" transform="copiarDatosPersonales" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{#action id="notaModificacionDatosPersonales" source="notaDatosPersonales" subType="modificacion" subTypeName="Modificacion Datos Personales" label="Modificacion Datos Personales" transform="copiarDatosPersonales" fromSource="nota" fromView="nomTieneMovimientos" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+    {{param persona="=_id"}}
+  {{/action}}
   {{action id="notaDatosSeguro" source="notaDatosSeguro" label="Datos Seguro" transform="copiarDatosSeguro" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaCancelacionCita" source="notaCancelacionCita" label="Cancelación Cita" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaPrimeraVezClinicaSueno" source="notaPrimeraVezClinicaSueno" label="Primera Vez Clínica Sueño" transform="copiarDiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
@@ -12192,8 +12227,39 @@
   {{action id="notaReceta" source="notaReceta" label="Receta" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaSesionMedicoQuirurgica" source="notaSesionMedicoQuirurgica" label="Sesión Médico Quirurgica" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaReporteProcedimiento" source="notaReporteProcedimiento" label="Reporte Procedimiento" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
-  {{#action id="notaAltaServicio" source="notaAltaServicio" label="Alta Servicio" transform="copiarDiagnosticoUrgencias" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="solicitudesEgreso" toSection="solicitudesEgreso" error="=fn('errorDatosSeguro', persona, contexto, detalle)" errorType="info"}}
+  {{#action 
+    id="notaAltaServicio"
+    source="notaAltaServicio"
+    label="Alta Servicio"
+    transform="copiarDiagnosticoAltaUrgencias"
+    hide="true"
+    type="add-subdoc"
+    visibleMode="close"
+    color="deep-orange"
+    onlyPost="true"
+    fromSource="solicitud"
+    fromView="solicitudesEgreso"
+    toSection="solicitudesEgreso"
+    fromSource2="notaSolicitudInterconsulta"
+    fromView2="buscarInterconsulta"
+    toSection2="notaSolicitudInterconsulta"
+    fromSource3="notaSolicitudProcedimiento"
+    fromView3="buscarSolicitudProcedimiento"
+    toSection3="notaSolicitudProcedimiento"
+    fromSource4="notaPlanAltaEnfermeria"
+    fromView4="buscarPlanAltaEnfermeria"
+    toSection4="notaPlanAltaEnfermeria"
+    fromSource5="notaInicialUrgencias"
+    fromView5="buscarInicialUrgencias"
+    toSection5="notaInicialUrgencias"
+    fromSource6="notaFinalizaAtencion"
+    fromView6="buscarFinalizaAtencion"
+    toSection6="notaSalePacienteInterconsulta"
+    error="=fn('errorDatosSeguro', persona, contexto, detalle)"
+    errorType="info"
+  }}
     {{param persona="=_id"}}
+    {{param request="=_params._id"}}
     {{param tipoEpisodio="=fn('tipoEpisodio', contexto)"}}
     {{param desde="=fn('hospitalizacionDesde', contexto)"}}    
   {{/action}}
@@ -12292,7 +12358,7 @@
     {{param tipoEpisodio="=fn('tipoEpisodio', contexto)"}}
     {{param desde="=fn('hospitalizacionDesde', contexto)"}}    
   {{/action}}
-  {{#action id="notaSeulEgreso" source="notaSeulEgreso" label="SEUL Egreso" transform="copiarSeulEgreso" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="solicitudesEgreso" toSection="solicitudesEgreso" error="=fn('errorCluesEgreso',user.job.cluesTipoUnidad,user.job.cluesTipoAbreviacion)||fn('errorDatosSeguro', persona, contexto, detalle)" errorType="info"}}
+  {{#action id="notaSeulEgreso" source="notaSeulEgreso" label="SEUL Egreso" transform="copiarSeulEgreso" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="solicitudesEgreso" toSection="solicitudesEgreso" error="=fn('errorCluesEgreso',user.establishmentData.cluesTipoUnidad,user.establishmentData.cluesTipoAbreviacion)||fn('errorDatosSeguro', persona, contexto, detalle)" errorType="info"}}
     {{param persona="=_id"}}
     {{param tipoEpisodio="=fn('tipoEpisodio', contexto)"}}
     {{param desde="=fn('hospitalizacionDesde', contexto)"}}    
@@ -12337,7 +12403,7 @@
     {{item action="notaInicialUrgencias" text="Inicial Urgencias"}}
   {{/menu}}
   {{action id="notaActivarCodigoUrgencias" source="notaActivarCodigoUrgencias" label="Activar Código Urgencias" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
-  {{action id="notaInicialUrgencias" source="notaInicialUrgencias" label="Inicial Urgencias" transform="copiarDiagnosticoUrgencias" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" error="=fn('errorCluesUrgencias',user.job.cluesTipoUnidad,user.job.cluesTipoAbreviacion)" errorType="info"}}
+  {{action id="notaInicialUrgencias" source="notaInicialUrgencias" label="Inicial Urgencias" transform="copiarDiagnosticoUrgencias" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" error="=fn('errorCluesUrgencias',user.establishmentData.cluesTipoUnidad,user.establishmentData.cluesTipoAbreviacion)" errorType="info"}}
   {{action id="notaInicialUrgenciasGinecologiaYObstetricia" source="notaInicialUrgenciasGinecologiaYObstetricia" label="Inicial Urgencias Ginecología y Obstetricia" transform="copiarAlarmaObstetrica" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaUrgencias" source="notaUrgencias" label="Urgencias" transform="copiarDiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
 

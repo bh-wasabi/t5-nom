@@ -43,27 +43,29 @@ var esHost = 'http://demo5.enlanube.io:3000/es'
 var imageWidth = 60;
 var logoSaludNess = 'https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png';
 var logo3 = 'https://his-imagenes.s3-accelerate.amazonaws.com/logos/saludNess.png';
-subProyects = 'mx,his,hraei,n3';
+subProyects = 'mx,his,hraei,n3,multi';
+var headers = ['Hospital Regional de Alta Especialidad Ixtapaluca','Carretera Federal México Puebla Km. 34.5','Pueblo de Zoquiapan 56530, Ixtapaluca, Méx.','Teléfono: (55) 5972 9800, CLUES: MCSSA018786']
+params = '&esHRAEI=true&esHIS=true&n3=true&esMulti=true';
 
 // MCSMP014640
 // var headers = ['SERVICIOS ESPECIALIZADOS EN NEFROLOGÍA TOLUCA, S.C.','San Juan 201','Plazas de San Buenaventura, C.P. 50110, Toluca, México','Teléfono: (722) 917 4809, CLUES: MCSMP014640']
-// params = '&esHRAEI=true&esHIS=true&n3=true&MCSMP014640=true';
+// params = '&esHRAEI=true&esHIS=true&n3=true&MCSMP014640=true&esMulti=true';
 
 // MCSSA018354
 // var headers = ['MATERNIDAD ATLACOMULCO','Av. Mario Colin Sanchez S/N','Col. La Mora. C.P. 50450, Atlacomulco, México','Teléfono: (712) 195 5563, CLUES: MCSSA018354']
-// params = '&esHRAEI=true&esHIS=true&n3=true&MCSSA018354=true';
+// params = '&esHRAEI=true&esHIS=true&n3=true&MCSSA018354=true&esMulti=true';
 
 // CLSSA000815
 // var headers = ['HOSPITAL INTEGRAL PARRAS DE LA FUENTE','16 de Septiembre','Fraccionamiento Estrella, C.P. 27980, Parras de la Fuente, Coahuila','Teléfono: (842) 422 0151, CLUES: CLSSA000815']
-// params = '&esHRAEI=true&esHIS=true&n3=true&CLSSA000815=true';
+// params = '&esHRAEI=true&esHIS=true&n3=true&CLSSA000815=true&esMulti=true';
 
 // DFSSA004072
 // var headers = ['INSTITUTO NACIONAL DE PSIQUIATRÍA RAMÓN DE LA FUENTE MUÑÍZ','Calz. México-Xochimilco 101','Col. Huipulco, C.P. 14370, Tlalpan, Ciudad de México, CDMX','Teléfono: (55) 4160 5000, CLUES: DFSSA004072']
-// params = '&esHRAEI=true&esHIS=true&n3=true&DFSSA004072=true';
+// params = '&esHRAEI=true&esHIS=true&n3=true&DFSSA004072=true&esMulti=true';
 
 // DFSSA005146
-var headers = ['SERVICIO AMIGABLE ITINERANTE EDUSEX', 'CLUES: DFSSA005146']
-params = '&esHRAEI=true&esHIS=true&n3=true&DFSSA005146=true';
+// var headers = ['SERVICIO AMIGABLE ITINERANTE EDUSEX', 'CLUES: DFSSA005146']
+// params = '&esHRAEI=true&esHIS=true&n3=true&DFSSA005146=true&esMulti=true';
 
 proyectId = 't5-nom';
 esIndex = 'his4';

@@ -1,4 +1,6 @@
 {{#define id="notaCertificacionNoExistePaciente"}}
+  {{action id="afectar" confirm="=calc.contieneMalaPalabra(base.paciente.base.clave)" confirmWidth="400" confirmHeight="400" confirmMessage="='CURP contiene palabra altisonante (' + base.paciente.base.clave.substr(0,4) + ')<br>Si desea continuar presione Sí.<br>De lo contrario, presione No y modifique el dato colocando una X en el segundo caracter.'"}}
+
   {{#section id="base"}}
     {{validator type="expr" validIf="=verificacionBusqueda=='si'" message="Falta Certificar"}}
   {{/section}}

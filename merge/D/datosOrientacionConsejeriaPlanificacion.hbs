@@ -1,7 +1,6 @@
 {{#define id="datosOrientacionConsejeriaPlanificacion"}}
   {{#section id="base"}}
     {{field id="esMujer" type="expr" value="=_params.mainDoc.base.esMujer||base.esMujer"}}
-    {{!-- Tarea #3998 --}}
     {{field id="menorEs" type="expr" value="=calc.fromNowYears(esMenor)>=10&&calc.fromNowYears(esMenor)<=19"}}
   {{/section}}
 {{/define}}

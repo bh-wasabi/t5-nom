@@ -36,9 +36,9 @@
     {{#search index="sis-23" type="_doc" filterParamsOnlySearch="true"}}
       {{param DIA_CRONICOS="=edadActual<20?'NO':null"}}
       {{param DIA_CAINFANTIL="=edadActual>18?'NO':null"}}
-      {{param VALIDO_SM="=calc.in(_type, ['notaSaludMental','notaTempSaludMental'])?'SI':null"}}
-      {{param VALIDO_SB="=calc.in(_type, ['notaSaludBucal','notaTempSaludBucal'])?user.others.tipoPersonalCE:null"}}
-      {{param VALIDO_PF="=calc.in(_type, ['notaPlanificacionFamiliar','notaTempPlanificacionFamiliar'])?'SI':null"}}
+      {{param VALIDO_SM="=@esPrincipal&&calc.in(_type, ['notaSaludMental','notaTempSaludMental'])?'SI':null"}}
+      {{param VALIDO_SB="=@esPrincipal&&calc.in(_type, ['notaSaludBucal','notaTempSaludBucal'])?user.others.tipoPersonalCE:null"}}
+      {{param VALIDO_PF="=@esPrincipal&&calc.in(_type, ['notaPlanificacionFamiliar','notaTempPlanificacionFamiliar'])?'SI':null"}}
       {{param TIPO_PERSONAL_1VEZ_CE="=calc.in(_type, ['notaConsultaExterna','notaTempConsultaExterna','notaSisConsultaExterna'])&&relacionTemporal=='primeraVez'?user.others.tipoPersonalCE:null"}}
       {{param TIPO_PERSONAL_SUBSEC_CE="=calc.in(_type, ['notaConsultaExterna','notaTempConsultaExterna','notaSisConsultaExterna'])&&relacionTemporal=='subsecuente'?user.others.tipoPersonalCE:null"}}
     {{/search}}
@@ -48,8 +48,8 @@
     {{#search index="cie10-23" type="_doc" filterParamsOnlySearch="true"}}
       {{param NUM_CARACTERES="4"}}
       {{param RUBRICA_TYPE="='NOT B'"}}
-      {{param AF_PRIN="=calc.in(_type, ['notaUrgencias','notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaEgresos','notaTempEgresos','notaSeulEgreso'])&&esPrincipal?'SI':null"}}
-      {{param CLAVE_CAPITULO="=calc.in(_type, ['notaUrgencias','notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaEgresos','notaTempEgresos','notaSeulEgreso'])&&esOtro?'NOT XX':null"}}
+      {{param AF_PRIN="=calc.in(_type, ['notaUrgencias','notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaEgresos','notaTempEgresos','notaSeulEgreso','notaEvolucion'])&&esPrincipal?'SI':null"}}
+      {{param CLAVE_CAPITULO="=calc.in(_type, ['notaUrgencias','notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaEgresos','notaTempEgresos','notaSeulEgreso','notaEvolucion'])&&esOtro?'NOT XX':null"}}
       {{param VALIDO_LESIONES_AF="=calc.in(_type, ['notaLesiones','notaTempLesiones','notaSeulLesiones'])&&esPrincipal?'SI':null"}}
       {{param VALIDO_LESIONES_AT="=calc.in(_type, ['notaLesiones','notaTempLesiones','notaSeulLesiones'])&&esOtro?'SI':null"}}
     {{/search}}

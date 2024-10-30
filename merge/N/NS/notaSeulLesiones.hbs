@@ -1,4 +1,10 @@
 {{#define id="notaSeulLesiones"}}
+  {{#action id="afectar" confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))" confirmMessage="Diagnóstico Excede Límite Edad<br>¿Desea continuar?"}}
+    {{#update section="base"}}
+      {{set excedeLimiteEdad="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))?'SI':'NO'"}}
+    {{/update}}
+  {{/action}}
+  
   {{#section id="base"}}
     {{field id="esMujerMayor9" type="expr" value="=esMujer&&(calc.fromNowYears(persona.fechaNacimiento)>=9||calc.fromNowYears(persona.fechaNacimiento<=59))"}}
     {{field id="esFertil" type="expr" value="=mujerFertil=='embarazo'||mujerFertil=='puerperio'"}}
@@ -11,22 +17,36 @@
   			{{set cantidadAfectacionesTratadas="=otrosDiagnosticos.length"}}
   		{{/update}}
   	{{/onChange}}
+    {{#field id="usuarioReferido"}}
+      {{onChange clearFields="cluesReferido,cluesEstatus,cluesFechaBaja"}}
+    {{/field}}
+    {{#field id="cluesReferido"}}
+      {{#onChange clearFields="cluesEstatus,cluesFechaBaja"}}
+        {{set cluesEstatus="=ESTATUS_OPERACION"}}
+        {{set cluesFechaBaja="=FECHA_EFECTIVA_BAJA"}}
+      {{/onChange}}
+    {{/field}}
     {{validator type="expr" notValidIf="=atencionMedicaLesion.base.consecuenciaLesion=='defuncion'&&afectacionesTratadas[0].base.destinoAtencionLesion!='defuncion'" message="Verificar Destino en Afectaciones Tratadas"}}
     {{validator type="expr" notValidIf="=profesionalResponsableSalud.base.responsableAtencionMedica=='medicoTratante'&&(calc.in('tratamientoPsicologo',atencionMedicaLesion.base.tipoAtencionLesion)||calc.in('consergeria',atencionMedicaLesion.base.tipoAtencionLesion))" message="Profesional Responsable Salud Inválido"}}
-    {{validator type="expr" notValidIf="=(profesionalResponsableSalud.base.responsableAtencionMedica=='psicologoTratante'&&atencionMedicaLesion.base.tipoAtencionLesion.length>1)||(profesionalResponsableSalud.base.responsableAtencionMedica=='psicologoTratante'&&!calc.in('tratamientoPsicologo',atencionMedicaLesion.base.tipoAtencionLesion))" message="Profesional Responsable Salud Inválido"}}
-    {{validator type="expr" notValidIf="=(profesionalResponsableSalud.base.responsableAtencionMedica=='trabajadoraSocial'&&atencionMedicaLesion.base.tipoAtencionLesion.length>1)||(profesionalResponsableSalud.base.responsableAtencionMedica=='trabajadoraSocial'&&!calc.in('consergeria',atencionMedicaLesion.base.tipoAtencionLesion))" message="Profesional Responsable Salud Inválido"}}
+    {{!-- Se quita primer parte de la validación, que obliga a que unicamente tenga un Tipo de Atención para Psicologos --}}
+    {{!-- {{validator type="expr" notValidIf="=(profesionalResponsableSalud.base.responsableAtencionMedica=='psicologoTratante'&&atencionMedicaLesion.base.tipoAtencionLesion.length>1)||(profesionalResponsableSalud.base.responsableAtencionMedica=='psicologoTratante'&&!calc.in('tratamientoPsicologo',atencionMedicaLesion.base.tipoAtencionLesion))" message="Profesional Responsable Salud Inválido"}} --}}
+    {{validator type="expr" notValidIf="=(profesionalResponsableSalud.base.responsableAtencionMedica=='psicologoTratante'&&!calc.in('tratamientoPsicologo',atencionMedicaLesion.base.tipoAtencionLesion))" message="Profesional Responsable Salud Inválido"}}
+    {{!-- Se quita primer parte de la validación, que obliga a que unicamente tenga un Tipo de Atención para Trabajador Social --}}
+    {{!-- {{validator type="expr" notValidIf="=(profesionalResponsableSalud.base.responsableAtencionMedica=='trabajadoraSocial'&&atencionMedicaLesion.base.tipoAtencionLesion.length>1)||(profesionalResponsableSalud.base.responsableAtencionMedica=='trabajadoraSocial'&&!calc.in('consergeria',atencionMedicaLesion.base.tipoAtencionLesion))" message="Profesional Responsable Salud Inválido"}} --}}
+    {{validator type="expr" notValidIf="=(profesionalResponsableSalud.base.responsableAtencionMedica=='trabajadoraSocial'&&!calc.in('consergeria',atencionMedicaLesion.base.tipoAtencionLesion))" message="Profesional Responsable Salud Inválido"}}
     {{validator type="expr" validIf="=calc.isEmpty(@edadGestacional)||(calc.number(@edadGestacional)>=1&&calc.number(@edadGestacional)<=45)||(calc.number(@edadGestacional)==99)" message="Error en la Edad Gestacional"}}
     {{validator type="expr" validIf="=calc.isEmpty(otrosDiagnosticos)||otrosDiagnosticos.length<7" message="Máximo 6 Afecciones Tratadas"}}
     {{validator type="expr" notValidIf="=!calc.isEmpty(atencionMedicaLesion.base.fechaAtencion)&&!calc.isEmpty(eventoLesion.base.fechaOcurreEvento)&&moment(atencionMedicaLesion.base.fechaAtencion).isBefore(eventoLesion.base.fechaOcurreEvento)" message="Fecha Atención Médica Inválida"}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')), @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico)" message="Tiene Diagnósticos Duplicados"}}
     {{validator type="expr" notValidIf="=calc.in('DEFUNCION', calc.mergeArrays(afeccionPrincipal.base.validoSeul, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.validoSeul, calc.pluckRef(@otrosDiagnosticos, 'base.validoSeul')))&&(calc.getRef(@atencionMedicaLesion, 'base.consecuenciaLesion')!='defuncion'||calc.getRef(@destinoDespuesLesion, 'base.destinoAtencionLesion')!='defuncion')" message="DEFUNCIÓN Mal Configurada"}}
+    {{validator type="expr" validIf="=!@cluesReferido||cluesEstatus=='EN OPERACION'||(@cluesFechaBaja&&moment().add(-90,'days').format('YYYY-MM-DD')<=@cluesFechaBaja)" message="CLUES Fuera de Operación"}}
   {{/section}}
 
   {{#section id="circunstanciasEvento"}}
     {{field id="tieneTrata" type="expr" value="=tipoIntencionalidad!='trataPersonas'"}}
     {{field id="ocultarCampos" type="expr" value="=calc.in(tipoIntencionalidad,['violenciaFamiliar','violenciaNoFamiliar'])"}}
     {{field id="tieneOtro" type="expr" value="=agenteLesion==='otra'"}}
-    {{field id="tieneViolenciaNoFamiliar" type="expr" value="=tipoIntencionalidad=='violenciaFamiliar'&&numeroAgresores=='unico'"}}
+    {{field id="tieneViolencia" type="expr" value="=calc.in(tipoIntencionalidad,['violenciaFamiliar','violenciaNoFamiliar'])&&numeroAgresores=='unico'"}}
     {{field id="masUnoAgresor" type="expr"  value="=numeroAgresores=='unico'"}}
     {{field id="esAccidente" type="expr" value="=agenteLesion=='vehiculoMotor'"}}
     {{#field id="tipoIntencionalidad"}}
@@ -61,7 +81,8 @@
     {{validator type="expr" notValidIf="=@tipoParentesco=='conyugue'&&@edadAgresor==''" message="Edad del Agresor Requerida"}}
     {{validator type="expr" notValidIf="=@tipoDroga.length>1&&(calc.in('ninguna',@tipoDroga)||calc.in('seIgnora',@tipoDroga))" message="Drogas Incorrectas"}}
     {{validator type="expr" notValidIf="=@tipoIntencionalidad=='violenciaFamiliar'&&calc.in(@tipoParentesco,['sinParentesco','desconocido'])" message="Parentesco Agresor Inválido"}}
-    {{validator type="expr" validIf="=!@edadAgresor||(@edadAgresor>=3&&@edadAgresor<=99)" message="Edad Agresor Inválida"}}
+    {{validator type="expr" notValidIf="=@tipoIntencionalidad=='violenciaNoFamiliar'&&!calc.in(@tipoParentesco,['sinParentesco','desconocido'])" message="Parentesco Agresor Inválido"}}
+    {{validator type="expr" validIf="=!@edadAgresor||(@edadAgresor>=3&&@edadAgresor<=99)||(@edadAgresor=='999'&&@tipoParentesco!='conyugue')" message="Edad Agresor Inválida"}}
     {{validator type="expr" validIf="=calc.isEmpty(@otroAgente)||!calc.in(calc.lowerCase(calc.normalize(@otroAgente)),['fuego','flama','sustancia caliente','vapor','intoxicacion por drogas o medicamentos','pie','mano','caida','objeto contundente','objeto punzo cortante','golpe contra piso','golpe contra pared','cuerpo extraño','explosion','asfixia','sofocacion','multiples agentes','proyectil arma de fuego','ahorcamiento','radiacion','sustancias quimicas','corriente electrica','herramienta','maquina','sacudidas','desastre natural','vehiculo de motor','ahorcamiento por sumersion','piquete','mordedura de animal','fuerzas de la naturaleza','intoxicacion por plantas hongos venenosos','otra','se ignora','no aplica'])" message="Otro Agente Inválido"}}
   {{/section}}
   

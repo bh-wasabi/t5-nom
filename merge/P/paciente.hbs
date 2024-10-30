@@ -18,7 +18,7 @@
       {{set condition="=calc.isEmpty(base.apellidoPaterno)" apellidoPaterno="='XX'"}}
       {{set condition="=calc.isEmpty(base.apellidoMaterno)" apellidoMaterno="='XX'"}}
       {{set condition="=calc.isEmpty(base.generoSocial)" generoSocial="='noEspecificado'"}}
-      {{set clave="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, base.generoCurp, base.entidadNacimiento, moment(base.fechaNacimiento).format('YYYY-MM-DD'),16)"}}
+      {{set clave="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, base.generoCurp, base.entidadNacimiento, moment(base.fechaNacimiento).format('YYYY-MM-DD'),16,true)"}}
     {{/update}}
   {{/action}}
 
@@ -92,9 +92,8 @@
     {{field id="esMujer" type="expr" value="=base.genero==='mujer'"}}    
     {{field id="esMenor3Meses" type="expr" value="=moment().diff(moment(fechaNacimiento), 'months')<=3"}}
     {{field id="esMenor3Dias" type="expr" value="=moment().diff(moment(fechaNacimiento), 'days')<=3"}} 
-    {{!-- Tarea 3092 --}}
     {{field id="esMenor5Anos" type="expr" value="=calc.fromNowYears(fechaNacimiento)<5"}}
-    {{!-- Tarea 3092 --}}
+    {{field id="esMenor10Anos" type="expr" value="=calc.fromNowYears(fechaNacimiento)<10"}}
     {{field id="clave2" type="expr" value="=@clave2||'PN'+calc.zeroFill(_created.folio||_parentDoc._created.folio||moment().unix(),7)"}} 
     {{#field id="cama"}}
       {{#editor}}
@@ -165,22 +164,6 @@
       {{/editor}}
     {{/field}}
     {{field id="tieneOtrasAlertasAlimentarias" type="expr" value="=calc.in('otras', @alertaAlimentaria)"}} 
-    [.#if esHIS.]
-    {{validator type="expr" validIf="=calc.curp3Ok(clave)" message="CURP Incorrecto"}}
-    {{validator type="expr" validIf="=calc.setTimeStr(@fechaNacimiento,@horaNacimiento)<moment().format()" message="Fecha Nacimiento Incorrecta"}}
-    [./if.]
-    {{!-- Tarea 3092 --}}
-    {{validator type="expr" validIf="=moment().diff(moment(@fechaNacimiento), 'years')<120" message="Paciente Mayor a 120 años"}}
-    {{!-- Tarea 3092 --}}
-    {{!-- Tarea 3710 --}}
-    {{validator type="expr" validIf="=calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'))===clave" message="CURP Incorrecto"}}
-    {{!-- Tarea 3710 --}}
-
-    {{!-- Agregar Bloque - Tarea 3966 --}}
-    {{validator type="expr" validIf="=fn('entidadNacimientoCorrecta', paisNacimiento, entidadNacimiento)" message="Entidad Nacimiento Incorrecta"}}
-    {{!-- Tarea 3966 --}}
-
-    {{!-- Agregar Bloque - Tarea 5604 --}}
     {{field id="esMenor3Anos" type="expr" value="=calc.fromNowYears(fechaNacimiento)<3"}}
     {{field id="esConsultaExterna" type="expr" value="=tipoAtencion=='consultaExterna'"}}
     {{field id="esUrgenciasHospitalizacion" type="expr" value="=tipoAtencion!='consultaExterna'"}}
@@ -197,16 +180,25 @@
         {{set paisProcedencia="MX"}}
       {{/onChange}}
     {{/field}}
-    {{validator type="expr" notValidIf="=esMenor3Anos&&ocupacion!='9990'" message="Ocupación Inválida"}}
-    {{validator type="expr" validIf="=fn('escolaridadCorrecta', calc.fromNowYears(fechaNacimiento), escolaridad)" message="Escolaridad Incorrecta"}}
+    [.#if esHIS.]
+    {{validator type="expr" validIf="=calc.curp3Ok(clave)" message="CURP Incorrecto"}}
+    {{validator type="expr" validIf="=calc.setTimeStr(@fechaNacimiento,@horaNacimiento)<moment().format()" message="Fecha Nacimiento Incorrecta"}}
+    [./if.]
+    {{validator type="expr" notValidIf="=desconoceFechaNacimiento==='si'&&clave!==fn('CURP_GENERICO')" message="Colocar CURP Genérico si Desconoce Fecha Nacimiento"}}
+    {{validator type="expr" validIf="=moment().diff(moment(@fechaNacimiento), 'years')<120" message="Paciente Mayor a 120 años"}}
+    {{validator type="expr" validIf="=(calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'),16,false)===clave.substr(0,16)||calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'),16,true)===clave.substr(0,16)||clave===fn('CURP_GENERICO'))&&clave.length===18" message="CURP Incorrecto"}}
+    {{validator type="expr" validIf="=fn('entidadNacimientoCorrecta', paisNacimiento, entidadNacimiento)" message="Entidad Nacimiento Incorrecta"}}
+    {{validator type="expr" notValidIf="=esMenor3Anos&&!calc.isEmpty(@ocupacion)&&@ocupacion!='9990'" message="Ocupación Inválida"}}
+    {{validator type="expr" validIf="=fn('escolaridadCorrecta', calc.fromNowYears(fechaNacimiento)||2, escolaridad)" message="Escolaridad Incorrecta"}}
     {{validator type="expr" notValidIf="=!calc.in(sabeLeerEscribir,['si','no','noAplica'])&&calc.fromNowYears(fechaNacimiento)>=3" message="Falta Indicar Sabe Leer y Escribir"}}
-    {{validator type="expr" notValidIf="=esMenor3Anos&&sabeLeerEscribir!='noAplica'" message="Sabe Leer y Escribir Incorrecto"}}
+    {{validator type="expr" notValidIf="=esMenor3Anos&&sabeLeerEscribir!='no'" message="Sabe Leer y Escribir Incorrecto (Paciente menor 3 años)"}}
     {{validator type="expr" notValidIf="=sabeLeerEscribir=='no'&&!calc.in(escolaridad,['ninguna','noAplica','noEspecificado','preescolarCompleta','preescolarIncompleta','seIgnora'])" message="Sabe Leer y Escribir Incorrecto"}}
+    {{validator type="expr" notValidIf="=escolaridad==='ninguna'&&sabeLeerEscribir!=='no'" message="Sabe Leer Escribir debe ser 'No' cuando Escolaridad es 'Ninguna'"}}
     {{validator type="expr" notValidIf="=esMenor5Anos&&afromexicano!=calc.pluckRef(familiarResponsable,'base.afromexicano')[0]" message="Se Considera Afromexicano Inválido"}}
     {{validator type="expr" notValidIf="=migrante=='internacional'&&paisProcedencia=='MX'" message="País Procedencia Inválido"}}
-    {{!-- Tarea 5604 --}}
-    {{validator type="expr" notValidIf="=clave==user.serviceProvider.clave" message="No puede tener el mismo CURP que el Usuario"}}
-    {{validator type="expr" notValidIf="=calc.isEmpty(@estadoCivil)&&calc.fromNowYears(fechaNacimiento)>10" message="Falta Indicar Estado Civil"}}
+    {{validator type="expr" notValidIf="=clave===user.serviceProvider.clave&&clave!==fn('CURP_GENERICO')" message="No puede tener el mismo CURP que el Usuario"}}
+    {{validator type="expr" validIf="=fn('validaCaracter17Curp',clave,fechaNacimiento)||clave===fn('CURP_GENERICO')" message="CURP Inválido (Caracter 17)"}}
+    {{validator type="expr" notValidIf="=esMenor10Anos&&estadoCivil!=='noAplica'" message="Estado Civil Inválido (Paciente menor 10 años)"}}
   {{/section}}
 
 {{!--   {{#edi id="orden-trabajo"}}

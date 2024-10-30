@@ -1,4 +1,10 @@
 {{#define id="notaInicialUrgencias"}}
+  {{#action id="afectar" confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))" confirmMessage="Diagnóstico Excede Límite Edad<br>¿Desea continuar?"}}
+    {{#update section="base"}}
+      {{set excedeLimiteEdad="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))?'SI':'NO'"}}
+    {{/update}}
+  {{/action}}
+  
   {{#section id="base"}}
     {{!-- {{field id="fueraHospital" type="expr" value="=!@continuaAtencionFueraUrgencias"}}
     {{field id="casa" type="expr" value="=continuaAtencionEnUrgencias=='casa'"}}
@@ -12,17 +18,35 @@
     {{#field id="mujerFertil"}}
       {{onChange clearFields="edadGestacional"}}
     {{/field}}
+    {{#field id="trasladoTransitorioOtroHospital"}}
+      {{onChange clearFields="CLUES,cluesEstatus,cluesFechaBaja"}}
+    {{/field}}
+    {{#field id="CLUES"}}
+      {{#onChange clearFields="cluesEstatus,cluesFechaBaja"}}
+        {{set cluesEstatus="=ESTATUS_OPERACION"}}
+        {{set cluesFechaBaja="=FECHA_EFECTIVA_BAJA"}}
+      {{/onChange}}
+    {{/field}}
     {{validator type="expr" validIf="=(calc.number(@edadGestacional)>=0&&calc.number(@edadGestacional)<=45)||(calc.number(@edadGestacional)==99)" message="Error en la Edad Gestacional"}}
     {{validator type="expr" validIf="=!@numeroSobres||(@numeroSobres>=1&&@numeroSobres<=20)" message="Error en Número de Sobres (1-20)"}}
-    {{validator type="expr" notValidIf="=@CLUES==user.job.cluesAdscripcionNomina" message="CLUES Inválido"}}
+    {{validator type="expr" notValidIf="=@CLUES==user.establishmentData.clues" message="CLUES Inválido"}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')), @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico)" message="Tiene Diagnósticos Duplicados"}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.validoSeul, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.validoSeul, calc.pluckRef(@otrosDiagnosticos, 'base.validoSeul')), null, 'PARTO')" message="Tiene Diagnósticos de tipo PARTO Duplicados"}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.validoSeul, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.validoSeul, calc.pluckRef(@otrosDiagnosticos, 'base.validoSeul')), null, 'ABORTO')" message="Tiene Diagnósticos de tipo ABORTO Duplicados"}}
-    {{validator type="expr" notValidIf="=moment().diff(@fechaIngreso,'days')>40" message="Fecha Ingreso no debe pasar 40 días"}}
     {{validator type="expr" notValidIf="=_.last(calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico'))=='P95X'" message="Código P95X no puede ser seleccionado como última Comorbilidad"}}
+    {{validator type="expr" notValidIf="=moment().diff(@fechaIngreso,'days')>40" message="Fecha Ingreso no debe pasar 40 días"}}
+    {{validator type="expr" notValidIf="=@atencionPrehospitalariaDesde=='00:00'" message="Tiempo Traslado Inválido (Mayor que 00:00)"}}
+    {{validator type="expr" validIf="=!@CLUES||cluesEstatus=='EN OPERACION'||(@cluesFechaBaja&&moment(@fechaIngreso||undefined).add(-90,'days').format('YYYY-MM-DD')<=@cluesFechaBaja)" message="CLUES Fuera de Operación"}}
   {{/section}}
   {{#view id="sinbaUrgencias"}}
     {{complexView type="sinbaUrgencias"}}
+  {{/view}}
+  {{#view id="buscarInicialUrgencias"}}
+    {{#find limit="-1"}}
+      {{include field="base"}}
+      {{sort field="_created.date" direction="desc"}}
+      {{filter field="_created.request" eq="=request"}}
+    {{/find}}
   {{/view}}
   {{#grid id="sinbaUrgencias" name="SINBA - Urgencias" view="sinbaUrgencias" exportToExcel="true" allowRefresh="true" columnChooser="true" wordWrapEnabled="true" columnAutoWidth="wordWrapEnabled"}}
     {{column field="clues"}}
