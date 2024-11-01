@@ -1,0 +1,22 @@
+{{#define id="seulInterconsulta"}}
+  {{#section id="base"}}
+    {{#field id="interconsulta"}}
+      {{#editor}}
+        {{param persona="=_mainDoc.persona.id"}}
+        {{param tipoSolicitud="interconsulta"}}
+      {{/editor}}
+      {{#onChange}}
+        {{set claveServicioInterconsultante="=base.interconsulta.base.servicioInterconsultante"}}
+        {{set servicioInterconsultante="=base.interconsulta.base._servicioInterconsultante"}}
+        {{set especialidadMedicoInterconsultante="=base.interconsulta.base.especialidadMedicoInterconsultante"}}
+        {{set paisMedicoInterconsultante="=base.interconsulta.base.paisMedicoInterconsultante"}}
+        {{set curpMedicoInterconsultante="=base.interconsulta.base.curpMedicoInterconsultante"}}
+        {{set medicoInterconsultante="=base.interconsulta.base.medicoInterconsultante"}}
+        {{set nombreMedicoInterconsultante="=base.interconsulta.base.nombreMedicoInterconsultante"}}
+        {{set apellidoPaternoMedicoInterconsultante="=base.interconsulta.base.apellidoPaternoMedicoInterconsultante"}}
+        {{set apellidoMaternoMedicoInterconsultante="=base.interconsulta.base.apellidoMaternoMedicoInterconsultante"}}
+        {{set cedulaMedicoInterconsultante="=base.interconsulta.base.cedulaMedicoInterconsultante"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+{{/define}}

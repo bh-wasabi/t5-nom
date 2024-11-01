@@ -5024,6 +5024,7 @@
       {{!-- {{set fechaIngresoUrgencias="=contexto.urgencias.desde"}} --}}
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
+    {{update section="comorbilidades" value="=calc.subItemsMap(_items2, 'base.otrosDiagnosticos', 'base.diagnostico', 'base.nombre')" temp="true"}}
   {{/transform}}
 
   {{#transform id="copiarDiagnosticoUrgencias"}}
@@ -5140,6 +5141,7 @@
       {{setRef ref="servicios.base.genero" value="=persona.genero"}}
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
+    {{update section="comorbilidades" value="=calc.subItemsMap(_items2, 'base.otrosDiagnosticos', 'base.diagnostico', 'base.nombre')" temp="true"}}
   {{/transform}}
 
   {{#transform id="copiarDetecciones"}}
@@ -12211,7 +12213,9 @@
   {{action id="notaHistoriaClinicaMaxilo" source="notaHistoriaClinicaMaxilo" label="Historia Clínica Maxilofacial" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
   {{action id="notaResultadoEstudio" source="notaResultadoEstudio" label="Resumen Estudio" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}  
   {{action id="notaResumenClinico" source="notaResumenClinico" label="Resumen Clínico" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
-  {{action id="notaEvolucion" source="notaEvolucion" label="Evolución" transform="copiarDiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{#action id="notaEvolucion" source="notaEvolucion" label="Evolución" transform="copiarDiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+    {{param persona="_id"}}
+  {{/action}}
   
   {{#action id="notaIndicacion" source="notaIndicacion" label="Indicación" transform="copiarPlan" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="farmaciaHoy" toSection="farmaciaHoy"}}
     {{param persona="=_id"}}
@@ -12240,8 +12244,8 @@
     fromSource="solicitud"
     fromView="solicitudesEgreso"
     toSection="solicitudesEgreso"
-    fromSource2="notaSolicitudInterconsulta"
-    fromView2="buscarInterconsulta"
+    fromSource2="notaEvolucion"
+    fromView2="comorbilidades"
     toSection2="notaSolicitudInterconsulta"
     fromSource3="notaSolicitudProcedimiento"
     fromView3="buscarSolicitudProcedimiento"
@@ -12358,7 +12362,7 @@
     {{param tipoEpisodio="=fn('tipoEpisodio', contexto)"}}
     {{param desde="=fn('hospitalizacionDesde', contexto)"}}    
   {{/action}}
-  {{#action id="notaSeulEgreso" source="notaSeulEgreso" label="SEUL Egreso" transform="copiarSeulEgreso" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="solicitudesEgreso" toSection="solicitudesEgreso" error="=fn('errorCluesEgreso',user.establishmentData.cluesTipoUnidad,user.establishmentData.cluesTipoAbreviacion)||fn('errorDatosSeguro', persona, contexto, detalle)" errorType="info"}}
+  {{#action id="notaSeulEgreso" source="notaSeulEgreso" label="SEUL Egreso" transform="copiarSeulEgreso" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="solicitudesEgreso" toSection="solicitudesEgreso" fromSource2="notaEvolucion" fromView2="comorbilidades" error="=fn('errorCluesEgreso',user.establishmentData.cluesTipoUnidad,user.establishmentData.cluesTipoAbreviacion)||fn('errorDatosSeguro', persona, contexto, detalle)" errorType="info"}}
     {{param persona="=_id"}}
     {{param tipoEpisodio="=fn('tipoEpisodio', contexto)"}}
     {{param desde="=fn('hospitalizacionDesde', contexto)"}}    

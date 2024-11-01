@@ -66,7 +66,8 @@
     {{validator type="expr" validIf="=!@cluesTraslado||cluesEstatus=='EN OPERACION'||(@cluesFechaBaja&&moment().add(-90,'days').format('YYYY-MM-DD')<=@cluesFechaBaja)" message="CLUES Fuera de Operación"}}
     {{validator type="expr" notValidIf="=@diasEstancia>1&&servicios.base.tipoServicioOtorgado=='cortaEstancia'" message="Tipo Servicio Otorgado no puede ser Corta Estancia (Días Estancia Hospitalaria > 1)"}}
     {{validator type="expr" notValidIf="=moment(@fechaEgreso).diff(@fechaIngresoHospitalario,'days')>1&&servicios.base.tipoServicioOtorgado=='cortaEstancia'" message="Tipo Servicio Otorgado no puede ser Corta Estancia (Diferencia Fechas > 1)"}}
-    {{validator type="expr" notValidIf="=procedimientoEgresos.length+procedimientoDiagnosticosTerapeuticosQuirurgicos>8" message="Máximo 8 Procedimientos"}}
+    {{validator type="expr" notValidIf="=otrosDiagnosticos.length+seleccionarOtrosDiagnosticos.length>6" message="Máximo 6 Comorbilidades"}}
+    {{validator type="expr" notValidIf="=procedimientoEgresos.length+procedimientoDiagnosticosTerapeuticosQuirurgicos.length>8" message="Máximo 8 Procedimientos"}}
 	{{/section}}
   {{#view id="egresosPaciente"}}
     {{#find limit="-1"}}

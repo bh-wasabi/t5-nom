@@ -185,6 +185,8 @@
     {{validator type="expr" validIf="=calc.setTimeStr(@fechaNacimiento,@horaNacimiento)<moment().format()" message="Fecha Nacimiento Incorrecta"}}
     [./if.]
     {{validator type="expr" notValidIf="=desconoceFechaNacimiento==='si'&&clave!==fn('CURP_GENERICO')" message="Colocar CURP Genérico si Desconoce Fecha Nacimiento"}}
+    {{validator type="expr" notValidIf="=desconoceFechaNacimiento==='si'&&moment().diff(moment(fechaNacimiento),'years')<1&&fechaNacimiento.substr(8,2)!=='15'" message="Fecha Nacimiento Inválida (Desconoce Fecha)"}}
+    {{validator type="expr" notValidIf="=desconoceFechaNacimiento==='si'&&moment().diff(moment(fechaNacimiento),'years')>=1&&fechaNacimiento.substr(8,2)!=='30'&&fechaNacimiento.substr(5,2)!=='06'" message="Fecha Nacimiento Inválida (Desconoce Fecha)"}}
     {{validator type="expr" validIf="=moment().diff(moment(@fechaNacimiento), 'years')<120" message="Paciente Mayor a 120 años"}}
     {{validator type="expr" validIf="=(calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'),16,false)===clave.substr(0,16)||calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'),16,true)===clave.substr(0,16)||clave===fn('CURP_GENERICO'))&&clave.length===18" message="CURP Incorrecto"}}
     {{validator type="expr" validIf="=fn('entidadNacimientoCorrecta', paisNacimiento, entidadNacimiento)" message="Entidad Nacimiento Incorrecta"}}

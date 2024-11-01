@@ -5,4 +5,14 @@
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.validoSeul, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.validoSeul, calc.pluckRef(@otrosDiagnosticos, 'base.validoSeul')), null, 'ABORTO')" message="Tiene Diagnósticos de tipo ABORTO Duplicados"}}
     {{validator type="expr" notValidIf="=_.last(calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico'))=='P95X'" message="Código P95X no puede ser seleccionado como última Comorbilidad"}}
   {{/section}}
+
+  {{#view id="comorbilidades"}}
+    {{#find limit="-1"}}
+      {{include field="_name"}}
+      {{include field="base.otrosDiagnosticos"}}
+      {{filter field="base.estatus" eq="afectado"}}
+      {{filter field="persona.id" eq="=persona"}}
+      {{sort field="_created.date" direction="desc"}}
+    {{/find}}
+  {{/view}}
 {{/define}}

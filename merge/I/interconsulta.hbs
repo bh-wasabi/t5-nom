@@ -12,6 +12,9 @@
         {{set cedulaMedicoInterconsultante="=_.first(prestadorServicios.datosEspecialidad).base.cedulaEspecialidad"}}
         {{set paisMedicoInterconsultante="=prestadorServicios._paisNacimiento"}}
         {{set curpMedicoInterconsultante="=prestadorServicios.clave"}}
+        {{set nombreMedicoInterconsultante="=base.nombres"}}
+        {{set apellidoPaternoMedicoInterconsultante="=base.apellidoPaterno"}}
+        {{set apellidoMaternoMedicoInterconsultante="=base.apellidoMaterno"}}
       {{/onChange}}
     {{/field}}
 
