@@ -192,10 +192,10 @@
     {{validator type="expr" validIf="=fn('entidadNacimientoCorrecta', paisNacimiento, entidadNacimiento)" message="Entidad Nacimiento Incorrecta"}}
     {{validator type="expr" notValidIf="=esMenor3Anos&&!calc.isEmpty(@ocupacion)&&@ocupacion!='9990'" message="Ocupación Inválida"}}
     {{validator type="expr" validIf="=fn('escolaridadCorrecta', calc.fromNowYears(fechaNacimiento)||2, escolaridad)" message="Escolaridad Incorrecta"}}
-    {{validator type="expr" notValidIf="=!calc.in(sabeLeerEscribir,['si','no','noAplica'])&&calc.fromNowYears(fechaNacimiento)>=3" message="Falta Indicar Sabe Leer y Escribir"}}
+    {{validator type="expr" notValidIf="=!calc.in(sabeLeerEscribir,['si','no','seIgnora'])&&calc.fromNowYears(fechaNacimiento)>=3" message="Falta Indicar Sabe Leer y Escribir"}}
     {{validator type="expr" notValidIf="=esMenor3Anos&&sabeLeerEscribir!='no'" message="Sabe Leer y Escribir Incorrecto (Paciente menor 3 años)"}}
     {{validator type="expr" notValidIf="=sabeLeerEscribir=='no'&&!calc.in(escolaridad,['ninguna','noAplica','noEspecificado','preescolarCompleta','preescolarIncompleta','seIgnora'])" message="Sabe Leer y Escribir Incorrecto"}}
-    {{validator type="expr" notValidIf="=escolaridad==='ninguna'&&sabeLeerEscribir!=='no'" message="Sabe Leer Escribir debe ser 'No' cuando Escolaridad es 'Ninguna'"}}
+    {{!-- {{validator type="expr" notValidIf="=escolaridad==='ninguna'&&sabeLeerEscribir!=='no'" message="Sabe Leer Escribir debe ser 'No' cuando Escolaridad es 'Ninguna'"}} --}}
     {{validator type="expr" notValidIf="=esMenor5Anos&&afromexicano!=calc.pluckRef(familiarResponsable,'base.afromexicano')[0]" message="Se Considera Afromexicano Inválido"}}
     {{validator type="expr" notValidIf="=migrante=='internacional'&&paisProcedencia=='MX'" message="País Procedencia Inválido"}}
     {{validator type="expr" notValidIf="=clave===user.serviceProvider.clave&&clave!==fn('CURP_GENERICO')" message="No puede tener el mismo CURP que el Usuario"}}

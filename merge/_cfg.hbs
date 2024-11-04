@@ -2470,12 +2470,22 @@
 
   {{#function id="validaCertificadoDefuncion"}}
     {{define type="param" id="certificado"}}
+    {{!-- Debe tener 9 caracteres --}}
     {{when condition="=certificado.length!=9" return="true"}}
+    {{!-- Debe ser numérico --}}
     {{when condition="=isNaN(certificado)" return="true"}}
+    {{!-- No puede ser de mas de 4 años atrás --}}
     {{when condition="=moment().year().toString().slice(2,4)-certificado.slice(0,2)>4" return="true"}}
+    {{!-- Puede ser del próximo año cuando se reporta en diciembre --}}
+    {{when condition="=certificado.slice(0,2)-moment().year().toString().slice(2,4)>0&&moment().month()<11" return="true"}}
+    {{!-- No puede ser de 2 años hacia adelante --}}
     {{when condition="=certificado.slice(0,2)-moment().year().toString().slice(2,4)>1" return="true"}}
-    {{when condition="=certificado.slice(2,3)!='0'&&!calc.in(certificado.slice(0,2),['21','22'])" return="true"}}
-    {{when condition="=!calc.in(certificado.slice(2,3),['0','1','2'])&&calc.in(certificado.slice(0,2),['21','22'])" return="true"}}
+    {{!-- Para 2023 debe ser menor de 231110000 --}}
+    {{when condition="=certificado.slice(0,2)=='23'&&calc.forceNumber(certificado)>231110000" return="true"}}
+    {{!-- Para 2022 debe ser menor de 221650000 --}}
+    {{when condition="=certificado.slice(0,2)=='22'&&calc.forceNumber(certificado)>221650000" return="true"}}
+    {{!-- Para 2021 debe ser menor de 212838000 --}}
+    {{when condition="=certificado.slice(0,2)=='21'&&calc.forceNumber(certificado)>212838000" return="true"}}
     {{default return="false"}}
   {{/function}}
 
@@ -9601,7 +9611,7 @@
  {{/template}}
 
   {{#template id="datosPuerperaPlanificacion"}}
-		{{#if puerperaAceptaFamiliar}}<br>Puérpera Acepta Planificación Familiar: {{_puerperaAceptaFamiliar}}{{/if}}
+		<br>Puérpera Acepta Planificación Familiar: {{_puerperaAceptaFamiliar}}
 		{{#if puerperaMetodoPlanificacion}}<br>Método Planificación: {{_puerperaMetodoPlanificacion}}{{/if}}
 		{{#if esOral}}{{#if numeroCicloEntregadosOral}}<br>Número Ciclos Entregados Oral: {{numeroCicloEntregadosOral}}{{/if}}{{/if}}
 		{{#if esInyectableMensual}}{{#if numeroCiclosEntregadosInyectableMensual}}<br>Número Ciclos Entregados Inyectable Mensual: {{numeroCiclosEntregadosInyectableMensual}}{{/if}}{{/if}}

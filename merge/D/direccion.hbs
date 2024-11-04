@@ -14,7 +14,7 @@
     {{#field id="entidadFederativa"}}
       {{#onChange clearFields="correosMexico,localidad,codigoPostal,colonia,delegacion,ciudad,estado,codigoOficina,codigoDelegacion,codigoCiudad,codigoEstado,zona,tipoAsentamiento"}}
         {{set delegacion="=calc.in(entidadFederativa,['00','88'])?'No Especificado':entidadFederativa=='99'?'Se Ignora':null"}}
-        {{set otraLocalidad="=calc.in(entidadFederativa,['00','88'])?'No Especificado':entidadFederativa=='99'?'Se Ignora':null"}}
+        {{!-- {{set otraLocalidad="=calc.in(entidadFederativa,['00','88'])?'No Especificado':entidadFederativa=='99'?'Se Ignora':null"}} --}}
       {{/onChange}}
     {{/field}}
     {{#field id="correosMexico"}}

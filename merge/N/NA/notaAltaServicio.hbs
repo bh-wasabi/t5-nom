@@ -40,6 +40,7 @@
     {{validator type="expr" notValidIf="=calc.in('DEFUNCION', calc.mergeArrays(afeccionPrincipal.base.validoSeul, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.validoSeul, calc.pluckRef(@otrosDiagnosticos, 'base.validoSeul')))&&motivoAltaServicio!='defuncion'" message="DEFUNCIÓN Mal Configurada"}}
     {{validator type="expr" notValidIf="=_.last(calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico'))=='P95X'" message="Código P95X no puede ser seleccionado como última Comorbilidad"}}
     {{validator type="expr" validIf="=!@CLUES||cluesEstatus=='EN OPERACION'||(@cluesFechaBaja&&moment(@fechaIngreso||undefined).add(-90,'days').format('YYYY-MM-DD')<=@cluesFechaBaja)" message="CLUES Fuera de Operación"}}
+    {{validator type="expr" notValidIf="=calc.findDuplicates(calc.pluck(@interconsultas,'_name'))" message="Interconsultas Duplicadas"}}
     {{validator type="expr" notValidIf="=@otrosDiagnosticos.length+@seleccionarOtrosDiagnosticos.length>6" message="Máximo 6 Comorbilidades"}}
     {{validator type="expr" notValidIf="=@procedimientoEgresos.length+@procedimientoDiagnosticosTerapeuticosQuirurgicos.length>8" message="Máximo 8 Procedimientos"}}
     {{validator type="expr" notValidIf="=@interconsultas.length>3" message="Máximo 3 Interconsultas"}}

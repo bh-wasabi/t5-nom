@@ -240,6 +240,8 @@
     {{validator type="expr" validIf="=calc.fromNowYears(@fechaNacimiento)<90" message="Error, Mayor a 90 Años"}}{{!-- cambios 2024-05-29 --}}
     {{validator type="expr" condition="=fn('cedulaObligatoria',base.tipoPersonalNom??'')" notValidIf="=fn('faltaCedulaEspecialidad',@datosEspecialidad)" message="Falta Cédula Especialidad"}}
     {{validator type="expr" condition="=paisNacimiento=='MX'" validIf="=(calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'),16,false)===prestadorServicios.clave.substr(0,16)||calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'),16,true)===prestadorServicios.clave.substr(0,16)||prestadorServicios.clave===fn('CURP_GENERICO'))&&prestadorServicios.clave.length===18" message="CURP Incorrecto"}}
+    {{validator type="expr" notValidIf="=paisNacimiento==='MX'&&prestadorServicios.clave===fn('CURP_GENERICO')" message="CURP Inválido para nacido en México"}}
+    {{validator type="expr" validIf="=fn('validaCaracter17Curp',prestadorServicios.clave,prestadorServicios.fechaNacimiento)||prestadorServicios.clave===fn('CURP_GENERICO')" message="CURP Inválido (Caracter 17)"}}
   {{/section}}
   {{!-- Tarea #3976 RACC --}}
 

@@ -5024,7 +5024,7 @@
       {{!-- {{set fechaIngresoUrgencias="=contexto.urgencias.desde"}} --}}
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
-    {{update section="comorbilidades" value="=calc.subItemsMap(_items2, 'base.otrosDiagnosticos', 'base.diagnostico', 'base.nombre')" temp="true"}}
+    {{update section="comorbilidades" value="=calc.subItemsMap(_items2, 'base.otrosDiagnosticos', '=base.diagnostico+`#`+base.detalle', '=base.nombre')"}}
   {{/transform}}
 
   {{#transform id="copiarDiagnosticoUrgencias"}}
@@ -5141,8 +5141,9 @@
       {{setRef ref="servicios.base.genero" value="=persona.genero"}}
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
-    {{update section="comorbilidades" value="=calc.subItemsMap(_items2, 'base.otrosDiagnosticos', 'base.diagnostico', 'base.nombre')" temp="true"}}
+    {{update section="comorbilidades" value="=calc.subItemsMap(_items2, 'base.otrosDiagnosticos', '=base.diagnostico+`#`+base.detalle', '=base.nombre')"}}
   {{/transform}}
+
 
   {{#transform id="copiarDetecciones"}}
     {{update section="contexto" value="=contexto"}}
@@ -7704,7 +7705,7 @@
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
   {{/action}}
-  {{#action id="notaPlanificacionFamiliar" source="notaPlanificacionFamiliar" label="Planificación Familiar" transform="copiarPlanificacionFamiliar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="nota" fromView="ultima" error="=fn('errorPacientePlanificacionFamiliar', persona.genero, calc.fromNowFloat(persona.fechaNacimiento, persona.horaNacimiento))" errorType="info"}}
+  {{#action id="notaPlanificacionFamiliar" source="notaPlanificacionFamiliar" label="Planificación Familiar" transform="copiarPlanificacionFamiliar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="nota" fromView="ultima" errorType="info"}}
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
   {{/action}}
