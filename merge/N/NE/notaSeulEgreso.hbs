@@ -5,8 +5,7 @@
 		{{field id="esVoluntadPropia" type="expr" value="=motivoEgreso=='voluntadPropia'"}}
     {{field id="esDefuncion" type="expr" value="=motivoEgreso=='defuncion'"}}
     {{field id="noEsDefuncion" type="expr" value="=!esDefuncion"}}
-    {{field id="esMujerMayor9Anos" type="expr" value="=esMujer&&(calc.fromNowYears(persona.fechaNacimiento)>=9&&calc.fromNowYears(persona.fechaNacimiento)<=59)"}}
-    {{field id="esMenor4Meses" type="expr" value="=moment().diff(moment(fechaNacimiento), 'months')<=4"}}
+    {{field id="esMujerMayor9Anos" type="expr" value="=esMujer&&(moment(moment().diff(persona.fechaNacimiento,'years')<1?base.fechaIngresoHospitalario:base.fechaEgreso).diff(persona.fechaNacimiento,'years')>=9&&moment(moment().diff(persona.fechaNacimiento,'years')<1?base.fechaIngresoHospitalario:base.fechaEgreso).diff(persona.fechaNacimiento,'years')<=59)"}}
     {{field id="otraUnidad" type="expr" value="=motivoEgreso=='trasladoOtraUnidad'"}}
     {{field id="siParcial" type="expr" value="=tipoUnidadPsiquiatrica=='hospitalParcial'"}}
     {{field id="siOtroMetodo" type="expr" value="=metodoAnticonceptivo=='11'"}}

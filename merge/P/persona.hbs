@@ -5132,6 +5132,8 @@
       {{set _signosVitales="=detalle._signosVitales"}}
       {{set somatometria="=detalle.somatometria"}}
       {{set _somatometria="=detalle._somatometria"}} --}}
+      {{set somatometriaIngreso="=detalle.notaIngreso.base.somatometria"}}
+      {{set _somatometriaIngreso="=detalle.notaIngreso.base._somatometria"}}
       {{set motivoEgreso="=(contexto.estaDifunto)?'defuncion':null"}}
       {{set fechaHoraDefuncion="=contexto.defuncion.fechaHoraDefuncion"}}
       {{set fechaIngresoHospitalario="=contexto.defuncion.fechaIngreso"}}
