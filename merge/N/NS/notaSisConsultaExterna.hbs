@@ -8,14 +8,12 @@
   {{#section id="base"}}
     {{field id="tieneAlergia" type="expr" value="=tieneAlgunaAlergia=='si'"}}
     {{field id="siMigrante" type="expr" value="=calc.in(@esMigrante,'internacional')"}}
-    {{!-- Tarea 5660 --}}
+    {{field id="noEsPsicologo" type="expr" value="=!calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])"}}
     {{field id="esUneme" type="expr" value="=calc.in(user.establishmentData.cluesTipoAbreviacion,['T','UNE'])&&calc.in(user.establishmentData.cluesSubAbreviacion,['T02','UNE02','UNE04','UNE11'])"}}
     {{field id="saludMentalAdiccionesDisponible" type="expr" value="=calc.in(user.others.tipoPersonalNom,['medicoPasante','medicoGeneral','medicoResidente','medicoEspecialista','homeopata','medicoGeneralSaludMental','medicoSaludMental'])"}}
     {{#field id="tieneAlgunaAlergia"}}
       {{onChange clearFields="alergia"}}
     {{/field}}
-    {{validator type="expr" validIf="=moment(fechaConsulta).isAfter(moment(fechaNacimiento))" message="Fecha Consulta Inválida"}}
-    {{!-- Tarea 5660 --}}
   {{/section}}
   {{#section id="mujer"}}
     {{field id="entre9y59" type="expr" value="=edadActual>=9&&edadActual<60"}}
@@ -38,27 +36,28 @@
     {{validator type="expr" notValidIf="=@registroPregestacional.length>1&&calc.in('sinAntecedentes',@registroPregestacional)" message="Error en el Riesgo Pregestacional"}}
   {{/section}}
   {{#section id="exploracion"}}
-    {{field id="esMujer" type="expr" value="=base.esMujer"}}
+    {{field id="esMujerMayor6" type="expr" value="=base.esMujer&&moment(base.fechaConsulta).diff(persona.fechaNacimiento,'years')>=6"}}
     {{field id="estaEmbarazada" type="expr" value="=mujer.estaEmbarazada"}}
-    {{field id="esMenor17" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)<=10"}}
-    {{!-- Tarea 5660 --}}
-    {{field id="noPsicologo" type="expr" value="=!calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])"}}
-    {{!-- Tarea 5660 --}}
+    {{field id="esMenor5" type="expr" value="=moment(base.fechaConsulta).diff(persona.fechaNacimiento,'years')<5"}}
+    {{field id="noEsPsicologo" type="expr" value="=!calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])"}}
+    {{field id="puedeResultadoPesoNinos" type="expr" value="=esMenor5&&noEsPsicologo"}}
   {{/section}}
   {{#section id="analisis"}}
     {{field id="esMujer" type="expr" value="=base.esMujer"}}
     {{field id="estaEmbarazada" type="expr" value="=mujer.estaEmbarazada"}}
-    {{field id="esMenor6" type="expr" value="calc.fromNowYears(persona.fechaNacimiento)<6"}}
-    {{field id="esMenor10" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)<10"}}
-    {{field id="esPrimeraVezSubsecuente" type="expr" value="=consultaNinoSano=='primeraVez'||consultaNinoSano=='subsecuente'&&esMenor6"}}
-    {{field id="noEsPrimeraVezSubsecuente" type="expr" value="=consultaNinoSano=='noAplica'&&esMenor17"}}
-    {{field id="esMayor60" type="expr" value="=calc.fromNowYears(persona.fechaNacimiento)>=60&&!calc.in(user.others.tipoPersonalNom,['pasanteNutricion','nutriologa','homeopata','medicoTradicionalIndigena','taps','parteraTecnica','promotorSalud','acupunturista'])"}}
-    {{field id="esMenor17" type="expr" value="=(calc.fromNowYears(persona.fechaNacimiento)<=17)"}}
+    {{field id="esMenor6" type="expr" value="=moment(base.fechaConsulta).diff(persona.fechaNacimiento,'years')<6"}}
+    {{field id="esMenor10" type="expr" value="=moment(base.fechaConsulta).diff(persona.fechaNacimiento,'years')<10"}}
+    {{field id="esMenor18" type="expr" value="=moment(base.fechaConsulta).diff(persona.fechaNacimiento,'years')<18"}}
+    {{field id="esMayor59" type="expr" value="=moment(base.fechaConsulta).diff(persona.fechaNacimiento,'years')>59"}}
+    {{field id="noEsPsicologo" type="expr" value="=!calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])"}}
+    {{field id="puedeIntervencionGerontologica" type="expr" value="!calc.in(user.others.tipoPersonalNom,['pasanteNutricion','nutriologa','homeopata','medicoTradicionalIndigena','taps','parteraTecnica','promotorSalud','acupunturista'])&&esMayor59"}}
+    {{field id="esPrimeraVezSubsecuente" type="expr" value="=consultaNinoSano=='primeraVez'||consultaNinoSano=='subsecuente'&&esMenor6&&noEsPsicologo"}}
+    {{field id="noEsPrimeraVezSubsecuente" type="expr" value="=consultaNinoSano=='noAplica'&&esMenor18&&noEsPsicologo"}}
     {{field id="esPsicologo" type="expr" value="=(calc.in(prestadorServicios._especialidad,['psicologiaAdultos','psicologiaPediatrica','psicologiaClinica']))"}}
-    {{field id="esContraEsMenor17" type="expr" value="=@contrarreferido=='no'&&esMenor17"}}
-    {{field id="esContraEsMayor60" type="expr" value="=@contrarreferido=='no'&&esMayor60"}}
     {{field id="esContraEsPsicologo" type="expr" value="=@contrarreferido=='no'&&esPsicologo"}}
     {{field id="noEsContrarreferido" type="expr" value="=@contrarreferido=='no'&&!esPsicologo"}}
+    {{field id="puedeInfoPrevencion" type="expr" value="=esMenor10&&noEsPsicologo"}}
+    {{field id="muestraResultadoBatelle" type="expr" value="=moment(base.fechaConsulta).diff(persona.fechaNacimiento,'years')<5&&moment(base.fechaConsulta).diff(persona.fechaNacimiento,'months')>=16"}}
     {{#field id="consultaNinoSano"}}
       {{onChange clearFields="saludNino,cancerMenores,enfermedadesDiarreicasAgudas,infeccionesRespiratoriasAgudas"}}
     {{/field}}
@@ -82,13 +81,12 @@
     {{/field}}
     {{validator type="expr" notValidIf="=@contrarreferido=='no'&&calc.isEmpty(@referidoPor)&&calc.isEmpty(@referidoPor2)&&calc.isEmpty(@referidoPor3)" message="Error en Contrarreferido"}}
     {{validator type="expr" notValidIf="=calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])&&@referidoPor&&@referidoPor!='otras'" message="Referido Por Inválido"}}
-    {{validator type="expr" notValidIf="=calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])&&@referidoPor2&&@referidoPor2!='otras'" message="Referido Por Inválido"}}
     {{validator type="expr" notValidIf="=calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])&&@referidoPor3&&@referidoPor3!='otras'" message="Referido Por Inválido"}}
     {{validator type="expr" notValidIf="=!esMujer&&calc.in(@referidoPor,['embarazoAltoRiesgo','emergenciaObsPree','emergenciaObsHemorragia','otraEmergenciaObs'])" message="Referido Por Inválido"}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')),'R69X')" message="Tiene Diagnósticos Duplicados"}}
     {{validator type="expr" validIf="=!@promocionSobres||(@promocionSobres>=0&&@promocionSobres<=9)" message="Número Sobres Promoción Vida Suero Oral Inválido"}}
     {{validator type="expr" notValidIf="=calc.in(exploracion.signosVitales.base.tirasControl,['1','2'])&&(exploracion.signosVitales.base.embarazadaSinDiabetes=='si'||calc.arrayInArray(calc.mergeArrays(afeccionPrincipal.base.diagnostico,calc.pluckRef(@otrosDiagnosticos,'base.diagnostico')),['O240','O241','O242','O243','O244','O249']))" message="Numero Tiras Control en Signos Vitales Inválido"}}
-    {{validator type="expr" notValidIf="=@referidoPor!='sospechaCancer'&&esMenor17" message="'Referido Por' Inválido (Paciente Menor)"}}
+    {{validator type="expr" notValidIf="=!calc.in(referidoPor,['sospechaCancer','iras','neumonia','otras','cisticercosis'])&&esMenor18" message="'Referido Por' Inválido (Paciente Menor)"}}
     {{validator type="expr" notValidIf="=calc.in('noAplica',@estudiosTeleconsulta)&&@estudiosTeleconsulta.length>1" message="Estudios Teleconsulta 'No Aplica' debe ser único"}}
   {{/section}}
 

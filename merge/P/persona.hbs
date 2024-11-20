@@ -5107,6 +5107,8 @@
     {{update section="persona" transform="copiarPersona"}}
     {{update section="nomDatos" transform="copiarNomDatos"}}
     {{#update section="base" newRef="servicios"}}
+      {{set fechaIngresoHospitalario="=_params.fechaIngresoHospitalario"}}
+      {{set fechaEgreso="=_params.fechaEgreso"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
@@ -5136,7 +5138,6 @@
       {{set _somatometriaIngreso="=detalle.notaIngreso.base._somatometria"}}
       {{set motivoEgreso="=(contexto.estaDifunto)?'defuncion':null"}}
       {{set fechaHoraDefuncion="=contexto.defuncion.fechaHoraDefuncion"}}
-      {{set fechaIngresoHospitalario="=contexto.defuncion.fechaIngreso"}}
       {{set diasEstancia="=moment(fechaHoraDefuncion).diff(moment(fechaIngresoHospitalario), 'day')"}}
       {{set evolucion="=contexto.defuncion.comentarios"}}
       {{setRef ref="servicios.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
@@ -5151,14 +5152,16 @@
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
     {{update section="nomDatos" transform="copiarNomDatos"}}
-    {{#update section="base"}}
+    {{#update section="base" newRef="signosVitales"}}
+      {{set fechaAtencion="=_params.fechaAtencion"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
       {{set edadActual="=persona.edadActual"}}
       {{set _edadActual="=persona._edadActual"}}
-      {{set tipoServicioSisMenor="=calc.fromNowYears(persona.fechaNacimiento)<18"}}
-      {{set tipoServicioSisMayor="=calc.fromNowYears(persona.fechaNacimiento)>=60"}}
+      {{set tipoServicioSisMenor="=moment(fechaAtencion).diff(persona.fechaNacimiento,'years')<18"}}
+      {{set tipoServicioSisMayor="=moment(fechaAtencion).diff(persona.fechaNacimiento,'years')>=60"}}
       {{set primeraConsultaAno="=_items.length?'no':'si'"}}
+      {{setRef ref="signosVitales.base.fechaHoraRegistro" value="=_params.fechaAtencion"}}
     {{/update}}
     {{#update section="otrosDatos"}}
       {{set cluesTieneEspirometro="=calc.isNotEmpty(user.establishmentData.cluesTieneEspirometro)"}}
@@ -5474,7 +5477,8 @@
       {{set diagnostico="=detalle.diagnostico"}}
       {{set _diagnostico="=detalle._diagnostico"}}
     {{/update}}
-    {{#update section="exploracion" newRef="atencionObstetricas"}}
+    {{!-- {{#update section="exploracion" newRef="atencionObstetricas"}} --}}
+    {{#update section="exploracion" newRef="signosVitales"}}
       {{!-- {{set signosVitales="=detalle.signosVitales"}} --}}
       {{!-- {{set _signosVitales="=detalle._signosVitales"}} --}}
       {{!-- {{set somatometria="=detalle.somatometria"}} --}}
@@ -5485,6 +5489,7 @@
       {{setRef ref="signosVitales.base.genero" value="=persona.genero"}}
       {{setRef ref="signosVitales.base.edadActual" value="=persona.edadActual"}}
       {{setRef ref="signosVitales.base._edadActual" value="=persona._edadActual"}}
+      {{setRef ref="signosVitales.base.fechaHoraRegistro" value="=_params.fechaAtencion"}}
     {{/update}}
     {{update section="antecedentes" value="=detalle.antecedentes"}}
     {{#update section="mujer"}}
@@ -5505,13 +5510,14 @@
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
     {{update section="nomDatos" transform="copiarNomDatos"}}
-    {{#update section="base"}}
+    {{#update section="base" newRef="signosVitales"}}
       {{set fechaAtencion="=_params.fechaAtencion"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
       {{set tipoServicioSisMenor="=calc.fromNowYears(persona.fechaNacimiento)<18"}}
       {{set tipoServicioSisMayor="=calc.fromNowYears(persona.fechaNacimiento)>=60"}}
       {{set primeraConsultaAno="=_items.length?'no':'si'"}}
+      {{setRef ref="signosVitales.base.fechaHoraRegistro" value="=_params.fechaAtencion"}}
       {{!-- {{set primerConsultaUneme="=primeraConsultaAno"}} --}}
       {{!-- {{set primeraUemeSaih="=primeraConsultaAno"}} --}}
     {{/update}}
@@ -5529,7 +5535,7 @@
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
     {{update section="nomDatos" transform="copiarNomDatos"}}
-    {{#update section="base"}}
+    {{#update section="base" newRef="signosVitales"}}
       {{set fechaAtencion="=_params.fechaAtencion"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
@@ -5542,6 +5548,7 @@
       {{set edad="=calc.fromNowYears(persona.fechaNacimiento)"}}
       {{set noPsicologoEsHombre="=!calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])&&persona.genero=='hombre'"}}
       {{set noPsicologo="=!calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])"}}
+      {{setRef ref="signosVitales.base.fechaHoraRegistro" value="=_params.fechaAtencion"}}
     {{/update}}
     {{update section="tipoServicioSis" value="=calc.itemsToCode(calc.tipoServicioSis(calc.in('planificacionFamiliar',user.others.tipoServicioSis)?'planificacionFamiliar':'',user.others.tipoPersonalNom,base.esMujer?'mujer':'',base.tipoServicioSisMenor?'menor':base.tipoServicioSisMayor?'mayor':''))" temp="true"}}
     {{update section="resumen" value="=resumen" temp="true"}}
@@ -5551,7 +5558,7 @@
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
     {{update section="nomDatos" transform="copiarNomDatos"}}
-    {{#update section="base"}}
+    {{#update section="base" newRef="signosVitales"}}
       {{set fechaAtencion="=_params.fechaAtencion"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
@@ -5560,6 +5567,7 @@
       {{set tipoServicioSisMenor="=calc.fromNowYears(persona.fechaNacimiento)<18"}}
       {{set tipoServicioSisMayor="=calc.fromNowYears(persona.fechaNacimiento)>=60"}}
       {{set primeraConsultaAno="=_items.length?'no':'si'"}}
+      {{setRef ref="signosVitales.base.fechaHoraRegistro" value="=_params.fechaAtencion"}}
     {{/update}}
     {{#update section="diagnosticos"}}
       {{!-- {{set diagnostico="=detalle.diagnostico"}} --}}
@@ -7710,27 +7718,27 @@
   {{#action id="notaSisConsultaExterna" source="notaSisConsultaExterna" label="Consulta Externa" transform="copiarSisConsultaExterna" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="nota" fromView="ultima"}}
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
-    {{ask field="fechaAtencion" type="date" label="Fecha Atención" required="true" value="=moment().format()" min="=moment(persona.fechaNacimiento).format()" max="=moment().format()"}}
+    {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=moment(persona.fechaNacimiento).format()" max="=moment().endOf('day').format()"}}
   {{/action}}
   {{#action id="notaPlanificacionFamiliar" source="notaPlanificacionFamiliar" label="Planificación Familiar" transform="copiarPlanificacionFamiliar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="nota" fromView="ultima" errorType="info"}}
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
-    {{ask field="fechaAtencion" type="date" label="Fecha Atención" required="true" value="=moment().format()" min="=moment(persona.fechaNacimiento).format()" max="=moment().format()"}}
+    {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=moment(persona.fechaNacimiento).format()" max="=moment().endOf('day').format()"}}
   {{/action}}
   {{#action id="notaDetecciones" source="notaDetecciones" label="Detecciónes" transform="copiarDetecciones" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="nota" fromView="ultima"}}
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
-    {{!-- {{ask field="fechaAtencion" type="date" label="Fecha Atención" min="=moment(persona.fechaNacimiento).format()" max="=moment().format()" required="true"}} --}}
+    {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=moment(persona.fechaNacimiento).format()" max="=moment().endOf('day').format()"}}
   {{/action}}
   {{#action id="notaSaludMental" source="notaSaludMental" label="Salud Mental" transform="copiarSaludMental" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="nota" fromView="ultima"}}
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
-    {{ask field="fechaAtencion" type="date" label="Fecha Atención" required="true" value="=moment().format()" min="=moment(persona.fechaNacimiento).format()" max="=moment().format()"}}
+    {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=moment(persona.fechaNacimiento).format()" max="=moment().endOf('day').format()"}}
   {{/action}}
   {{#action id="notaSaludBucal" source="notaSaludBucal" label="Salud Bucal" transform="copiarSaludBucal" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="nota" fromView="ultima"}}
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
-    {{ask field="fechaAtencion" type="date" label="Fecha Atención" required="true" value="=moment().format()" min="=moment(persona.fechaNacimiento).format()" max="=moment().format()"}}
+    {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=moment(persona.fechaNacimiento).format()" max="=moment().endOf('day').format()"}}
   {{/action}}
   {{!-- CERTIFICACIONES RACC --}}  
 
@@ -12381,10 +12389,12 @@
     {{param tipoEpisodio="=fn('tipoEpisodio', contexto)"}}
     {{param desde="=fn('hospitalizacionDesde', contexto)"}}    
   {{/action}}
-  {{#action id="notaSeulEgreso" source="notaSeulEgreso" label="SEUL Egreso" transform="copiarSeulEgreso" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="solicitudesEgreso" toSection="solicitudesEgreso" fromSource2="notaEvolucion" fromView2="comorbilidades" error="=fn('errorCluesEgreso',user.establishmentData.cluesTipoUnidad,user.establishmentData.cluesTipoAbreviacion)||fn('errorDatosSeguro', persona, contexto, detalle)" errorType="info"}}
+  {{#action id="notaSeulEgreso" source="notaSeulEgreso" label="SEUL Egreso" transform="copiarSeulEgreso" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="solicitudesEgreso" toSection="solicitudesEgreso" fromSource2="notaEvolucion" fromView2="comorbilidades" error="=fn('errorCluesEgreso',user.establishmentData.cluesTipoUnidad,user.establishmentData.cluesTipoAbreviacion)||fn('errorDatosSeguro', persona, contexto, detalle)||fn('validarFechaEgreso',persona.fechaNacimiento,_ask.fechaIngresoHospitalario,_ask.fechaEgreso,user.establishmentData.cluesTipoAbreviacion,user.establishmentData.cluesSubAbreviacion)" errorType="info"}}
     {{param persona="=_id"}}
     {{param tipoEpisodio="=fn('tipoEpisodio', contexto)"}}
-    {{param desde="=fn('hospitalizacionDesde', contexto)"}}    
+    {{param desde="=fn('hospitalizacionDesde', contexto)"}}
+    {{ask field="fechaIngresoHospitalario" type="datetime" label="Fecha Ingreso Hospitalario" required="true" value="=moment().format()" min="=moment(persona.fechaNacimiento).format()" max="=moment().endOf('day').format()"}}
+    {{ask field="fechaEgreso" type="datetime" label="Fecha Egreso" required="true" value="=moment().format()" min="=moment(persona.fechaNacimiento).format()" max="=moment().endOf('day').format()"}}
   {{/action}}
   {{action id="notaEgresoAjuste" source="notaEgresoAjuste" label="Egreso (Ajuste)" transform="copiarDiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" superUser="true"}}
   {{action id="notaSolicitudPrestamoExpediente" source="notaSolicitudPrestamoExpediente" label="Solicitud Prestamo Expediente Clínico" transform="copiarDiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}

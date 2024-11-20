@@ -13,9 +13,9 @@
     {{/field}}
     {{#field id="puerperaMetodoPlanificacion"}}
       {{#onChange clearFields="numeroCicloEntregadosOral,numeroCiclosEntregadosInyectableMensual,numeroCiclosEntregadosInyectableBimestral,numeroCiclosEntregadosInyectableTrimestral,implanteSubdermico,numeroCiclosEntregadosParcheDermico,diu,diuMedicado"}}
-        {{set implanteSubdermico="='noAplica'"}}
-        {{set diu="='noAplica'"}}
-        {{set diuMedicado="='noAplica'"}}
+        {{!-- {{set implanteSubdermico="='noAplica'"}} --}}
+        {{!-- {{set diu="='noAplica'"}} --}}
+        {{!-- {{set diuMedicado="='noAplica'"}} --}}
       {{/onChange}}
     {{/field}}
     {{validator type="expr" notValidIf="=esOral&&!numeroCicloEntregadosOral" message="Falta Indicar Número Ciclos"}}

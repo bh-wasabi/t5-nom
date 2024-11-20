@@ -2553,6 +2553,28 @@
     {{when tipoPersonal="'trabajadoraSocial'" return="'30'"}}
     {{default return="'0'"}}
   {{/function}}
+
+  {{#function id="esUnidadPsiquiatrica"}}
+    {{define type="param" id="tipologia"}}
+    {{define type="param" id="subtipologia"}}
+    {{when condition="=calc.in(tipologia,['HPSIQ','HPSIQMF'])" return="true"}}
+    {{when condition="=tipologia==='Y'&&calc.in(subtipologia,['99','NES','INP','SAP'])" return="true"}}
+    {{default return="false"}}
+  {{/function}}
+
+  {{#function id="validarFechaEgreso"}}
+    {{define type="param" id="fechaNacimiento"}}
+    {{define type="param" id="fechaIngreso"}}
+    {{define type="param" id="fechaEgreso"}}
+    {{define type="param" id="tipologia"}}
+    {{define type="param" id="subtipologia"}}
+    {{when condition="=moment(fechaIngreso).isSame(fechaEgreso)" return="'Las fechas deben ser distintas'"}}
+    {{when condition="=moment(fechaEgreso).isBefore(fechaIngreso)" return="'Fecha Egreso no debe ser menor a la Fecha Ingreso'"}}
+    {{when condition="=moment(fechaIngreso).isAfter()" return="'Fecha Ingreso no puede ser mayor a la fecha actual'"}}
+    {{when condition="=moment(fechaIngreso).isBefore(fechaNacimiento)" return="'Fecha Ingreso no puede ser menor a la Fecha de Nacimiento'"}}
+    {{when condition="=moment(fechaEgreso).diff(fechaIngreso,'years')>=5&&!fn('esUnidadPsiquiatrica',tipologia,subtipologia)" return="'Fecha Ingreso no debe exceder de cinco años con respecto a la Fecha Egreso'"}}
+    {{default return=""}}
+  {{/function}}
 {{/define}}
 
 {{#markup}}

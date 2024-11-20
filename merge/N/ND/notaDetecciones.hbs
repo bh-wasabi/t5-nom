@@ -35,7 +35,8 @@
     {{field id="mostrarResultadoVph" type="expr" value="=deteccionVPH==='realizada'&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=35&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')<=64&&esMujer"}}
     {{field id="mostrarDeteccionCancerCuelloUterino" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=25&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')<=64&&esMujer"}}
     {{field id="mostrarResultadoCancerUterino" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=25&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')<=64&&esMujer"}}
-    {{validator type="expr" notValidIf="=calc.in(@deteccionCancerCuelloUterino,['realizada','noRealizada'])&&calc.in(@resultadoCancerCuelloUterino,['positivo','negativo'])" message="Resultado Cáncer Cuello Uterino Inválido"}}
+    {{validator type="expr" notValidIf="=calc.in(@deteccionCancerCuelloUterino,['realizada','noRealizada'])&&@resultadoCancerCuelloUterino!=='noAplica'" message="Resultado Cáncer Cuello Uterino Inválido"}}
+    {{validator type="expr" notValidIf="=calc.in(@resultadoCancerCuelloUterino,['positivo','negativo'])&&deteccionCancerCuelloUterino!=='noAplica'" message="Resultado Cáncer Cuello Uterino Inválido"}}
   {{/section}}
   {{#section id="otrosDatos"}}
     {{field id="esMujerIntersexual" type="expr" value="genero=='mujer'||genero=='intersexual'"}}

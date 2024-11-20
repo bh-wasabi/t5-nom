@@ -4,6 +4,13 @@
       {{#editor}}
         {{param persona="=_mainDoc.persona.id"}}
         {{param tipoSolicitud="procedimiento,cirugia"}}
+        {{#onChange}}
+          {{set codigoCie9="=base.procedimiento.base.codigoCie9"}}
+          {{set limiteSexo="=base.procedimiento.base.limiteSexo"}}
+          {{set limiteInferior="=base.procedimiento.base.limiteInferior"}}
+          {{set limiteSuperior="=base.procedimiento.base.limiteSuperior"}}
+          {{set otrasValidaciones="=base.procedimiento.base.otrasValidaciones"}}
+        {{/onChange}}
       {{/editor}}
     {{/field}}
 		{{#field id="cirujano"}}

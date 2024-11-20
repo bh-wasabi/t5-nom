@@ -3,7 +3,6 @@
   {{#section id="base"}}
     {{field id="pruebaEdiInicial" type="expr" value="=pruebaEdiNino=='primeraVez'"}}
     {{field id="pruebaEdiSubsecuente" type="expr" value="=pruebaEdiNino=='subsecuente'"}}
-    {{field id="muestraResultadoBatelle" type="expr" value="=calc.fromNowYears(fechaNacimiento)<5&&calc.fromNowMonths(fechaNacimiento)>15"}}
     {{#field id="pruebaEdiNino"}}
       {{onChange clearFields="resultadoPruebaEdiInicial,resultadoPruebaEdiSubsecuente"}}
     {{/field}}

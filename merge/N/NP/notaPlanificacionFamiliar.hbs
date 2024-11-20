@@ -9,8 +9,9 @@
     {{#field id="fechaAtencion"}}
       {{onChange clearFields="afeccionPrincipal,otrosDiagnosticos"}}
     {{/field}}
+    {{field id="entre10y19" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=10&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')<=19"}}
     {{validator type="expr" validIf="=moment(fechaAtencion).isAfter(fechaNacimiento)" message="Fecha Atención Inválida"}}
-    {{validator type="expr" notValidIf="=catServicios=='SERVICIO AMIGABLE'&&(moment(fechaAtencion).diff(persona.fechaNacimiento,'years')<10||moment(fechaAtencion).diff(persona.fechaNacimiento,'years')>19)" message="Servicio Atención Inválido"}}
+    {{validator type="expr" notValidIf="=catServicios=='SERVICIO AMIGABLE'&&!entre10y19" message="Servicio Atención Inválido"}}
     {{validator type="expr" notValidIf="=catServicios=='SERVICIO AMIGABLE'&&calc.isEmpty(user.establishmentData.cluesServicioAmigable)" message="CLUES Sin Servicio Amigable"}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')),'R69X')" message="Tiene Diagnósticos Duplicados"}}
     {{validator type="expr" validIf="=(persona.genero==='mujer'&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=9&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')<=59)||(calc.in(persona.genero,['hombre','intersexual'])&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=9&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')<=70)" message="Edad a la Fecha Atención Fuera de Rango"}}
