@@ -2519,6 +2519,18 @@
     {{default return="XXXX999999XXXXXX99"}}
   {{/function}}
 
+  {{#function id="servicioEspecialidadPediatria"}}
+    {{default return="['alergologiaPediatrica','anestesiaPediatrica','cardiologiaIntervencionistaPediatrica','cardiologiaPediatrica','cirugiaCardiovascularPediatrica','cirugiaColorrectalPediatrica','cirugiaEndoscopicaPediatrica','cirugiaGeneralPediatrica','cirugiaMaxilofacialPediatrica','cirugiaNeonatal','cirugiaOncologicaPediatrica','cirugiaPlasticaPediatrica','cirugiaToraxPediatrica','dermatologiaPediatrica','endocrinologiaPediatrica','estomatologiaPediatrica','gastroenterologiaPediatrica','geneticaPediatrica','hematologiaPediatrica','infectologiaPediatrica','inmunologiaPediatrica','medicinaCriticaPediatrica','medicinaInternaPediatrica','nefrologiaPediatrica','neonatologia','neumologiaPediatrica','neurocirugiaPediatrica','neurologiaPediatrica','oftalmologiaPediatrica','oncologiaPediatrica','ortopediaPediatrica','otorrinolaringologiaPediatrica','otraEspecialidadPediatrica','pediatria','psiquiatriaPediatrica','radiologiaPediatrica','rehabilitacionPediatrica','reumatologiaPediatrica','trasplanteMedulaOsea','traumatologiaPediatrica','urologiaPediatrica']"}}
+  {{/function}}
+
+  {{#function id="servicioEspecialidadGinecoobstetricia"}}
+    {{default return="['biologiaReproduccion','ginecoObstetricia','medicinaMaternoFetal','obstetricia','urologiaGinecologica']"}}
+  {{/function}}
+
+  {{#function id="servicioEspecialidadGinecoobstetriciaEgresos"}}
+    {{default return="['biologiaReproduccion','ginecoObstetricia','medicinaMaternoFetal','obstetricia']"}}
+  {{/function}}
+
   {{#function id="sugerirTipoPersonal"}}
     {{define type="param" id="tipoPersonal"}}
     {{when tipoPersonal="'medicoPasante'" return="'1'"}}
@@ -3263,14 +3275,14 @@
   {{/template}}
 
   {{#template id="interconsulta"}}
-    {{#if suspender}}(Suspendido) {{/if}}
-    {{#if diagnostico}}<br>Diagnósticos Agregados: {{_diagnostico}}{{/if}}
-    {{#if servicioInterconsultante}}<br>Servicio Interconsultante: {{_servicioInterconsultante}}{{/if}}
-    {{#if medicoInterconsultante}}<br>Médico Interconsultante: {{_medicoInterconsultante}}{{/if}}
-    {{#if especialidadMedicoInterconsultante}}<br>Especialidad Médico Interconsultante: {{especialidadMedicoInterconsultante}}{{/if}}
-    {{#if cedulaMedicoInterconsultante}}<br>Cédula Médico Interconsultante: {{cedulaMedicoInterconsultante}}{{/if}}
-    {{#if paisMedicoInterconsultante}}<br>País Médico Interconsultante: {{paisMedicoInterconsultante}}{{/if}}
-    {{#if curpMedicoInterconsultante}}<br>CURP Médico Interconsulante: {{curpMedicoInterconsultante}}{{/if}}
+    {{!-- {{#if suspender}}(Suspendido) {{/if}} --}}
+    {{!-- {{#if diagnostico}}<br>Diagnósticos Agregados: {{_diagnostico}}{{/if}} --}}
+    {{!-- {{#if servicioInterconsultante}}<br>Servicio Interconsultante: {{_servicioInterconsultante}}{{/if}} --}}
+    {{!-- {{#if medicoInterconsultante}}<br>Médico Interconsultante: {{_medicoInterconsultante}}{{/if}} --}}
+    {{!-- {{#if especialidadMedicoInterconsultante}}<br>Especialidad Médico Interconsultante: {{especialidadMedicoInterconsultante}}{{/if}} --}}
+    {{!-- {{#if cedulaMedicoInterconsultante}}<br>Cédula Médico Interconsultante: {{cedulaMedicoInterconsultante}}{{/if}} --}}
+    {{!-- {{#if paisMedicoInterconsultante}}<br>País Médico Interconsultante: {{paisMedicoInterconsultante}}{{/if}} --}}
+    {{!-- {{#if curpMedicoInterconsultante}}<br>CURP Médico Interconsulante: {{curpMedicoInterconsultante}}{{/if}} --}}
     {{#if servicioInterconsultado}}<br>Servicio Interconsultado: {{_servicioInterconsultado}}{{/if}}
     {{#if medicoInterconsultado}}<br>Médico Interconsultado: {{_medicoInterconsultado}}{{/if}}
     {{#if especialidadMedicoInterconsultado}}<br>Especialidad Médico Interconsultado: {{especialidadMedicoInterconsultado}}{{/if}}

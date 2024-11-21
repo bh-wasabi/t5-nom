@@ -29,5 +29,8 @@
 
     {{validator type="expr" notValidIf="=calc.capitalize(@otroServicioConsultante)==calc.lookupInPreset('cfg.servicioEspecialidad', 'nombre', calc.capitalize(@otroServicioConsultante)).nombre" message="Error al Seleccionar Otro Servicio Consultante"}}
     {{validator type="expr" notValidIf="=calc.capitalize(@otroServicioInterconsultante)==calc.lookupInPreset('cfg.servicioEspecialidad', 'nombre', calc.capitalize(@otroServicioInterconsultante)).nombre" message="Error al Seleccionar Otro Servicio Consultante"}}
+    {{validator type="expr" notValidIf="=calc.fromNowYears(_parentDoc.persona.fechaNacimiento)>=18&&calc.in(servicioInterconsultado,fn('servicioEspecialidadPediatria'))" message="Servicio Interconsultado Inválido (Paciente Mayor de Edad)"}}
+    {{validator type="expr" notValidIf="=(_parentDoc.persona.genero!=='mujer'&&calc.in(servicioInterconsultado,fn('servicioEspecialidadGinecoobstetricia')))||(_parentDoc.persona.genero==='mujer'&&calc.in(servicioInterconsultado,fn('servicioEspecialidadGinecoobstetricia'))&&(calc.fromNowYears(_parentDoc.persona.fechaNacimiento)<9||calc.fromNowYears(_parentDoc.persona.fechaNacimiento)>59))" message="Servicio Interconsultado Inválido (Paciente No Mujer o Fuera de Rango de Edad)"}}
+    {{validator type="expr" notValidIf="=_parentDoc.persona.genero!=='mujer'&&servicioInterconsultado==='ginecologia'" message="Servicio Interconsultado Inválido (Paciente No Mujer)"}}
   {{/section}}
 {{/define}}

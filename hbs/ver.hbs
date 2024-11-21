@@ -104,7 +104,14 @@
       {{param c_estado="=estado"}}
       {{param c_mnpio="=municipio"}}
     {{/search}}
-  {{/view}}  
+  {{/view}}
+  {{#view id="municipioCorreosMexico"}}
+    {{define type="param" id="estado"}}
+    {{editor display="nombre"}}
+    {{#search index="municipio-24" type="_doc" sort="nombre" filterParamsOnlySearch="true"}}
+      {{param c_estado="=estado"}}
+    {{/search}}
+  {{/view}}
   {{#view id="cucop"}}
     {{editor display="nombre"}}
     {{search index="cucop" type="_doc" sort="nombre"}}

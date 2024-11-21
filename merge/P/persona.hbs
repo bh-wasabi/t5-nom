@@ -5542,8 +5542,8 @@
       {{set fechaNacimiento="=persona.fechaNacimiento"}}
       {{set edadActual="=persona.edadActual"}}
       {{set _edadActual="=persona._edadActual"}}
-      {{set tipoServicioSisMenor="=calc.fromNowYears(persona.fechaNacimiento)<18"}}
-      {{set tipoServicioSisMayor="=calc.fromNowYears(persona.fechaNacimiento)>=60"}}
+      {{set tipoServicioSisMenor="=moment(fechaAtencion).diff(persona.fechaNacimiento,'years')<18"}}
+      {{set tipoServicioSisMayor="=moment(fechaAtencion).diff(persona.fechaNacimiento,'years')>=60"}}
       {{set primeraConsultaAno="=_items.length?'no':'si'"}}
       {{set edad="=calc.fromNowYears(persona.fechaNacimiento)"}}
       {{set noPsicologoEsHombre="=!calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])&&persona.genero=='hombre'"}}
@@ -10223,17 +10223,15 @@
     {{item action="notaSeulLesiones" text="Nota Registro Lesiones"}}
     {{item action="notaSaludBucal" source="notaSaludBucal" text="Nota Salud Bucal" hide="true" type="add-subdoc" }}
     {{item action="notaSaludMental" source="notaSaludMental" text="Nota Salud Mental" hide="true" type="add-subdoc" }}
-    {{item action="notaRegistroSignosVitalesSomatometria" text="Nota Signos Vitales y Somatometría"}}
+    {{item action="notaRegistroSignosVitalesSomatometria" text="Nota Signos Vitales y Somatometría" beginGroup="true"}}
   {{/menu}}
 
   {{action id="menuNotasHospitalizacion" hide="true" type="menu" menu="menuNotasHospitalizacion" label="Notas Hospitalización" color="deep-orange"}}
   {{#menu id="menuNotasHospitalizacion" color="deep-orange"}}
     {{item action="notaSeulEgreso" text="Nota Egreso Hospitalario"}}
     {{item action="notaSeulLesiones" text="Nota Registro Lesiones"}}
-    {{item action="notaRegistroSignosVitalesSomatometria" text="Nota Signos Vitales y Somatometría"}}
-    {{item action="notaSolicitudInterconsulta" text="Solicitud Interconsulta"}}
-    {{!-- {{item action="notaSolicitudCirugia" text="Solicitud Programación Cirugía"}} --}}
-    {{!-- {{item action="notaSolicitudCirugiaAmbulatoria" text="Solicitud Programación Cirugía Ambulatoria"}} --}}
+    {{item action="notaRegistroSignosVitalesSomatometria" text="Nota Signos Vitales y Somatometría" beginGroup="true"}}
+    {{item action="notaSolicitudInterconsulta" text="Solicitud Interconsulta" beginGroup="true"}}
     {{item action="notaSolicitudProcedimiento" text="Solicitud Procedimiento"}}
   {{/menu}}
 
@@ -10243,10 +10241,9 @@
     {{item action="notaInicialUrgencias" text="Nota Inicial Urgencias"}}
     {{item action="notaPlanAltaEnfermeria" text="Nota Plan Alta Enfermería"}}
     {{item action="notaSeulLesiones" text="Nota Registro Lesiones"}}
-    {{item action="notaRegistroSignosVitalesSomatometria" text="Nota Signos Vitales y Somatometría"}}
-    {{item action="notaSolicitudInterconsulta" text="Solicitud Interconsulta"}}
-    {{!-- {{item action="notaSolicitudCirugia" text="Solicitud Programación Cirugía"}} --}}
-    {{!-- {{item action="notaSolicitudCirugiaAmbulatoria" text="Solicitud Programación Cirugía Ambulatoria"}} --}}
+    {{item action="notaRegistroSignosVitalesSomatometria" text="Nota Signos Vitales y Somatometría" beginGroup="true"}}
+    {{item action="notaSolicitudInterconsulta" text="Solicitud Interconsulta" beginGroup="true"}}
+    {{item action="notaSolicitudMedicamento" text="Solicitud Medicamento"}}
     {{item action="notaSolicitudProcedimiento" text="Solicitud Procedimiento"}}
   {{/menu}}
 

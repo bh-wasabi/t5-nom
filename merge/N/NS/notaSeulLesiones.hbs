@@ -43,13 +43,16 @@
   {{/section}}
 
   {{#section id="circunstanciasEvento"}}
-    {{field id="tieneTrata" type="expr" value="=tipoIntencionalidad!='trataPersonas'"}}
     {{field id="ocultarCampos" type="expr" value="=calc.in(tipoIntencionalidad,['violenciaFamiliar','violenciaNoFamiliar'])"}}
+    {{field id="mostrarAgenteLesion" type="expr" value="=calc.in(tipoIntencionalidad,['accidental','autoinfligido'])||calc.arrayInArray(accidenteViolencia,['violenciaFisica','violenciaSexual'])"}}
     {{field id="tieneOtro" type="expr" value="=agenteLesion==='otra'"}}
     {{field id="tieneViolencia" type="expr" value="=calc.in(tipoIntencionalidad,['violenciaFamiliar','violenciaNoFamiliar'])&&numeroAgresores=='unico'"}}
     {{field id="masUnoAgresor" type="expr"  value="=numeroAgresores=='unico'"}}
     {{field id="esAccidente" type="expr" value="=agenteLesion=='vehiculoMotor'"}}
     {{#field id="tipoIntencionalidad"}}
+      {{onChange clearFields="accidenteViolencia,agenteLesion,otroAgente,accidenteLesion,eventoRepetido,numeroAgresores,tipoParentesco,genero,edadAgresor,agresorEfectoTipoDroga,tipoDroga"}}
+    {{/field}}
+    {{#field id="accidenteViolencia"}}
       {{onChange clearFields="agenteLesion,otroAgente,accidenteLesion,eventoRepetido,numeroAgresores,tipoParentesco,genero,edadAgresor,agresorEfectoTipoDroga,tipoDroga"}}
     {{/field}}
     {{#field id="agenteLesion"}}
@@ -84,6 +87,7 @@
     {{validator type="expr" notValidIf="=@tipoIntencionalidad=='violenciaNoFamiliar'&&!calc.in(@tipoParentesco,['sinParentesco','desconocido'])" message="Parentesco Agresor Inválido"}}
     {{validator type="expr" validIf="=!@edadAgresor||(@edadAgresor>=3&&@edadAgresor<=99)||(@edadAgresor=='999'&&@tipoParentesco!='conyugue')" message="Edad Agresor Inválida"}}
     {{validator type="expr" validIf="=calc.isEmpty(@otroAgente)||!calc.in(calc.lowerCase(calc.normalize(@otroAgente)),['fuego','flama','sustancia caliente','vapor','intoxicacion por drogas o medicamentos','pie','mano','caida','objeto contundente','objeto punzo cortante','golpe contra piso','golpe contra pared','cuerpo extraño','explosion','asfixia','sofocacion','multiples agentes','proyectil arma de fuego','ahorcamiento','radiacion','sustancias quimicas','corriente electrica','herramienta','maquina','sacudidas','desastre natural','vehiculo de motor','ahorcamiento por sumersion','piquete','mordedura de animal','fuerzas de la naturaleza','intoxicacion por plantas hongos venenosos','otra','se ignora','no aplica'])" message="Otro Agente Inválido"}}
+    {{validator type="expr" notValidIf="mostrarAgenteLesion&&agenteLesion==='noAplica'" message="Agente Lesión Inválido"}}
   {{/section}}
   
   {{#view id="sinbaLesiones"}}
