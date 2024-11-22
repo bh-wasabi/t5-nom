@@ -18,13 +18,20 @@
       {{/onChange}}
     {{/field}}
 
+    {{#field id="servicioInterconsultado"}}
+      {{onChange clearFields="medicoInterconsultado"}}
+    {{/field}}
+    
     {{#field id="medicoInterconsultado"}}
-      {{#onChange}}
-        {{set especialidadMedicoInterconsultado="=prestadorServicios._especialidad"}}
-        {{set cedulaMedicoInterconsultado="=_.first(prestadorServicios.datosEspecialidad).base.cedulaEspecialidad"}}
-        {{set paisMedicoInterconsultado="=prestadorServicios._paisNacimiento"}}
-        {{set curpMedicoInterconsultado="=prestadorServicios.clave"}}
-      {{/onChange}}
+      {{#editor}}
+        {{param especialidad="=servicioInterconsultado"}}
+        {{#onChange}}
+          {{set especialidadMedicoInterconsultado="=prestadorServicios._especialidad"}}
+          {{set cedulaMedicoInterconsultado="=_.first(prestadorServicios.datosEspecialidad).base.cedulaEspecialidad"}}
+          {{set paisMedicoInterconsultado="=prestadorServicios._paisNacimiento"}}
+          {{set curpMedicoInterconsultado="=prestadorServicios.clave"}}
+        {{/onChange}}
+      {{/editor}}
     {{/field}}
 
     {{validator type="expr" notValidIf="=calc.capitalize(@otroServicioConsultante)==calc.lookupInPreset('cfg.servicioEspecialidad', 'nombre', calc.capitalize(@otroServicioConsultante)).nombre" message="Error al Seleccionar Otro Servicio Consultante"}}

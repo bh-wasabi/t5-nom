@@ -2,6 +2,10 @@
  	{{#section id="base"}}
     {{field id="siParto" type="expr" value="=tipoAtencionObstetrica=='parto'"}}
     {{field id="siAborto" type="expr" value="=tipoAtencionObstetrica=='aborto'"}}
+    {{field id="edadGestacionalNo88" type="expr" value="=edadGestacional!=='88'"}}
+    {{#field id="edadGestacional"}}
+      {{onChange clearFields="tipoAtencionObstetrica,tipoEmbarazo,nacioElPacienteEnEstaAtencion,totalProductos,tipoNacimiento,tipoProcedimientoAborto,datosInformacionProducto,datosInformacionProductoAborto"}}
+    {{/field}}
     {{#field id="tipoAtencionObstetrica"}}
       {{onChange clearFields="tipoEmbarazo,nacioElPacienteEnEstaAtencion,totalProductos,tipoNacimiento,tipoProcedimientoAborto,datosInformacionProducto,datosInformacionProductoAborto"}}
     {{/field}}

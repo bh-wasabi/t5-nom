@@ -9936,6 +9936,10 @@
 		{{#if siAborto}}{{#if datosInformacionProductoAborto}}<br>Información Producto: <br>{{_datosInformacionProductoAborto}}{{/if}}{{/if}}    
   {{/template}}
 
+	{{#template id="datosMujerSeulEgresoEmbarazo"}}
+		{{#if edadGestacional}}<br>Edad Gestacional: {{edadGestacional}}{{/if}}
+	{{/template}}
+
   {{#template id="datosServiciosEgreso"}}
     {{#if procedenciaIngreso}}<br>Procedencia del Ingreso: {{_procedenciaIngreso}}{{/if}}
     {{#if servicioIngreso}}<br>Servicio Ingreso: {{_servicioIngreso}}{{/if}}

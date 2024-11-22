@@ -13,6 +13,7 @@
     {{field id="noNotificoMP" type="expr" value="=motivoEgreso=='defuncion'&&notificoMP=='no'"}}
     {{field id="siObstetrica" type="expr" value="=calc.in(mujerFertil,['embarazo','puerperio'])"}}
     {{field id="esEmbarazo" type="expr" value="=mujerFertil==='embarazo'"}}
+    {{field id="esPuerperio" type="expr" value="=mujerFertil==='puerperio'"}}
     {{#field id="pacientePsiquiatrico"}}
       {{onChange clearFields="tipoUnidadPsiquiatrica,tipoServicioPsiquiatrico,HospitalParcial"}}
     {{/field}}
@@ -22,7 +23,7 @@
       {{/onChange}}
     {{/field}}
     {{#field id="mujerFertil"}}
-      {{onChange clearFields="datosMujer,antecedentesEmbarazos"}}
+      {{onChange clearFields="datosMujer,datosMujerEmbarazo,antecedentesEmbarazos"}}
     {{/field}}
     {{#field id="cluesTraslado"}}
       {{#onChange clearFields="cluesEstatus,cluesFechaBaja"}}

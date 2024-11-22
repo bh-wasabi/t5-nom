@@ -65,7 +65,6 @@
       {{/onChange}}
     {{/field}}
     {{validator type="expr" notValidIf="=codigoLocalidad=='9999'&&calc.isEmpty(@otraLocalidad)" message="Falta Indicar Otra Localidad"}}
-    {{validator type="expr" notValidIf="=(codigoDelegacionDesconoce==='998'&&codigoLocalidad!=='9998')||codigoDelegacionDesconoce==='999'&&codigoLocalidad!=='9999'" message="Municipio y Localidad Deben Coincidir"}}
-    {{validator type="expr" notValidIf="=(codigoLocalidad==='9998'&&codigoDelegacionDesconoce!=='998')||codigoLocalidad==='9999'&&codigoDelegacionDesconoce!=='999'" message="Municipio y Localidad Deben Coincidir"}}
+    {{validator type="expr" notValidIf="=(codigoDelegacionDesconoce==='998'&&codigoLocalidad=='9999')||codigoDelegacionDesconoce==='999'&&codigoLocalidad=='9998'" message="Municipio y Localidad Deben Coincidir"}}
   {{/section}}
 {{/define}}

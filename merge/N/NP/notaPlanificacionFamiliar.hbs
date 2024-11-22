@@ -21,13 +21,13 @@
     {{field id="noAplica" type="expr" value="=revisionColocacionMetodoQuirurgico=='noAplica'&&base.esMujer&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=9&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')<=59"}}
     {{field id="noPsicologoNoAplica" type="expr" value="=noPsicologo&&noAplica"}}
     {{field id="esRealizacionQx" type="expr" value="=revisionColocacionMetodoQuirurgico=='revisionPosteriorIntQuirurgica'&&base.noPsicologoEsHombre"}}
+    {{field id="esMujer" type="expr" value="=base.esMujer"}}
     {{#field id="revisionColocacionMetodoQuirurgico"}}
       {{onChange clearFields="puerpera,altaAzoospermia"}}
     {{/field}}
     {{validator type="expr" validIf="=@numeroPerservativosEntregados>=0&&@numeroPerservativosEntregados<=50" message="Error en Preservativos Entregados"}}
     {{validator type="expr" validIf="=@numeroPerservativosEntregadosFemeninos>=0&&@numeroPerservativosEntregadosFemeninos<=50" message="Error en Preservativos Entregados Femeninos"}}
-    {{validator type="expr" notValidIf="=@revisionColocacionMetodoQuirurgico=='revisionPosteriorIntQuirurgica'&&esMujer" message="Revisión/Colocación Método Quirúrgico Inválido para Mujer"}}
-    {{validator type="expr" notValidIf="=@revisionColocacionMetodoQuirurgico=='realizacionIntervencionQuirurgica'&&esHombre" message="Revisión/Colocación Método Quirúrgico Inválido para Hombre"}}
+    {{validator type="expr" notValidIf="=@revisionColocacionMetodoQuirurgico=='realizacionIntervencionQuirurgica'&&esMujer" message="Revisión/Colocación Método Quirúrgico Inválido para Mujer"}}
   {{/section}}
   {{#section id="orientacionConsejeria"}}
     {{field id="esMenor" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=10&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')<=19"}}
