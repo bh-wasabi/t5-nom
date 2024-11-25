@@ -89,6 +89,16 @@
     {{validator type="expr" validIf="=calc.isEmpty(@otroAgente)||!calc.in(calc.lowerCase(calc.normalize(@otroAgente)),['fuego','flama','sustancia caliente','vapor','intoxicacion por drogas o medicamentos','pie','mano','caida','objeto contundente','objeto punzo cortante','golpe contra piso','golpe contra pared','cuerpo extraño','explosion','asfixia','sofocacion','multiples agentes','proyectil arma de fuego','ahorcamiento','radiacion','sustancias quimicas','corriente electrica','herramienta','maquina','sacudidas','desastre natural','vehiculo de motor','ahorcamiento por sumersion','piquete','mordedura de animal','fuerzas de la naturaleza','intoxicacion por plantas hongos venenosos','otra','se ignora','no aplica'])" message="Otro Agente Inválido"}}
     {{validator type="expr" notValidIf="mostrarAgenteLesion&&agenteLesion==='noAplica'" message="Agente Lesión Inválido"}}
   {{/section}}
+
+  {{#view id="buscarPorEpisodio"}}
+    {{#find limit="1"}}
+      {{include field="_name"}}
+      {{sort field="_created.date" direction="desc"}}
+      {{filter field="persona.id" eq="=persona"}}
+      {{filter field="contexto.episodio" eq="=episodio" isNumber="true"}}
+      {{filter field="_isAffected" eq="true"}}
+    {{/find}}
+  {{/view}}
   
   {{#view id="sinbaLesiones"}}
     {{complexView type="sinbaLesiones"}}

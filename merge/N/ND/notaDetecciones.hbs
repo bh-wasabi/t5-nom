@@ -21,7 +21,6 @@
   {{/section}}
   {{#section id="datosGenerales"}}
     {{field id="siEdadCuidador" type="expr" value="=calc.in(@edadCuidador,['20edad','2059edad','60mas'])"}}
-    {{field id="esMayor19" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=19"}}
     {{field id="esMayor20" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=20"}}
     {{field id="esMayor50" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=50"}}
     {{field id="esMayor60" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=60"}}

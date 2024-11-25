@@ -16,7 +16,7 @@
     {{/field}}
   {{/section}}
   {{#section id="mujer"}}
-    {{field id="entre9y59" type="expr" value="=edadActual>=9&&edadActual<60"}}
+    {{field id="entre9y59" type="expr" value="=base.esMujer&&moment(base.fechaConsulta).diff(persona.fechaNacimiento,'years')>=9&&moment(base.fechaConsulta).diff(persona.fechaNacimiento,'years')<=59"}}
     {{field id="estaEmbarazada" type="expr" value="=condicion=='embarazada'"}}
     {{field id="esPregestacional" type="expr" value="=condicion=='pregestacional'"}}
     {{field id="esPuerpera" type="expr" value="=condicion=='puerpera'"}}

@@ -11,7 +11,7 @@
     {{field id="noCasa" type="expr" value="=!casa"}}
     {{field id="enUrgencias" type="expr" value="=continuaAtencionEnUrgencias&&noCasa"}}
     {{field id="fueraUrgencias" type="expr" value="=!enUrgencias"}} --}}
-    {{field id="esMujerMayor9" type="expr" value="=esMujer&&calc.fromNowYears(persona.fechaNacimiento)>=9"}}
+    {{field id="esMujerMayor9" type="expr" value="=esMujer&&calc.fromNowYears(persona.fechaNacimiento)>=9&&calc.fromNowYears(persona.fechaNacimiento)<=59"}}
     {{field id="tieneCondicionAlta" type="expr" value="=(continuaAtencionFueraUrgencias||seEnviaA)"}}
     {{field id="tienePlanHidratacion" type="expr" value="=planHidratacion=='planA'||planHidratacion=='planB'"}}
     {{field id="esFertil" type="expr" value="=mujerFertil=='embarazo'"}}

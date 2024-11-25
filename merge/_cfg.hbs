@@ -10623,6 +10623,10 @@
     {{#if cirujano}}<br>Cirujano: {{_cirujano}}{{/if}}
     {{#if descripcionProcedimiento}}<br>Descripción del Procedimiento: {{descripcionProcedimiento}}{{/if}}
   {{/template}}
+	{{#template id="procedimientoAltaUrgencias"}}
+		{{#if procedimientoCie9}}<br>Procedimientos Realizados (CIE-9): {{_procedimientoCie9}}{{/if}}
+		{{#if codigoCie9}}<br>Código (CIE-9): {{codigoCie9}}{{/if}}
+	{{/template}}
 	{{#template id="seulInterconsulta"}}
 		{{_interconsulta}}
 	{{/template}}

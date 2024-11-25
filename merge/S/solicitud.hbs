@@ -2268,6 +2268,7 @@
       {{filter condition="=fecha" field="_date" lt="=moment(fecha).add(1,'day').format()"}}
       {{filter condition="=desde" field="_date" gt="=desde"}}
       {{filter condition="=hasta" field="_date" lt="=moment(hasta).add(1,'day').format('YYYY-MM-DD')"}}
+      {{filter condition="=especialidad" field="base.interconsulta.base.servicioInterconsultado" in="=user.serviceProvider.especialidad"}}
     {{/find}}
     {{join source="persona" view="contexto" as="join" id="persona.id"}}
     {{calc field="nombre" type="expr" value="=join._name"}}
