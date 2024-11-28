@@ -5147,8 +5147,16 @@
       {{set fechaHoraDefuncion="=contexto.defuncion.fechaHoraDefuncion"}}
       {{set diasEstancia="=moment(fechaHoraDefuncion).diff(moment(fechaIngresoHospitalario), 'day')"}}
       {{set evolucion="=contexto.defuncion.comentarios"}}
+      {{set afeccionPrincipal="=detalle.notaSeulLesiones.base.afeccionPrincipal"}}
+      {{set _afeccionPrincipal="=detalle.notaSeulLesiones.base._afeccionPrincipal"}}
+      {{set afeccionPrincipalReseleccionada="=detalle.notaSeulLesiones.base.afeccionPrincipalReseleccionada"}}
+      {{set _afeccionPrincipalReseleccionada="=detalle.notaSeulLesiones.base._afeccionPrincipalReseleccionada"}}
+      {{set otrosDiagnosticos="=detalle.notaSeulLesiones.base.otrosDiagnosticos"}}
+      {{set _otrosDiagnosticos="=detalle.notaSeulLesiones.base._otrosDiagnosticos"}}
       {{setRef ref="servicios.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
       {{setRef ref="servicios.base.genero" value="=persona.genero"}}
+      {{setRef ref="afeccionPrincipal.base.folioLesion" value="=detalle.notaSeulLesiones._created.folio"}}
+      {{setRef ref="afeccionPrincipalReseleccionada.base.folioLesion" value="=detalle.notaSeulLesiones._created.folio"}}
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
     {{update section="comorbilidades" value="=calc.subItemsMap(_items2, 'base.otrosDiagnosticos', '=base.diagnostico+`#`+base.detalle', '=base.nombre')"}}
@@ -5458,8 +5466,9 @@
       {{set fechaConsulta="=_params.fechaAtencion"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
-      {{set tipoServicioSisMenor="=calc.fromNowYears(persona.fechaNacimiento)<18"}}
-      {{set tipoServicioSisMayor="=calc.fromNowYears(persona.fechaNacimiento)>=60"}}
+      {{set esMujerEntre9y59="=esMujer&&moment(fechaConsulta).diff(persona.fechaNacimiento,'years')>=9&&moment(fechaConsulta).diff(persona.fechaNacimiento,'years')<=59"}}
+      {{set tipoServicioSisMenor="=moment(fechaConsulta).diff(persona.fechaNacimiento,'years')<18"}}
+      {{set tipoServicioSisMayor="=moment(fechaConsulta).diff(persona.fechaNacimiento,'years')>=60"}}
       {{set fechaNacimiento="=persona.fechaNacimiento"}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
       {{set esNeonatal="=calc.fromNowDays(persona.fechaNacimiento)<29"}}
@@ -5521,8 +5530,8 @@
       {{set fechaAtencion="=_params.fechaAtencion"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
-      {{set tipoServicioSisMenor="=calc.fromNowYears(persona.fechaNacimiento)<18"}}
-      {{set tipoServicioSisMayor="=calc.fromNowYears(persona.fechaNacimiento)>=60"}}
+      {{set tipoServicioSisMenor="=moment(fechaAtencion).diff(persona.fechaNacimiento,'years')<18"}}
+      {{set tipoServicioSisMayor="=moment(fechaAtencion).diff(persona.fechaNacimiento,'years')>=60"}}
       {{set primeraConsultaAno="=_items.length?'no':'si'"}}
       {{setRef ref="signosVitales.base.fechaHoraRegistro" value="=_params.fechaAtencion"}}
       {{!-- {{set primerConsultaUneme="=primeraConsultaAno"}} --}}

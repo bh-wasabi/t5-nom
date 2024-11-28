@@ -18,6 +18,24 @@
     {{field id="esMayor10" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=10"}}
     {{field id="esMayor50" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=50"}}
     {{field id="esMayor60" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=60"}}
+    {{#field id="tamizajeTristeDeprimido"}}
+      {{onChange clearFields="deteccionDepresion"}}
+    {{/field}}
+    {{#field id="olvidaCosasCostumbre"}}
+      {{onChange clearFields="deteccionAlteracionMemorai"}}
+    {{/field}}
+    {{#field id="tamizajeFugaOringa"}}
+      {{onChange clearFields="deteccionIncontinenciaUrinaria"}}
+    {{/field}}
+    {{#field id="tamizajeCaidas"}}
+      {{onChange clearFields="caida60Mas"}}
+    {{/field}}
+    {{#field id="tamizajeActividadesBasicas"}}
+      {{onChange clearFields="evaluacionActividadesBasicas"}}
+    {{/field}}
+    {{#field id="tamizajeActividadesInstrumental"}}
+      {{onChange clearFields="evaluacionActividadesInstrumental"}}
+    {{/field}}
   {{/section}}
   {{#section id="datosGenerales"}}
     {{field id="siEdadCuidador" type="expr" value="=calc.in(@edadCuidador,['20edad','2059edad','60mas'])"}}
@@ -25,7 +43,7 @@
     {{field id="esMayor50" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=50"}}
     {{field id="esMayor60" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=60"}}
     {{#field id="edadCuidador"}}
-      {{onChange clearFields="sexoCuidador"}}
+      {{onChange clearFields="sexoCuidador,sobrecargaCuidado"}}
     {{/field}}
     {{validator type="expr" notValidIf="=!esMayor60&&siEdadCuidador" message="Edad Cuidador Inválida (Sólo Mayores de 60 Años)"}}
   {{/section}}
@@ -46,7 +64,10 @@
     {{field id="siHiperplasia" type="expr" value="=hiperplasiaProstatica=='positivo'"}}
     {{field id="esMujerMayor15" type="expr" value="=base.esMujer&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=15"}}
     {{field id="cluesTieneEspirometro" type="expr" value="=cluesTieneEspirometro&&esMayor19"}}
-    {{field id="tieneResultadoEspirometria" type="expr" value="=calc.isNotEmpty(resultadoEspirometria)"}}
+    {{field id="tieneResultadoEspirometria" type="expr" value="=calc.isNotEmpty(@resultadoEspirometria)&&@resultadoEspirometria!='0'"}}
+    {{#field id="resultadoEspirometria"}}
+      {{onChange clearFields="limiteInferiorNormalidadEspirometria,resultadoPruebaEspirometria"}}
+    {{/field}}
     {{validator type="expr" validIf="=!@resultadoEspirometria||(@resultadoEspirometria>=0&&@resultadoEspirometria<=100)" message="Resultado Espirometría Fuera de Rango (0-100)"}}
     {{validator type="expr" validIf="=!@resultadoEspirometria||((@limiteInferiorNormalidadEspirometria>=0.655&&@limiteInferiorNormalidadEspirometria<=0.785)||@limiteInferiorNormalidadEspirometria==0.999)" message="Límite Inferior Normalidad Espirometría Fuera de Rango"}}
   {{/section}}

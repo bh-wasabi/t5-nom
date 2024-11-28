@@ -1,5 +1,6 @@
 {{#define id="datosInfeccionesRespiratoriasAgudasSis"}}
   {{#section id="base"}}
+    {{field id="presentaInfeccion" type="expr" value="=presentaInfeccionAguda!=='noAplica'"}}
     {{#field id="presentaInfeccionAguda"}}
       {{onChange clearFields="planTratamiento,neumonia"}}
     {{/field}}

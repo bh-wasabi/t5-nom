@@ -1,6 +1,16 @@
 {{#define id="procedimientoCirugia"}}
   {{#section id="base"}}
-    {{field id="codigoCie9" value="=cirugiaCie9"}}    
+    {{#field id="cirugiaCie9"}}
+      {{#editor alwaysLoad="true"}}
+        {{#onChange}}
+          {{set limiteSexo="=SEX_TYPE==1?'HOMBRE':SEX_TYPE==2?'MUJER':'NO'"}}
+          {{set limiteInferior="=calc.zeroFill(PRO_EDAD_IA,3)+(PRO_CVE_EDIA==1?'D':PRO_CVE_EDIA==2?'M':PRO_CVE_EDIA==3?'A':'')"}}
+          {{set limiteSuperior="=calc.zeroFill(PRO_EDAD_FA,3)+(PRO_CVE_EDFA==1?'D':PRO_CVE_EDFA==2?'M':PRO_CVE_EDFA==3?'A':'')"}}
+          {{set otrasValidaciones="=PRO_TIPO_NOM"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+    {{field id="codigoCie9" value="=cirugiaCie9"}}
     {{#field id="articulo"}}
       {{#editor}}
         {{param tipoArticulo="='procedimiento'"}}

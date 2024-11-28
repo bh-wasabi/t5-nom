@@ -1,6 +1,7 @@
 {{#define id="datosEnfermedadDiarreicaAgudaSis"}}
   {{#section id="base"}}
     {{field id="noEsA" type="expr" value="=planTratamientoEda!=='planA'&&presentaEnfermedad!=='noAplica'"}}
+    {{field id="mostrarPlanTratamiento" type="expr" value="=presentaEnfermedad!=='noAplica'"}}
     {{field id="presentaEnfermedadNoAplica" type="expr" value="=presentaEnfermedad==='noAplica'"}}
     {{#field id="presentaEnfermedad"}}
       {{onChange clearFields="planTratamientoEda,recuperacionDeshidratacion,sobresSueroOral"}}

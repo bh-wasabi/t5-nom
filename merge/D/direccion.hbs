@@ -4,6 +4,7 @@
     {{field id="entidadNoEspecificada" type="expr" value="=entidadFederativa=='00'"}}
     {{field id="entidadSeIgnora" type="expr" value="=entidadFederativa=='99'"}}
     {{field id="siDesconoceCalle" type="expr" value="=desconoceCalle=='si'"}}
+    {{field id="entidadValida" type="expr" value="=!calc.in(entidadFederativa,['00','88','99'])"}}
     {{#field id="pais"}}
       {{#onChange}}
         {{set entidadFederativa="=pais!='MX'?'88':null"}}
@@ -55,7 +56,7 @@
         {{#onChange refresh="true"}}
           {{set codigoLocalidad="=c_localidad"}}
           {{set codigoEstado="=c_estado"}}
-          {{set codigoPostal="=calc.in(c_localidad,['9998','9999'])?'99999':codigoPostal"}}
+          {{set codigoPostal="=c_localidad=='9998'?'99999':c_localidad=='9999'?'00000':codigoPostal"}}
         {{/onChange}}
       {{/editor}}
     {{/field}}

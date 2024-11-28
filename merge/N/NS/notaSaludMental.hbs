@@ -40,12 +40,11 @@
     {{#field id="contrarreferido"}}
       {{onChange clearFields="referidoPor"}}
     {{/field}}
-    {{validator type="expr" notValidIf="=!calc.in(@seRealizoPsicoterapia,['grupal','pareja','familiar'])&&base.catServicios==='PAIDOPSIQUIATRÍA'&&user.others.tipoPersonalNom!=='residentePsiquiatria'" message="Servicio Atención PAIDOPSIQUIATRÍA válido para terapia GRUPAL, PAREJA o FAMILIAR"}}
     {{validator type="expr" notValidIf="=calc.findDuplicates(calc.pluckRef(consumoSustanciaPsicoactivas,'base.consumoSustanciasPsicoactivas'))" message="Duplicidad en Consumo Sustancias"}}
     {{validator type="expr" notValidIf="=calc.in('noAplica',calc.pluckRef(consumoSustanciaPsicoactivas,'base.consumoSustanciasPsicoactivas'))&&calc.pluckRef(consumoSustanciaPsicoactivas,'base.consumoSustanciasPsicoactivas').length>1" message="Sustancias Psicoactivas 'No Aplica' debe ser único"}}
     {{validator type="expr" notValidIf="=calc.in('noAplica',calc.pluckRef(identificacionViolencia,'base.ambitoViolencia'))&&calc.pluckRef(identificacionViolencia,'base.ambitoViolencia').length>1" message="Identificación Violencia 'No Aplica' debe ser único"}}
-    {{validator type="expr" notValidIf="=calc.in(base.catServicios,['GERONTOLOGÍA','PSICOGERIATRÍA'])&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')<60&&!calc.in(diagnosticos.seRealizoPsicoterapia,['grupal','pareja','familiar'])" message="Psicoterapia Individual Inválida"}}
-    {{validator type="expr" notValidIf="=calc.in(base.catServicios,['PAIDOPSIQUIATRÍA'])&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=18&&!calc.in(diagnosticos.seRealizoPsicoterapia,['grupal','pareja','familiar'])" message="Psicoterapia Individual Inválida"}}
+    {{validator type="expr" notValidIf="=!calc.in(@seRealizoPsicoterapia,['grupal','pareja','familiar'])&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')<60&&calc.in(base.catServicios,['GERONTOLOGÍA','PSICOGERIATRÍA'])" message="='Servicio Atención ' + base.catServicios + ' válido para terapia GRUPAL, PAREJA o FAMILIAR'"}}
+    {{validator type="expr" notValidIf="=!calc.in(@seRealizoPsicoterapia,['grupal','pareja','familiar'])&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=18&&base.catServicios==='PAIDOPSIQUIATRÍA'&&user.others.tipoPersonalNom!=='residentePsiquiatria'" message="Servicio Atención PAIDOPSIQUIATRÍA válido para terapia GRUPAL, PAREJA o FAMILIAR"}}
     {{validator type="expr" notValidIf="=contrarreferido=='no'&&!calc.in(@referidoPor,['otras','noAplica'])" message="Referido Por Inválido"}}
     {{validator type="expr" notValidIf="=calc.in('noAplica',@estudiosTeleconsulta)&&@estudiosTeleconsulta.length>1" message="Estudios Teleconsulta 'No Aplica' debe ser único"}}
   {{/section}}

@@ -52,11 +52,12 @@
     {{field id="noEsPsicologo" type="expr" value="=!calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])"}}
     {{field id="puedeIntervencionGerontologica" type="expr" value="!calc.in(user.others.tipoPersonalNom,['pasanteNutricion','nutriologa','homeopata','medicoTradicionalIndigena','taps','parteraTecnica','promotorSalud','acupunturista'])&&esMayor59"}}
     {{field id="esPrimeraVezSubsecuente" type="expr" value="=consultaNinoSano=='primeraVez'||consultaNinoSano=='subsecuente'&&esMenor6&&noEsPsicologo"}}
-    {{field id="noEsPrimeraVezSubsecuente" type="expr" value="=consultaNinoSano=='noAplica'&&esMenor18&&noEsPsicologo"}}
     {{field id="esPsicologo" type="expr" value="=(calc.in(prestadorServicios._especialidad,['psicologiaAdultos','psicologiaPediatrica','psicologiaClinica']))"}}
     {{field id="esContraEsPsicologo" type="expr" value="=@contrarreferido=='no'&&esPsicologo"}}
     {{field id="noEsContrarreferido" type="expr" value="=@contrarreferido=='no'&&!esPsicologo"}}
     {{field id="puedeInfoPrevencion" type="expr" value="=esMenor10&&noEsPsicologo"}}
+    {{field id="muestraCancerMenores" type="expr" value="=esMenor18&&noEsPsicologo"}}
+    {{field id="muestraEnfermedadesAgudas" type="expr" value="=consultaNinoSano=='noAplica'&&esMenor18&&noEsPsicologo"}}
     {{field id="muestraResultadoBatelle" type="expr" value="=moment(base.fechaConsulta).diff(persona.fechaNacimiento,'years')<5&&moment(base.fechaConsulta).diff(persona.fechaNacimiento,'months')>=16"}}
     {{#field id="consultaNinoSano"}}
       {{onChange clearFields="saludNino,cancerMenores,enfermedadesDiarreicasAgudas,infeccionesRespiratoriasAgudas"}}

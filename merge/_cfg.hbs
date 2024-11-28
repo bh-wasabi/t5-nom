@@ -1699,6 +1699,16 @@
     {{default return="=(base.esMujer)?'mujer':'antecedentes'"}}
   {{/function}}
 
+  {{#function id="notaSisConsultaExternaSiguiente"}}
+    {{define type="param" id="base"}}
+    {{default return="=(base.esMujerEntre9y59)?'mujer':'exploracion'"}}
+  {{/function}}
+
+  {{#function id="notaSisConsultaExternaAnterior"}}
+    {{define type="param" id="base"}}
+    {{default return="=(base.esMujerEntre9y59)?'mujer':'antecedentes'"}}
+  {{/function}}
+
   {{#function id="tipoNotificacionEpidemiologica"}}
     {{define type="param" id="N_INTER"}}
     {{define type="param" id="NIN"}}
@@ -2397,10 +2407,11 @@
   {{#function id="escolaridadCorrecta"}}
     {{define type="param" id="edad"}}
     {{define type="param" id="escolaridad"}}
-    {{when edad="0..2" return="=escolaridad=='noAplica'"}}
-    {{when edad="3..5" return="=calc.in(escolaridad, ['ninguna','preescolarCompleta','preescolarIncompleta'])"}}
-    {{when edad="<13" return="=calc.in(escolaridad, ['ninguna','preescolarCompleta','preescolarIncompleta','primariaCompleta','primariaIncompleta'])"}}
-    {{when edad=">=13" return="=escolaridad!='noAplica'"}}
+    {{when edad="<=2" return="=escolaridad=='noAplica'"}}
+    {{when edad="<=4" return="=calc.in(escolaridad, ['ninguna','preescolarCompleta','preescolarIncompleta'])"}}
+    {{when edad="<=10" return="=calc.in(escolaridad, ['ninguna','preescolarCompleta','preescolarIncompleta','primariaIncompleta','primariaCompleta'])"}}
+    {{when edad="<=13" return="=calc.in(escolaridad, ['ninguna','preescolarCompleta','preescolarIncompleta','primariaCompleta','primariaIncompleta','secundariaIncompleta'])"}}
+    {{when edad=">=14" return="=escolaridad!='noAplica'"}}
   {{/function}}
 
   {{#function id="cedulaObligatoria"}}
@@ -2529,6 +2540,18 @@
 
   {{#function id="servicioEspecialidadGinecoobstetriciaEgresos"}}
     {{default return="['biologiaReproduccion','ginecoObstetricia','medicinaMaternoFetal','obstetricia']"}}
+  {{/function}}
+
+  {{#function id="diagnosticoParto"}}
+    {{default return="['O800','O801','O808','O809','O810','O811','O812','O813','O814','O815','O820','O821','O822','O828','O829','O830','O831','O832','O833','O834','O838','O839','O840','O841','O842','O848','O849']"}}
+  {{/function}}
+
+  {{#function id="diagnosticoAborto"}}
+    {{default return="['O000','O001','O002','O008','O009']"}}
+  {{/function}}
+
+  {{#function id="diagnosticoProductoUnico"}}
+    {{default return="['O080','O081','O082','O083']"}}
   {{/function}}
 
   {{#function id="sugerirTipoPersonal"}}

@@ -5,11 +5,11 @@
         {{param persona="=_mainDoc.persona.id"}}
         {{param tipoSolicitud="procedimiento,cirugia"}}
         {{#onChange}}
-          {{set codigoCie9="=base.procedimiento.base.codigoCie9"}}
-          {{set limiteSexo="=base.procedimiento.base.limiteSexo"}}
-          {{set limiteInferior="=base.procedimiento.base.limiteInferior"}}
-          {{set limiteSuperior="=base.procedimiento.base.limiteSuperior"}}
-          {{set otrasValidaciones="=base.procedimiento.base.otrasValidaciones"}}
+          {{set codigoCie9="=_parent.type=='notaSolicitudProcedimiento'?base.procedimiento.base.codigoCie9:base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.cirugiaCie9"}}
+          {{set limiteSexo="=_parent.type=='notaSolicitudProcedimiento'?base.procedimiento.base.limiteSexo:base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSexo"}}
+          {{set limiteInferior="=_parent.type=='notaSolicitudProcedimiento'?base.procedimiento.base.limiteInferior:base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteInferior"}}
+          {{set limiteSuperior="=_parent.type=='notaSolicitudProcedimiento'?base.procedimiento.base.limiteSuperior:base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSuperior"}}
+          {{set otrasValidaciones="=_parent.type=='notaSolicitudProcedimiento'?base.procedimiento.base.otrasValidaciones:base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.otrasValidaciones"}}
         {{/onChange}}
       {{/editor}}
     {{/field}}
