@@ -27,9 +27,13 @@
         {{param especialidad="=servicioInterconsultado"}}
         {{#onChange}}
           {{set especialidadMedicoInterconsultado="=prestadorServicios._especialidad"}}
+          {{set datosEspecialidadMedicoInterconsultado="=prestadorServicios.datosEspecialidad"}}
           {{set cedulaMedicoInterconsultado="=_.first(prestadorServicios.datosEspecialidad).base.cedulaEspecialidad"}}
           {{set paisMedicoInterconsultado="=prestadorServicios._paisNacimiento"}}
           {{set curpMedicoInterconsultado="=prestadorServicios.clave"}}
+          {{set nombreMedicoInterconsultado="=base.nombres"}}
+          {{set apellidoPaternoMedicoInterconsultado="=base.apellidoPaterno"}}
+          {{set apellidoMaternoMedicoInterconsultado="=base.apellidoMaterno"}}
         {{/onChange}}
       {{/editor}}
     {{/field}}

@@ -4,6 +4,8 @@
       {{set excedeLimiteEdad="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))?'SI':'NO'"}}
     {{/update}}
   {{/action}}
+
+  {{param folioControl="base.foliosUtilizadosDefuncion"}}
   
   {{#section id="base"}}
     {{field id="esMujerMayor9" type="expr" value="=esMujer&&(calc.fromNowYears(persona.fechaNacimiento)>=9||calc.fromNowYears(persona.fechaNacimiento<=59))"}}
@@ -12,11 +14,6 @@
     {{#field id="mujerFertil"}}
       {{onChange clearFields="edadGestacional"}}
     {{/field}}
-  	{{#onChange}}
-  		{{#update}}
-  			{{set cantidadAfectacionesTratadas="=otrosDiagnosticos.length"}}
-  		{{/update}}
-  	{{/onChange}}
     {{#field id="usuarioReferido"}}
       {{onChange clearFields="cluesReferido,cluesEstatus,cluesFechaBaja"}}
     {{/field}}
@@ -26,6 +23,12 @@
         {{set cluesFechaBaja="=FECHA_EFECTIVA_BAJA"}}
       {{/onChange}}
     {{/field}}
+  	{{#onChange}}
+  		{{#update}}
+  			{{set cantidadAfectacionesTratadas="=otrosDiagnosticos.length"}}
+        {{set foliosUtilizadosDefuncion="=[destinoDespuesLesion.base.folioCertificadoDefuncion]"}}
+  		{{/update}}
+  	{{/onChange}}
     {{validator type="expr" notValidIf="=atencionMedicaLesion.base.consecuenciaLesion=='defuncion'&&afectacionesTratadas[0].base.destinoAtencionLesion!='defuncion'" message="Verificar Destino en Afectaciones Tratadas"}}
     {{validator type="expr" notValidIf="=profesionalResponsableSalud.base.responsableAtencionMedica=='medicoTratante'&&(calc.in('tratamientoPsicologo',atencionMedicaLesion.base.tipoAtencionLesion)||calc.in('consergeria',atencionMedicaLesion.base.tipoAtencionLesion))" message="Profesional Responsable Salud Inválido"}}
     {{!-- Se quita primer parte de la validación, que obliga a que unicamente tenga un Tipo de Atención para Psicologos --}}

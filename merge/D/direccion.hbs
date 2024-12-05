@@ -3,6 +3,7 @@
     {{field id="noEsMexico" type="expr" value="=pais!='MX'"}}
     {{field id="entidadNoEspecificada" type="expr" value="=entidadFederativa=='00'"}}
     {{field id="entidadSeIgnora" type="expr" value="=entidadFederativa=='99'"}}
+    {{field id="entidadNoAplica" type="expr" value="=entidadFederativa=='88'"}}
     {{field id="siDesconoceCalle" type="expr" value="=desconoceCalle=='si'"}}
     {{field id="entidadValida" type="expr" value="=!calc.in(entidadFederativa,['00','88','99'])"}}
     {{#field id="pais"}}
@@ -25,7 +26,7 @@
     {{/field}}
     {{#field id="correosMexico"}}
       {{#editor}}
-        {{param estado="=entidadFederativa=='00'?'88':entidadFederativa"}}
+        {{param estado="=entidadFederativa"}}
         {{#onChange clearFields="localidad"}}
           {{set codigoPostal="=d_codigo"}}
           {{set colonia="=d_asenta"}}
@@ -44,7 +45,7 @@
     {{#field id="seleccionarDelegacion"}}
       {{#editor}}
         {{param estado="=@codigoEstado||entidadFederativa"}}
-        {{#onChange refresh="true"}}
+        {{#onChange refresh="true" clearFields="localidad,otraLocalidad"}}
           {{set codigoDelegacionDesconoce="c_municipio"}}
         {{/onChange}}
       {{/editor}}
@@ -65,7 +66,9 @@
         {{set calle="SIN INFORMACIÓN"}}
       {{/onChange}}
     {{/field}}
+    {{validator type="expr" notValidIf="=!noEsMexico&&entidadNoAplica" message="Entidad Federativa Inválida"}}
     {{validator type="expr" notValidIf="=codigoLocalidad=='9999'&&calc.isEmpty(@otraLocalidad)" message="Falta Indicar Otra Localidad"}}
+    {{validator type="expr" notValidIf="=codigoLocalidad!='9999'&&!calc.isEmpty(@otraLocalidad)" message="No Debe Indicar Otra Localidad"}}
     {{validator type="expr" notValidIf="=(codigoDelegacionDesconoce==='998'&&codigoLocalidad=='9999')||codigoDelegacionDesconoce==='999'&&codigoLocalidad=='9998'" message="Municipio y Localidad Deben Coincidir"}}
   {{/section}}
 {{/define}}

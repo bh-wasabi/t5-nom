@@ -18,7 +18,7 @@
       {{set condition="=calc.isEmpty(base.apellidoPaterno)" apellidoPaterno="='XX'"}}
       {{set condition="=calc.isEmpty(base.apellidoMaterno)" apellidoMaterno="='XX'"}}
       {{set condition="=calc.isEmpty(base.generoSocial)" generoSocial="='noEspecificado'"}}
-      {{set clave="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, base.generoCurp, base.entidadNacimiento, moment(base.fechaNacimiento).format('YYYY-MM-DD'),16,true)"}}
+      {{set clave="=base.desconoceFechaNacimiento=='no'?calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, base.generoCurp, base.entidadNacimiento, moment(base.fechaNacimiento).format('YYYY-MM-DD'),16,true):'XXXX999999XXXXXX99'"}}
     {{/update}}
   {{/action}}
 
@@ -87,14 +87,21 @@
       {{filter condition="=excluirPaciente" field="_id" neq="=excluirPaciente" isObjectId="true"}}
     {{/find}}
   {{/view}}
+
   {{#section id="base"}}
     {{field id="nombreCompleto" type="expr" label="Nombre" value="=calc.concat(@nombres, @apellidoPaterno, @apellidoMaterno)"}}
     {{field id="esMujer" type="expr" value="=base.genero==='mujer'"}}    
-    {{field id="esMenor3Meses" type="expr" value="=moment().diff(moment(fechaNacimiento), 'months')<=3"}}
+    {{field id="esMenor3Meses" type="expr" value="=moment().diff(moment(fechaNacimiento), 'months')<b=3"}}
     {{field id="esMenor3Dias" type="expr" value="=moment().diff(moment(fechaNacimiento), 'days')<=3"}} 
     {{field id="esMenor5Anos" type="expr" value="=calc.fromNowYears(fechaNacimiento)<5"}}
     {{field id="esMenor10Anos" type="expr" value="=calc.fromNowYears(fechaNacimiento)<10"}}
     {{field id="clave2" type="expr" value="=@clave2||'PN'+calc.zeroFill(_created.folio||_parentDoc._created.folio||moment().unix(),7)"}} 
+    {{field id="tieneOtrasAlertasAlimentarias" type="expr" value="=calc.in('otras', @alertaAlimentaria)"}} 
+    {{field id="esMenor3Anos" type="expr" value="=calc.fromNowYears(fechaNacimiento)<3"}}
+    {{field id="esConsultaExterna" type="expr" value="=tipoAtencion=='consultaExterna'"}}
+    {{field id="esUrgenciasHospitalizacion" type="expr" value="=tipoAtencion!='consultaExterna'"}}
+    {{field id="esMigrante" type="expr" value="=migrante=='internacional'||migrante=='retornado'||migrante=='nacional'"}}
+    {{field id="bloquearProcedencia" type="expr" value="=migrante=='nacional'||migrante=='retornado'"}}
     {{#field id="cama"}}
       {{#editor}}
         {{param tipoUbicacion="='cama'"}}
@@ -163,12 +170,6 @@
         {{param regimenAlimenticio="=regimenAlimenticio"}}
       {{/editor}}
     {{/field}}
-    {{field id="tieneOtrasAlertasAlimentarias" type="expr" value="=calc.in('otras', @alertaAlimentaria)"}} 
-    {{field id="esMenor3Anos" type="expr" value="=calc.fromNowYears(fechaNacimiento)<3"}}
-    {{field id="esConsultaExterna" type="expr" value="=tipoAtencion=='consultaExterna'"}}
-    {{field id="esUrgenciasHospitalizacion" type="expr" value="=tipoAtencion!='consultaExterna'"}}
-    {{field id="esMigrante" type="expr" value="=migrante=='internacional'||migrante=='retornado'||migrante=='nacional'"}}
-    {{field id="bloquearProcedencia" type="expr" value="=migrante=='nacional'||migrante=='retornado'"}}
     {{#field id="tipoAtencion"}}
       {{#onChange}}
         {{set esConsultaExterna="=tipoAtencion=='consultaExterna'"}}
@@ -185,9 +186,9 @@
     {{validator type="expr" validIf="=calc.setTimeStr(@fechaNacimiento,@horaNacimiento)<moment().format()" message="Fecha Nacimiento Incorrecta"}}
     [./if.]
     {{validator type="expr" notValidIf="=desconoceFechaNacimiento==='si'&&clave!==fn('CURP_GENERICO')" message="Colocar CURP Genérico si Desconoce Fecha Nacimiento"}}
-    {{validator type="expr" notValidIf="=desconoceFechaNacimiento==='si'&&moment().diff(moment(fechaNacimiento),'years')<1&&fechaNacimiento.substr(8,2)!=='15'" message="Fecha Nacimiento Inválida (Desconoce Fecha)"}}
-    {{validator type="expr" notValidIf="=desconoceFechaNacimiento==='si'&&moment().diff(moment(fechaNacimiento),'years')>=1&&fechaNacimiento.substr(8,2)!=='30'&&fechaNacimiento.substr(5,2)!=='06'" message="Fecha Nacimiento Inválida (Desconoce Fecha)"}}
-    {{validator type="expr" validIf="=moment().diff(moment(@fechaNacimiento), 'years')<120" message="Paciente Mayor a 120 años"}}
+    {{validator type="expr" notValidIf="=desconoceFechaNacimiento==='si'&&moment().diff(fechaNacimiento,'years')<1&&fechaNacimiento.substr(8,2)!='15'" message="Fecha Nacimiento Inválida (Desconoce Fecha)<br/>Formato Válido: [año estimado]-[mes estimado]-15"}}
+    {{validator type="expr" notValidIf="=@desconoceFechaNacimiento==='si'&&(fechaNacimiento.substr(5,2)!='06'||fechaNacimiento.substr(8,2)!='30')" message="Fecha Nacimiento Inválida (Desconoce Fecha)</br>Formato Válido: [año estimado]-06-30"}}
+    {{validator type="expr" validIf="=moment().diff(fechaNacimiento,'years')<120" message="Paciente Mayor a 120 años"}}
     {{validator type="expr" validIf="=(calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'),16,false)===clave.substr(0,16)||calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'),16,true)===clave.substr(0,16)||clave===fn('CURP_GENERICO'))&&clave.length===18" message="CURP Incorrecto"}}
     {{validator type="expr" validIf="=fn('entidadNacimientoCorrecta', paisNacimiento, entidadNacimiento)" message="Entidad Nacimiento Incorrecta"}}
     {{validator type="expr" notValidIf="=esMenor3Anos&&!calc.isEmpty(@ocupacion)&&@ocupacion!='9990'" message="Ocupación Inválida"}}

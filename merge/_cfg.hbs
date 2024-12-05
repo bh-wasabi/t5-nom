@@ -169,11 +169,13 @@
     {{set escolaridad="=persona.escolaridad"}}
     {{set sabeLeerEscribir="=persona.sabeLeerEscribir"}}
     {{set desconoceFechaNacimiento="=persona.desconoceFechaNacimiento"}}
+    {{set paisResidencia="=_.first(persona.direccion).base.pais"}}
     {{set entidadResidencia="=_.first(persona.direccion).base.entidadFederativa"}}
-    {{set municipioResidencia="=_.first(persona.direccion).base.codigoDelegacion"}}
+    {{set municipioResidencia="=_.first(persona.direccion).base.codigoDelegacionDesconoce||_.first(persona.direccion).base.codigoDelegacion"}}
     {{set localidadResidencia="=_.first(persona.direccion).base.codigoLocalidad"}}
     {{set otraLocalidad="=_.first(persona.direccion).base.otraLocalidad"}}
     {{set codigoPostal="=_.first(persona.direccion).base.codigoPostal"}}
+    {{set programaDerechohabiencia="=detalle.notaDerechohabienciaEgreso.base.dependencia"}}
   {{/transform}}
 
   {{#function id="listaEstatus"}}
@@ -2392,7 +2394,6 @@
     {{default return="=servicio"}}
   {{/function}}
 
-  {{!-- Tarea 5604 - Agregar Bloque --}}
   {{#function id="contieneNulos"}}
     {{define type="param" id="lista"}}
     {{default return="=calc.in(null,lista)"}}
@@ -2547,11 +2548,15 @@
   {{/function}}
 
   {{#function id="diagnosticoAborto"}}
-    {{default return="['O000','O001','O002','O008','O009']"}}
+    {{default return="['O000','O001','O002','O008','O009','O010','O011','O019','O020','O021','O028','O029','O030','O031','O032','O033','O034','O035','O036','O037','O038','O039','O040','O041','O042','O043','O044','O045','O046','O047','O048','O049','O050','O051','O052','O053','O054','O055','O056','O057','O058','O059','O060','O061','O062','O063','O064','O065','O066','O067','O068','O069','O070','O071','O072','O073','O074','O075','O076','O077','O078','O079','O080','O081','O082','O083','O084','O085','O086','O087','O088','O089']"}}
   {{/function}}
 
   {{#function id="diagnosticoProductoUnico"}}
-    {{default return="['O080','O081','O082','O083']"}}
+    {{default return="['O800','O801','O808','O809','O810','O811','O812','O813','O814','O815','O820','O821','O822','O828','O829','O830','O831','O832','O833','O834','O838','O839']"}}
+  {{/function}}
+
+  {{#function id="procedimientoEsterilizacion"}}
+    {{default return="['6621','6622','6629','6631','6632','6639','6663']"}}
   {{/function}}
 
   {{#function id="sugerirTipoPersonal"}}
@@ -2609,6 +2614,30 @@
     {{when condition="=moment(fechaIngreso).isBefore(fechaNacimiento)" return="'Fecha Ingreso no puede ser menor a la Fecha de Nacimiento'"}}
     {{when condition="=moment(fechaEgreso).diff(fechaIngreso,'years')>=5&&!fn('esUnidadPsiquiatrica',tipologia,subtipologia)" return="'Fecha Ingreso no debe exceder de cinco años con respecto a la Fecha Egreso'"}}
     {{default return=""}}
+  {{/function}}
+
+  {{#function id="validarFechaEgresoUrgencias"}}
+    {{define type="param" id="fechaNacimiento"}}
+    {{define type="param" id="fechaIngreso"}}
+    {{define type="param" id="fechaEgreso"}}
+    {{when condition="=moment(fechaIngreso).isSame(fechaEgreso)" return="'Las fechas deben ser distintas'"}}
+    {{when condition="=moment(fechaEgreso).isBefore(fechaIngreso)" return="'Fecha Egreso no debe ser menor a la Fecha Ingreso'"}}
+    {{when condition="=moment(fechaIngreso).isAfter()" return="'Fecha Ingreso no puede ser mayor a la fecha actual'"}}
+    {{when condition="=moment(fechaIngreso).isBefore(fechaNacimiento)" return="'Fecha Ingreso no puede ser menor a la Fecha de Nacimiento'"}}
+    {{default return=""}}
+  {{/function}}
+
+  {{#function id="validarDerechohabiencia"}}
+    {{define type="param" id="detalle"}}
+    {{define type="param" id="contexto"}}
+    {{when condition="=calc.isEmpty(detalle.notaDerechohabienciaEgreso)" return="Falta Indicar Derechohabiencia"}}
+    {{default return="=@detalle.notaDerechohabienciaEgreso.contexto.episodio==@contexto.episodio?null:'Falta Indicar Derechohabiencia'"}}
+  {{/function}}
+
+  {{#function id="validarInicialUrgencias"}}
+    {{define type="param" id="detalle"}}
+    {{when condition="=calc.isEmpty(detalle.notaInicialUrgencias)" return="Falta Nota Inicial Urgencias"}}
+    {{default return="=@detalle.notaInicialUrgencias.contexto.episodio==@contexto.episodio)?null:'Falta Nota Inicial Urgencias'"}}
   {{/function}}
 {{/define}}
 
@@ -8735,7 +8764,7 @@
   {{/template}}
   {{#template id="atencionMedicaLesion"}}
     {{#if fechaAtencion}}<br>Fecha Atención: {{date fechaAtencion "DD/MMM/YYYY"}}{{/if}}
-    {{#if horaAtencion}}<br>Hora Atención: {{date horaAtencion "hh:mm a"}}{{/if}}
+    {{#if horaAtencion}}<br>Hora Atención: {{horaAtencion}}{{/if}}
     {{#if servicioAtencionLesion}}<br>Servicio Atención: {{_servicioAtencionLesion}}{{/if}}
     {{#if esOtroServicioAtencion}}{{#if especifiqueServicioAtencion}}<br>Especificar Servicio Atención: {{especifiqueServicioAtencion}}{{/if}}{{/if}}
     {{#if tipoAtencionLesion}}<br>Típo Atención: {{_tipoAtencionLesion}}{{/if}}
@@ -10642,7 +10671,7 @@
     {{#if codigoCie9}}<br>Código (CIE-9): {{codigoCie9}}{{/if}}
     {{#if enQuirofanoOFuera}}<br>En quirófano o Fuera: {{_enQuirofanoOFuera}}{{/if}}
     {{#if tipoAnestesia}}<br>Tipo Anestesia: {{_tipoAnestesia}}{{/if}}
-    {{#if tiempoProcedimientoCie9}}<br>Tiempo: {{date tiempoProcedimientoCie9 "hh:mm"}}{{/if}}
+    {{#if tiempoProcedimientoCie9}}<br>Tiempo: {{tiempoProcedimientoCie9}}{{/if}}
     {{#if cirujano}}<br>Cirujano: {{_cirujano}}{{/if}}
     {{#if descripcionProcedimiento}}<br>Descripción del Procedimiento: {{descripcionProcedimiento}}{{/if}}
   {{/template}}

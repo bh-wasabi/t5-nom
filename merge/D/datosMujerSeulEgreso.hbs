@@ -11,7 +11,11 @@
     {{/field}}
     {{validator type="expr" validIf="=(@edadGestacional>0&&edadGestacional<=45)||@edadGestacional==88||@edadGestacional==99" message="Edad Gestacional Inválida"}}
     {{validator type="expr" validIf="=@siAborto||(@tipoEmbarazo=='unico'&&@totalProductos==1)||(@tipoEmbarazo=='gemelar'&&@totalProductos==2)||(@tipoEmbarazo=='tresMas'&&(@totalProductos>=3&&@totalProductos<=6))" message="Error en Número de Productos"}}
-    {{validator type="expr" notValidIf="=siAborto&&edadGestacional>=1&&edadGestacional<=21" message="No Coincide Edad Gestacional con Tipo Atención Obstétrica"}}
+    {{validator type="expr" notValidIf="=siParto&&edadGestacional>=1&&edadGestacional<=21" message="No Coincide Edad Gestacional con Tipo Atención Obstétrica (22-45)"}}
+    {{validator type="expr" notValidIf="=siAborto&&edadGestacional>=22&&edadGestacional<=45" message="No Coincide Edad Gestacional con Tipo Atención Obstétrica (1-21)"}}
     {{validator type="expr" notValidIf="=(@totalProductos!=(calc.isEmpty(@datosInformacionProducto)?0:@datosInformacionProducto.length))&&(@totalProductos!=(calc.isEmpty(@datosInformacionProductoAborto)?0:@datosInformacionProductoAborto.length))" message="<strong>Total Productos</strong> no Coincide con Registros en <strong>Información Producto</strong>"}}
+    {{!-- {{validator type="expr" notValidIf="=calc.findDuplicates(calc.pluckRef(@datosInformacionProducto,'base.folioCertificadoNacimiento'))" message="Folio Certificado Nacimiento Duplicado"}} --}}
+    {{!-- {{validator type="expr" notValidIf="=calc.findDuplicates(calc.pluckRef(@datosInformacionProducto,'base.folioCertificadoDefuncion'))" message="Folio Certificado Muerte Fetal Duplicado"}} --}}
+    {{!-- {{validator type="expr" notValidIf="=calc.findDuplicates(calc.pluckRef(@datosInformacionProductoAborto,'base.folioCertificadoDefuncion'))" message="Folio Certificado Defunción Duplicado"}} --}}
   {{/section}}
 {{/define}}

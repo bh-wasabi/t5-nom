@@ -1,0 +1,6 @@
+{{#define id="notaDerechohabienciaEgreso"}}
+  {{#section id="base"}}
+    {{field id="lista" type="expr" value="=dependenciaLista"}}
+    {{validator type="expr" validIf="=calc.in(@dependencia, @lista)" message="Dependencia No Configurada en Paciente"}}
+  {{/section}}
+{{/define}}

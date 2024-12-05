@@ -1,22 +1,30 @@
 {{#define id="notaSeulEgreso"}}
-  {{action id="afectar" confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))" confirmMessage="Diagnóstico Excede Límite Edad<br>¿Desea continuar?"}}
+  {{#action id="afectar" confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteEdad'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteEdad')))" confirmMessage="Diagnóstico o Procedimiento Excede Límite Edad<br>¿Desea continuar?"}}
+    {{#update section="base"}}
+      {{set excedeLimiteEdad="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteEdad'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteEdad')))?'SI':'NO'"}}
+    {{/update}}
+  {{/action}}
+
+  {{param folioControl="base.foliosUtilizadosNacimiento,base.foliosUtilizadosDefuncion,base.folioUtilizadosMuerteFetal"}}
   
  	{{#section id="base"}}
 		{{field id="esVoluntadPropia" type="expr" value="=motivoEgreso=='voluntadPropia'"}}
     {{field id="esDefuncion" type="expr" value="=motivoEgreso=='defuncion'"}}
     {{field id="noEsDefuncion" type="expr" value="=!esDefuncion"}}
     {{field id="esMujerMayor9Anos" type="expr" value="=esMujer&&(moment(moment().diff(persona.fechaNacimiento,'years')<1?base.fechaIngresoHospitalario:base.fechaEgreso).diff(persona.fechaNacimiento,'years')>=9&&moment(moment().diff(persona.fechaNacimiento,'years')<1?base.fechaIngresoHospitalario:base.fechaEgreso).diff(persona.fechaNacimiento,'years')<=59)"}}
+    {{field id="esMenor4Meses" type="expr" value="=moment(moment().diff(persona.fechaNacimiento,'years')<1?base.fechaIngresoHospitalario:base.fechaEgreso).diff(persona.fechaNacimiento,'months')<4"}}
     {{field id="otraUnidad" type="expr" value="=motivoEgreso=='trasladoOtraUnidad'"}}
     {{field id="siParcial" type="expr" value="=tipoUnidadPsiquiatrica=='hospitalParcial'"}}
     {{field id="siOtroMetodo" type="expr" value="=metodoAnticonceptivo=='11'"}}
     {{field id="esHospitalPsiquiatrico" type="expr" value="=calc.in(user.establishmentData.cluesTipoAbreviacion,['Y','HPSIQ','HPSIQMF'])&&calc.in(user.establishmentData.cluesSubAbreviacion,['99','NES','INP','SAP'])"}}
     {{field id="noNotificoMP" type="expr" value="=motivoEgreso=='defuncion'&&notificoMP=='no'"}}
     {{field id="siObstetrica" type="expr" value="=calc.in(mujerFertil,['embarazo','puerperio'])"}}
-    {{field id="esEmbarazo" type="expr" value="=mujerFertil==='embarazo'"}}
-    {{field id="esPuerperio" type="expr" value="=mujerFertil==='puerperio'"}}
+    {{field id="esEmbarazo" type="expr" value="=mujerFertil==='embarazo'||(mujerFertil==='puerperio'&&(moment(base.fechaEgreso).diff(persona.fechaNacimiento,'years')<10||moment(base.fechaEgreso).diff(persona.fechaNacimiento,'years')>54))"}}
+    {{field id="esPuerperio" type="expr" value="=mujerFertil==='puerperio'&&moment(base.fechaEgreso).diff(persona.fechaNacimiento,'years')>9&&moment(base.fechaEgreso).diff(persona.fechaNacimiento,'years')<55"}}
     {{field id="tieneDiagnosticoParto" type="expr" value="=calc.arrayInArray(calc.mergeArrays([@afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada.base.diagnostico],calc.pluckRef(@otrosDiagnosticos,'base.diagnostico'),@seleccionarOtrosDiagnosticos.map((d) => d.substr(0, 4))),fn('diagnosticoParto'))"}}
     {{field id="tieneDiagnosticoAborto" type="expr" value="=calc.arrayInArray(calc.mergeArrays([@afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada.base.diagnostico],calc.pluckRef(@otrosDiagnosticos,'base.diagnostico'),@seleccionarOtrosDiagnosticos.map((d) => d.substr(0, 4))),fn('diagnosticoAborto'))"}}
     {{field id="tieneDiagnosticoProductoUnico" type="expr" value="=calc.arrayInArray(calc.mergeArrays([@afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada.base.diagnostico],calc.pluckRef(@otrosDiagnosticos,'base.diagnostico'),@seleccionarOtrosDiagnosticos.map((d) => d.substr(0, 4))),fn('diagnosticoProductoUnico'))"}}
+    {{field id="tieneProcedimientoEsterilizacion" type="expr" value="=calc.arrayInArray(calc.mergeArrays(calc.pluckRef(@procedimientoEgresos,'base.procedimientoCie9'),calc.pluckRef(@procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.codigoCie9')),fn('procedimientoEsterilizacion'))"}}
     {{#field id="pacientePsiquiatrico"}}
       {{onChange clearFields="tipoUnidadPsiquiatrica,tipoServicioPsiquiatrico,HospitalParcial"}}
     {{/field}}
@@ -26,7 +34,7 @@
       {{/onChange}}
     {{/field}}
     {{#field id="mujerFertil"}}
-      {{onChange clearFields="datosMujer,datosMujerEmbarazo,antecedentesEmbarazos"}}
+      {{onChange clearFields="datosMujer,datosMujerEmbarazo,antecedentesEmbarazos,metodoAnticonceptivo,otroMetodo"}}
     {{/field}}
     {{#field id="cluesTraslado"}}
       {{#onChange clearFields="cluesEstatus,cluesFechaBaja"}}
@@ -37,8 +45,15 @@
     {{#onChange}}
   		{{#update}}
         {{set gestas="=fn('calcularGestas',antecedentesEmbarazos.base.paras,antecedentesEmbarazos.base.abortos,antecedentesEmbarazos.base.cesareas,esEmbarazo?1:0)"}}
+        {{set foliosUtilizadosNacimiento="=_.compact(calc.pluckRef(calc.pluckRef(datosMujer,'base.datosInformacionProducto'),'base.folioCertificadoNacimiento'))"}}
+        {{set foliosUtilizadosMuerteFetal="=_.compact(calc.pluckRef(calc.pluckRef(datosMujer,'base.datosInformacionProducto'),'base.folioCertificadoDefuncion'))"}}
+        {{set foliosUtilizadosDefuncion="=calc.isEmpty(@datosMujer)?_.compact([@folioCertificadoDefuncion]):_.compact([].concat([@folioCertificadoDefuncion],calc.pluckRef(calc.pluckRef(datosMujer,'base.datosInformacionProductoAborto'),'base.folioCertificadoDefuncion')))"}}
   		{{/update}}
   	{{/onChange}}
+    {{validator type="expr" notValidIf="=(moment(base.fechaEgreso).diff(persona.fechaNacimiento,'years')<10||moment(base.fechaEgreso).diff(persona.fechaNacimiento,'years')>54)&&calc.getRef(@datosMujerEmbarazo,'base.edadGestacional')!='0'" message="Edad Gestacional debe ser 0"}}
+    
+    {{validator type="expr" notValidIf="=@tieneProcedimientoEsterilizacion&&(!calc.in('Z302', calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico'))))" message="Procedimiento de Esterilización debe tener Diagnóstico Esterilización (Z302)"}}
+    {{validator type="expr" notValidIf="=!@tieneProcedimientoEsterilizacion&&(calc.in('Z302', calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico'))))" message="Diagnóstico Esterilización (Z302) debe tener Procedimiento de Esterilización"}}
 
     {{validator type="expr" validIf="=moment(fechaEgreso).diff(fechaIngresoHospitalario,'years',true)<5||esHospitalPsiquiatrico" message="Fecha Egreso Excede 5 Años"}}
     {{validator type="expr" validIf="=!calc.in(@tipoServicioPsiquiatrico, ['paidopsiquiatria','psicogeriatria'])||(@tipoServicioPsiquiatrico=='paidopsiquiatria'&&moment().diff(moment(fechaNacimiento), 'years')<18)||(@tipoServicioPsiquiatrico=='psicogeriatria'&&moment().diff(moment(fechaNacimiento), 'years')>59)" message="Tipo Servicio Incorrecto"}}
@@ -47,6 +62,7 @@
     {{validator type="expr" notValidIf="=!tieneDiagnosticoParto&&datosMujer.base.siParto" message="Tipo Atención Obstétrica Inválida, Falta Diagnóstico de Parto"}}
     {{validator type="expr" notValidIf="=!tieneDiagnosticoAborto&&datosMujer.base.siAborto" message="Tipo Atención Obstétrica Inválida, Falta Diagnóstico de Aborto"}}
     {{validator type="expr" notValidIf="=!tieneDiagnosticoProductoUnico&&datosMujer.base.totalProductos=='1'" message="Total Productos Inválido, Falta Diagnóstico de Producto Único"}}
+
     {{validator type="expr" notValidIf="=@cluesTraslado==user.establishmentData.clues" message="CLUES Procedencia Inválido"}}
     {{validator type="expr" notValidIf="=@folioCertificadoDefuncion&&fn('validaCertificadoDefuncion',@folioCertificadoDefuncion)" message="Certificado Defunción Inválido"}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')), @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico)" message="Tiene Diagnósticos Duplicados"}}

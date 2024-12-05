@@ -2,16 +2,23 @@
   {{#section id="base"}}
     {{field id="entidadNoEspecificada" type="expr" value="=entidadFederativa=='00'"}}
     {{field id="entidadSeIgnora" type="expr" value="=entidadFederativa=='99'"}}
+    {{field id="entidadNoAplica" type="expr" value="=entidadFederativa=='88'"}}
     {{field id="siDesconoceCalle" type="expr" value="=desconoceCalle=='si'"}}
+    {{field id="entidadValida" type="expr" value="=!calc.in(entidadFederativa,['00','88','99'])"}}
     {{#field id="entidadFederativa"}}
-      {{#onChange clearFields="correosMexico,localidad,codigoPostal,colonia,delegacion,ciudad,estado,codigoOficina,codigoDelegacion,codigoCiudad,codigoEstado,zona,tipoAsentamiento"}}
+      {{#onChange clearFields="desconoceDireccion,correosMexico,localidad,codigoPostal,colonia,delegacion,ciudad,estado,codigoOficina,codigoDelegacion,codigoCiudad,codigoEstado,zona,tipoAsentamiento"}}
         {{set delegacion="=calc.in(entidadFederativa,['00','88'])?'No Especificado':entidadFederativa=='99'?'Se Ignora':null"}}
         {{!-- {{set otraLocalidad="=calc.in(entidadFederativa,['00','88'])?'No Especificado':entidadFederativa=='99'?'Se Ignora':null"}} --}}
       {{/onChange}}
     {{/field}}
+    {{#field id="desconoceDireccion"}}
+      {{#onChange clearFields="correosMexico,localidad,codigoPostal,colonia,delegacion,seleccionarDelegacion,ciudad,estado,codigoOficina,codigoDelegacion,codigoCiudad,codigoEstado,zona,tipoAsentamiento"}}
+        {{set estado="=desconoceDireccion=='si'?_entidadFederativa:null"}}
+      {{/onChange}}
+    {{/field}}
     {{#field id="correosMexico"}}
       {{#editor}}
-        {{param estado="=entidadFederativa=='00'?'88':entidadFederativa"}}
+        {{param estado="=entidadFederativa"}}
         {{#onChange clearFields="localidad"}}
           {{set codigoPostal="=d_codigo"}}
           {{set colonia="=d_asenta"}}
@@ -27,12 +34,22 @@
         {{/onChange}}
       {{/editor}}
     {{/field}}
+    {{#field id="seleccionarDelegacion"}}
+      {{#editor}}
+        {{param estado="=@codigoEstado||entidadFederativa"}}
+        {{#onChange refresh="true" clearFields="localidad,otraLocalidad"}}
+          {{set codigoDelegacionDesconoce="c_municipio"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
     {{#field id="localidad"}}
       {{#editor}}
         {{param estado="=@codigoEstado||entidadFederativa"}}
         {{param municipio="=codigoDelegacion"}}
         {{#onChange refresh="true"}}
           {{set codigoLocalidad="=c_localidad"}}
+          {{set codigoEstado="=c_estado"}}
+          {{set codigoPostal="=c_localidad=='9998'?'99999':c_localidad=='9999'?'00000':codigoPostal"}}
         {{/onChange}}
       {{/editor}}
     {{/field}}
@@ -41,6 +58,9 @@
         {{set calle="SIN INFORMACIÓN"}}
       {{/onChange}}
     {{/field}}
+    {{validator type="expr" notValidIf="=entidadNoAplica" message="Entidad Federativa Inválida"}}
     {{validator type="expr" notValidIf="=codigoLocalidad=='9999'&&calc.isEmpty(@otraLocalidad)" message="Falta Indicar Otra Localidad"}}
+    {{validator type="expr" notValidIf="=codigoLocalidad!='9999'&&!calc.isEmpty(@otraLocalidad)" message="No Debe Indicar Otra Localidad"}}
+    {{validator type="expr" notValidIf="=(codigoDelegacionDesconoce==='998'&&codigoLocalidad=='9999')||codigoDelegacionDesconoce==='999'&&codigoLocalidad=='9998'" message="Municipio y Localidad Deben Coincidir"}}
   {{/section}}
 {{/define}}

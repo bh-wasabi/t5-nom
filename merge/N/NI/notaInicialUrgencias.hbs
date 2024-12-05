@@ -11,7 +11,7 @@
     {{field id="noCasa" type="expr" value="=!casa"}}
     {{field id="enUrgencias" type="expr" value="=continuaAtencionEnUrgencias&&noCasa"}}
     {{field id="fueraUrgencias" type="expr" value="=!enUrgencias"}} --}}
-    {{field id="esMujerMayor9" type="expr" value="=esMujer&&calc.fromNowYears(persona.fechaNacimiento)>=9&&calc.fromNowYears(persona.fechaNacimiento)<=59"}}
+    {{field id="esMujerMayor9" type="expr" value="=esMujer&&moment(base.fechaIngreso).diff(persona.fechaNacimiento,'years')>=9&&moment(base.fechaIngreso).diff(persona.fechaNacimiento,'years')<=59"}}
     {{field id="tieneCondicionAlta" type="expr" value="=(continuaAtencionFueraUrgencias||seEnviaA)"}}
     {{field id="tienePlanHidratacion" type="expr" value="=planHidratacion=='planA'||planHidratacion=='planB'"}}
     {{field id="esFertil" type="expr" value="=mujerFertil=='embarazo'"}}
@@ -34,7 +34,7 @@
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.validoSeul, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.validoSeul, calc.pluckRef(@otrosDiagnosticos, 'base.validoSeul')), null, 'PARTO')" message="Tiene Diagnósticos de tipo PARTO Duplicados"}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.validoSeul, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.validoSeul, calc.pluckRef(@otrosDiagnosticos, 'base.validoSeul')), null, 'ABORTO')" message="Tiene Diagnósticos de tipo ABORTO Duplicados"}}
     {{validator type="expr" notValidIf="=_.last(calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico'))=='P95X'" message="Código P95X no puede ser seleccionado como última Comorbilidad"}}
-    {{validator type="expr" notValidIf="=moment().diff(@fechaIngreso,'days')>40" message="Fecha Ingreso no debe pasar 40 días"}}
+    {{!-- {{validator type="expr" notValidIf="=moment().diff(@fechaIngreso,'days')>40" message="Fecha Ingreso no debe pasar 40 días"}} --}}
     {{validator type="expr" notValidIf="=@atencionPrehospitalariaDesde=='00:00'" message="Tiempo Traslado Inválido (Mayor que 00:00)"}}
     {{validator type="expr" validIf="=!@CLUES||cluesEstatus=='EN OPERACION'||(@cluesFechaBaja&&moment(@fechaIngreso||undefined).add(-90,'days').format('YYYY-MM-DD')<=@cluesFechaBaja)" message="CLUES Fuera de Operación"}}
   {{/section}}

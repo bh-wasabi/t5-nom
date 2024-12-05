@@ -1,9 +1,11 @@
 {{#define id="notaAltaServicio"}}
-  {{#action id="afectar" confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))" confirmMessage="Diagnóstico Excede Límite Edad<br>¿Desea continuar?"}}
+  {{#action id="afectar" confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteEdad'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteEdad')))" confirmMessage="Diagnóstico o Procedimiento Excede Límite Edad<br>¿Desea continuar?"}}
     {{#update section="base"}}
-      {{set excedeLimiteEdad="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))?'SI':'NO'"}}
+      {{set excedeLimiteEdad="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteEdad'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteEdad')))?'SI':'NO'"}}
     {{/update}}
   {{/action}}
+
+  {{param folioControl="base.foliosUtilizadosDefuncion"}}
 
   {{#section id="base"}}
     {{field id="tieneTraslado" type="expr" value="=motivoAltaServicio=='trasladoOtraUnidad'"}}
@@ -33,6 +35,13 @@
         {{set cluesFechaBaja="=FECHA_EFECTIVA_BAJA"}}
       {{/onChange}}
     {{/field}}
+    {{#onChange}}
+  		{{#update}}
+        {{set foliosUtilizadosDefuncion="=[base.folioCertificadoDefuncion]"}}
+  		{{/update}}
+  	{{/onChange}}
+    {{field id="tienemas60" type="expr" value="=moment(base.fechaEgreso).diff(persona.fechaNacimiento,'years')<60"}}
+    {{validator type="expr" notValidIf="=@folioCertificadoDefuncion&&fn('validaCertificadoDefuncion',@folioCertificadoDefuncion)" message="Certificado Defunción Inválido"}}
     {{validator type="expr" notValidIf="=moment(@fechaEgreso).diff(@fechaIngreso,'days')>40" message="No deben pasar <strong>40 Días</strong> entre <strong>Fecha Desde</strong> y <strong>Fecha Hasta</strong>"}}
     {{validator type="expr" notValidIf="=@CLUES==user.establishmentData.clues" message="CLUES Inválido"}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')), @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico)" message="Tiene Diagnósticos Duplicados"}}
