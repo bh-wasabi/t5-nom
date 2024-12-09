@@ -187,7 +187,7 @@
     [./if.]
     {{validator type="expr" notValidIf="=desconoceFechaNacimiento==='si'&&clave!==fn('CURP_GENERICO')" message="Colocar CURP Genérico si Desconoce Fecha Nacimiento"}}
     {{validator type="expr" notValidIf="=desconoceFechaNacimiento==='si'&&moment().diff(fechaNacimiento,'years')<1&&fechaNacimiento.substr(8,2)!='15'" message="Fecha Nacimiento Inválida (Desconoce Fecha)<br/>Formato Válido: [año estimado]-[mes estimado]-15"}}
-    {{validator type="expr" notValidIf="=@desconoceFechaNacimiento==='si'&&(fechaNacimiento.substr(5,2)!='06'||fechaNacimiento.substr(8,2)!='30')" message="Fecha Nacimiento Inválida (Desconoce Fecha)</br>Formato Válido: [año estimado]-06-30"}}
+    {{validator type="expr" notValidIf="=@desconoceFechaNacimiento==='si'&&moment().diff(fechaNacimiento,'years')>=1&&(fechaNacimiento.substr(5,2)!='06'||fechaNacimiento.substr(8,2)!='30')" message="Fecha Nacimiento Inválida (Desconoce Fecha)</br>Formato Válido: [año estimado]-06-30"}}
     {{validator type="expr" validIf="=moment().diff(fechaNacimiento,'years')<120" message="Paciente Mayor a 120 años"}}
     {{validator type="expr" validIf="=(calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'),16,false)===clave.substr(0,16)||calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'),16,true)===clave.substr(0,16)||clave===fn('CURP_GENERICO'))&&clave.length===18" message="CURP Incorrecto"}}
     {{validator type="expr" validIf="=fn('entidadNacimientoCorrecta', paisNacimiento, entidadNacimiento)" message="Entidad Nacimiento Incorrecta"}}
@@ -202,6 +202,7 @@
     {{validator type="expr" notValidIf="=clave===user.serviceProvider.clave&&clave!==fn('CURP_GENERICO')" message="No puede tener el mismo CURP que el Usuario"}}
     {{validator type="expr" validIf="=fn('validaCaracter17Curp',clave,fechaNacimiento)||clave===fn('CURP_GENERICO')" message="CURP Inválido (Caracter 17)"}}
     {{validator type="expr" notValidIf="=esMenor10Anos&&estadoCivil!=='noAplica'" message="Estado Civil Inválido (Paciente menor 10 años)"}}
+    {{validator type="expr" notValidIf="=!esMenor10Anos&&estadoCivil==='noAplica'" message="Estado Civil Inválido (Paciente mayor 10 años)"}}
     {{validator type="expr" notValidIf="=esUrgenciasHospitalizacion&&calc.in(grupoEtnico.base.indigena,['noResponde','noSabe'])" message="Se Considera Indígena Inválido (SI/NO)"}}
   {{/section}}
 

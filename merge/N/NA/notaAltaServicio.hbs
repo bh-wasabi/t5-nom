@@ -1,7 +1,7 @@
 {{#define id="notaAltaServicio"}}
-  {{#action id="afectar" confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteEdad'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteEdad')))" confirmMessage="Diagnóstico o Procedimiento Excede Límite Edad<br>¿Desea continuar?"}}
+  {{#action id="afectar" confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteEdad'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteEdad')))||calc.in('SI', calc.pluckRef(base.interconsultas,'base.excedeLimiteEdad'))" confirmMessage="Diagnóstico, Procedimiento o Interconsulta Excede Límite Edad<br>¿Desea continuar?"}}
     {{#update section="base"}}
-      {{set excedeLimiteEdad="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteEdad'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteEdad')))?'SI':'NO'"}}
+      {{set excedeLimiteEdad="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteEdad'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteEdad')))|calc.in('SI', calc.pluckRef(base.interconsultas,'base.excedeLimiteEdad'))?'SI':'NO'"}}
     {{/update}}
   {{/action}}
 
@@ -11,6 +11,8 @@
     {{field id="tieneTraslado" type="expr" value="=motivoAltaServicio=='trasladoOtraUnidad'"}}
     {{field id="defuncion" type="expr" value="=motivoAltaServicio=='defuncion'"}}
     {{field id="noNotificaMP" type="expr" value="=@defuncion&&ministerioPublico=='no'"}}
+    {{field id="esMujerMayor9" type="expr" value="=esMujer&&moment(base.fechaEgreso).diff(persona.fechaNacimiento,'years')>=9&&moment(base.fechaEgreso).diff(persona.fechaNacimiento,'years')<=59"}}
+    {{field id="esFertil" type="expr" value="=mujerFertil=='embarazo'"}}
     {{#field id="central"}}
       {{onChange clearFields="cama"}}
     {{/field}}
@@ -37,10 +39,9 @@
     {{/field}}
     {{#onChange}}
   		{{#update}}
-        {{set foliosUtilizadosDefuncion="=[base.folioCertificadoDefuncion]"}}
+        {{set foliosUtilizadosDefuncion="=_.compact([@folioCertificadoDefuncion])"}}
   		{{/update}}
   	{{/onChange}}
-    {{field id="tienemas60" type="expr" value="=moment(base.fechaEgreso).diff(persona.fechaNacimiento,'years')<60"}}
     {{validator type="expr" notValidIf="=@folioCertificadoDefuncion&&fn('validaCertificadoDefuncion',@folioCertificadoDefuncion)" message="Certificado Defunción Inválido"}}
     {{validator type="expr" notValidIf="=moment(@fechaEgreso).diff(@fechaIngreso,'days')>40" message="No deben pasar <strong>40 Días</strong> entre <strong>Fecha Desde</strong> y <strong>Fecha Hasta</strong>"}}
     {{validator type="expr" notValidIf="=@CLUES==user.establishmentData.clues" message="CLUES Inválido"}}

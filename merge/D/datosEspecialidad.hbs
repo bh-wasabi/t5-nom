@@ -1,5 +1,9 @@
 {{#define id="datosEspecialidad"}}
   {{#section id="base"}}
+    {{field id="siOtraEspecialidad" type="expr" value="=especialidad==='otra'"}}
+    {{#field id="especialidad"}}
+      {{onChange clearFields="especifiqueEspecialidad"}}
+    {{/field}}
     {{validator type="expr" notValidIf="=@cedulaEspecialidad.length<6" message="Cédula Especialidad Inválida (Mínimo 6 caracteres)"}}
   {{/section}}
 {{/define}} 

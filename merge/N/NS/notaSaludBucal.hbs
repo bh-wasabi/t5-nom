@@ -58,6 +58,7 @@
     {{validator type="expr" notValidIf="=@contrarreferido=='si'&&@referidoPor=='otras'" message="Contrarreferido Inválido (Referido por 'Otras')"}}
     {{validator type="expr" notValidIf="=calc.in(@referidoPor,['embarazoAltoRiesgo','sospechaCancer','iras','neumonia','cisticercosis','preecalmpsia','hemorragia','otraEmergencia'])" message="'Referido Por' Inválido"}}
     {{validator type="expr" notValidIf="=calc.in('noAplica',@estudiosTeleconsulta)&&@estudiosTeleconsulta.length>1" message="Estudios Teleconsulta 'No Aplica' debe ser único"}}
+    {{validator type="expr" notValidIf="=@solicitaTeleconsulta=='si'&&calc.in('noAplica',@estudiosTeleconsulta)" message="Estudios Teleconsulta 'No Aplica' únicamente sin Teleconsulta"}}
   {{/section}}
 {{!--RACC VISTA  --}}
  {{#view id="ultima"}}

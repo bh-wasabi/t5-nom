@@ -5036,11 +5036,11 @@
       {{set _somatometriaPediatrica="=detalle._somatometriaPediatrica"}}
       {{set fechaNacimiento="=persona.fechaNacimiento"}}
       {{!-- {{set fechaIngresoUrgencias="=contexto.urgencias.desde"}} --}}
-      {{set afeccionPrincipal="=detalle.notaInicialUrgencias.base.afeccionPrincipal"}}
+      {{set afeccionPrincipal="=calc.recalcLimiteEdadDiagnostico(detalle.notaInicialUrgencias.base.afeccionPrincipal, persona.fechaNacimiento, moment(_params.fechaEgreso).diff(persona.fechaNacimiento,'years')<1?_params.fechaIngreso:_params.fechaEgreso)"}}
       {{set _afeccionPrincipal="=detalle.notaInicialUrgencias.base._afeccionPrincipal"}}
-      {{set afeccionPrincipalReseleccionada="=detalle.notaInicialUrgencias.base.afeccionPrincipalReseleccionada"}}
+      {{set afeccionPrincipalReseleccionada="=calc.recalcLimiteEdadDiagnostico(detalle.notaInicialUrgencias.base.afeccionPrincipalReseleccionada, persona.fechaNacimiento, moment(_params.fechaEgreso).diff(persona.fechaNacimiento,'years')<1?_params.fechaIngreso:_params.fechaEgreso)"}}
       {{set _afeccionPrincipalReseleccionada="=detalle.notaInicialUrgencias.base._afeccionPrincipalReseleccionada"}}
-      {{set otrosDiagnosticos="=detalle.notaInicialUrgencias.base.otrosDiagnosticos"}}
+      {{set otrosDiagnosticos="=calc.recalcLimiteEdadDiagnostico(detalle.notaInicialUrgencias.base.otrosDiagnosticos, persona.fechaNacimiento, moment(_params.fechaEgreso).diff(persona.fechaNacimiento,'years')<1?_params.fechaIngreso:_params.fechaEgreso)"}}
       {{set _otrosDiagnosticos="=detalle.notaInicialUrgencias.base._otrosDiagnosticos"}}
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
@@ -5152,20 +5152,20 @@
       {{set antecedenteFamiliar="=detalle.antecedentes.antecedenteFamiliar"}}
       {{set _antecedenteFamiliar="=detalle.antecedentes._antecedenteFamiliar"}}
       {{!-- {{set signosVitales="=detalle.signosVitales"}}
-      {{set _signosVitales="=detalle._signosVitales"}}
-      {{set somatometria="=detalle.somatometria"}}
-      {{set _somatometria="=detalle._somatometria"}} --}}
-      {{set somatometriaIngreso="=detalle.notaIngreso.base.somatometria"}}
-      {{set _somatometriaIngreso="=detalle.notaIngreso.base._somatometria"}}
+      {{set _signosVitales="=detalle._signosVitales"}} --}}
+      {{set somatometria="=contexto.episodio==detalle.notaEvolucion.contexto.episodio&&detalle.notaEvolucion.base.somatometria"}}
+      {{set _somatometria="=contexto.episodio==detalle.notaEvolucion.contexto.episodio&&detalle.notaEvolucion.base._somatometria"}} 
+      {{set somatometriaIngreso="=contexto.episodio==detalle.notaIngreso.contexto.episodio&&detalle.notaIngreso.base.somatometria"}}
+      {{set _somatometriaIngreso="=contexto.episodio==detalle.notaIngreso.contexto.episodio&&detalle.notaIngreso.base._somatometria"}}
       {{set motivoEgreso="=(contexto.estaDifunto)?'defuncion':null"}}
       {{set fechaHoraDefuncion="=contexto.defuncion.fechaHoraDefuncion"}}
       {{set diasEstancia="=moment(fechaHoraDefuncion).diff(moment(fechaIngresoHospitalario), 'day')"}}
       {{set evolucion="=contexto.defuncion.comentarios"}}
-      {{set afeccionPrincipal="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&detalle.notaSeulLesiones.base.afeccionPrincipal"}}
+      {{set afeccionPrincipal="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&calc.recalcLimiteEdadDiagnostico(detalle.notaSeulLesiones.base.afeccionPrincipal, persona.fechaNacimiento, moment(_params.fechaEgreso).diff(persona.fechaNacimiento,'years')<1?_params.fechaIngresoHospitalario:_params.fechaEgreso)"}}
       {{set _afeccionPrincipal="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&detalle.notaSeulLesiones.base._afeccionPrincipal"}}
-      {{set afeccionPrincipalReseleccionada="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&detalle.notaSeulLesiones.base.afeccionPrincipalReseleccionada"}}
+      {{set afeccionPrincipalReseleccionada="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&calc.recalcLimiteEdadDiagnostico(detalle.notaSeulLesiones.base.afeccionPrincipalReseleccionada, persona.fechaNacimiento, moment(_params.fechaEgreso).diff(persona.fechaNacimiento,'years')<1?_params.fechaIngresoHospitalario:_params.fechaEgreso)"}}
       {{set _afeccionPrincipalReseleccionada="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&detalle.notaSeulLesiones.base._afeccionPrincipalReseleccionada"}}
-      {{set otrosDiagnosticos="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&detalle.notaSeulLesiones.base.otrosDiagnosticos"}}
+      {{set otrosDiagnosticos="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&calc.recalcLimiteEdadDiagnostico(detalle.notaSeulLesiones.base.otrosDiagnosticos, persona.fechaNacimiento, moment(_params.fechaEgreso).diff(persona.fechaNacimiento,'years')<1?_params.fechaIngresoHospitalario:_params.fechaEgreso)"}}
       {{set _otrosDiagnosticos="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&detalle.notaSeulLesiones.base._otrosDiagnosticos"}}
       {{setRef ref="servicios.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
       {{setRef ref="servicios.base.genero" value="=persona.genero"}}
@@ -5638,6 +5638,8 @@
     {{update section="persona" transform="copiarPersona"}}
     {{update section="nomDatos" transform="copiarNomDatos"}}
     {{#update section="base"}}
+      {{set fechaEvento="=_params.fechaEvento"}}
+      {{set horaEvento="=(_params.fechaEvento).substr(11,5)"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
@@ -5650,6 +5652,8 @@
       {{set _riesgoEpidemiologico="=detalle._riesgoEpidemiologico"}}
       {{set servicio="=contexto.servicio"}}
       {{set _servicio="=contexto._servicio"}}
+      {{setRef ref="eventoLesion.base.fechaOcurreEvento" value="=_params.fechaEvento"}}
+      {{setRef ref="eventoLesion.base.horaEvento" value="=(_params.fechaEvento).substr(11,5)"}}
       {{setRef ref="eventoLesion.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
       {{setRef ref="eventoLesion.base.diaFestivo" value=""}}
       {{setRef ref="atencionMedicaLesion.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
@@ -6627,7 +6631,9 @@
   {{#transform id="copiarProcedimiento"}}
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
+    {{update section="nomDatos" transform="copiarNomDatos"}}
     {{#update section="base"}}
+      {{set fechaProcedimiento="_params.fechaProcedimiento"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
@@ -6740,7 +6746,9 @@
   {{#transform id="copiarInterconsulta"}}
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
+    {{update section="nomDatos" transform="copiarNomDatos"}}
     {{#update section="base"}}
+      {{set fechaInterconsulta="_params.fechaInterconsulta"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
@@ -12257,6 +12265,7 @@
   {{#action id="notaSeulLesiones" source="notaSeulLesiones" label="SEUL Lesiones" transform="copiarSeulLesiones" fromSource="notaSeulLesiones" fromView="buscarPorEpisodio" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" error="=fn('validarDerechohabiencia', detalle, contexto)||fn('errorDatosSeguro', persona, contexto, detalle)||(_items[0]&&'Nota Lesión Activa: '+_items[0]._name)" errorType="info"}}
     {{param persona="=_id"}}
     {{param episodio="=contexto.episodio"}}
+    {{ask field="fechaEvento" type="datetime" label="Fecha y Hora Evento" required="true" value="=moment().format()" min="=moment(persona.fechaNacimiento).format()" max="=moment().endOf('day').format()"}}
   {{/action}}
   {{action id="notaReaccionesTransfusionales" source="notaReaccionesTransfusionales" label="Reacciones Transfusionales" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaInduccionOtorgada" source="notaInduccionOtorgada" label="Inducción Otorgada" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
@@ -12738,10 +12747,14 @@
   {{action id="notaSolicitudRecepcionTrasplante" source="notaSolicitudRecepcionTrasplante" label="Solicitud Recepción Potencial" transform="copiarTrasplante" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaSolicitudImagenologia" source="notaSolicitudImagenologia" label="Solicitud Imagenología" transform="copiarImagenologia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" error="=fn('errorDatosSeguro', persona, contexto, detalle)" errorType="info"}}
   {{action id="notaSolicitudPatologia" source="notaSolicitudPatologia" label="Solicitud Patología" transform="copiarPatologia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" error="=fn('errorDatosSeguro', persona, contexto, detalle)" errorType="info"}}
-  {{action id="notaSolicitudProcedimiento" source="notaSolicitudProcedimiento" label="Solicitud Procedimiento" transform="copiarProcedimiento" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" btnSolid="true" error="=fn('errorDatosSeguro', persona, contexto, detalle)" errorType="info"}}
+  {{#action id="notaSolicitudProcedimiento" source="notaSolicitudProcedimiento" label="Solicitud Procedimiento" transform="copiarProcedimiento" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" btnSolid="true" error="=fn('errorDatosSeguro', persona, contexto, detalle)" errorType="info"}}
+    {{ask field="fechaProcedimiento" type="datetime" label="Fecha Procedimiento" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().endOf('day').format()"}}
+  {{/action}}
   {{action id="notaSolicitudInhaloterapia" source="notaSolicitudInhaloterapia" label="Solicitud inhaloterapia" transform="copiarInhaloterapia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" error="=fn('errorDatosSeguro', persona, contexto, detalle)" errorType="info"}}
   {{action id="notaSolicitudCateterSondaDrenaje" source="notaSolicitudCateterSondaDrenaje" label="Solicitud Catéteres, Sondas o Drenajes" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
-  {{action id="notaSolicitudInterconsulta" source="notaSolicitudInterconsulta" label="Solicitud Interconsulta" transform="copiarInterconsulta" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange"  onlyPost="true" btnSolid="true" error="=fn('errorDatosSeguro', persona, contexto, detalle)" errorType="info"}}
+  {{#action id="notaSolicitudInterconsulta" source="notaSolicitudInterconsulta" label="Solicitud Interconsulta" transform="copiarInterconsulta" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange"  onlyPost="true" btnSolid="true" error="=fn('errorDatosSeguro', persona, contexto, detalle)" errorType="info"}}
+    {{ask field="fechaInterconsulta" type="datetime" label="Fecha Interconsulta" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().endOf('day').format()"}}
+  {{/action}}
   {{action id="notaSolicitudDieta" source="notaSolicitudDieta" label="Solicitud Dieta" transform="copiarDieta" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaSolicitudHitoPaciente" source="notaSolicitudHitoPaciente" label="Hito Paciente" transform="copiarHitoPaciente" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaSolicitudMedidaGeneral" source="notaSolicitudMedidaGeneral" label="Solicitud Medida General" transform="copiarMedidaGeneral" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}

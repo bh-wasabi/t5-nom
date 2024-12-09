@@ -153,6 +153,7 @@
     {{set segundoApellidoPrestador="=user.lastName2"}}
     {{set tipoPersonal="=user.others.tipoPersonalNom"}}
     {{set programaSMyMG="=user.job.programaSMyMG"}}
+    {{set datosEspecialidad="=user.serviceProvider.datosEspecialidad"}}
     {{set cedulaResponsable="=_.first(user.identification).base.cedulaEspecialidad"}}
     {{set paisNacPaciente="=persona.paisNacimiento"}}
     {{set entidadNacimiento="=persona.entidadNacimiento"}}
@@ -3329,7 +3330,8 @@
   {{#template id="interconsulta"}}
     {{!-- {{#if suspender}}(Suspendido) {{/if}} --}}
     {{!-- {{#if diagnostico}}<br>Diagnósticos Agregados: {{_diagnostico}}{{/if}} --}}
-    {{!-- {{#if servicioInterconsultante}}<br>Servicio Interconsultante: {{_servicioInterconsultante}}{{/if}} --}}
+    {{#if servicioInterconsultante}}<br>Servicio Interconsultante: {{_servicioInterconsultante}}{{/if}}
+    {{#if otroServicioInterconsultante}}<br>Especifique Servicio Interconsultante: {{otroServicioInterconsultante}}{{/if}}
     {{!-- {{#if medicoInterconsultante}}<br>Médico Interconsultante: {{_medicoInterconsultante}}{{/if}} --}}
     {{!-- {{#if especialidadMedicoInterconsultante}}<br>Especialidad Médico Interconsultante: {{especialidadMedicoInterconsultante}}{{/if}} --}}
     {{!-- {{#if cedulaMedicoInterconsultante}}<br>Cédula Médico Interconsultante: {{cedulaMedicoInterconsultante}}{{/if}} --}}

@@ -12,9 +12,9 @@
     {{field id="enUrgencias" type="expr" value="=continuaAtencionEnUrgencias&&noCasa"}}
     {{field id="fueraUrgencias" type="expr" value="=!enUrgencias"}} --}}
     {{field id="esMujerMayor9" type="expr" value="=esMujer&&moment(base.fechaIngreso).diff(persona.fechaNacimiento,'years')>=9&&moment(base.fechaIngreso).diff(persona.fechaNacimiento,'years')<=59"}}
+    {{field id="esFertil" type="expr" value="=mujerFertil=='embarazo'"}}
     {{field id="tieneCondicionAlta" type="expr" value="=(continuaAtencionFueraUrgencias||seEnviaA)"}}
     {{field id="tienePlanHidratacion" type="expr" value="=planHidratacion=='planA'||planHidratacion=='planB'"}}
-    {{field id="esFertil" type="expr" value="=mujerFertil=='embarazo'"}}
     {{#field id="mujerFertil"}}
       {{onChange clearFields="edadGestacional"}}
     {{/field}}

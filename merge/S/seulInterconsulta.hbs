@@ -7,15 +7,18 @@
       {{/editor}}
       {{#onChange}}
         {{set claveServicioInterconsultante="=base.interconsulta.base.servicioInterconsultante"}}
-        {{set servicioInterconsultante="=base.interconsulta.base._servicioInterconsultante"}}
-        {{set especialidadMedicoInterconsultante="=base.interconsulta.base.especialidadMedicoInterconsultante"}}
-        {{set paisMedicoInterconsultante="=base.interconsulta.base.paisMedicoInterconsultante"}}
-        {{set curpMedicoInterconsultante="=base.interconsulta.base.curpMedicoInterconsultante"}}
-        {{set medicoInterconsultante="=base.interconsulta.base.medicoInterconsultante"}}
-        {{set nombreMedicoInterconsultante="=base.interconsulta.base.nombreMedicoInterconsultante"}}
-        {{set apellidoPaternoMedicoInterconsultante="=base.interconsulta.base.apellidoPaternoMedicoInterconsultante"}}
-        {{set apellidoMaternoMedicoInterconsultante="=base.interconsulta.base.apellidoMaternoMedicoInterconsultante"}}
-        {{set cedulaMedicoInterconsultante="=base.interconsulta.base.cedulaMedicoInterconsultante"}}
+        {{set otroServicioInterconsultante="=base.interconsulta.base.otroServicioInterconsultante"}}
+        {{set claveServicioInterconsultado="=base.interconsulta.base.servicioInterconsultado"}}
+        {{set servicioInterconsultado="=base.interconsulta.base._servicioInterconsultado"}}
+        {{set especialidadMedicoInterconsultado="=base.interconsulta.base.especialidadMedicoInterconsultado"}}
+        {{set paisMedicoInterconsultado="=base.interconsulta.base.paisMedicoInterconsultado"}}
+        {{set curpMedicoInterconsultado="=base.interconsulta.base.curpMedicoInterconsultado"}}
+        {{set medicoInterconsultado="=base.interconsulta.base.medicoInterconsultado"}}
+        {{set nombreMedicoInterconsultado="=base.interconsulta.base.nombreMedicoInterconsultado"}}
+        {{set apellidoPaternoMedicoInterconsultado="=base.interconsulta.base.apellidoPaternoMedicoInterconsultado"}}
+        {{set apellidoMaternoMedicoInterconsultado="=base.interconsulta.base.apellidoMaternoMedicoInterconsultado"}}
+        {{set cedulaMedicoInterconsultado="=base.interconsulta.base.cedulaMedicoInterconsultado"}}
+        {{set excedeLimiteEdad="=moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years')>=18&&calc.in(base.interconsulta.base.servicioInterconsultado,fn('servicioEspecialidadPediatria'))||(_parentDoc.persona.genero==='mujer'&&calc.in(base.interconsulta.base.servicioInterconsultado,fn('servicioEspecialidadGinecoobstetricia'))&&(moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years')<9||moment(_parentDoc.base.fechaInterconsulta).diff(_parentDoc.persona.fechaNacimiento,'years')>59))?'SI':'NO'"}}
       {{/onChange}}
     {{/field}}
   {{/section}}

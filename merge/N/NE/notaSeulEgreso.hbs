@@ -50,7 +50,7 @@
         {{set foliosUtilizadosDefuncion="=calc.isEmpty(@datosMujer)?_.compact([@folioCertificadoDefuncion]):_.compact([].concat([@folioCertificadoDefuncion],calc.pluckRef(calc.pluckRef(datosMujer,'base.datosInformacionProductoAborto'),'base.folioCertificadoDefuncion')))"}}
   		{{/update}}
   	{{/onChange}}
-    {{validator type="expr" notValidIf="=(moment(base.fechaEgreso).diff(persona.fechaNacimiento,'years')<10||moment(base.fechaEgreso).diff(persona.fechaNacimiento,'years')>54)&&calc.getRef(@datosMujerEmbarazo,'base.edadGestacional')!='0'" message="Edad Gestacional debe ser 0"}}
+    {{validator type="expr" notValidIf="=(moment(base.fechaEgreso).diff(persona.fechaNacimiento,'years')<10||moment(base.fechaEgreso).diff(persona.fechaNacimiento,'years')>54)&&!calc.isEmpty(@datosMujerEmbarazo)&&calc.getRef(@datosMujerEmbarazo,'base.edadGestacional')!='0'" message="Edad Gestacional debe ser 0"}}
     
     {{validator type="expr" notValidIf="=@tieneProcedimientoEsterilizacion&&(!calc.in('Z302', calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico'))))" message="Procedimiento de Esterilización debe tener Diagnóstico Esterilización (Z302)"}}
     {{validator type="expr" notValidIf="=!@tieneProcedimientoEsterilizacion&&(calc.in('Z302', calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico'))))" message="Diagnóstico Esterilización (Z302) debe tener Procedimiento de Esterilización"}}
@@ -61,7 +61,7 @@
     
     {{validator type="expr" notValidIf="=!tieneDiagnosticoParto&&datosMujer.base.siParto" message="Tipo Atención Obstétrica Inválida, Falta Diagnóstico de Parto"}}
     {{validator type="expr" notValidIf="=!tieneDiagnosticoAborto&&datosMujer.base.siAborto" message="Tipo Atención Obstétrica Inválida, Falta Diagnóstico de Aborto"}}
-    {{validator type="expr" notValidIf="=!tieneDiagnosticoProductoUnico&&datosMujer.base.totalProductos=='1'" message="Total Productos Inválido, Falta Diagnóstico de Producto Único"}}
+    {{validator type="expr" notValidIf="=!tieneDiagnosticoProductoUnico&&datosMujer.base.siParto&&datosMujer.base.totalProductos=='1'" message="Total Productos Inválido, Falta Diagnóstico de Producto Único"}}
 
     {{validator type="expr" notValidIf="=@cluesTraslado==user.establishmentData.clues" message="CLUES Procedencia Inválido"}}
     {{validator type="expr" notValidIf="=@folioCertificadoDefuncion&&fn('validaCertificadoDefuncion',@folioCertificadoDefuncion)" message="Certificado Defunción Inválido"}}

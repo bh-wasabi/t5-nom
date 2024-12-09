@@ -63,6 +63,7 @@
     {{#field id="contrarreferido"}}
       {{onChange clearFields="referidoPor"}}
     {{/field}}
+    {{validator type="expr" notValidIf="=@solicitaTeleconsulta=='si'&&calc.in('noAplica',@estudiosTeleconsulta)" message="Estudios Teleconsulta 'No Aplica' únicamente sin Teleconsulta"}}
   {{/section}}
 
   {{!--RACC VISTA  --}}

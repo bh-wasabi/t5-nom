@@ -26,9 +26,11 @@
   	{{#onChange}}
   		{{#update}}
   			{{set cantidadAfectacionesTratadas="=otrosDiagnosticos.length"}}
-        {{set foliosUtilizadosDefuncion="=[destinoDespuesLesion.base.folioCertificadoDefuncion]"}}
+        {{set foliosUtilizadosDefuncion="=_.compact([destinoDespuesLesion.base.folioCertificadoDefuncion])"}}
   		{{/update}}
   	{{/onChange}}
+    {{validator type="expr" notValidIf="=!calc.isEmpty(@atencionMedicaLesion.base.horaAtencion)&&@atencionMedicaLesion.base.horaAtencion<=@eventoLesion.base.horaEvento" message="Hora Evento debe ser menor a Hora Atención"}}
+    
     {{validator type="expr" notValidIf="=atencionMedicaLesion.base.consecuenciaLesion=='defuncion'&&afectacionesTratadas[0].base.destinoAtencionLesion!='defuncion'" message="Verificar Destino en Afectaciones Tratadas"}}
     {{validator type="expr" notValidIf="=profesionalResponsableSalud.base.responsableAtencionMedica=='medicoTratante'&&(calc.in('tratamientoPsicologo',atencionMedicaLesion.base.tipoAtencionLesion)||calc.in('consergeria',atencionMedicaLesion.base.tipoAtencionLesion))" message="Profesional Responsable Salud Inválido"}}
     {{!-- Se quita primer parte de la validación, que obliga a que unicamente tenga un Tipo de Atención para Psicologos --}}
