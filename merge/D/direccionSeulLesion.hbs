@@ -61,6 +61,8 @@
     {{validator type="expr" notValidIf="=entidadNoAplica" message="Entidad Federativa Inválida"}}
     {{validator type="expr" notValidIf="=codigoLocalidad=='9999'&&calc.isEmpty(@otraLocalidad)" message="Falta Indicar Otra Localidad"}}
     {{validator type="expr" notValidIf="=codigoLocalidad!='9999'&&!calc.isEmpty(@otraLocalidad)" message="No Debe Indicar Otra Localidad"}}
+    {{validator type="expr" notValidIf="=codigoLocalidad=='9998'&&calc.isTrue(@desconoceDireccion)" message="Localidad Inválida Si Desconoce Dirección"}}
+    {{validator type="expr" notValidIf="=codigoPostal=='99999'&&calc.isFalse(@desconoceDireccion)" message="Código Postal Inválido Si Conoce Dirección"}}
     {{validator type="expr" notValidIf="=(codigoDelegacionDesconoce==='998'&&codigoLocalidad=='9999')||codigoDelegacionDesconoce==='999'&&codigoLocalidad=='9998'" message="Municipio y Localidad Deben Coincidir"}}
   {{/section}}
 {{/define}}

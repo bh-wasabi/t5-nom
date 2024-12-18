@@ -5173,7 +5173,7 @@
       {{setRef ref="afeccionPrincipalReseleccionada.base.folioLesion" value="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&detalle.notaSeulLesiones._created.folio"}}
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
-    {{update section="comorbilidades" value="=calc.subItemsMap(_items2, 'base.otrosDiagnosticos', '=base.diagnostico+`#`+base.detalle', '=base.nombre')"}}
+    {{update section="comorbilidades" value="=calc.subItemsMap(_items2, 'base.otrosDiagnosticos', '=base.detalle+`#`+base.diagnostico', '=base.nombre')"}}
   {{/transform}}
 
 
