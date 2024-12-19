@@ -177,6 +177,7 @@
     {{set otraLocalidad="=_.first(persona.direccion).base.otraLocalidad"}}
     {{set codigoPostal="=_.first(persona.direccion).base.codigoPostal"}}
     {{set programaDerechohabiencia="=detalle.notaDerechohabienciaEgreso.base.dependencia"}}
+    {{set programaDerechohabienciaGratuidad="=detalle.notaDerechohabienciaEgreso.base.otra"}}
   {{/transform}}
 
   {{#function id="listaEstatus"}}

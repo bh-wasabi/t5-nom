@@ -5,44 +5,19 @@
     {{/update}}
   {{/action}}
   
-  {{#section id="base"}}
-    {{#field id="fechaAtencion"}}
-      {{onChange clearFields="afeccionPrincipal,otrosDiagnosticos"}}
-    {{/field}}
-    {{field id="entre10y19" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=10&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')<=19"}}
-    {{field id="entre9y59" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=9&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')<=59"}}
-    {{field id="entre9y70" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=9&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')<=70"}}
-    {{field id="entre10y70" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=10&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')<=70"}}
-    {{validator type="expr" notValidIf="=catServicios=='SERVICIO AMIGABLE'&&!entre10y19" message="Servicio Atención Inválido"}}
-    {{validator type="expr" notValidIf="=catServicios=='SERVICIO AMIGABLE'&&calc.isEmpty(user.establishmentData.cluesServicioAmigable)" message="CLUES Sin Servicio Amigable"}}
-    {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')),'R69X')" message="Tiene Diagnósticos Duplicados"}}
-    {{validator type="expr" notValidIf="=persona.genero==='mujer'&&!entre9y59" message="Edad a la Fecha Atención Fuera de Rango (Debe ser entre 9 y 59)"}}
-    {{validator type="expr" notValidIf="=persona.genero==='hombre'&&!entre9y70" message="Edad a la Fecha Atención Fuera de Rango (Debe ser entre 9 y 70)"}}
-    {{validator type="expr" notValidIf="=persona.genero==='intersexual'&&!entre10y70" message="Edad a la Fecha Atención Fuera de Rango (Debe ser entre 10 y 70)"}}
-  {{/section}}
   {{#section id="metodos"}}
-    {{field id="noPsicologo" type="expr" value="=!calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])"}}
-    {{field id="noAplica" type="expr" value="=revisionColocacionMetodoQuirurgico=='noAplica'&&base.esMujer&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=9&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')<=59"}}
-    {{field id="noPsicologoNoAplica" type="expr" value="=noPsicologo&&noAplica"}}
-    {{field id="esRealizacionQx" type="expr" value="=revisionColocacionMetodoQuirurgico=='revisionPosteriorIntQuirurgica'&&base.noPsicologoEsHombre"}}
-    {{field id="esMujer" type="expr" value="=base.esMujer"}}
     {{#field id="revisionColocacionMetodoQuirurgico"}}
-      {{onChange clearFields="puerpera,altaAzoospermia"}}
+      {{onChange clearFields="puerperaAceptaFamiliar,puerperaMetodoPlanificacion,numeroCicloEntregadosOral,numeroCiclosEntregadosInyectableMensual,numeroCiclosEntregadosInyectableBimestral,numeroCiclosEntregadosInyectableTrimestral,implanteSubdermico,numeroCiclosEntregadosParcheDermico,diu,diuMedicado,numeroPerservativosEntregados,numeroPerservativosEntregadosFemeninos,numeroOtrosMetodosEntregados,seEntregoAnticoncepcionEmergencia,altaAzoospermia"}}
     {{/field}}
-    {{validator type="expr" validIf="=@numeroPerservativosEntregados>=0&&@numeroPerservativosEntregados<=50" message="Error en Preservativos Entregados"}}
-    {{validator type="expr" validIf="=@numeroPerservativosEntregadosFemeninos>=0&&@numeroPerservativosEntregadosFemeninos<=50" message="Error en Preservativos Entregados Femeninos"}}
-    {{validator type="expr" notValidIf="=@revisionColocacionMetodoQuirurgico=='realizacionIntervencionQuirurgica'&&esMujer" message="Revisión/Colocación Método Quirúrgico Inválido para Mujer"}}
+    {{#field id="puerperaAceptaFamiliar"}}
+      {{onChange clearFields="puerperaMetodoPlanificacion,numeroCicloEntregadosOral,numeroCiclosEntregadosInyectableMensual,numeroCiclosEntregadosInyectableBimestral,numeroCiclosEntregadosInyectableTrimestral,implanteSubdermico,numeroCiclosEntregadosParcheDermico,diu,diuMedicado"}}
+    {{/field}}
+    {{#field id="puerperaMetodoPlanificacion"}}
+      {{onChange clearFields="numeroCicloEntregadosOral,numeroCiclosEntregadosInyectableMensual,numeroCiclosEntregadosInyectableBimestral,numeroCiclosEntregadosInyectableTrimestral,implanteSubdermico,numeroCiclosEntregadosParcheDermico,diu,diuMedicado"}}
+    {{/field}}
   {{/section}}
-  {{#section id="orientacionConsejeria"}}
-    {{field id="esMenor" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=10&&moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')<=19"}}
-    {{validator type="expr" notValidIf="=calc.isEmpty(base.afeccionPrincipal)&&calc.isFalse(orientacionConsejeria.orientacionPlanificacionFamiliar)&&calc.isFalse(orientacionConsejeria.orientacionIts)&&calc.isFalse(orientacionConsejeria.orientacionPrevencionEmbarazo)&&calc.isFalse(orientacionConsejeria.orientacionSaludSexual)&&metodos.revisionColocacionMetodoQuirurgico==='noAplica'&&calc.isFalse(metodos.puerpera.base.puerperaAceptaFamiliar)" message="Se debe registrar Afección Principal, Orientación Consejería y/o Metodos"}}
-  {{/section}}
+
   {{#section id="condicion"}}
-    {{field id="esMujer" type="expr" value="=base.esMujer"}}
-    {{field id="esHombre" type="expr" value="=!esMujer"}}
-    {{field id="telemedicina" type="expr" value="=@solicitaTelemedicina=='si'?'En Tiempo Real':''"}}
-    {{field id="teleconsulta" type="expr" value="=(@solicitaTeleconsulta=='si'&&calc.isNotEmpty(estudiosTeleconsulta))?'Diferida':''"}}
-    {{field id="noContra" type="expr" value="=contrarreferido=='no'"}}
     {{#field id="solicitaTelemedicina"}}
       {{#onChange clearFields="solicitaTeleconsulta,estudiosTeleconsulta,modalidad"}}
         {{set modalidad="=@solicitaTelemedicina=='si'?'En Tiempo Real':''"}}
@@ -63,17 +38,5 @@
     {{#field id="contrarreferido"}}
       {{onChange clearFields="referidoPor"}}
     {{/field}}
-    {{validator type="expr" notValidIf="=@solicitaTeleconsulta=='si'&&calc.in('noAplica',@estudiosTeleconsulta)" message="Estudios Teleconsulta 'No Aplica' únicamente sin Teleconsulta"}}
   {{/section}}
-
-  {{!--RACC VISTA  --}}
-   {{#view id="ultima"}}
-    {{#find limit="1"}}
-      {{include field="_name"}}
-      {{sort field="_id" direction="asc"}}
-      {{filter field="base.estatus" eq="='afectado'"}}
-      {{filter condition="=persona" field="persona.id" eq="=persona"}}
-      {{!-- {{filter condition="=desde" field="_create.date" gt="=desde"}} --}}
-    {{/find}}
-  {{/view}}
 {{/define}}

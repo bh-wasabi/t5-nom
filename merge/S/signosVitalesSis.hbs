@@ -4,8 +4,15 @@
     {{field id="estaVivo" type="expr" value="=situacionActual=='vivo'"}}
     {{field id="estaDifunto" type="expr" value="=situacionActual=='difunto'"}}    
     {{field id="pam" type="calc" label="PMA" value="=fn('pam', base)" format="#.##"}}
+    {{field id="glicemiaMayor20" type="expr" value="=@glicemiaCapilar>=20&&@glicemiaCapilar<=999"}}
     {{#field id="tomaGlicemiaCapilar"}}
       {{onChange clearFields="glicemiaCapilar,resultadoObtenido,prePrandial"}}
+    {{/field}}
+    {{#field id="glicemiaCapilar"}}
+      {{onChange clearFields="resultadoObtenido,prePrandial"}}
+    {{/field}}
+    {{#field id="resultadoObtenido"}}
+      {{onChange clearFields="prePrandial"}}
     {{/field}}
     {{validator type="expr" validIf="=@temperaturaCorporal==0||(@temperaturaCorporal>=30&&@temperaturaCorporal<=44)" message="Temperatura Incorrecta"}}
     {{validator type="expr" validIf="=(@tensionSistolica==0||@tensionSistolica==999)||(@tensionSistolica>=50&&@tensionSistolica<=300)" message="Presión Sistólica Incorrecta"}}
@@ -18,7 +25,7 @@
     {{validator type="expr" validIf="=(@tensionSistolica>=0&&(@tensionDiastolica>=20&&@tensionDiastolica<=200))||(@tensionSistolica==0&&@tensionDiastolica==0)||(@tensionSistolica==999&&@tensionDiastolica==999)" message="Presión Diastólica Fuera de Rango"}}
     {{validator type="expr" validIf="=calc.number(@tensionDiastolica)<=calc.number(@tensionSistolica)" message="Presión Diastólica Fuera de Rango 2"}}
     {{validator type="expr" validIf="=@tomaGlicemiaCapilar=='no'||(@glicemiaCapilar>=20&&@glicemiaCapilar<=999)||(@glicemiaCapilar==0)" message="Glicemia Capilar Incorrecta"}}
-    {{validator type="expr" validIf="=@tomaGlicemiaCapilar=='no'||(@glicemiaCapilar>0&&@resultadoObtenido!='')" message="Seleccione un resultado"}}
+    {{validator type="expr" validIf="=@tomaGlicemiaCapilar=='no'||@glicemiaCapilar==0||(@glicemiaCapilar>0&&@resultadoObtenido!='')" message="Seleccione un resultado"}}
     {{validator type="expr" notValidIf="=@glicemiaCapilar.substr(@glicemiaCapilar.length-1)=='.'" message="Glicemia Capilar Incorrecta"}}
   {{/section}}
 {{/define}}

@@ -821,7 +821,8 @@
       {{sort field="_created.date" direction="desc"}}
       {{filter field="_isAffected" eq="true"}}
       {{filter field="_type" in="notaPlanificacionFamiliar,notaSisConsultaExterna,notaSaludBucal,notaSaludMental,notaDetecciones"}}
-      {{filter condition="=persona" field="persona.id" eq="=persona"}}
+      {{filter field="_created.establishment" eq="=user.establishment"}}
+      {{filter field="persona.id" eq="=persona"}}
     {{/find}}
   {{/view}}
 
@@ -831,7 +832,8 @@
       {{sort field="_created.date" direction="desc"}}
       {{filter field="_isAffected" eq="true"}}
       {{filter field="_type" in="notaPlanificacionFamiliar,notaSisConsultaExterna,notaSaludBucal,notaSaludMental,notaDetecciones,notaSeulEgreso,notaSeulLesiones,notaSolicitudInterconsulta,notaSolicitudProcedimiento,notaInicialUrgencias,notaPlanAltaEnfermeria,notaEvolucion,notaAltaServicio"}}
-      {{filter condition="=persona" field="persona.id" eq="=persona"}}
+      {{filter field="_created.establishment" eq="=user.establishment"}}
+      {{filter field="persona.id" eq="=persona"}}
     {{/find}}
   {{/view}}
 

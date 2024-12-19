@@ -86,8 +86,8 @@
     {{validator type="expr" notValidIf="=noEsDefuncion&&calc.isEmpty(@somatometria)" message="Campo Somatometría Requerido"}}
     {{validator type="expr" notValidIf="=@diasEstancia>1&&servicios.base.tipoServicioOtorgado=='cortaEstancia'" message="Tipo Servicio Otorgado no puede ser Corta Estancia (Días Estancia Hospitalaria > 1)"}}
     {{validator type="expr" notValidIf="=moment(@fechaEgreso).diff(@fechaIngresoHospitalario,'days')>0&&servicios.base.tipoServicioOtorgado=='cortaEstancia'" message="Tipo Servicio Otorgado no puede ser Corta Estancia (Diferencia Fechas > 1)"}}
-    {{validator type="expr" notValidIf="=otrosDiagnosticos.length+seleccionarOtrosDiagnosticos.length>6" message="Máximo 6 Comorbilidades"}}
-    {{validator type="expr" notValidIf="=procedimientoEgresos.length+procedimientoDiagnosticosTerapeuticosQuirurgicos.length>8" message="Máximo 8 Procedimientos"}}
+    {{validator type="expr" notValidIf="=calc.arrayLength(@otrosDiagnosticos,@seleccionarOtrosDiagnosticos)>6" message="Máximo 6 Comorbilidades"}}
+    {{validator type="expr" notValidIf="=calc.arrayLength(@procedimientoEgresos,@procedimientoDiagnosticosTerapeuticosQuirurgicos)>8" message="Máximo 8 Procedimientos"}}
     
     {{!-- {{validator type="expr" validIf="=calc.isAllTrueFalse(calc.in('Z302', calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico'))), calc.in('ESTERILIZACION', calc.pluckRef(@procedimientoEgresos, 'base.otrasValidaciones')))" message="El Procedimiento Tipo ESTERILIZACIÓN No Corresponde con los Diagnósticos"}} --}}
     {{!-- {{validator type="expr" validIf="=moment(fechaIngresoHospitalario).isAfter(fechaNacimiento)" message="Fecha Ingreso Hospitalario Inválida"}} --}}

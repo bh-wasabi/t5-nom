@@ -5167,6 +5167,7 @@
       {{set _afeccionPrincipalReseleccionada="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&detalle.notaSeulLesiones.base._afeccionPrincipalReseleccionada"}}
       {{set otrosDiagnosticos="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&calc.recalcLimiteEdadDiagnostico(detalle.notaSeulLesiones.base.otrosDiagnosticos, persona.fechaNacimiento, moment(_params.fechaEgreso).diff(persona.fechaNacimiento,'years')<1?_params.fechaIngresoHospitalario:_params.fechaEgreso)"}}
       {{set _otrosDiagnosticos="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&detalle.notaSeulLesiones.base._otrosDiagnosticos"}}
+      {{set pacientePsiquiatrico="=calc.in(user.establishmentData.cluesTipoAbreviacion,['Y','HPSIQ','HPSIQMF'])&&calc.in(user.establishmentData.cluesSubAbreviacion,['99','NES','INP','SAP'])?'si':'no'"}}
       {{setRef ref="servicios.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
       {{setRef ref="servicios.base.genero" value="=persona.genero"}}
       {{setRef ref="afeccionPrincipal.base.folioLesion" value="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&detalle.notaSeulLesiones._created.folio"}}

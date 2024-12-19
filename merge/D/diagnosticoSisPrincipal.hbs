@@ -1,9 +1,9 @@
 {{#define id="diagnosticoSisPrincipal"}}
   {{#section id="base"}}
+    {{field id="tieneConfirmacionDiagnostica" type="expr" value="=relacionTemporal=='primeraVez'&&(@cronicos=='SI'||@cancerInfantil=='SI')"}}
     {{#field id="relacionTemporal"}}
       {{onChange clearFields="diagnostico,subDiagnostico,tieneConfirmacionDiagnostica"}}
     {{/field}}
-    {{field id="tieneConfirmacionDiagnostica" type="expr" value="=relacionTemporal=='primeraVez'&&(@cronicos=='SI'||@cancerInfantil=='SI')"}}
     {{#field id="diagnostico"}}
       {{#editor}}
         {{param esSis="=true"}}

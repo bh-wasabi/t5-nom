@@ -4,7 +4,7 @@
       {{#editor}}
         {{param persona="=_mainDoc.persona.id"}}
         {{param tipoSolicitud="procedimiento,cirugia"}}
-        {{#onChange}}
+        {{#onChange clearFields="enQuirofanoOFuera,tipoAnestesia,descripcionProcedimiento"}}
           {{set codigoCie9="=_parent.type=='notaSolicitudProcedimiento'?base.procedimiento.base.codigoCie9:base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.cirugiaCie9"}}
           {{set limiteSexo="=_parent.type=='notaSolicitudProcedimiento'?base.procedimiento.base.limiteSexo:base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSexo"}}
           {{set limiteInferior="=_parent.type=='notaSolicitudProcedimiento'?base.procedimiento.base.limiteInferior:base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteInferior"}}

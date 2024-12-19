@@ -213,10 +213,10 @@
   
   {{!-- RACC Tarea #3580  --}}
   {{#section id="puesto"}}  
-    {{field id="cluesTieneSsa" type="expr" value="=@cluesAdscripcionNomina.search('SSA')>0"}}
+    {{field id="cluesTieneSsa" type="expr" value="=@cluesAdscripcionNomina.search('SSA')>0||@cluesAdscripcionNomina.search('IMB')>0"}}
     {{#field id="cluesAdscripcionNomina"}}
       {{#onChange clearFields="programaSMyMG,cluesSubAbreviacion,cluesTipoAbreviacion,cluesServicioAmigable,cluesTieneEspirometro,cluesTipoUnidad,cluesIdEntidad"}}
-        {{set cluesTieneSsa="=@cluesAdscripcionNomina.search('SSA')>0"}}
+        {{set cluesTieneSsa="=@cluesAdscripcionNomina.search('SSA')>0||@cluesAdscripcionNomina.search('IMB')>0"}}
         {{set cluesSubAbreviacion="=@sub_abreviacion"}}
         {{set cluesTipoAbreviacion="=@tip_abreviacion"}}
         {{set cluesServicioAmigable="=@amigable"}}
