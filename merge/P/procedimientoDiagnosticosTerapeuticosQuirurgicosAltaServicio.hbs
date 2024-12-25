@@ -1,5 +1,6 @@
 {{#define id="procedimientoDiagnosticosTerapeuticosQuirurgicosAltaServicio"}}
   {{#section id="base"}}
+    {{field id="esEnQuirofano" type="expr" value="=enQuirofanoOFuera=='en'"}}
     {{#field id="procedimientosRealizados"}}
       {{#editor}}
         {{param persona="=_mainDoc.persona.id"}}
@@ -14,6 +15,9 @@
           {{set otrasValidaciones="=_parent.type=='notaSolicitudProcedimiento'?base.procedimiento.base.otrasValidaciones:base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.otrasValidaciones"}}
         {{/onChange}}
       {{/editor}}
+    {{/field}}
+    {{#field id="enQuirofanoOFuera"}}
+      {{onChange clearFields="cirujano,cedulaCirujano"}}
     {{/field}}
 		{{#field id="cirujano"}}
 			{{#onChange}}

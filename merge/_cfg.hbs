@@ -2485,6 +2485,15 @@
     {{default return="='CLUES Inválido'"}}
   {{/function}}
 
+  {{#function id="validaCluesPreconsulta"}}
+    {{define type="param" id="tipoAbreviacion"}}
+    {{define type="param" id="subAbreviacion"}}
+    {{when tipoAbreviacion="T" return="false"}}
+    {{when tipoAbreviacion="UNE" return="false"}}
+    {{when condition="=tipoAbreviacion==='Y'&&calc.in(subAbreviacion,['T01','T03','CISAM','UNE01','UNE12','UNE15','99'])" return="false"}}
+    {{default return="true"}}
+  {{/function}}
+
   {{#function id="errorPacientePlanificacionFamiliar"}}
     {{define type="param" id="genero"}}
     {{define type="param" id="edad"}}
