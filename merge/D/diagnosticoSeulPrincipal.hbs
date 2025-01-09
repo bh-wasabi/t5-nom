@@ -10,9 +10,9 @@
         {{param esSeul="=true"}}
         {{param esPrincipal="=true"}}
         {{param _type="=_parentDoc._type"}}
-        {{param edadActual="=_parentDoc.persona.edadActual"}}
+        {{param edadActual="=calc.in(_parentDoc._type,['notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaUrgencias'])?moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years'):_parentDoc.persona.edadActual"}}
       {{/editor}}
-      {{#onChange clearFields="subDiagnostico,causaExterna,morfoligia,folioLesion"}}
+      {{#onChange clearFields="subDiagnostico,detalle,causaExterna,morfoligia,folioLesion"}}
         {{set letra="=LETRA"}}
         {{set limiteSexo="=LSEX"}}
         {{set limiteInferior="=LINF"}}
@@ -25,7 +25,7 @@
         {{set tipoProducto="=TIPO_PRODUCTO"}}
         {{set tipoNacimiento="=TIPO_NACIMIENTO"}}
         {{set docType="=_parentDoc._type"}}
-        {{set edadActual="=_parentDoc.persona.edadActual"}}
+        {{set edadActual="=calc.in(_parentDoc._type,['notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaUrgencias'])?moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years'):_parentDoc.persona.edadActual"}}
         {{set requiereCampos="=REQUIERE_CAMPOS"}}
       {{/onChange}}
     {{/field}}    

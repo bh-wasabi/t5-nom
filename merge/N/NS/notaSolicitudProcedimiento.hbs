@@ -1,4 +1,14 @@
 {{#define id="notaSolicitudProcedimiento"}}
+  {{#action
+    id="afectar"
+    confirm="=calc.in('SI', calc.pluckRef(base.procedimiento, 'base.excedeLimiteEdad'))"
+    confirmMessage="Procedimiento Excede Límite Edad<br>¿Desea continuar?"
+  }}
+    {{#update section="base"}}
+      {{set excedeLimiteEdad="=calc.in('SI', calc.pluckRef(base.procedimiento, 'base.excedeLimiteEdad'))?'SI':'NO'"}}
+    {{/update}}
+  {{/action}}
+
   {{param attribute1="=_created.service"}}
   {{param attribute2="=_.isEmpty(calc.filterInRef(base.procedimiento, 'base.servicioSolicitado', ['tococirugia','endourologia','hemodinamia','braquiterapia']))?null:'procedimientoQx'"}}
   {{#view id="programados"}}
@@ -18,7 +28,4 @@
       {{filter field="_created.request" eq="=request"}}
     {{/find}}
   {{/view}}
-  {{#section id="base"}}
-    {{field id="esHospitalizacion" type="expr" value="=tipoEpisodio=='hospitalizacion'"}}
-  {{/section}}
 {{/define}}

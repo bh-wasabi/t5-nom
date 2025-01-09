@@ -4,8 +4,6 @@
       {{!-- {{editor display="base.codigo"}} --}}
       {{editor display="base.subclave"}}
     {{/field}}
-    {{field id="cantidadMedicamentosMinistrados" type="calc" value="=medicamentosMinistrados.length"}}
-    {{validator type="expr" notValidIf="=medicamentosMinistrados.length>6" message="Máximo 6 Medicamentos Ministrados"}}
   {{/section}}
 
   {{#view id="buscarPlanAltaEnfermeria"}}

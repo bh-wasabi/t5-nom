@@ -1,5 +1,10 @@
 {{#define id="notaAltaServicio"}}
-  {{#action id="afectar" confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteEdad'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteEdad')))||calc.in('SI', calc.pluckRef(base.interconsultas,'base.excedeLimiteEdad'))" confirmMessage="Diagnóstico, Procedimiento o Interconsulta Excede Límite Edad<br>¿Desea continuar?"}}
+  {{#action 
+    id="afectar"
+    error="=fn('validarNotaAltaServicio',base.otrosDiagnosticos,base.seleccionarOtrosDiagnosticos,comorbilidades,base.procedimientoEgresos,base.procedimientoDiagnosticosTerapeuticosQuirurgicos,procedimientosRealizados)"
+    confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteEdad'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteEdad')))||calc.in('SI', calc.pluckRef(base.interconsultas,'base.excedeLimiteEdad'))"
+    confirmMessage="Diagnóstico, Procedimiento o Interconsulta Excede Límite Edad<br>¿Desea continuar?"
+  }}
     {{#update section="base"}}
       {{set excedeLimiteEdad="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteEdad'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteEdad')))|calc.in('SI', calc.pluckRef(base.interconsultas,'base.excedeLimiteEdad'))?'SI':'NO'"}}
     {{/update}}
@@ -50,12 +55,12 @@
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.validoSeul, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.validoSeul, calc.pluckRef(@otrosDiagnosticos, 'base.validoSeul')), null, 'ABORTO')" message="Tiene Diagnósticos de tipo ABORTO Duplicados"}}
     {{validator type="expr" notValidIf="=calc.in('DEFUNCION', calc.mergeArrays(afeccionPrincipal.base.validoSeul, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.validoSeul, calc.pluckRef(@otrosDiagnosticos, 'base.validoSeul')))&&motivoAltaServicio!='defuncion'" message="DEFUNCIÓN Mal Configurada"}}
     {{validator type="expr" notValidIf="=_.last(calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico'))=='P95X'" message="Código P95X no puede ser seleccionado como última Comorbilidad"}}
-    {{validator type="expr" validIf="=!@CLUES||cluesEstatus=='EN OPERACION'||(@cluesFechaBaja&&moment(@fechaIngreso||undefined).add(-90,'days').format('YYYY-MM-DD')<=@cluesFechaBaja)" message="CLUES Fuera de Operación"}}
     {{validator type="expr" notValidIf="=calc.findDuplicates(calc.pluck(@interconsultas,'_name'))" message="Interconsultas Duplicadas"}}
     {{validator type="expr" notValidIf="=calc.findDuplicates(calc.pluck(@procedimientoDiagnosticosTerapeuticosQuirurgicos,'_name'))" message="Procedimientos Duplicados"}}
-    {{validator type="expr" notValidIf="=@otrosDiagnosticos.length+@seleccionarOtrosDiagnosticos.length>6" message="Máximo 6 Comorbilidades"}}
-    {{validator type="expr" notValidIf="=@procedimientoEgresos.length+@procedimientoDiagnosticosTerapeuticosQuirurgicos.length>8" message="Máximo 8 Procedimientos"}}
+    {{validator type="expr" notValidIf="=calc.arrayLength(otrosDiagnosticos,seleccionarOtrosDiagnosticos)>6" message="Máximo 6 Comorbilidades"}}
+    {{validator type="expr" notValidIf="=calc.arrayLength(@procedimientoEgresos,@procedimientoDiagnosticosTerapeuticosQuirurgicos)>6" message="Máximo 6 Procedimientos"}}
     {{validator type="expr" notValidIf="=@interconsultas.length>3" message="Máximo 3 Interconsultas"}}
+    {{validator type="expr" validIf="=!@CLUES||cluesEstatus=='EN OPERACION'||(@cluesFechaBaja&&moment(@fechaIngreso||undefined).add(-90,'days').format('YYYY-MM-DD')<=@cluesFechaBaja)" message="CLUES Fuera de Operación"}}
   {{/section}}
   {{#grid id="solicitudesEgreso" section="solicitudesEgreso" allowInsert="false" allowRemove="false"}}
     {{column field="_name" width="800" readOnly="true"}}
