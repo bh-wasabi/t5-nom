@@ -1,6 +1,5 @@
 {{#define id="procedimientoEgresos"}}
   {{#section id="base"}}
-    {{field id="esEnQuirofano" type="expr" value="=enQuirofanoOFuera=='en'"}}
     {{#field id="procedimientoCie9"}}
       {{#onChange}}
         {{set limiteSexo="=SEX_TYPE==1?'HOMBRE':SEX_TYPE==2?'MUJER':'NO'"}}
@@ -8,6 +7,7 @@
         {{set limiteSuperior="=calc.zeroFill(PRO_EDAD_FA,3)+(PRO_CVE_EDFA==1?'D':PRO_CVE_EDFA==2?'M':PRO_CVE_EDFA==3?'A':'')"}}
         {{!-- calc.meetsAgeLimit(valor, desde, fechaNacimiento, checarInferior, hoy, edadDesconocida) --}}
         {{set excedeLimiteEdad="=calc.meetsAgeLimit(calc.zeroFill(PRO_EDAD_IA,3)+(PRO_CVE_EDIA==1?'D':PRO_CVE_EDIA==2?'M':PRO_CVE_EDIA==3?'A':''), null, _parentDoc.persona.fechaNacimiento, true, moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years')<1?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaEgreso, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(calc.zeroFill(PRO_EDAD_FA,3)+(PRO_CVE_EDFA==1?'D':PRO_CVE_EDFA==2?'M':PRO_CVE_EDFA==3?'A':''), null, _parentDoc.persona.fechaNacimiento, false, moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years')<1?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaEgreso, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
+        {{set excedeLimiteSexo="=SEX_TYPE==0?'NO':_parentDoc.persona.genero=='intersexual'?'SI':calc.meetsSexLimit(SEX_TYPE==1?'HOMBRE':SEX_TYPE==2?'MUJER':'NO', _parentDoc.persona.genero)?'NO':'SI'"}}
         {{set otrasValidaciones="=PRO_TIPO_NOM"}}
       {{/onChange}}
     {{/field}}
@@ -19,8 +19,5 @@
 				{{set cedulaCirujano="=_.first(prestadorServicios.datosEspecialidad).base.cedulaEspecialidad"}}
 			{{/onChange}}
 		{{/field}}
-    {{validator type="expr" validIf="=calc.meetsSexLimit(limiteSexo, _parentDoc.persona.genero)" message="No Corresponde el Sexo del Paciente"}}
-    {{!-- {{validator type="expr" validIf="=calc.meetsAgeLimit(limiteInferior, null, _parentDoc.persona.fechaNacimiento, true)" message="No Corresponde la Edad del Paciente con el Límite Inferior"}} --}}
-    {{!-- {{validator type="expr" validIf="=calc.meetsAgeLimit(limiteSuperior, null, _parentDoc.persona.fechaNacimiento, false)" message="No Corresponde la Edad del Paciente con el Límite Superior"}} --}}
   {{/section}}
 {{/define}}

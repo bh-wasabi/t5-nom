@@ -48,16 +48,23 @@
       {{/editor}}
     {{/field}}
     {{#field id="clues"}}
-      {{#onChange clearFields="cluesSubAbreviacion,cluesTipoAbreviacion,cluesServicioAmigable,cluesTieneEspirometro,cluesTipoUnidad,cluesIdEntidad"}}
+      {{#onChange clearFields="cluesSubAbreviacion,cluesTipoAbreviacion,cluesServicioAmigable,cluesTieneEspirometro,cluesEstatusOperacion,cluesFechaEfectivaBaja,cluesTipoUnidad,cluesIdEntidad"}}
         {{set cluesTieneSsa="=@clues.search('SSA')>0"}}
         {{set cluesSubAbreviacion="=@sub_abreviacion"}}
         {{set cluesTipoAbreviacion="=@tip_abreviacion"}}
         {{set cluesServicioAmigable="=@amigable"}}
         {{set cluesTieneEspirometro="=@espirometro"}}
+        {{set cluesEstatusOperacion="=@ESTATUS_OPERACION"}}
+        {{set cluesFechaEfectivaBaja="=@FECHA_EFECTIVA_BAJA"}}
         {{set cluesTipoUnidad="@tipo_unidad"}}
         {{set cluesIdEntidad="@id_entidad_federativa"}}
       {{/onChange}}
     {{/field}}
+    {{#onChange}}
+      {{#update}}
+        {{set estado="=cluesEstatusOperacion=='FUERA DE OPERACION'?'inactivo':'activo'"}}
+      {{/update}}
+    {{/onChange}}
   {{/section}}
   {{#grid id="nivelesAlerta" section="nivelesAlerta" allowInsert="true" allowRemove="true"}}
     {{column field="servicio" width="900"}}

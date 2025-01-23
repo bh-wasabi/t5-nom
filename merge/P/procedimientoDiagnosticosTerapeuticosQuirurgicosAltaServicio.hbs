@@ -2,7 +2,7 @@
   {{#section id="base"}}
     {{field id="esEnQuirofano" type="expr" value="=enQuirofanoOFuera=='en'"}}
     {{#field id="procedimientosRealizados"}}
-      {{#editor}}
+      {{#editor display="procedimiento"}}
         {{param persona="=_mainDoc.persona.id"}}
         {{param tipoSolicitud="procedimiento,cirugia"}}
         {{#onChange clearFields="enQuirofanoOFuera,tipoAnestesia,descripcionProcedimiento"}}

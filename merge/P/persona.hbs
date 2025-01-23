@@ -5550,8 +5550,6 @@
       {{set tipoServicioSisMayor="=moment(fechaAtencion).diff(persona.fechaNacimiento,'years')>=60"}}
       {{set primeraConsultaAno="=_items.length?'no':'si'"}}
       {{setRef ref="signosVitales.base.fechaHoraRegistro" value="=_params.fechaAtencion"}}
-      {{!-- {{set primerConsultaUneme="=primeraConsultaAno"}} --}}
-      {{!-- {{set primeraUemeSaih="=primeraConsultaAno"}} --}}
     {{/update}}
     {{update section="tipoServicioSis" value="=calc.itemsToCode(calc.tipoServicioSis(calc.in('saludMental',user.others.tipoServicioSis)?'saludMental':'',user.others.tipoPersonalNom,base.esMujer?'mujer':'',base.tipoServicioSisMenor?'menor':base.tipoServicioSisMayor?'mayor':''))" temp="true"}}  
     {{update section="resumen" value="=resumen" temp="true"}}
@@ -7770,7 +7768,7 @@
   {{#action id="notaSisConsultaExterna" source="notaSisConsultaExterna" label="Consulta Externa" transform="copiarSisConsultaExterna" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="nota" fromView="ultima"}}
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
-    {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=moment(persona.fechaNacimiento).format()" max="=moment().endOf('day').format()" errorMessage="Fecha Incorrecta"}}
+    {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=moment(persona.fechaNacimiento).format()" max="=moment().endOf('day').format()" errorMessage="Fecha Atención Incorrecta"}}
   {{/action}}
   {{#action id="notaPlanificacionFamiliar" source="notaPlanificacionFamiliar" label="Planificación Familiar" transform="copiarPlanificacionFamiliar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="nota" fromView="ultima" errorType="info"}}
     {{param persona="=_id"}}
@@ -7787,7 +7785,7 @@
     {{param desde="=moment().format('YYYY')"}}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=moment(persona.fechaNacimiento).format()" max="=moment().endOf('day').format()" errorMessage="Fecha Incorrecta"}}
   {{/action}}
-  {{#action id="notaSaludBucal" source="notaSaludBucal" label="Salud Bucal" transform="copiarSaludBucal" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="nota" fromView="ultima"}}
+  {{#action id="notaSaludBucal" source="notaSaludBucal" label="Nota Salud Bucal" transform="copiarSaludBucal" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="nota" fromView="ultima"}}
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=moment(persona.fechaNacimiento).format()" max="=moment().endOf('day').format()" errorMessage="Fecha Incorrecta"}}
@@ -10286,6 +10284,7 @@
     {{item action="notaEvolucion" text="Nota Evolución"}}
     {{item action="notaRegistroSignosVitalesSomatometria" text="Nota Signos Vitales y Somatometría" beginGroup="true"}}
     {{item action="notaSolicitudProcedimiento" text="Solicitud Procedimiento" beginGroup="true"}}
+    {{item action="notaSolicitudTococirugia" text="Solicitud Tococirugía"}}
   {{/menu}}
 
   {{action id="menuNotasUrgencias" hide="true" type="menu" menu="menuNotasUrgencias" label="Notas Urgencias" color="deep-orange"}}

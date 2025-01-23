@@ -4,6 +4,14 @@
       {{set excedeLimiteEdad="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))?'SI':'NO'"}}
     {{/update}}
   {{/action}}
+
+  {{!-- {{#section id="base"}}
+    {{#field id="relacionTemporal"}}
+      {{#onChange}}
+        {{setRef ref="afeccionPrincipal.base.relacionTemporal" value="=relacionTemporal"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}} --}}
   
   {{#section id="metodos"}}
     {{#field id="revisionColocacionMetodoQuirurgico"}}

@@ -16,17 +16,10 @@
     {{#field id="resultadoObtenido"}}
       {{onChange clearFields="tirasControl,embarazadaSinDiabetes,prePrandial"}}
     {{/field}}
-    {{validator type="expr" validIf="=@temperaturaCorporal==0||(@temperaturaCorporal>=30&&@temperaturaCorporal<=44)" message="Temperatura Incorrecta"}}
-    {{validator type="expr" validIf="=(@tensionSistolica==0||@tensionSistolica==999)||(@tensionSistolica>=50&&@tensionSistolica<=300)" message="Presión Sistólica Incorrecta"}}
-    {{validator type="expr" validIf="=(@tensionDiastolica==0||@tensionDiastolica==999)||(@tensionDiastolica>=20&&@tensionDiastolica<=200)" message="Presión Diastólica Incorrecta"}}
-    {{validator type="expr" validIf="=@frecuenciaCardiaca==0||(@frecuenciaCardiaca>=40&&@frecuenciaCardiaca<=220)" message="Frecuencia Cardíaca Incorrecta"}}
-    {{validator type="expr" validIf="=@frecuenciaRespiratoria==0||(@frecuenciaRespiratoria>=10&&@frecuenciaRespiratoria<=99)" message="Frecuencia Respiratoria Incorrecta"}}
-    {{validator type="expr" validIf="=@saturacionOxigeno>=0&&@saturacionOxigeno<=100" message="Saturación Oxigeno Incorrecta"}}
     {{validator type="expr" validIf="=(calc.number(@tensionDiastolica)>=0&&calc.number(@tensionSistolica)>=50)||(@tensionSistolica==0&&@tensionDiastolica==0)" message="Presión Sistólica Fuera de Rango"}}
-    {{validator type="expr" validIf="=(calc.number(@tensionSistolica)>=calc.number(@tensionDiastolica))||(@tensionSistolica==0||@tensionDiastolica==0)" message="Presión Sistólica Fuera de Rango 2"}} 
+    {{validator type="expr" validIf="=(calc.number(@tensionSistolica)>=calc.number(@tensionDiastolica))||(@tensionSistolica==0||@tensionDiastolica==0)" message="Presión Sistólica debe ser mayor o igual a Presión Diastólica"}} 
     {{validator type="expr" validIf="=(@tensionSistolica>=0&&(@tensionDiastolica>=20&&@tensionDiastolica<=200))||(@tensionSistolica==0&&@tensionDiastolica==0)||(@tensionSistolica==999&&@tensionDiastolica==999)" message="Presión Diastólica Fuera de Rango"}}
-    {{validator type="expr" validIf="=calc.number(@tensionDiastolica)<=calc.number(@tensionSistolica)" message="Presión Diastólica Fuera de Rango 2"}}
-    {{validator type="expr" validIf="=@tomaGlicemiaCapilar=='no'||(@glicemiaCapilar>=20&&@glicemiaCapilar<=999)||(@glicemiaCapilar==0)" message="Glicemia Capilar Incorrecta"}}
+    {{validator type="expr" validIf="=calc.number(@tensionDiastolica)<=calc.number(@tensionSistolica)" message="Presión Diastólica debe ser menor o igual a Presión Sistólica"}}
     {{validator type="expr" validIf="=@tomaGlicemiaCapilar=='no'||@glicemiaCapilar==0||(@glicemiaCapilar>0&&@resultadoObtenido!='')" message="Seleccione un resultado"}}
     {{validator type="expr" validIf="=!@tirasControl||calc.in(@tirasControl,['0','1','2'])" message="Número Tiras Control Inválido"}}
     {{validator type="expr" notValidIf="=@glicemiaCapilar.substr(@glicemiaCapilar.length-1)=='.'" message="Glicemia Capilar Incorrecta"}}
