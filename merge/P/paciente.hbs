@@ -2,6 +2,8 @@
   {{param name="=_params.name||'Paciente'"}}
   {{action id="eliminar" hide="true"}}
 
+  {{action id="afectar" confirm="=base.tipoAtencion!='consultaExterna'&&base.genero=='intersexual'" confirmMessage="Se generará registro de paciente Intersexual<br>¿Desea continuar?"}}
+
   {{!-- {{action id="afectarTodo" condition="=true" type="affect-all" label="Procesar Todo..." color="red" btnSolid="true" visibleMode="close" confirm="true" confirmMessage="¿Desea Procesar en Lote?" superUser="true"}} --}}
 
   {{#action id="tool" condition="true" type="photo" label="Tomar Foto" color="grey" as="foto" icon="camera"}}
@@ -189,7 +191,6 @@
     {{validator type="expr" notValidIf="=desconoceFechaNacimiento==='si'&&moment().diff(fechaNacimiento,'years')<1&&fechaNacimiento.substr(8,2)!='15'" message="Fecha Nacimiento Inválida (Desconoce Fecha)<br/>Formato Válido: [año estimado]-[mes estimado]-15"}}
     {{validator type="expr" notValidIf="=@desconoceFechaNacimiento==='si'&&moment().diff(fechaNacimiento,'years')>=1&&(fechaNacimiento.substr(5,2)!='06'||fechaNacimiento.substr(8,2)!='30')" message="Fecha Nacimiento Inválida (Desconoce Fecha)</br>Formato Válido: [año estimado]-06-30"}}
     {{validator type="expr" validIf="=moment().diff(fechaNacimiento,'years')<120" message="Paciente Mayor a 120 años"}}
-    {{validator type="expr" validIf="=(calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'),16,false)===clave.substr(0,16)||calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'),16,true)===clave.substr(0,16)||clave===fn('CURP_GENERICO'))&&clave.length===18" message="CURP Incorrecto"}}
     {{validator type="expr" validIf="=fn('entidadNacimientoCorrecta', paisNacimiento, entidadNacimiento)" message="Entidad Nacimiento Incorrecta"}}
     {{validator type="expr" notValidIf="=esMenor3Anos&&!calc.isEmpty(@ocupacion)&&@ocupacion!='9990'" message="Ocupación Inválida"}}
     {{validator type="expr" validIf="=fn('escolaridadCorrecta', calc.fromNowYears(fechaNacimiento)||2, escolaridad)" message="Escolaridad Incorrecta"}}
@@ -205,6 +206,7 @@
     {{validator type="expr" notValidIf="=esMenor10Anos&&estadoCivil!=='noAplica'" message="Estado Civil Inválido (Paciente menor 10 años)"}}
     {{validator type="expr" notValidIf="=!esMenor10Anos&&estadoCivil==='noAplica'" message="Estado Civil Inválido (Paciente mayor 10 años)"}}
     {{validator type="expr" notValidIf="=esUrgenciasHospitalizacion&&calc.in(grupoEtnico.base.indigena,['noResponde','noSabe'])" message="Se Considera Indígena Inválido (SI/NO)"}}
+    {{validator type="expr" validIf="=(calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'),18,false)===clave||calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'),18,true)===clave||clave===fn('CURP_GENERICO'))&&clave.length===18" message="CURP Incorrecto"}}
   {{/section}}
 
 {{!--   {{#edi id="orden-trabajo"}}

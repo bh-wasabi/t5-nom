@@ -3,8 +3,8 @@
     {{field id="tieneCausaExterna" type="expr" value="=calc.in('CAUSA',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaEgresos','notaTempEgresos','notaSeulEgreso','notaLesiones','notaTempLesiones','notaSeulLesiones'])"}}
     {{field id="tieneMorfologia" type="expr" value="=calc.in('MORFOLOGIA',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaEgresos','notaSeulEgreso'])"}}
     {{field id="tieneFolioLesion" type="expr" value="=calc.in('FOLIO_LESION',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaEgresos','notaSeulEgreso'])"}}
-    {{field id="tienePlanHidratacion" type="expr" value="=calc.in('PLAN_HIDRATACION',calc.splitAndTrim(requiereCampos))&&edadActual<5&&calc.in(docType,['notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaUrgencias','notaEvolucion'])"}}
-    {{field id="tienePlanInfeccionesRespiratorias" type="expr" value="=calc.in('PLAN_RESPIRATORIAS',calc.splitAndTrim(requiereCampos))&&edadActual<5&&calc.in(docType,['notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaUrgencias','notaEvolucion'])"}}
+    {{field id="tienePlanHidratacion" type="expr" value="=calc.in('PLAN_HIDRATACION',calc.splitAndTrim(requiereCampos))&&edadActual<=5&&calc.in(docType,['notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaUrgencias','notaEvolucion'])"}}
+    {{field id="tienePlanInfeccionesRespiratorias" type="expr" value="=calc.in('PLAN_RESPIRATORIAS',calc.splitAndTrim(requiereCampos))&&edadActual<=5&&calc.in(docType,['notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaUrgencias','notaEvolucion'])"}}
     {{#field id="diagnostico"}}
       {{#editor}}
         {{param esSeul="=true"}}
@@ -12,7 +12,7 @@
         {{param _type="=_parentDoc._type"}}
         {{param edadActual="=calc.in(_parentDoc._type,['notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaUrgencias'])?moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years'):_parentDoc.persona.edadActual"}}
       {{/editor}}
-      {{#onChange clearFields="subDiagnostico,detalle,causaExterna,morfoligia,folioLesion"}}
+      {{#onChange clearFields="subDiagnostico,detalle,causaExterna,morfoligia,folioLesion,planHidratacion,infeccionesRespiratoriasPlan"}}
         {{set letra="=LETRA"}}
         {{set limiteSexo="=LSEX"}}
         {{set limiteInferior="=LINF"}}

@@ -3,6 +3,15 @@
     {{field id="siVivo" type="expr" value="=condicionNacimiento=='nacidoVivo'"}}
     {{field id="siNacioVivoCondicionMuerto" type="expr" value="=condicionNacimiento=='nacidoVivo'&&condicionNacidoVivo=='muerto'"}}
     {{field id="siMuerto" type="expr" value="=condicionNacimiento=='nacidoMuerto'"}}
+    {{#field id="folioCertificadoNacimiento"}}
+      {{onChange clearFields="folioCertificadoUtilizado"}}
+    {{/field}}
+    {{#field id="folioCertificadoDefuncion"}}
+      {{onChange clearFields="folioCertificadoUtilizado"}}
+    {{/field}}
+    {{#field id="folioCertificadoMuerteFetal"}}
+      {{onChange clearFields="folioCertificadoUtilizado"}}
+    {{/field}}
     {{#field id="condicionNacimiento"}}
       {{#onChange condition="=condicionNacimiento=='nacidoMuerto'" clearFields="condicionNacidoVivo,folioCertificadoNacimiento,folioCertificadoDefuncion,folioCertificadoMuerteFetal,apgar,reanimacionNeonatal,alojamientoConjunto,lactanciaExclusiva"}}
         {{set apgar="=0"}}
@@ -12,5 +21,13 @@
         {{set condicionNacidoVivo="='muerto'"}}
       {{/onChange}}
     {{/field}}
+    {{#onChange}}
+  		{{#update}}
+        {{set folioCertificadoUtilizado="=@folioCertificadoDefuncion||@folioCertificadoNacimiento||@folioCertificadoMuerteFetal"}}
+  		{{/update}}
+  	{{/onChange}}
+    {{validator type="expr" notValidIf="=condicionNacimiento=='nacidoVivo'&&reanimacionNeonatal=='noAplica'" message="Reanimación Neonatal inválido"}}
+    {{validator type="expr" notValidIf="=condicionNacimiento=='nacidoVivo'&&alojamientoConjunto=='noAplica'" message="Alojamiento Conjunto inválido"}}
+    {{validator type="expr" notValidIf="=condicionNacimiento=='nacidoVivo'&&lactanciaExclusiva=='noAplica'" message="Lactancia Exclusiva inválida"}}
   {{/section}}
 {{/define}}

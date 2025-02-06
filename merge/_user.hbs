@@ -65,11 +65,13 @@
       {{include field="base.estatus"}}
       {{include field="base.area"}}
       {{include field="base.correo"}}
-      {{include field="base.especialidad"}}    
+      {{include field="base.especialidad"}}
+      {{include field="_created.folio"}}
       {{sort field="_name" direction="asc"}}
       {{search field="_name"}}
       {{search field="base._especialidad"}}
       {{search field="base._datosEspecialidad"}}
+      {{search field="_created.folio" type="number"}}
       {{search field="prestadorServicios.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
       {{filter condition="=servicio" field="base.servicio" in="=servicio"}}
       {{filter condition="=area" field="base.area" in="=area"}}
@@ -135,6 +137,13 @@
     {{/find}}
   {{/view}}
   {{#section id="base"}}
+    {{!-- {{field id="cluesTieneSsa" type="expr" value="=@cluesInstitucion.search('SSA')>0||@cluesInstitucion.search('IMB')>0"}} --}}
+    {{field id="cluesTieneSsa" type="expr" value="=@cluesInstitucion=='SSA'||@cluesInstitucion=='IMB'"}}
+    {{#field id="establecimiento"}}
+      {{#onChange clearFields="cluesInstitucion,programaSMyMG"}}
+        {{set cluesInstitucion="=base.cluesInstitucion"}}
+      {{/onChange}}
+    {{/field}}
     {{#field id="nombres"}}
       {{#onChange}}
         {{set nombre="=calc.concat(@nombres, @apellidoPaterno, @apellidoMaterno)"}}
@@ -240,10 +249,15 @@
     {{validator type="expr" validIf="=calc.fromNowYears(@fechaNacimiento)>=18" message="Error, Menor a 18 Años"}}
     {{validator type="expr" validIf="=calc.fromNowYears(@fechaNacimiento)<90" message="Error, Mayor a 90 Años"}}{{!-- cambios 2024-05-29 --}}
     {{validator type="expr" condition="=fn('cedulaObligatoria',base.tipoPersonalNom??'')" notValidIf="=fn('faltaCedulaEspecialidad',@datosEspecialidad)" message="Falta Cédula Especialidad"}}
-    {{validator type="expr" condition="=paisNacimiento=='MX'" validIf="=(calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'),16,false)===prestadorServicios.clave.substr(0,16)||calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'),16,true)===prestadorServicios.clave.substr(0,16)||prestadorServicios.clave===fn('CURP_GENERICO'))&&prestadorServicios.clave.length===18" message="CURP Incorrecto"}}
     {{validator type="expr" notValidIf="=paisNacimiento==='MX'&&prestadorServicios.clave===fn('CURP_GENERICO')" message="CURP Inválido para nacido en México"}}
     {{validator type="expr" validIf="=fn('validaCaracter17Curp',prestadorServicios.clave,prestadorServicios.fechaNacimiento)||prestadorServicios.clave===fn('CURP_GENERICO')" message="CURP Inválido (Caracter 17)"}}
     {{validator type="expr" validIf="=fn('validaCaracter18Curp',prestadorServicios.clave,prestadorServicios.fechaNacimiento)||prestadorServicios.clave===fn('CURP_GENERICO')" message="CURP Inválido (Caracter 18)"}}
+    {{validator type="expr" validIf="=(calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'),16,false)===clave.substr(0,16)||calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'),16,true)===prestadorServicios.clave.substr(0,16)||prestadorServicios.clave===fn('CURP_GENERICO'))&&prestadorServicios.clave.length===18" message="CURP Incorrecto"}}
+    {{#onChange}}
+      {{#update}}
+        {{set tieneCurp="=clave?true:false"}}
+      {{/update}}
+    {{/onChange}}
   {{/section}}
   {{!-- Tarea #3976 RACC --}}
 
@@ -303,6 +317,9 @@
   {{#template id="lista"}}
     <div>
       {{_name}}
+      {{#if _created.folio}}
+        </br><span style="font-size:12px;">Folio: {{_created.folio}}</span>
+      {{/if}}
       </br><span style="font-size:12px;">{{base.correo}}</span>
       </br><span style="font-size:12px;white-space:pre-wrap;">{{base._area}}</span>
     </div>    

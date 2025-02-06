@@ -5043,9 +5043,12 @@
       {{set _afeccionPrincipalReseleccionada="=detalle.notaInicialUrgencias.base._afeccionPrincipalReseleccionada"}}
       {{set otrosDiagnosticos="=calc.recalcLimiteEdadDiagnostico(detalle.notaInicialUrgencias.base.otrosDiagnosticos, persona.fechaNacimiento, moment(_params.fechaEgreso).diff(persona.fechaNacimiento,'years')<1?_params.fechaIngreso:_params.fechaEgreso)"}}
       {{set _otrosDiagnosticos="=detalle.notaInicialUrgencias.base._otrosDiagnosticos"}}
+      {{set mujerFertil="=detalle.notaInicialUrgencias.base.mujerFertil"}}
+      {{set _mujerFertil="=detalle.notaInicialUrgencias.base._mujerFertil"}}
+      {{set edadGestacional="=detalle.notaInicialUrgencias.base.edadGestacional"}}
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
-    {{update section="comorbilidades" value="=calc.subItemsMap(_items2, 'base.otrosDiagnosticos', '=base.diagnostico+`#`+base.detalle', '=base.nombre')"}}
+    {{update section="comorbilidades" value="=calc.subItemsMap(_items2, 'base.otrosDiagnosticos', '=base.detalle+`#`+base.diagnostico', '=base.nombre')"}}
   {{/transform}}
 
   {{#transform id="copiarDiagnosticoUrgencias"}}
@@ -6052,6 +6055,7 @@
   {{#transform id="copiarCirugia"}}
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
+    {{update section="nomDatos" transform="copiarNomDatos"}}
     {{#update section="base"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
@@ -6076,7 +6080,7 @@
       {{set prioridad="=fn('prioridadCentral', central)"}}
       [./if.] --}}
       {{set prioridad="=fn('prioridadServicio', _params.service)"}}
-
+      {{setRef ref="cirugia.base.cirugiaRealizar.base.fechaPropuesta" value="=_params.fechaPropuesta"}}
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
   {{/transform}}
@@ -6136,7 +6140,9 @@
   {{#transform id="copiarTococirugia"}}
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
+    {{update section="nomDatos" transform="copiarNomDatos"}}
     {{#update section="base"}}
+      {{!-- {{set fechaPropuesta="_params.fechaPropuesta"}} --}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
@@ -6150,6 +6156,7 @@
       {{set esCuentaAbierta="=fn('cuentaAbierta', contexto)"}}
       {{set tipoEpisodio="=fn('tipoEpisodio', contexto)"}}
       {{set hospitalizacionDesde="=fn('hospitalizacionDesde', contexto)"}}
+      {{setRef ref="tococirugia.base.cirugiaRealizar.base.fechaPropuesta" value="=_params.fechaPropuesta"}}
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
   {{/transform}}
@@ -10284,13 +10291,14 @@
     {{item action="notaEvolucion" text="Nota Evolución"}}
     {{item action="notaRegistroSignosVitalesSomatometria" text="Nota Signos Vitales y Somatometría" beginGroup="true"}}
     {{item action="notaSolicitudProcedimiento" text="Solicitud Procedimiento" beginGroup="true"}}
+    {{item action="notaSolicitudCirugia" text="Solicitud Programación Cirugía"}}
     {{item action="notaSolicitudTococirugia" text="Solicitud Tococirugía"}}
   {{/menu}}
 
   {{action id="menuNotasUrgencias" hide="true" type="menu" menu="menuNotasUrgencias" label="Notas Urgencias" color="deep-orange"}}
   {{#menu id="menuNotasUrgencias" color="deep-orange"}}
-    {{item action="notaAltaServicio" text="Nota Alta Servicio"}}
     {{item action="notaInicialUrgencias" text="Nota Urgencias"}}
+    {{item action="notaAltaServicio" text="Nota Alta Servicio"}}
     {{item action="notaPlanAltaEnfermeria" text="Nota Plan Alta Enfermería"}}
     {{item action="notaSeulLesiones" text="Nota Registro Lesiones"}}
     {{item action="notaRegistroSignosVitalesSomatometria" text="Nota Signos Vitales y Somatometría" beginGroup="true"}}
@@ -12766,6 +12774,7 @@
   {{#action id="notaSolicitudCirugia" source="notaSolicitudCirugia" label="Solicitud Programación Cirugía" transform="copiarCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="activos" confirm="=calc.hasValue(_items[0]._name)" confirmMessage="=_items[0]._name+'<br><strong>¿Desea Continuar?</strong>'" confirmTitle="=calc.concat('Solicitud Activa',_items[0]._created.folio)" confirmHeight="600" confirmWidth="500" btnSolid="true" error="=fn('errorDatosSeguro', persona, contexto, detalle)"}}
     {{param tipoSolicitud="='cirugia'"}}
     {{param persona="=_id"}}
+    {{ask field="fechaPropuesta" type="date" label="Fecha Propuesta para la Cirugía" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().endOf('day').format()"}}
   {{/action}}
   {{#action id="notaSolicitudCirugiaAmbulatoria" source="notaSolicitudCirugiaAmbulatoria" label="Solicitud Programación Cirugía Ambulatoria" transform="copiarCirugiaAmbulatoria" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="activos" confirm="=calc.hasValue(_items[0]._name)" confirmMessage="=_items[0]._name+'<br><strong>¿Desea Continuar?</strong>'" confirmTitle="=calc.concat('Solicitud Activa',_items[0]._created.folio)" confirmHeight="600" confirmWidth="500" btnSolid="true" error="=fn('errorDatosSeguro', persona, contexto, detalle)"}}
     {{param tipoSolicitud="='cirugiaAmbulatoria'"}}
@@ -12774,6 +12783,7 @@
   {{#action id="notaSolicitudTococirugia" source="notaSolicitudTococirugia" label="Solicitud Tococirugía" transform="copiarTococirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange"  onlyPost="true" fromSource="solicitud" fromView="activos" confirm="=calc.hasValue(_items[0]._name)" confirmMessage="=_items[0]._name+'<br><strong>¿Desea Continuar?</strong>'" confirmTitle="=calc.concat('Solicitud Activa',_items[0]._created.folio)" confirmHeight="600" confirmWidth="500" btnSolid="true" error="=fn('errorDatosSeguro', persona, contexto, detalle)"}}
     {{param tipoSolicitud="='tococirugia'"}}
     {{param persona="=_id"}}
+    {{ask field="fechaPropuesta" type="date" label="Fecha Propuesta para la Tococirugía" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().endOf('day').format()"}}
   {{/action}}
 
   {{action id="notaSolicitudHemocomponente" source="notaSolicitudHemocomponente" label="Solicitud Hemocomponentes" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}

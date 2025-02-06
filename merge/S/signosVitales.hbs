@@ -5,6 +5,15 @@
     {{field id="estaVivo" type="expr" value="=situacionActual=='vivo'"}}
     {{field id="estaDifunto" type="expr" value="=situacionActual=='difunto'"}}
     {{field id="pam" type="calc" label="PMA" value="=fn('pam', base)" format="#.##"}}
+    {{#field id="tomaGlicemiaCapilar"}}
+      {{onChange clearFields="glicemiaCapilar,resultadoObtenido,prePrandial"}}
+    {{/field}}
+    {{#field id="glicemiaCapilar"}}
+      {{onChange clearFields="resultadoObtenido,prePrandial"}}
+    {{/field}}
+    {{#field id="resultadoObtenido"}}
+      {{onChange clearFields="prePrandial"}}
+    {{/field}}
     {{validator type="expr" validIf="=(calc.number(@tensionDiastolica)>=0&&calc.number(@tensionSistolica)>=50)||(@tensionSistolica==0&&@tensionDiastolica==0)" message="Presión Sistólica Fuera de Rango"}}
     {{validator type="expr" validIf="=(calc.number(@tensionSistolica)>=calc.number(@tensionDiastolica))||(@tensionSistolica==0||@tensionDiastolica==0)" message="Presión Sistólica debe ser mayor o igual a Presión Diastólica"}} 
     {{validator type="expr" validIf="=(@tensionSistolica>=0&&(@tensionDiastolica>=20&&@tensionDiastolica<=200))||(@tensionSistolica==0&&@tensionDiastolica==0)||(@tensionSistolica==999&&@tensionDiastolica==999)" message="Presión Diastólica Fuera de Rango"}}

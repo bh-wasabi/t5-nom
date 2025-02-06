@@ -49,7 +49,7 @@
     {{/field}}
     {{#field id="clues"}}
       {{#onChange clearFields="cluesSubAbreviacion,cluesTipoAbreviacion,cluesServicioAmigable,cluesTieneEspirometro,cluesEstatusOperacion,cluesFechaEfectivaBaja,cluesTipoUnidad,cluesIdEntidad"}}
-        {{set cluesTieneSsa="=@clues.search('SSA')>0"}}
+        {{set cluesInstitucion="=@institucion"}}
         {{set cluesSubAbreviacion="=@sub_abreviacion"}}
         {{set cluesTipoAbreviacion="=@tip_abreviacion"}}
         {{set cluesServicioAmigable="=@amigable"}}

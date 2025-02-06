@@ -1,5 +1,10 @@
 {{#define id="notaSisConsultaExterna"}}
-  {{#action id="afectar" confirm="=calc.in('SI', _.union(calc.pluckRef([_doc.analisis.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(_doc.analisis.otrosDiagnosticos, 'base.excedeLimiteEdad')))" confirmMessage="Diagnóstico Excede Límite Edad<br>¿Desea continuar?"}}
+  {{#action 
+    id="afectar"
+    confirm="=calc.in('SI', _.union(calc.pluckRef([_doc.analisis.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(_doc.analisis.otrosDiagnosticos, 'base.excedeLimiteEdad')))"
+    confirmMessage="Diagnóstico Excede Límite Edad<br>¿Desea continuar?"
+    error="=user.others.tipoPersonalNom=='licenciadoGerontologia'&&moment(base.fechaConsulta).diff(persona.fechaNacimiento,'years')<59?'No Corresponde la Edad del Paciente con el Tipo de Personal (Licenciado en Gerontología)':''"
+  }}
     {{#update section="base"}}
       {{set excedeLimiteEdad="=calc.in('SI', _.union(calc.pluckRef([_doc.analisis.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(_doc.analisis.otrosDiagnosticos, 'base.excedeLimiteEdad')))?'SI':'NO'"}}
     {{/update}}
