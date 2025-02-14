@@ -28,6 +28,7 @@
       {{/onChange}}
     {{/field}}
     {{validator type="expr" validIf="=(calc.number(@edadGestacional)>=0&&calc.number(@edadGestacional)<=45)||(calc.number(@edadGestacional)==99)" message="Error en la Edad Gestacional"}}
+    {{validator type="expr" notValidIf="=@mujerFertil=='embarazo'&&@edadGestacional=='0'" message="Error en la Edad Gestacional"}}
     {{validator type="expr" validIf="=!@numeroSobres||(@numeroSobres>=1&&@numeroSobres<=20)" message="Error en Número de Sobres (1-20)"}}
     {{validator type="expr" notValidIf="=@CLUES==user.establishmentData.clues" message="CLUES Inválido"}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')), @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico)" message="Tiene Diagnósticos Duplicados"}}

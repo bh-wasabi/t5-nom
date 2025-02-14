@@ -23,7 +23,7 @@
     {{/field}}
 
     {{#field id="servicioInterconsultado"}}
-      {{onChange clearFields="medicoInterconsultado"}}
+      {{onChange clearFields="medicoInterconsultado,otroServicioInterconsultado"}}
     {{/field}}
     
     {{#field id="medicoInterconsultado"}}
@@ -38,6 +38,7 @@
           {{set nombreMedicoInterconsultado="=base.nombres"}}
           {{set apellidoPaternoMedicoInterconsultado="=base.apellidoPaterno"}}
           {{set apellidoMaternoMedicoInterconsultado="=base.apellidoMaterno"}}
+          {{set otroServicioInterconsultado="=calc.getRef(calc.findWhereRef(prestadorServicios.datosEspecialidad, 'base.especialidad', @servicioInterconsultado),'base.especifiqueEspecialidad')"}}
         {{/onChange}}
       {{/editor}}
     {{/field}}

@@ -3,7 +3,7 @@
     id="afectar"
     confirm="=!calc.in(diagnosticos.seRealizoPsicoterapia,['grupal','pareja','familiar'])&&calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))"
     confirmMessage="Diagnóstico Excede Límite Edad<br>¿Desea continuar?"
-    error="=calc.fn('validarServicioSaludMental',diagnosticos.esPsicologoPsiquiatra,diagnosticos.seRealizoPsicoterapia,base.catServicios,moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years'))"
+    error="=fn('validarServicioSaludMental',diagnosticos.esPsicologoPsiquiatra,diagnosticos.seRealizoPsicoterapia,base.catServicios,moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years'))"
   }}
     {{#update section="base"}}
       {{set excedeLimiteEdad="=!calc.in(diagnosticos.seRealizoPsicoterapia,['grupal','pareja','familiar'])&&calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))?'SI':'NO'"}}

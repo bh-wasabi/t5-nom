@@ -32,7 +32,7 @@
   		{{#update}}
         {{set gestas="=fn('calcularGestas',antecedentesEmbarazos.base.paras,antecedentesEmbarazos.base.abortos,antecedentesEmbarazos.base.cesareas,esEmbarazo?1:0)"}}
         {{set foliosUtilizadosNacimiento="=_.compact(calc.pluckRef(calc.pluckRef(datosMujer,'base.datosInformacionProducto'),'base.folioCertificadoNacimiento'))"}}
-        {{set foliosUtilizadosMuerteFetal="=_.compact(calc.pluckRef(calc.pluckRef(datosMujer,'base.datosInformacionProducto'),'base.folioCertificadoDefuncion'))"}}
+        {{set foliosUtilizadosMuerteFetal="=_.compact(calc.pluckRef(calc.pluckRef(datosMujer,'base.datosInformacionProducto'),'base.folioCertificadoMuerteFetal'))"}}
         {{set foliosUtilizadosDefuncion="=calc.isEmpty(@datosMujer)?_.compact([@folioCertificadoDefuncion]):_.compact([].concat([@folioCertificadoDefuncion],calc.pluckRef(calc.pluckRef(datosMujer,'base.datosInformacionProductoAborto'),'base.folioCertificadoDefuncion')))"}}
   		{{/update}}
   	{{/onChange}}

@@ -2512,12 +2512,18 @@
     {{when condition="=certificado.slice(0,2)-moment().year().toString().slice(2,4)>0&&moment().month()<11" return="true"}}
     {{!-- No puede ser de 2 años hacia adelante --}}
     {{when condition="=certificado.slice(0,2)-moment().year().toString().slice(2,4)>1" return="true"}}
+    {{!-- Para 2025 debe ser menor de 251000000 --}}
+    {{when condition="=certificado.slice(0,2)=='25'&&calc.forceNumber(certificado)>250999999" return="true"}}
+    {{!-- Para 2024 debe ser menor de 241000000 --}}
+    {{when condition="=certificado.slice(0,2)=='24'&&calc.forceNumber(certificado)>240999999" return="true"}}
+    {{!-- Para 2023 debe ser menor de 231000000 --}}
+    {{when condition="=certificado.slice(0,2)=='23'&&calc.forceNumber(certificado)>230999999" return="true"}}
     {{!-- Para 2023 debe ser menor de 231110000 --}}
-    {{when condition="=certificado.slice(0,2)=='23'&&calc.forceNumber(certificado)>231110000" return="true"}}
+    {{!-- {{when condition="=certificado.slice(0,2)=='23'&&calc.forceNumber(certificado)>231110000" return="true"}} --}}
     {{!-- Para 2022 debe ser menor de 221650000 --}}
-    {{when condition="=certificado.slice(0,2)=='22'&&calc.forceNumber(certificado)>221650000" return="true"}}
+    {{!-- {{when condition="=certificado.slice(0,2)=='22'&&calc.forceNumber(certificado)>221650000" return="true"}} --}}
     {{!-- Para 2021 debe ser menor de 212838000 --}}
-    {{when condition="=certificado.slice(0,2)=='21'&&calc.forceNumber(certificado)>212838000" return="true"}}
+    {{!-- {{when condition="=certificado.slice(0,2)=='21'&&calc.forceNumber(certificado)>212838000" return="true"}} --}}
     {{default return="false"}}
   {{/function}}
 
@@ -2573,6 +2579,10 @@
     {{default return="['O000','O001','O002','O008','O009','O010','O011','O019','O020','O021','O028','O029','O030','O031','O032','O033','O034','O035','O036','O037','O038','O039','O040','O041','O042','O043','O044','O045','O046','O047','O048','O049','O050','O051','O052','O053','O054','O055','O056','O057','O058','O059','O060','O061','O062','O063','O064','O065','O066','O067','O068','O069','O070','O071','O072','O073','O074','O075','O076','O077','O078','O079','O080','O081','O082','O083','O084','O085','O086','O087','O088','O089']"}}
   {{/function}}
 
+  {{#function id="diagnosticoDefuncion"}}
+    {{default return="['O95X','O960','O961','O969','O96X','O970','O971','O979','O97X']"}}
+  {{/function}}
+
   {{#function id="diagnosticoProductoUnico"}}
     {{default return="['O800','O801','O808','O809','O810','O811','O812','O813','O814','O815','O820','O821','O822','O828','O829','O830','O831','O832','O833','O834','O838','O839']"}}
   {{/function}}
@@ -2622,6 +2632,14 @@
     {{when condition="=calc.in(tipologia,['HPSIQ','HPSIQMF'])" return="true"}}
     {{when condition="=tipologia==='Y'&&calc.in(subtipologia,['99','NES','INP','SAP'])" return="true"}}
     {{default return="false"}}
+  {{/function}}
+
+  {{#function id="validarConsultaExterna"}}
+    {{define type="param" id="fechaNacimiento"}}
+    {{define type="param" id="tipoPersonal"}}
+    {{define type="param" id="nombreTipoPersonal"}}
+    {{when condition="=moment().diff(moment(@fechaNacimiento), 'years')<59&&calc.in(@tipoPersonal,['licenciadoGerontologia','pasanteGerontologia'])" return="='No Corresponde la Edad del Paciente con el Tipo de Personal (' + @nombreTipoPersonal + ')'"}}
+    {{default return="''"}}
   {{/function}}
 
   {{#function id="validarFechaEgreso"}}
@@ -3112,6 +3130,17 @@
     {{/if}}
   {{/template}}
 
+  {{#template id="nomDireccion"}}
+    {{#if noEsMexico}}
+      {{calle}} {{numeroExterior}} {{numeroInterior}}
+      <br>{{codigoPostal}} {{#if ciudad}}, {{ciudad}}{{/if}}{{#if estado}}, {{estado}}{{/if}}{{#if pais}}, {{_pais}}{{/if}}
+    {{else}}
+      {{calle}} {{numeroExterior}} {{numeroInterior}}
+      {{#if delegacion}}<br>{{delegacion}}{{/if}}
+      <br>{{codigoPostal}} {{#if ciudad}}, {{ciudad}}{{/if}}{{#if estado}}, {{estado}}{{/if}}{{#if pais}}, {{_pais}}{{/if}}
+    {{/if}}
+  {{/template}}
+
   {{#template id="dispositivoMetrica"}}
     {{_categoria}} {{_tipo}}
   {{/template}}
@@ -3391,6 +3420,7 @@
     {{!-- {{#if paisMedicoInterconsultante}}<br>País Médico Interconsultante: {{paisMedicoInterconsultante}}{{/if}} --}}
     {{!-- {{#if curpMedicoInterconsultante}}<br>CURP Médico Interconsulante: {{curpMedicoInterconsultante}}{{/if}} --}}
     {{#if servicioInterconsultado}}<br>Servicio Interconsultado: {{_servicioInterconsultado}}{{/if}}
+    {{#if otroServicioInterconsultado}}<br>Especifique Servicio Interconsultado: {{otroServicioInterconsultado}}{{/if}}
     {{#if medicoInterconsultado}}<br>Médico Interconsultado: {{_medicoInterconsultado}}{{/if}}
     {{#if especialidadMedicoInterconsultado}}<br>Especialidad Médico Interconsultado: {{especialidadMedicoInterconsultado}}{{/if}}
     {{#if cedulaMedicoInterconsultado}}<br>Cédula Médico Interconsultado: {{cedulaMedicoInterconsultado}}{{/if}}

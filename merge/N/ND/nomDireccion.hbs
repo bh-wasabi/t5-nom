@@ -1,0 +1,80 @@
+{{#define id="nomDireccion"}}
+  {{#section id="base"}}
+    {{field id="noEsMexico" type="expr" value="=pais!='MX'"}}
+    {{field id="entidadNoAplica" type="expr" value="=entidadFederativa=='88'"}}
+    {{field id="siDesconoceCalle" type="expr" value="=desconoceCalle=='si'"}}
+    {{field id="entidadValida" type="expr" value="=!calc.in(entidadFederativa,['00','88','99'])"}}
+    {{field id="siDesconoceDireccion" type="expr" value="=desconoceDireccion!='no'"}}
+    {{field id="siNoDesconoceDireccion" type="expr" value="=desconoceDireccion=='no'"}}
+    {{field id="direccionNoEspecificado" type="expr" value="=desconoceDireccion=='noEspecificado'"}}
+    {{#field id="pais" clearFields="entidadFederativa,desconoceDireccion,correosMexico,localidad,desconoceLocalidad,codigoPostal,colonia,delegacion,seleccionarDelegacion,ciudad,estado,codigoOficina,codigoDelegacion,codigoCiudad,codigoEstado,zona,tipoAsentamiento"}}
+      {{#onChange}}
+        {{set entidadFederativa="=pais!='MX'?'88':null"}}
+        {{set delegacion="=pais!='MX'?'NO APLICA':null"}}
+        {{set desconoceLocalidad="=pais!='MX'?'NO APLICA':null"}}
+        {{set estado="=pais!='MX'?'NO APLICA':null"}}
+        {{set codigoPostal="=pais!='MX'?'99999':null"}}
+        {{set codigoDelegacion="=pais!='MX'?'997':null"}}
+        {{set codigoEstado="=pais!='MX'?'88':null"}}
+        {{set codigoLocalidad="=pais!='MX'?'9997':null"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="entidadFederativa"}}
+      {{#onChange clearFields="desconoceDireccion,correosMexico,localidad,desconoceLocalidad,codigoPostal,colonia,delegacion,seleccionarDelegacion,ciudad,estado,codigoOficina,codigoDelegacion,codigoCiudad,codigoEstado,zona,tipoAsentamiento"}}
+        {{set delegacion="=calc.in(entidadFederativa,['00','88'])?'NO ESPECIFICADO':entidadFederativa=='99'?'SE IGNORA':null"}}
+        {{set desconoceLocalidad="=calc.in(entidadFederativa,['00','88'])?'NO ESPECIFICADO':entidadFederativa=='99'?'SE IGNORA':null"}}
+        {{set estado="=calc.in(entidadFederativa,['00','88'])?'NO ESPECIFICADO':entidadFederativa=='99'?'SE IGNORA':null"}}
+        {{set codigoPostal="=calc.in(entidadFederativa,['00','88'])?'00000':entidadFederativa=='99'?'99999':null"}}
+        {{set codigoDelegacion="=calc.in(entidadFederativa,['00','88'])?'999':entidadFederativa=='99'?'998':null"}}
+        {{set codigoEstado="=calc.in(entidadFederativa,['00','88'])?'00':entidadFederativa=='99'?'99':null"}}
+        {{set codigoLocalidad="=calc.in(entidadFederativa,['00','88'])?'9999':entidadFederativa=='99'?'9998':null"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="desconoceDireccion"}}
+      {{#onChange clearFields="correosMexico,localidad,desconoceLocalidad,otraLocalidad,codigoPostal,colonia,delegacion,seleccionarDelegacion,ciudad,estado,codigoOficina,codigoDelegacion,codigoCiudad,codigoEstado,zona,tipoAsentamiento"}}
+        {{set delegacion="=desconoceDireccion=='noEspecificado'?'NO ESPECIFICADO':desconoceDireccion=='seIgnora'?'SE IGNORA':null"}}
+        {{set estado="=desconoceDireccion=='noEspecificado'?'NO ESPECIFICADO':desconoceDireccion=='seIgnora'?'SE IGNORA':null"}}
+        {{set codigoPostal="=desconoceDireccion=='noEspecificado'?'00000':desconoceDireccion=='seIgnora'?'99999':null"}}
+        {{set codigoDelegacion="=desconoceDireccion=='noEspecificado'?'999':desconoceDireccion=='seIgnora'?'998':null"}}
+        {{set codigoEstado="=desconoceDireccion=='noEspecificado'?'00':desconoceDireccion=='seIgnora'?'99':null"}}
+        {{set codigoLocalidad="=desconoceDireccion=='noEspecificado'?'9999':desconoceDireccion=='seIgnora'?'9998':null"}}
+        {{set desconoceLocalidad="=desconoceDireccion=='noEspecificado'?'NO ESPECIFICADO':desconoceDireccion=='seIgnora'?'SE IGNORA':null"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="correosMexico"}}
+      {{#editor}}
+        {{param estado="=entidadFederativa"}}
+        {{param codigoPostal="=codigoPostal"}}
+        {{#onChange clearFields="localidad,desconoceLocalidad,otraLocalidad"}}
+          {{set codigoPostal="=d_codigo"}}
+          {{set colonia="=d_asenta"}}
+          {{set delegacion="=D_mnpio"}}
+          {{set ciudad="=d_ciudad"}}
+          {{set estado="=d_estado"}}
+          {{set codigoOficina="=c_oficina"}}
+          {{set codigoDelegacion="=c_mnpio"}}
+          {{set codigoCiudad="=c_cve_ciudad"}}
+          {{set codigoEstado="=c_estado"}}
+          {{set zona="=d_zona"}}
+          {{set tipoAsentamiento="=d_tipo_asenta"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="localidad"}}
+      {{#editor}}
+        {{param estado="=@codigoEstado||entidadFederativa"}}
+        {{param municipio="=@codigoDelegacion"}}
+        {{#onChange refresh="true"}}
+          {{set codigoLocalidad="=c_localidad"}}
+          {{set codigoEstado="=c_estado"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="desconoceCalle"}}
+      {{#onChange condition="=desconoceCalle=='si'" clearFields="calle,numeroExterior,numeroInterior"}}
+        {{set calle="SIN INFORMACIÓN"}}
+      {{/onChange}}
+    {{/field}}
+    {{validator type="expr" notValidIf="=!noEsMexico&&entidadNoAplica" message="Entidad Federativa Inválida para MÉXICO"}}
+  {{/section}}
+{{/define}}

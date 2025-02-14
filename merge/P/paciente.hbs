@@ -93,13 +93,14 @@
   {{#section id="base"}}
     {{field id="nombreCompleto" type="expr" label="Nombre" value="=calc.concat(@nombres, @apellidoPaterno, @apellidoMaterno)"}}
     {{field id="esMujer" type="expr" value="=base.genero==='mujer'"}}    
-    {{field id="esMenor3Meses" type="expr" value="=moment().diff(moment(fechaNacimiento), 'months')<b=3"}}
+    {{field id="esMenor3Meses" type="expr" value="=moment().diff(moment(fechaNacimiento), 'months')<=3"}}
     {{field id="esMenor3Dias" type="expr" value="=moment().diff(moment(fechaNacimiento), 'days')<=3"}} 
+    {{field id="esMenor3Anos" type="expr" value="=calc.fromNowYears(fechaNacimiento)<3"}}
     {{field id="esMenor5Anos" type="expr" value="=calc.fromNowYears(fechaNacimiento)<5"}}
     {{field id="esMenor10Anos" type="expr" value="=calc.fromNowYears(fechaNacimiento)<10"}}
+    {{field id="esMenor59Anos" type="expr" value="=calc.fromNowYears(fechaNacimiento)<59"}}
     {{field id="clave2" type="expr" value="=@clave2||'PN'+calc.zeroFill(_created.folio||_parentDoc._created.folio||moment().unix(),7)"}} 
     {{field id="tieneOtrasAlertasAlimentarias" type="expr" value="=calc.in('otras', @alertaAlimentaria)"}} 
-    {{field id="esMenor3Anos" type="expr" value="=calc.fromNowYears(fechaNacimiento)<3"}}
     {{field id="esConsultaExterna" type="expr" value="=tipoAtencion=='consultaExterna'"}}
     {{field id="esUrgenciasHospitalizacion" type="expr" value="=tipoAtencion!='consultaExterna'"}}
     {{field id="esMigrante" type="expr" value="=migrante=='internacional'||migrante=='retornado'||migrante=='nacional'"}}

@@ -54,11 +54,24 @@
     {{validator type="expr" notValidIf="=@folioCertificadoDefuncion&&fn('validaCertificadoDefuncion',@folioCertificadoDefuncion)" message="Certificado Defunción Inválido"}}
     {{validator type="expr" notValidIf="=moment(@fechaEgreso).diff(@fechaIngreso,'days')>40" message="No deben pasar <strong>40 Días</strong> entre <strong>Fecha Desde</strong> y <strong>Fecha Hasta</strong>"}}
     {{validator type="expr" notValidIf="=@CLUES==user.establishmentData.clues" message="CLUES Inválido"}}
-    {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')), @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico)" message="Tiene Diagnósticos Duplicados"}}
+    
+    {{validator type="expr" notValidIf="=calc.findDuplicates(calc.mergeArrays(@seleccionarOtrosDiagnosticos&&@seleccionarOtrosDiagnosticos.map((val)=>val.substr(val.indexOf('#')+1,val.length)),@afeccionPrincipal.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')))" message="Tiene Diagnósticos Duplicados"}}
+    {{validator type="expr" notValidIf="=calc.findDuplicates(calc.mergeArrays(@seleccionarOtrosDiagnosticos&&@seleccionarOtrosDiagnosticos.map((val)=>val.substr(val.indexOf('#')+1,val.length)),@afeccionPrincipalReseleccionada&&@afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')))" message="Tiene Diagnósticos Duplicados"}}
+
+    {{!-- PARTO --}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.validoSeul, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.validoSeul, calc.pluckRef(@otrosDiagnosticos, 'base.validoSeul')), null, 'PARTO')" message="Tiene Diagnósticos de tipo PARTO Duplicados"}}
+    {{validator type="expr" notValidIf="=_.intersection(fn('diagnosticoParto'),calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico'), @seleccionarOtrosDiagnosticos&&@seleccionarOtrosDiagnosticos.map((val)=>val.substr(val.indexOf('#')+1,val.length)))).length>1" message="Tiene Diagnósticos de tipo PARTO Duplicados"}}
+    
+    {{!-- ABORTO --}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.validoSeul, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.validoSeul, calc.pluckRef(@otrosDiagnosticos, 'base.validoSeul')), null, 'ABORTO')" message="Tiene Diagnósticos de tipo ABORTO Duplicados"}}
-    {{validator type="expr" notValidIf="=calc.in('DEFUNCION', calc.mergeArrays(afeccionPrincipal.base.validoSeul, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.validoSeul, calc.pluckRef(@otrosDiagnosticos, 'base.validoSeul')))&&motivoAltaServicio!='defuncion'" message="DEFUNCIÓN Mal Configurada"}}
-    {{validator type="expr" notValidIf="=!calc.in('DEFUNCION', calc.mergeArrays(afeccionPrincipal.base.validoSeul, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.validoSeul, calc.pluckRef(@otrosDiagnosticos, 'base.validoSeul')))&&motivoAltaServicio=='defuncion'" message="Falta Diagnóstico de DEFUNCIÓN"}}
+    {{validator type="expr" notValidIf="=_.intersection(fn('diagnosticoAborto'),calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico'), @seleccionarOtrosDiagnosticos&&@seleccionarOtrosDiagnosticos.map((val)=>val.substr(val.indexOf('#')+1,val.length)))).length>1" message="Tiene Diagnósticos de tipo ABORTO Duplicados"}}
+    
+    {{!-- PARTO Y ABORTO --}}
+    {{validator type="expr" notValidIf="=_.intersection(calc.mergeArrays(fn('diagnosticoParto'),fn('diagnosticoAborto')),calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico'), @seleccionarOtrosDiagnosticos&&@seleccionarOtrosDiagnosticos.map((val)=>val.substr(val.indexOf('#')+1,val.length)))).length>1" message="Tiene Diagnósticos de tipo ABORTO y PARTO"}}
+    
+    {{!-- DEFUNCION --}}
+    {{validator type="expr" notValidIf="=calc.arrayInArray(fn('diagnosticoDefuncion'),calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico'), @seleccionarOtrosDiagnosticos&&@seleccionarOtrosDiagnosticos.map((val)=>val.substr(val.indexOf('#')+1,val.length))))&&motivoAltaServicio!='defuncion'" message="Motivo Alta Servicio Inválido (Existen diagnósticos de DEFUNCIÓN)"}}
+    
     {{validator type="expr" notValidIf="=_.last(calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico'))=='P95X'" message="Código P95X no puede ser seleccionado como última Comorbilidad"}}
     {{validator type="expr" notValidIf="=_.last(@seleccionarOtrosDiagnosticos).split('#')[1]=='P95X'" message="Código P95X no puede ser seleccionado como última Comorbilidad"}}
     {{validator type="expr" notValidIf="=calc.findDuplicates(calc.pluck(@interconsultas,'_name'))" message="Interconsultas Duplicadas"}}
