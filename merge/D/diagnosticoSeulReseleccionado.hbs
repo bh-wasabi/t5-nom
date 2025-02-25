@@ -4,6 +4,7 @@
     {{field id="tieneMorfologia" type="expr" value="=calc.in('MORFOLOGIA',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaEgresos','notaSeulEgreso'])"}}
     {{field id="tieneFolioLesion" type="expr" value="=calc.in('FOLIO_LESION',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaEgresos','notaSeulEgreso'])"}}
     {{field id="tienePlanHidratacion" type="expr" value="=calc.in('PLAN_HIDRATACION',calc.splitAndTrim(requiereCampos))&&edadActual<5&&calc.in(docType,['notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaUrgencias','notaEvolucion'])"}}
+    {{field id="mostrarSobres" type="expr" value="=calc.in(@planHidratacion,['planA','planB'])"}}
     {{field id="tienePlanInfeccionesRespiratorias" type="expr" value="=calc.in('PLAN_RESPIRATORIAS',calc.splitAndTrim(requiereCampos))&&edadActual<5&&calc.in(docType,['notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaUrgencias','notaEvolucion'])"}}
     {{#field id="diagnostico"}}
       {{#editor}}
@@ -12,7 +13,7 @@
         {{param _type="=_parentDoc._type"}}
         {{param edadActual="=_parentDoc.persona.edadActual"}}
       {{/editor}}
-      {{#onChange clearFields="subDiagnostico,detalle,causaExterna,morfoligia,folioLesion"}}
+      {{#onChange clearFields="subDiagnostico,detalle,causaExterna,descripcionCausaExterna,morfologia,folioLesion,planHidratacion,numeroSobres,infeccionesRespiratoriasPlan"}}
         {{set letra="=LETRA"}}
         {{set limiteSexo="=LSEX"}}
         {{set limiteInferior="=LINF"}}
@@ -27,7 +28,10 @@
         {{set edadActual="=_parentDoc.persona.edadActual"}}
         {{set requiereCampos="=REQUIERE_CAMPOS"}}
       {{/onChange}}
-    {{/field}}    
+    {{/field}}
+    {{#field id="planHidratacion"}}
+      {{onChange clearFields="numeroSobres"}}
+    {{/field}}
     {{validator type="expr" validIf="=calc.meetsSexLimit(limiteSexo, _parentDoc.persona.genero)" message="No Corresponde el Sexo del Paciente"}}
     {{!-- {{validator type="expr" validIf="=calc.meetsAgeLimit(limiteInferior, desde, _parentDoc.persona.fechaNacimiento, true)" message="No Corresponde la Edad del Paciente con el Límite Inferior"}} --}}
     {{!-- {{validator type="expr" validIf="=calc.meetsAgeLimit(limiteSuperior, desde, _parentDoc.persona.fechaNacimiento, false)" message="No Corresponde la Edad del Paciente con el Límite Superior"}} --}}

@@ -12,5 +12,6 @@
     {{validator type="expr" validIf="=!@descripcionAfectacion||calc.matchIfPattern('^[A-z].{1,249}$', @descripcionAfectacion)" message="Verificar Descripción Afectación"}}
     {{validator type="expr" validIf="=!@descripcionCausas||calc.matchIfPattern('^[A-z].{1,249}$', @descripcionCausas)" message="Verificar Descripción"}}
     {{validator type="expr" notValidIf="=@folioCertificadoDefuncion&&fn('validaCertificadoDefuncion',@folioCertificadoDefuncion)" message="Certificado Defunción Inválido"}}
+    {{validator type="expr" notValidIf="=calc.in(calc.upperCase(calc.normalize(@especificarDestino)),fn('especifiqueDestinoAtencionLesionInvalido'))" message="Especificar Destino Inválido"}}
   {{/section}}
 {{/define}}

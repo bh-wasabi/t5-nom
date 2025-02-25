@@ -16,6 +16,6 @@
     {{validator type="expr" notValidIf="=@accidenteVehiculoMotor=='conductor'&&calc.fromNowYears(_parentDoc.persona.fechaNacimiento)<15" message="Accidente Vehículo Motor Inválido (Paciente Menor 15 Años)"}}
     {{validator type="expr" notValidIf="=@equipoUtilizadoAccidenteAuto=='sillaPortaInfante'&&@accidenteVehiculoMotor!='ocupante'" message="Equipo Utilizado Incorrecto"}}
     {{validator type="expr" notValidIf="=@equipoUtilizadoAccidenteAuto=='sillaPortaInfante'&&calc.fromNowYears(_parentDoc.persona.fechaNacimiento)>5" message="Equipo Utilizado Incorrecto"}}
-    {{validator type="expr" validIf="=!calc.in(calc.lowerCase(calc.normalize(@otroEquipoSeguridad)),['cinturon de seguridad','casco','silla porta infante','otro'])" message="Especifique Otro Equipo Inválido"}}
+    {{validator type="expr" notValidIf="=calc.in(calc.upperCase(calc.normalize(@otroEquipoSeguridad)),fn('especifiqueEquipoInvalido'))" message="Especifique Otro Equipo Inválido"}}
   {{/section}}
 {{/define}}

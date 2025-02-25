@@ -96,7 +96,7 @@
     {{validator type="expr" notValidIf="=@tipoIntencionalidad=='violenciaFamiliar'&&calc.in(@tipoParentesco,['sinParentesco','desconocido'])" message="Parentesco Agresor Inválido"}}
     {{validator type="expr" notValidIf="=@tipoIntencionalidad=='violenciaNoFamiliar'&&!calc.in(@tipoParentesco,['sinParentesco','desconocido'])" message="Parentesco Agresor Inválido"}}
     {{validator type="expr" validIf="=!@edadAgresor||(@edadAgresor>=3&&@edadAgresor<=99)||(@edadAgresor=='999'&&@tipoParentesco!='conyugue')" message="Edad Agresor Inválida"}}
-    {{validator type="expr" validIf="=calc.isEmpty(@otroAgente)||!calc.in(calc.lowerCase(calc.normalize(@otroAgente)),['fuego','flama','sustancia caliente','vapor','intoxicacion por drogas o medicamentos','pie','mano','caida','objeto contundente','objeto punzo cortante','golpe contra piso','golpe contra pared','cuerpo extraño','explosion','asfixia','sofocacion','multiples agentes','proyectil arma de fuego','ahorcamiento','radiacion','sustancias quimicas','corriente electrica','herramienta','maquina','sacudidas','desastre natural','vehiculo de motor','ahorcamiento por sumersion','piquete','mordedura de animal','fuerzas de la naturaleza','intoxicacion por plantas hongos venenosos','otra','se ignora','no aplica'])" message="Otro Agente Inválido"}}
+    {{validator type="expr" notValidIf="=calc.in(calc.upperCase(calc.normalize(@otroAgente)),fn('especifiqueAgenteLesionInvalido'))" message="Otro Agente Inválido"}}
     {{validator type="expr" notValidIf="=mostrarAgenteLesion&&agenteLesion==='noAplica'" message="Agente Lesión Inválido"}}
   {{/section}}
 

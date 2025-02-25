@@ -1,8 +1,8 @@
 {{#define id="datosServiciosSeulEgreso"}}
   {{#section id="base"}}
     {{field id="siServicioNormal" type="expr" value="tipoServicioOtorgado=='normal'"}}
-    {{field id="siOtraProcedencia" type="expr" value="=procedenciaIngreso=='5'"}}
-    {{field id="siReferido" type="expr" value="=procedenciaIngreso=='3'"}}
+    {{field id="siOtraProcedencia" type="expr" value="=procedenciaIngreso=='otro'"}}
+    {{field id="siReferido" type="expr" value="=procedenciaIngreso=='referido'"}}
     {{!-- {{field id="siServicioAdicional" type="expr" value="=numeroServicio=='uno'||numeroServicio=='dos'"}} --}}
     {{field id="tieneTerapiaIntensiva" type="expr" value="=calc.arrayInArray(@claveServicioAdicional,['unidadCoronaria','unidadTerapiaIntensivaQuirurgica','unidadTerapiaIntensiva','unidadTerapiaIntensivaQuirurgicaPediatrica','unidadTerapiaIntensivaPediatrica','unidadCuidadosIntensivosNeonatales'])"}}
     {{field id="tieneTerapiaIntermedia" type="expr" value="=calc.arrayInArray(@claveServicioAdicional,['unidadTerapiaIntermedia','crecimientoDesarrollo','unidadCuidadosIntermediosNeonatales'])"}}
@@ -20,9 +20,9 @@
   			{{set numeroServicio="=claveServicioAdicional.length"}}
   		{{/update}}
   	{{/onChange}}
-    {{validator type="expr" notValidIf="=procedenciaIngreso=='4'&&moment().diff(moment(fechaNacimiento), 'months')>1" message="Procedencia Ingreso Inválida"}}
+    {{validator type="expr" notValidIf="=procedenciaIngreso=='cuneroPatologico'&&moment().diff(moment(fechaNacimiento), 'months')>1" message="Procedencia Ingreso Inválida"}}
     {{validator type="expr" notValidIf="=@cluesProcedencia==user.establishmentData.clues" message="CLUES Procedencia Inválido"}}
-    {{validator type="expr" validIf="=!calc.in(calc.lowerCase(calc.normalize(@especifiqueProcedencia)),['consulta externa','urgencias','referido','cunero patologico','otro'])" message="Especifique Procedencia Inválida"}}
+    {{validator type="expr" validIf="=!calc.in(calc.upperCase(calc.normalize(@especifiqueProcedencia)),fn('especifiqueProcedenciaInvalido'))" message="Especifique Procedencia Inválida"}}
     {{validator type="expr" notValidIf="=@claveServicioAdicional.length>2" message="Máximo dos Servicios Adicionales"}}
     {{validator type="expr" notValidIf="=calc.in(@claveServicioEgreso,@claveServicioAdicional)" message="='Servicio ' + @_claveServicioEgreso + ' Duplicado'"}}
     

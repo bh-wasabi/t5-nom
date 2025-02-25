@@ -7,13 +7,13 @@
     {{field id="siDesconoceDireccion" type="expr" value="=desconoceDireccion!='no'"}}
     {{field id="siNoDesconoceDireccion" type="expr" value="=desconoceDireccion=='no'"}}
     {{field id="direccionNoEspecificado" type="expr" value="=desconoceDireccion=='noEspecificado'"}}
-    {{#field id="pais" clearFields="entidadFederativa,desconoceDireccion,correosMexico,localidad,desconoceLocalidad,codigoPostal,colonia,delegacion,seleccionarDelegacion,ciudad,estado,codigoOficina,codigoDelegacion,codigoCiudad,codigoEstado,zona,tipoAsentamiento"}}
+    {{#field id="pais" clearFields="entidadFederativa,desconoceDireccion,correosMexico,localidad,desconoceLocalidad,otraLocalidad,codigoPostal,colonia,delegacion,seleccionarDelegacion,ciudad,estado,codigoOficina,codigoDelegacion,codigoCiudad,codigoEstado,zona,tipoAsentamiento"}}
       {{#onChange}}
         {{set entidadFederativa="=pais!='MX'?'88':null"}}
         {{set delegacion="=pais!='MX'?'NO APLICA':null"}}
         {{set desconoceLocalidad="=pais!='MX'?'NO APLICA':null"}}
         {{set estado="=pais!='MX'?'NO APLICA':null"}}
-        {{set codigoPostal="=pais!='MX'?'99999':null"}}
+        {{set codigoPostal="=pais!='MX'?'00000':null"}}
         {{set codigoDelegacion="=pais!='MX'?'997':null"}}
         {{set codigoEstado="=pais!='MX'?'88':null"}}
         {{set codigoLocalidad="=pais!='MX'?'9997':null"}}
@@ -76,5 +76,6 @@
       {{/onChange}}
     {{/field}}
     {{validator type="expr" notValidIf="=!noEsMexico&&entidadNoAplica" message="Entidad Federativa Inválida para MÉXICO"}}
+    {{validator type="expr" notValidIf="=calc.isEmpty(@numeroExterior)&&esLesion" message="Falta Indicar Número Exterior"}}
   {{/section}}
 {{/define}}

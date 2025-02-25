@@ -18,6 +18,5 @@
     {{validator type="expr" validIf="=(calc.number(@tensionSistolica)>=calc.number(@tensionDiastolica))||(@tensionSistolica==0||@tensionDiastolica==0)" message="Presión Sistólica debe ser mayor o igual a Presión Diastólica"}} 
     {{validator type="expr" validIf="=(@tensionSistolica>=0&&(@tensionDiastolica>=20&&@tensionDiastolica<=200))||(@tensionSistolica==0&&@tensionDiastolica==0)||(@tensionSistolica==999&&@tensionDiastolica==999)" message="Presión Diastólica Fuera de Rango"}}
     {{validator type="expr" validIf="=calc.number(@tensionDiastolica)<=calc.number(@tensionSistolica)" message="Presión Diastólica debe ser menor o igual a Presión Sistólica"}}
-    {{validator type="expr" validIf="=@tomaGlicemiaCapilar=='no'||(@glicemiaCapilar>0&&@resultadoObtenido!='')" message="Seleccione un resultado"}}
   {{/section}}
 {{/define}}

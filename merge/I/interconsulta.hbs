@@ -13,7 +13,7 @@
     {{#field id="medicoInterconsultante"}}
       {{#onChange}}
         {{set especialidadMedicoInterconsultante="=prestadorServicios._especialidad"}}
-        {{set cedulaMedicoInterconsultante="=_.first(prestadorServicios.datosEspecialidad).base.cedulaEspecialidad"}}
+        {{set cedulaMedicoInterconsultante="=calc.getRef(calc.findWhereRef(prestadorServicios.datosEspecialidad,'base.especialidad',@servicioInterconsultante),'base.cedulaEspecialidad')"}}
         {{set paisMedicoInterconsultante="=prestadorServicios._paisNacimiento"}}
         {{set curpMedicoInterconsultante="=prestadorServicios.clave"}}
         {{set nombreMedicoInterconsultante="=base.nombres"}}
@@ -32,7 +32,7 @@
         {{#onChange}}
           {{set especialidadMedicoInterconsultado="=prestadorServicios._especialidad"}}
           {{set datosEspecialidadMedicoInterconsultado="=prestadorServicios.datosEspecialidad"}}
-          {{set cedulaMedicoInterconsultado="=_.first(prestadorServicios.datosEspecialidad).base.cedulaEspecialidad"}}
+          {{set cedulaMedicoInterconsultado="=calc.getRef(calc.findWhereRef(prestadorServicios.datosEspecialidad,'base.especialidad',@servicioInterconsultado),'base.cedulaEspecialidad')"}}
           {{set paisMedicoInterconsultado="=prestadorServicios._paisNacimiento"}}
           {{set curpMedicoInterconsultado="=prestadorServicios.clave"}}
           {{set nombreMedicoInterconsultado="=base.nombres"}}
