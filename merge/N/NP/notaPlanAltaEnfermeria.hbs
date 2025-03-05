@@ -1,8 +1,11 @@
 {{#define id="notaPlanAltaEnfermeria"}}
   {{#section id="base"}}
     {{#field id="medicamentosMinistrados"}}
+      {{#editor display="base.subclave"}}
+        {{param persona="=persona.id"}}
+      {{/editor}}
       {{!-- {{editor display="base.codigo"}} --}}
-      {{editor display="base.subclave"}}
+      {{!-- {{editor display="base.subclave"}} --}}
     {{/field}}
   {{/section}}
 

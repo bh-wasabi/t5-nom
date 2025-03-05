@@ -40,7 +40,7 @@
   {{action id="reporteListaUsuarios" hide="true" type="quickReport" source="_user" view="listaUsuarios"}}
   
   {{!-- Modificar Bloque - Tarea 5604 --}}
-  {{#action id="sugerirCurp" hide="true" type="update" error="=fn('validaSugerirCurp',base.nombres,prestadorServicios.fechaNacimiento,prestadorServicios.generoCurp,prestadorServicios.entidadNacimiento)"}}
+  {{#action id="sugerirCurp" hide="true" type="update" error="=_updated.date?'No se puede modificar CURP':fn('validaSugerirCurp',base.nombres,prestadorServicios.fechaNacimiento,prestadorServicios.generoCurp,prestadorServicios.entidadNacimiento)"}}
     {{#update section="prestadorServicios"}}
       {{set condition="=prestadorServicios.paisNacimiento=='MX'" clave="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'), 16, true)"}}
       {{set condition="=prestadorServicios.paisNacimiento!='MX'" clave="=fn('CURP_GENERICO')"}}

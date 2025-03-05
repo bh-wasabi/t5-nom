@@ -3155,6 +3155,12 @@
     {{#if detalle}}<br>{{detalle}}{{/if}}
   {{/template}}
 
+  {{#template id="diagnosticoCausaExterna"}}
+    {{#if causaExterna}}<br>Causa Externa: {{_causaExterna}}{{/if}}
+    {{#if descripcionCausaExterna}}<br>Descripción: {{descripcionCausaExterna}}{{/if}}
+    {{#if folioLesion}}<br>Folio Lesión: {{folioLesion}}{{/if}}
+  {{/template}}  
+
   {{#template id="direccion"}}
     {{#if noEsMexico}}
       {{calle}} {{numeroExterior}} {{numeroInterior}}
@@ -6823,7 +6829,7 @@
     {{#if dentaduras}}<br>Dentaduras o placas parciales: {{_dentaduras}}{{/if}}
     {{#if tatuaje}}<br>Tatuaje o maquillaje permanente: {{_tatuaje}}{{/if}}
     {{#if perforacion}}<br>Perforación (piercing) del cuerpo: {{_perforacion}}{{/if}}
-    {{#if audifono}}<br>Audífono (quíteselo antes de entrar a la sala del escáner RM: {{_audifono}}{{/if}}
+    {{#if audifono}}<br>Audífono (quíteselo antes de entrar a la sala del escáner RM): {{_audifono}}{{/if}}
     {{#if otroImplante}}<br>Otro implante: {{_otroImplante}}{{/if}}
     {{#if tieneOtroImplante}}{{#if describaOtroImplante}}<br>Describa: {{describaOtroImplante}}{{/if}}{{/if}}
     {{#if problemaRespiratorio}}<br>Problema respiratorio o desorden del movimiento: {{_problemaRespiratorio}}{{/if}}

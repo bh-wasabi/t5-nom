@@ -37,15 +37,6 @@
   		{{/update}}
   	{{/onChange}}
 	{{/section}}
-  {{#view id="egresosPaciente"}}
-    {{#find limit="-1"}}
-      {{include field="_created"}}
-      {{include field="base"}}
-      {{include field="persona"}}
-      {{filter field="base.estatus" eq="='afectado'"}}
-      {{filter condition="=persona" field="persona.id" eq="=persona"}}
-    {{/find}}
-  {{/view}}
   {{#view id="totalEgresos"}}
     {{#pipeline}}
       {{filter field="_created.date" gte="=calc.fromYearMonth(ejercicio,periodo)" required="true"}}

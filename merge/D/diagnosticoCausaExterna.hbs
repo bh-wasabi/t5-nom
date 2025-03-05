@@ -1,0 +1,10 @@
+{{#define id="diagnosticoCausaExterna"}}
+  {{#section id="base"}}
+    {{field id="esEgreso" type="expr" value="=calc.in(docType,['notaTempEgresos','notaEgresos','notaSeulEgreso'])"}}
+    {{#field id="causaExterna"}}
+      {{#onChange clearFields="descripcionCauseExterna,folioLesion"}}
+        {{set docType="=_parentDoc._type"}}
+      {{/onChange}}
+    {{/field}}
+  {{/section}}
+{{/define}}

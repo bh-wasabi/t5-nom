@@ -1,5 +1,6 @@
 {{#define id="notaEvolucion"}}
   {{#section id="base"}}
+    {{validator type="expr" validIf="true" log="=otrosDiagnosticos"}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')), @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico)" message="Tiene Diagnósticos Duplicados"}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.validoSeul, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.validoSeul, calc.pluckRef(@otrosDiagnosticos, 'base.validoSeul')), null, 'PARTO')" message="Tiene Diagnósticos de tipo PARTO Duplicados"}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.validoSeul, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.validoSeul, calc.pluckRef(@otrosDiagnosticos, 'base.validoSeul')), null, 'ABORTO')" message="Tiene Diagnósticos de tipo ABORTO Duplicados"}}
@@ -10,6 +11,19 @@
     {{#find limit="-1"}}
       {{include field="_name"}}
       {{include field="base.otrosDiagnosticos"}}
+      {{filter field="base.estatus" eq="afectado"}}
+      {{filter field="persona.id" eq="=persona"}}
+      {{sort field="_created.date" direction="desc"}}
+    {{/find}}
+  {{/view}}
+
+  {{#view id="ultimaEvolucion"}}
+    {{#find limit="1"}}
+      {{include field="_name"}}
+      {{include field="base.afeccionPrincipal"}}
+      {{include field="base._afeccionPrincipal"}}
+      {{include field="base.otrosDiagnosticos"}}
+      {{include field="base._otrosDiagnosticos"}}
       {{filter field="base.estatus" eq="afectado"}}
       {{filter field="persona.id" eq="=persona"}}
       {{sort field="_created.date" direction="desc"}}

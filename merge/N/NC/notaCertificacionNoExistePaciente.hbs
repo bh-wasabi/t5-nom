@@ -1,5 +1,5 @@
 {{#define id="notaCertificacionNoExistePaciente"}}
-  {{action id="afectar" confirm="=calc.contieneMalaPalabra(base.paciente.base.clave)" confirmWidth="400" confirmHeight="400" confirmMessage="='CURP contiene palabra altisonante (' + base.paciente.base.clave.substr(0,4) + ')<br>Si desea continuar presione Sí.<br>De lo contrario, presione No y modifique el dato colocando una X en el segundo caracter.'"}}
+  {{action id="afectar" confirm="=calc.contieneMalaPalabra(base.paciente.base.clave)||(base.paciente.base.tipoAtencion!='consultaExterna'&&base.paciente.base.genero=='intersexual')" confirmWidth="400" confirmHeight="400" confirmMessage="=calc.contieneMalaPalabra(base.paciente.base.clave)?'CURP contiene palabra altisonante (' + base.paciente.base.clave.substr(0,4) + ')<br>Si desea continuar presione Sí.<br>De lo contrario, presione No y modifique el dato colocando una X en el segundo caracter.':(base.paciente.base.tipoAtencion!='consultaExterna'&&base.paciente.base.genero=='intersexual')?'Se generará registro de paciente Intersexual<br>¿Desea continuar?':''"}}
 
   {{#section id="base"}}
     {{validator type="expr" validIf="=verificacionBusqueda=='si'" message="Falta Certificar"}}
