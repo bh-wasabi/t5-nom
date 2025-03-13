@@ -27,6 +27,7 @@
   		{{/update}}
   	{{/onChange}}
     {{validator type="expr" notValidIf="=@folioCertificadoDefuncion&&fn('validaCertificadoDefuncion',@folioCertificadoDefuncion)" message="Certificado Defunción Inválido"}}
+    {{validator type="expr" notValidIf="=@folioCertificadoMuerteFetal&&fn('validaCertificadoMuerteFetal',@folioCertificadoMuerteFetal)" message="Certificado Muerte Fetal Inválido"}}
     {{validator type="expr" notValidIf="=condicionNacimiento=='nacidoVivo'&&reanimacionNeonatal=='noAplica'" message="Reanimación Neonatal inválido"}}
     {{validator type="expr" notValidIf="=condicionNacimiento=='nacidoVivo'&&alojamientoConjunto=='noAplica'" message="Alojamiento Conjunto inválido"}}
     {{validator type="expr" notValidIf="=condicionNacimiento=='nacidoVivo'&&lactanciaExclusiva=='noAplica'" message="Lactancia Exclusiva inválida"}}

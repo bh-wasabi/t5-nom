@@ -2724,6 +2724,12 @@
     {{default return="=@detalle.notaPlanAltaEnfermeria.contexto.episodio==@contexto.episodio?null:'Falta Nota Plan Alta Enfermería'"}}
   {{/function}}
 
+  {{#function id="validarPlanAltaEnfermeriaExiste"}}
+    {{define type="param" id="contexto"}}
+    {{define type="param" id="detalle" default="={}"}}
+    {{default return="=@detalle.notaPlanAltaEnfermeria.contexto.episodio==@contexto.episodio?'Ya Existe Nota Plan Alta Enfermería':null"}}
+  {{/function}}
+
   {{#function id="validarNotaAltaServicio"}}
     {{define type="param" id="otrosDiagnosticos"}}
     {{define type="param" id="seleccionarOtrosDiagnosticos"}}
@@ -2745,6 +2751,46 @@
     {{when condition="=@esPsicologoPsiquiatra&&!calc.in(@seRealizoPsicoterapia,['grupal','pareja','familiar'])&&@servicioAtencion=='PAIDOPSIQUIATRÍA'&&@edad>=18" return="'Servicio Atención PAIDOPSIQUIATRÍA válido para terapia GRUPAL, PAREJA o FAMILIAR'"}}
     {{when condition="=!@esPsicologoPsiquiatra&&calc.in(@servicioAtencion,['GERONTOLOGÍA','PSICOGERIATRÍA'])&&@edad<60" return="='Servicio Atención ' + @servicioAtencion + ' Inválido para la Edad del Paciente'"}}
     {{when condition="=!@esPsicologoPsiquiatra&&@servicioAtencion=='PAIDOPSIQUIATRÍA'&&@edad>=18" return="='Servicio Atención ' + @servicioAtencion + ' Inválido para la Edad del Paciente'"}}
+    {{default return=""}}
+  {{/function}}
+
+  {{#function id="validarCausaExterna"}}
+    {{define type="param" id="afeccionPrincipal" default="{}" notNull="true"}}
+    {{define type="param" id="afeccionPrincipalReseleccionada" default="{}" notNull="true"}}
+    {{define type="param" id="otrosDiagnosticos" default="[]" notNull="true"}}
+    {{define type="param" id="causaExterna" default="{}" notNull="true"}}
+    {{when condition="=(calc.getRef(@afeccionPrincipal,'base.tieneCausaExterna')||calc.getRef(@afeccionPrincipalReseleccionada,'base.tieneCausaExterna')||!calc.isEmpty(@otrosDiagnosticos)&&calc.pluckRef(@otrosDiagnosticos,'base.tieneCausaExterna').includes(true))&&calc.isEmpty(calc.getRef(@causaExterna,'base.causaExterna'))" return="'Falta Indicar Causa Externa'"}}
+    {{when condition="=(calc.getRef(@afeccionPrincipal,'base.tieneCausaExterna')||calc.getRef(@afeccionPrincipalReseleccionada,'base.tieneCausaExterna')||!calc.isEmpty(@otrosDiagnosticos)&&calc.pluckRef(@otrosDiagnosticos,'base.tieneCausaExterna').includes(true))&&calc.isEmpty(calc.getRef(@causaExterna,'base.descripcionCausaExterna'))" return="'Falta Indicar Descripción Causa Externa'"}}
+    {{when condition="=(calc.getRef(@afeccionPrincipal,'base.tieneFolioLesion')||calc.getRef(@afeccionPrincipalReseleccionada,'base.tieneFolioLesion'))&&calc.isEmpty(calc.getRef(@causaExterna,'base.folioLesion'))" return="'Falta Indicar Folio Lesión'"}}
+    {{when condition="=!(calc.getRef(@afeccionPrincipal,'base.tieneCausaExterna')||calc.getRef(@afeccionPrincipalReseleccionada,'base.tieneCausaExterna')||!calc.isEmpty(@otrosDiagnosticos)&&calc.pluckRef(@otrosDiagnosticos,'base.tieneCausaExterna').includes(true))&&!calc.isEmpty(calc.getRef(@causaExterna,'base.causaExterna'))" return="'Falta Diagnóstico que requiera Causa Externa'"}}
+    {{when condition="=!(calc.getRef(@afeccionPrincipal,'base.tieneCausaExterna')||calc.getRef(@afeccionPrincipalReseleccionada,'base.tieneCausaExterna')||!calc.isEmpty(@otrosDiagnosticos)&&calc.pluckRef(@otrosDiagnosticos,'base.tieneCausaExterna').includes(true))&&!calc.isEmpty(calc.getRef(@causaExterna,'base.descripcionCausaExterna'))" return="'Falta Diagnóstico que requiera Descripción Causa Externa'"}}
+    {{when condition="=!(calc.getRef(@afeccionPrincipal,'base.tieneFolioLesion')||calc.getRef(@afeccionPrincipalReseleccionada,'base.tieneFolioLesion'))&&!calc.isEmpty(calc.getRef(@causaExterna,'base.folioLesion'))" return="'Falta Diagnóstico que requiera Folio Lesión'"}}
+    {{default return="''"}}
+  {{/function}}
+
+  {{#function id="obtenerDatosProcedimiento"}}
+    {{define type="param" id="parentType"}}
+    {{define type="param" id="campo"}}
+    {{define type="param" id="base"}}
+    {{define type="param" id="parentDoc"}}
+    {{when condition="=parentType=='notaSolicitudProcedimiento'&&campo=='procedimientoCie9'" return="=base.procedimiento.base.codigoCie9"}}
+    {{when condition="=parentType=='notaSolicitudProcedimiento'&&campo=='limiteSexo'" return="=base.procedimiento.base.limiteSexo"}}
+    {{when condition="=parentType=='notaSolicitudProcedimiento'&&campo=='limiteInferior'" return="=base.procedimiento.base.limiteInferior"}}
+    {{when condition="=parentType=='notaSolicitudProcedimiento'&&campo=='limiteSuperior'" return="=base.procedimiento.base.limiteSuperior"}}
+    {{when condition="=parentType=='notaSolicitudProcedimiento'&&campo=='otrasValidaciones'" return="=base.procedimiento.base.otrasValidaciones"}}
+    {{when condition="=parentType=='notaSolicitudProcedimiento'&&campo=='excedeLimiteEdad'" return="=calc.meetsAgeLimit(base.procedimiento.base.limiteInferior, null, parentDoc.persona.fechaNacimiento, true, moment(parentDoc.base.fechaEgreso).diff(parentDoc.persona.fechaNacimiento,'years')<1?parentDoc._type=='notaSeulEgreso'?parentDoc.base.fechaIngresoHospitalario:parentDoc.base.fechaIngreso:parentDoc.base.fechaEgreso, parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(base.procedimiento.base.limiteSuperior, null, parentDoc.persona.fechaNacimiento, false, moment(parentDoc.base.fechaEgreso).diff(parentDoc.persona.fechaNacimiento,'years')<1?parentDoc._type=='notaSeulEgreso'?parentDoc.base.fechaIngresoHospitalario:parentDoc.base.fechaIngreso:parentDoc.base.fechaEgreso, parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
+    {{when condition="=parentType=='notaSolicitudCirugia'&&campo=='procedimientoCie9'" return="=base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.cirugiaCie9"}}
+    {{when condition="=parentType=='notaSolicitudCirugia'&&campo=='limiteSexo'" return="=base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSexo"}}
+    {{when condition="=parentType=='notaSolicitudCirugia'&&campo=='limiteInferior'" return="=base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteInferior"}}
+    {{when condition="=parentType=='notaSolicitudCirugia'&&campo=='limiteSuperior'" return="=base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSuperior"}}
+    {{when condition="=parentType=='notaSolicitudCirugia'&&campo=='otrasValidaciones'" return="=base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.otrasValidaciones"}}
+    {{when condition="=parentType=='notaSolicitudCirugia'&&campo=='excedeLimiteEdad'" return="=calc.meetsAgeLimit(base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteInferior, null, parentDoc.persona.fechaNacimiento, true, moment(parentDoc.base.fechaEgreso).diff(parentDoc.persona.fechaNacimiento,'years')<1?parentDoc._type=='notaSeulEgreso'?parentDoc.base.fechaIngresoHospitalario:parentDoc.base.fechaIngreso:parentDoc.base.fechaEgreso, parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSuperior, null, parentDoc.persona.fechaNacimiento, false, moment(parentDoc.base.fechaEgreso).diff(parentDoc.persona.fechaNacimiento,'years')<1?parentDoc._type=='notaSeulEgreso'?parentDoc.base.fechaIngresoHospitalario:parentDoc.base.fechaIngreso:parentDoc.base.fechaEgreso, parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
+    {{when condition="=parentType=='notaSolicitudTococirugia'&&campo=='procedimientoCie9'" return="=base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.cirugiaCie9"}}
+    {{when condition="=parentType=='notaSolicitudTococirugia'&&campo=='limiteSexo'" return="=base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSexo"}}
+    {{when condition="=parentType=='notaSolicitudTococirugia'&&campo=='limiteInferior'" return="=base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteInferior"}}
+    {{when condition="=parentType=='notaSolicitudTococirugia'&&campo=='limiteSuperior'" return="=base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSuperior"}}
+    {{when condition="=parentType=='notaSolicitudTococirugia'&&campo=='otrasValidaciones'" return="=base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.otrasValidaciones"}}
+    {{when condition="=parentType=='notaSolicitudTococirugia'&&campo=='excedeLimiteEdad'" return="=calc.meetsAgeLimit(base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteInferior, null, parentDoc.persona.fechaNacimiento, true, moment(parentDoc.base.fechaEgreso).diff(parentDoc.persona.fechaNacimiento,'years')<1?parentDoc._type=='notaSeulEgreso'?parentDoc.base.fechaIngresoHospitalario:parentDoc.base.fechaIngreso:parentDoc.base.fechaEgreso, parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSuperior, null, parentDoc.persona.fechaNacimiento, false, moment(parentDoc.base.fechaEgreso).diff(parentDoc.persona.fechaNacimiento,'years')<1?parentDoc._type=='notaSeulEgreso'?parentDoc.base.fechaIngresoHospitalario:parentDoc.base.fechaIngreso:parentDoc.base.fechaEgreso, parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
     {{default return=""}}
   {{/function}}
 {{/define}}

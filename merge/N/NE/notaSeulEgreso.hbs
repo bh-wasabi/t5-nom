@@ -20,7 +20,7 @@
       {{onChange clearFields="notificoMP,folioCertificadoDefuncion,signosVitales,fechaHoraDefuncion,cluesTraslado,cluesEstatus,cluesFechaBaja"}}
     {{/field}}
     {{#field id="mujerFertil"}}
-      {{onChange clearFields="datosMujer,datosMujerEmbarazo,antecedentesEmbarazos,metodoAnticonceptivo,otroMetodo"}}
+      {{onChange clearFields="metodoAnticonceptivo,otroMetodo"}}
     {{/field}}
     {{#field id="cluesTraslado"}}
       {{#onChange clearFields="cluesEstatus,cluesFechaBaja"}}
@@ -36,7 +36,7 @@
         {{set foliosUtilizadosDefuncion="=_.compact([].concat([@folioCertificadoDefuncion],calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProducto'),'base.folioCertificadoDefuncion'),calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProductoAborto'),'base.folioCertificadoDefuncion')))"}}
   		{{/update}}
   	{{/onChange}}
-	{{/section}}
+  {{/section}}
   {{#view id="totalEgresos"}}
     {{#pipeline}}
       {{filter field="_created.date" gte="=calc.fromYearMonth(ejercicio,periodo)" required="true"}}

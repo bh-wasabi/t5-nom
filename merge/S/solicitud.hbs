@@ -371,6 +371,7 @@
       {{include field="control._subMoment"}}
       {{include field="base.procedimiento"}}
       {{include field="base.cirugia"}}
+      {{include field="base.tococirugia"}}
       {{filter field="_updated.moment" eq="='finalizado'"}}
       {{filter condition="=persona" field="persona.id" eq="=persona"}}
       {{filter condition="=servicio" field="base.servicio" eq="=servicio"}}
@@ -379,7 +380,7 @@
       {{filter condition="=tipoSolicitud" field="base.tipoSolicitud" in="=tipoSolicitud"}}
       {{sort field="_moment.finalizado.date" direction="desc"}}
     {{/find}}
-    {{map field="procedimiento" type="expr" value="=calc.isEmpty(base.procedimiento)?base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base._cirugiaCie9:base.procedimiento.base._codigoCie9"}}
+    {{map field="procedimiento" type="expr" value="=calc.isEmpty(base.procedimiento)?calc.isEmpty(base.cirugia)?base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base._cirugiaCie9:base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base._cirugiaCie9:base.procedimiento.base._codigoCie9"}}
   {{/view}}
 
   {{#view id="reporteConsultaExterna"}}

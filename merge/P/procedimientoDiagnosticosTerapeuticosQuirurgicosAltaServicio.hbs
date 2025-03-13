@@ -4,16 +4,15 @@
     {{#field id="procedimientosRealizados"}}
       {{#editor display="procedimiento"}}
         {{param persona="=_mainDoc.persona.id"}}
-        {{param tipoSolicitud="procedimiento,cirugia"}}
+        {{param tipoSolicitud="procedimiento,cirugia,tococirugia"}}
         {{#onChange clearFields="enQuirofanoOFuera,tipoAnestesia,descripcionProcedimiento"}}
-          {{set procedimientoCie9="=_parent.type=='notaSolicitudProcedimiento'?base.procedimiento.base.codigoCie9:base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.cirugiaCie9"}}
-          {{set codigoCie9="=_parent.type=='notaSolicitudProcedimiento'?base.procedimiento.base.codigoCie9:base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.cirugiaCie9"}}
-          {{set limiteSexo="=_parent.type=='notaSolicitudProcedimiento'?base.procedimiento.base.limiteSexo:base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSexo"}}
-          {{set limiteInferior="=_parent.type=='notaSolicitudProcedimiento'?base.procedimiento.base.limiteInferior:base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteInferior"}}
-          {{set limiteSuperior="=_parent.type=='notaSolicitudProcedimiento'?base.procedimiento.base.limiteSuperior:base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSuperior"}}
-          {{!-- calc.meetsAgeLimit(valor, desde, fechaNacimiento, checarInferior, hoy, edadDesconocida) --}}
-          {{set excedeLimiteEdad="=calc.meetsAgeLimit(_parent.type=='notaSolicitudProcedimiento'?base.procedimiento.base.limiteInferior:base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteInferior, null, _parentDoc.persona.fechaNacimiento, true, moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years')<1?_parentDoc._type=='notaSeulEgreso'?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaIngreso:_parentDoc.base.fechaEgreso, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(_parent.type=='notaSolicitudProcedimiento'?base.procedimiento.base.limiteSuperior:base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSuperior, null, _parentDoc.persona.fechaNacimiento, false, moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years')<1?_parentDoc._type=='notaSeulEgreso'?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaIngreso:_parentDoc.base.fechaEgreso, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
-          {{set otrasValidaciones="=_parent.type=='notaSolicitudProcedimiento'?base.procedimiento.base.otrasValidaciones:base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.otrasValidaciones"}}
+          {{set procedimientoCie9="=fn('obtenerDatosProcedimiento',_parent.type,'procedimientoCie9',base)"}}
+          {{set codigoCie9="=fn('obtenerDatosProcedimiento',_parent.type,'procedimientoCie9',base)"}}
+          {{set limiteSexo="=fn('obtenerDatosProcedimiento',_parent.type,'limiteSexo',base)"}}
+          {{set limiteInferior="=fn('obtenerDatosProcedimiento',_parent.type,'limiteInferior',base)"}}
+          {{set limiteSuperior="=fn('obtenerDatosProcedimiento',_parent.type,'limiteSuperior',base)"}}
+          {{set excedeLimiteEdad="=fn('obtenerDatosProcedimiento',_parent.type,'excedeLimiteEdad',base,_parentDoc)"}}
+          {{set otrasValidaciones="=fn('obtenerDatosProcedimiento',_parent.type,'otrasValidaciones',base)"}}
         {{/onChange}}
       {{/editor}}
     {{/field}}

@@ -1,10 +1,10 @@
 {{#define id="diagnosticoSeulPrincipal"}}
   {{#section id="base"}}
     {{!-- Se dejan de mostrar los campos Causa Externa y Folio Lesión porque se integraron al embed diagnosticoCausaExterna --}}
-    {{field id="tieneCausaExterna" type="expr" value="=calc.in('CAUSA',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaEgresos','notaTempEgresos','notaSeulEgreso','notaLesiones','notaTempLesiones','notaSeulLesiones'])"}}
-    {{field id="tieneFolioLesion" type="expr" value="=calc.in('FOLIO_LESION',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaEgresos','notaSeulEgreso'])"}}
+    {{field id="tieneCausaExterna" type="expr" value="=calc.in('CAUSA',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaEgresos','notaTempEgresos','notaSeulEgreso','notaLesiones','notaTempLesiones','notaSeulLesiones','notaEvolucion'])"}}
+    {{field id="tieneFolioLesion" type="expr" value="=calc.in('FOLIO_LESION',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaEgresos','notaSeulEgreso','notaEvolucion'])"}}
     {{!-- Se dejan de mostrar los campos Causa Externa y Folio Lesión porque se integraron al embed diagnosticoCausaExterna --}}
-    {{field id="tieneMorfologia" type="expr" value="=calc.in('MORFOLOGIA',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaEgresos','notaSeulEgreso'])"}}
+    {{field id="tieneMorfologia" type="expr" value="=calc.in('MORFOLOGIA',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaEgresos','notaSeulEgreso','notaEvolucion'])"}}
     {{field id="tienePlanHidratacion" type="expr" value="=calc.in('PLAN_HIDRATACION',calc.splitAndTrim(requiereCampos))&&edadActual<=5&&calc.in(docType,['notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaUrgencias','notaEvolucion'])"}}
     {{field id="tienePlanInfeccionesRespiratorias" type="expr" value="=calc.in('PLAN_RESPIRATORIAS',calc.splitAndTrim(requiereCampos))&&edadActual<=5&&calc.in(docType,['notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaUrgencias','notaEvolucion'])"}}
     {{#field id="diagnostico"}}

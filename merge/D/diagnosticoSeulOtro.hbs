@@ -1,8 +1,8 @@
 {{#define id="diagnosticoSeulOtro"}}
   {{#section id="base"}}
-    {{field id="tieneCausaExterna" type="expr" value="=calc.in('CAUSA',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaSeulEgreso','notaTempLesiones','notaSeulLesiones'])"}}
-    {{field id="tieneMorfologia" type="expr" value="=calc.in('MORFOLOGIA',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaSeulEgreso'])"}}
-    {{field id="tieneFolioLesion" type="expr" value="=calc.in('FOLIO_LESION',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaSeulEgreso'])"}}
+    {{field id="tieneCausaExterna" type="expr" value="=calc.in('CAUSA',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaSeulEgreso','notaTempLesiones','notaSeulLesiones','notaEvolucion'])"}}
+    {{field id="tieneMorfologia" type="expr" value="=calc.in('MORFOLOGIA',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaSeulEgreso','notaEvolucion'])"}}
+    {{field id="tieneFolioLesion" type="expr" value="=calc.in('FOLIO_LESION',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaSeulEgreso','notaEvolucion'])"}}
     {{field id="tienePlanHidratacion" type="expr" value="=calc.in('PLAN_HIDRATACION',calc.splitAndTrim(requiereCampos))&&edadActual<5&&calc.in(docType,['notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaEvolucion'])"}}
     {{field id="tienePlanInfeccionesRespiratorias" type="expr" value="=calc.in('PLAN_RESPIRATORIAS',calc.splitAndTrim(requiereCampos))&&edadActual<5&&calc.in(docType,['notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaEvolucion'])"}}
     {{#field id="diagnostico"}}
@@ -23,6 +23,7 @@
         {{set validoSeul="=VALIDO_SEUL"}}
         {{set tipoProducto="=TIPO_PRODUCTO"}}
         {{set tipoNacimiento="=TIPO_NACIMIENTO"}}
+        {{set docType="=_parentDoc._type"}}
         {{set edadActual="=_parentDoc.persona.edadActual"}}
         {{set requiereCampos="=REQUIERE_CAMPOS"}}
       {{/onChange}}
@@ -32,5 +33,6 @@
     {{validator type="expr" validIf="=_parentDoc._type!='notaEvolucion'||calc.meetsAgeLimit(limiteSuperior, desde, _parentDoc.persona.fechaNacimiento, false, _parentDoc._type=='notaSeulEgreso'?moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaEgreso:_parentDoc.base.fechaAtencion||_parentDoc.base.fechaConsulta, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')" message="No Corresponde la Edad del Paciente con el Límite Superior"}}
     {{validator type="expr" validIf="=@detalle.length>1" message="Descripción (Mínimo 2 Caracteres)"}}
     {{validator type="expr" notValidIf="=_parentDoc.persona.genero=='intersexual'&&limiteSexo!='NO'" message="Diagnóstico Incorrecto para Intersexual"}}
+    {{validator type="expr" validIf="true" log="_doc"}}
   {{/section}}
 {{/define}}

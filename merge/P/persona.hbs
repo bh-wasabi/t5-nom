@@ -4616,6 +4616,7 @@
     {{update section="persona" transform="copiarPersona"}}
     {{#update section="base"}}
       {{set fechaAtencion="=_params.fechaAtencion"}}
+      {{set desconoceHoraIngreso="_params.desconoceHoraIngreso"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
@@ -5011,6 +5012,7 @@
       {{set horaIngreso="=fn('hospitalizacionDesde', contexto).substr(11,5)"}}
       {{set fechaEgreso="=_params.fechaEgreso"}}
       {{set horaEgreso="=(_params.fechaEgreso).substr(11,5)"}}
+      {{set desconoceHoraEgreso="=_params.desconoceHoraEgreso"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
@@ -5178,6 +5180,10 @@
       {{set _afeccionPrincipalReseleccionada="=contexto.episodio==detalle.notaEvolucion.contexto.episodio&&detalle.notaEvolucion.base._afeccionPrincipalReseleccionada"}}
       {{set otrosDiagnosticos="=contexto.episodio==detalle.notaEvolucion.contexto.episodio&&calc.recalcLimiteEdadDiagnostico(detalle.notaEvolucion.base.otrosDiagnosticos, persona.fechaNacimiento, moment(_params.fechaEgreso).diff(persona.fechaNacimiento,'years')<1?_params.fechaIngresoHospitalario:_params.fechaEgreso)"}}
       {{set _otrosDiagnosticos="=contexto.episodio==detalle.notaEvolucion.contexto.episodio&&detalle.notaEvolucion.base._otrosDiagnosticos"}}
+      {{set datosMujer="=contexto.episodio==detalle.notaAtencionParto.contexto.episodio&&detalle.notaAtencionParto.base.datosMujer"}}
+      {{set _datosMujer="=contexto.episodio==detalle.notaAtencionParto.contexto.episodio&&detalle.notaAtencionParto.base._datosMujer"}}
+      {{set antecedentesEmbarazos="=contexto.episodio==detalle.notaAtencionParto.contexto.episodio&&detalle.notaAtencionParto.base.antecedentesEmbarazos"}}
+      {{set _antecedentesEmbarazos="=contexto.episodio==detalle.notaAtencionParto.contexto.episodio&&detalle.notaAtencionParto.base._antecedentesEmbarazos"}}
       {{set pacientePsiquiatrico="=calc.in(user.establishmentData.cluesTipoAbreviacion,['Y','HPSIQ','HPSIQMF'])&&calc.in(user.establishmentData.cluesSubAbreviacion,['99','NES','INP','SAP'])?'si':'no'"}}
       {{setRef ref="servicios.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
       {{setRef ref="servicios.base.genero" value="=persona.genero"}}
@@ -5412,6 +5418,7 @@
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
     {{#update section="base"}}
+      {{set fechaAtencion="=_params.fechaAtencion"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
@@ -5432,6 +5439,10 @@
       {{set esCuentaAbierta="=fn('cuentaAbierta', contexto)"}}
       {{set tipoEpisodio="=fn('tipoEpisodio', contexto)"}}
       {{set hospitalizacionDesde="=fn('hospitalizacionDesde', contexto)"}}
+      {{set signosVitales="=detalle.signosVitales"}}
+      {{set _signosVitales="=detalle._signosVitales"}}
+      {{set somatometria="=detalle.somatometria"}}
+      {{set _somatometria="=detalle._somatometria"}}
     {{/update}}
     {{#update section="base" condition="=_.isEmpty(farmaciaHoy)"}}
       {{set medicamento="=detalle.medicamentoActual&&calc.newDoc(detalle.medicamentoActual, 'medicamento', 'base.informacionSolicitud', 'base.hasta', 'base.fechaHoraRequerida')"}}
@@ -5795,6 +5806,7 @@
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
     {{#update section="base"}}
+      {{set fechaAtencion="=_params.fechaAtencion"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
@@ -5895,6 +5907,7 @@
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
     {{#update section="base"}}
+      {{set fechaAtencion="=_params.fechaAtencion"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
@@ -5903,6 +5916,27 @@
       {{set _medico="=contexto._medico||contexto.ingreso._medico"}}     
       {{set tipoSanguineo="=persona.tipoSanguineo"}}
       {{set _tipoSanguineo="=persona._tipoSanguineo"}}
+    {{/update}}
+    {{update section="resumen" value="=resumen" temp="true"}}
+  {{/transform}}
+
+  {{#transform id="copiarResumenAtencionParto"}}
+    {{update section="contexto" value="=contexto"}}
+    {{update section="persona" transform="copiarPersona"}}
+    {{#update section="base"}}
+      {{set fechaAtencion="=_params.fechaAtencion"}}
+      {{set esMujer="=persona.esMujer"}}
+      {{set esHombre="=!esMujer"}}
+      {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
+      {{set esNeonatal="=calc.fromNowDays(persona.fechaNacimiento)<29"}}
+      {{set medico="=contexto.medico||contexto.ingreso.medico"}}
+      {{set _medico="=contexto._medico||contexto.ingreso._medico"}}     
+      {{set tipoSanguineo="=persona.tipoSanguineo"}}
+      {{set _tipoSanguineo="=persona._tipoSanguineo"}}
+      {{set afeccionPrincipal="=contexto.episodio==detalle.notaEvolucion.contexto.episodio&&detalle.notaEvolucion.base.afeccionPrincipal"}}
+      {{set _afeccionPrincipal="=contexto.episodio==detalle.notaEvolucion.contexto.episodio&&detalle.notaEvolucion.base._afeccionPrincipal"}}
+      {{set otrosDiagnosticos="=contexto.episodio==detalle.notaEvolucion.contexto.episodio&&detalle.notaEvolucion.base.otrosDiagnosticos"}}
+      {{set _otrosDiagnosticos="=contexto.episodio==detalle.notaEvolucion.contexto.episodio&&detalle.notaEvolucion.base._otrosDiagnosticos"}}
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
   {{/transform}}
@@ -5979,11 +6013,12 @@
     {{/update}}
   {{/transform}} --}}
 
-
   {{#transform id="copiarSolicitudTipoCirugia"}}
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
+    {{update section="nomDatos" transform="copiarNomDatos"}}
     {{#update section="base"}}
+      {{set fechaAtencion="=_params.fechaAtencion"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
@@ -6001,6 +6036,10 @@
       {{set _listaPrecios="=fn('_listaPrecios', detalle, contexto, persona)"}}
       {{set tipoEpisodio="=fn('tipoEpisodio', contexto)"}}
       {{set hospitalizacionDesde="=fn('hospitalizacionDesde', contexto)"}}
+      {{set afeccionPrincipal="=_items&&calc.getRef(_items[0], 'base.afeccionPrincipal')"}}
+      {{set _afeccionPrincipal="=_items&&calc.getRef(_items[0], 'base._afeccionPrincipal')"}}
+      {{set otrosDiagnosticos="=_items&&calc.getRef(_items[0], 'base.otrosDiagnosticos')"}}
+      {{set _otrosDiagnosticos="=_items&&calc.getRef(_items[0], 'base._otrosDiagnosticos')"}}
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
   {{/transform}}
@@ -11640,7 +11679,7 @@
 
   {{action id="menuNotasClinicas" hide="true" type="menu" menu="menuNotasClinicas" label="Notas Clínicas" color="deep-orange"}}
   {{#menu id="menuNotasClinicas" color="deep-orange"}}
-    {{item action="notaAdministracionDiagnosticos" text="Administración Diagnosticos"}}
+    {{!-- {{item action="notaAdministracionDiagnosticos" text="Administración Diagnosticos"}} --}}
     {{item action="notaHistoriaClinica" text="Historia Clínica"}}
     [.#if n1.]
     {{item action="notaAtencionMujer" text="Atención a la Mujer"}}
@@ -11670,7 +11709,7 @@
 
   {{action id="menuNotasClinicasHospitalizacion" hide="true" type="menu" menu="menuNotasClinicasHospitalizacion" label="Notas Clínicas Hospitalización" color="deep-orange"}}
   {{#menu id="menuNotasClinicasHospitalizacion" color="deep-orange"}}
-    {{item action="notaHistoriaClinica" text="Historia Clínica"}}
+    {{!-- {{item action="notaHistoriaClinica" text="Historia Clínica"}} --}}
     {{item action="notaContrarreferencia" text="Contrarreferencia"}}
     [.#if esCentral.]
     {{item action="notaRegistroReferencia" text="Registro Referencia"}}
@@ -12418,7 +12457,7 @@
     {{param desde="=fn('hospitalizacionDesde', contexto)"}}
     {{!-- {{ask field="fechaIngreso" type="datetime" label="Fecha Ingreso" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()"}} --}}
     {{ask field="fechaEgreso" type="datetime" label="Fecha Egreso" required="true" value="=moment().format()" min="=moment(fn('hospitalizacionDesde', contexto)).add('minutes',1)" max="=moment().add('minutes',1).format()" errorMessage="Fecha Egreso Incorrecta"}}
-    {{ask field="desconoceHora" type="select" label="Desconoce Hora Egreso" keys="si,no" names="Si,No" required="true"}}
+    {{ask field="desconoceHoraEgreso" type="select" label="Desconoce Hora Egreso" keys="si,no" names="Si,No" required="true"}}
   {{/action}}
   {{action id="notaAltaServicioAjuste" source="notaAltaServicioAjuste" label="Alta Servicio (Ajuste)" transform="copiarDiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" superUser="true"}}
 
@@ -12450,7 +12489,7 @@
     visibleMode="close" 
     color="deep-orange" 
     onlyPost="true" 
-    error="=fn('errorDatosSeguro', persona, contexto, detalle)||fn('validarFechaEgresoUrgencias',persona.fechaNacimiento,fn('hospitalizacionDesde', contexto),_ask.fechaEgreso)"
+    error="=fn('errorDatosSeguro', persona, contexto, detalle)||fn('validarPlanAltaEnfermeriaExiste', contexto, detalle)||fn('validarFechaEgresoUrgencias',persona.fechaNacimiento,fn('hospitalizacionDesde', contexto),_ask.fechaEgreso)"
     errorType="info"
   }}
     {{!-- {{ask field="fechaIngreso" type="datetime" label="Fecha Ingreso" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()"}} --}}
@@ -12561,7 +12600,9 @@
   {{action id="notaTiemposCoagulacion" source="notaTiemposCoagulacion" label="Tiempos de Coagulación" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaParametrosVentilatorios" source="notaParametrosVentilatorios" label="Parámetros Ventilatorios" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
 
-  {{action id="notaInformacionEmbarazoPartograma" source="notaInformacionEmbarazoPartograma" label="Información Embarazo - Partograma" transform="copiarEmbarazo" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{#action id="notaInformacionEmbarazoPartograma" source="notaInformacionEmbarazoPartograma" label="Información Embarazo - Partograma" transform="copiarEmbarazo" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+    {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
+  {{/action}}
   {{action id="notaExploracionFisicaPartograma" source="notaExploracionFisicaPartograma" label="Exploración Física - Partograma" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaRegistroPeriodicoPartograma" source="notaRegistroPeriodicoPartograma" label="Registro Periódico - Partograma" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
 
@@ -12587,7 +12628,7 @@
   {{action id="notaSolicitudCirugiaUrgente" source="notaSolicitudCirugia" subType="urgente" subTypeName="Solicitud Cirugía Urgente" label="Cirugía Urgente" transform="copiarCirugiaUrgente" hide="true" type="add-subdoc" visibleMode="close" color="primary" onlyPost="true" btnSolid="true" condition="=!fn('estaInternado', contexto)"}}
   {{#action id="notaSolicitudUrgencias" source="notaSolicitudUrgencias" label="Nueva Atención Triage" transform="copiarDatosReferencia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true" condition="=!fn('estaInternado', contexto)"}}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
-    {{ask field="desconoceHora" type="select" label="Desconoce Hora Atención" keys="si,no" names="Si,No" required="true"}}
+    {{ask field="desconoceHoraIngreso" type="select" label="Desconoce Hora Atención" keys="si,no" names="Sí,No" required="true"}}
   {{/action}}
 
   {{action id="urgenciasOtros" hide="true" type="menu" menu="urgenciasOtros" label="Otros" color="deep-orange"}}  
@@ -12636,15 +12677,23 @@
   {{action id="notaReporteTamizAuditivoNeonatal" source="notaReporteTamizAuditivoNeonatal" label="Reporte Tamiz Auditivo Neonatal" transform="copiarDatosReferencia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
 
   {{!-- Anestesia --}}
-  {{action id="notaValoracionPreanestesica" source="notaValoracionPreanestesica" label="Valoración Preanestésica" transform="copiarPlan" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
+  {{#action id="notaValoracionPreanestesica" source="notaValoracionPreanestesica" label="Valoración Preanestésica" transform="copiarPlan" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+    {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
+  {{/action}}
   {{action id="notaValoracionPreperfusion" source="notaValoracionPreperfusion" label="Valoración Preperfusión" transform="copiarSolicitudTipoCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
-  {{action id="notaPostanestesica" source="notaPostanestesica" label="Postanestésica" transform="copiarSolicitudTipoCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
+  {{#action id="notaPostanestesica" source="notaPostanestesica" label="Postanestésica" transform="copiarSolicitudTipoCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaEvolucion" fromView="ultimaEvolucion"}}
+    {{param persona="_id"}}
+    {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
+  {{/action}}
   {{action id="notaUnidadCuidadosPostanestesicos" source="notaUnidadCuidadosPostanestesicos" label="Unidad Cuidados Postanestésicos" transform="copiarSolicitudTipoCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
   {{action id="notaRecuperacionAnestesica" source="notaRecuperacionAnestesica" label="Recuperación Anestésica" transform="copiarRecuperacionAnestesica" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
 
   {{!-- Cirugía --}}
   {{action id="cirugiaPreoperatoria" hide="true" type="menu" menu="cirugiaPreoperatoria" label="Preoperatoria" color="deep-orange"}}      
-  {{action id="notaPreoperatoria" source="notaPreoperatoria" label="Preoperatoria" transform="copiarSolicitudTipoCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
+  {{#action id="notaPreoperatoria" source="notaPreoperatoria" label="Preoperatoria" transform="copiarSolicitudTipoCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaEvolucion" fromView="ultimaEvolucion"}}
+    {{param persona="_id"}}
+    {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
+  {{/action}}
   {{#menu id="cirugiaPreoperatoria" color="deep-orange"}}
     {{item action="notaRegistroPreoperatorio" text="Registro Preoperatorio"}}
     {{item action="notaRequisitosPreoperatoriosAreaQuirugica" text="Requisitos Preoperatorios"}}
@@ -12686,7 +12735,10 @@
     {{item action="notaSeguridadPerfusion" text="Seguridad Perfusión"}}
   {{/menu}}
   
-  {{action id="notaPostoperatoria" source="notaPostoperatoria" label="Postoperatoria" transform="copiarSolicitudTipoCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{#action id="notaPostoperatoria" source="notaPostoperatoria" label="Postoperatoria" transform="copiarSolicitudTipoCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaEvolucion" fromView="ultimaEvolucion"}}
+    {{param persona="_id"}}
+    {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
+  {{/action}}
   {{action id="notaPostoperatoriaAjuste" source="notaPostoperatoriaAjuste" label="Postoperatoria (Ajuste)" transform="copiarSolicitudTipoCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" superUser="true"}}
   {{action id="notaCirugiaSegura" source="notaCirugiaSegura" label="Cirugía Segura" transform="copiarSolicitudTipoCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
   {{action id="notaTiemposQuirurgicos" source="notaTiemposQuirurgicos" label="Tiempos Quirúrgicos" transform="copiarSolicitudTipoCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
@@ -12701,7 +12753,9 @@
   {{!-- Ginecología y Obstetricia --}}
   {{action id="notaAtencionMujer" source="notaAtencionMujer" label="Atención a la Mujer" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" condition="=persona.esMujer"}}  
   {{action id="notaSOAP" source="notaSOAP" label="SOAP" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
-  {{action id="notaAtencionParto" source="notaAtencionParto" label="Atención Postparto" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
+  {{#action id="notaAtencionParto" source="notaAtencionParto" label="Atención Postparto" transform="copiarResumenAtencionParto" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+    {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
+  {{/action}}
   {{#action id="notaHistoriaClinicaAtencionRecienNacido2" source="notaHistoriaClinicaAtencionRecienNacido2" label="Historia Clínica Atención Recien Nacido" transform="copiarEstudioSocioeconomico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="persona" fromView="datosMadre"}}
     {{param id="=detalle.madre"}}
   {{/action}}

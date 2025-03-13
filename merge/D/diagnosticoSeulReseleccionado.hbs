@@ -1,8 +1,8 @@
 {{#define id="diagnosticoSeulReseleccionado"}}
   {{#section id="base"}}
-    {{field id="tieneCausaExterna" type="expr" value="=calc.in('CAUSA',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaEgresos','notaTempEgresos','notaSeulEgreso','notaLesiones','notaTempLesiones','notaSeulLesiones'])"}}
-    {{field id="tieneMorfologia" type="expr" value="=calc.in('MORFOLOGIA',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaEgresos','notaSeulEgreso'])"}}
-    {{field id="tieneFolioLesion" type="expr" value="=calc.in('FOLIO_LESION',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaEgresos','notaSeulEgreso'])"}}
+    {{field id="tieneCausaExterna" type="expr" value="=calc.in('CAUSA',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaEgresos','notaTempEgresos','notaSeulEgreso','notaLesiones','notaTempLesiones','notaSeulLesiones','notaEvolucion'])"}}
+    {{field id="tieneMorfologia" type="expr" value="=calc.in('MORFOLOGIA',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaEgresos','notaSeulEgreso','notaEvolucion'])"}}
+    {{field id="tieneFolioLesion" type="expr" value="=calc.in('FOLIO_LESION',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaEgresos','notaSeulEgreso','notaEvolucion'])"}}
     {{field id="tienePlanHidratacion" type="expr" value="=calc.in('PLAN_HIDRATACION',calc.splitAndTrim(requiereCampos))&&edadActual<5&&calc.in(docType,['notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaUrgencias','notaEvolucion'])"}}
     {{field id="mostrarSobres" type="expr" value="=calc.in(@planHidratacion,['planA','planB'])"}}
     {{field id="tienePlanInfeccionesRespiratorias" type="expr" value="=calc.in('PLAN_RESPIRATORIAS',calc.splitAndTrim(requiereCampos))&&edadActual<5&&calc.in(docType,['notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaUrgencias','notaEvolucion'])"}}
