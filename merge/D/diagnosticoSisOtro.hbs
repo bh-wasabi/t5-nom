@@ -3,7 +3,7 @@
     {{#field id="relacionTemporal"}}
       {{onChange clearFields="diagnostico,subDiagnostico,tieneConfirmacionDiagnostica"}}
     {{/field}}
-    {{field id="tieneConfirmacionDiagnostica" type="expr" value="=primeraVez=='si'&&(@cronicos=='SI'||(@cancerInfantil=='SI'&&user.others.tipoPersonalCE=='4'))"}}
+    {{field id="tieneConfirmacionDiagnostica" type="expr" value="=(primeraVez=='si'&&@cronicos=='SI')||@cancerInfantil=='SI'"}}
     {{#field id="diagnostico"}}
       {{#editor}}
         {{param esSis="=true"}}

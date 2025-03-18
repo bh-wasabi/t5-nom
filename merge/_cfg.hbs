@@ -2587,8 +2587,16 @@
     {{default return="['O800','O801','O808','O809','O810','O811','O812','O813','O814','O815','O820','O821','O822','O828','O829','O830','O831','O832','O833','O834','O838','O839']"}}
   {{/function}}
 
+  {{#function id="diagnosticoCesarea"}}
+    {{default return="['O820','O821','O822','O828','O829','O842']"}}
+  {{/function}}
+
   {{#function id="procedimientoEsterilizacion"}}
     {{default return="['6621','6622','6629','6631','6632','6639','6663']"}}
+  {{/function}}
+
+  {{#function id="procedimientoCesarea"}}
+    {{default return="['740X','741X','742X','743X','744X','7491','7499']"}}
   {{/function}}
 
   {{#function id="especifiqueProcedenciaInvalido"}}
@@ -2792,6 +2800,11 @@
     {{when condition="=parentType=='notaSolicitudTococirugia'&&campo=='otrasValidaciones'" return="=base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.otrasValidaciones"}}
     {{when condition="=parentType=='notaSolicitudTococirugia'&&campo=='excedeLimiteEdad'" return="=calc.meetsAgeLimit(base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteInferior, null, parentDoc.persona.fechaNacimiento, true, moment(parentDoc.base.fechaEgreso).diff(parentDoc.persona.fechaNacimiento,'years')<1?parentDoc._type=='notaSeulEgreso'?parentDoc.base.fechaIngresoHospitalario:parentDoc.base.fechaIngreso:parentDoc.base.fechaEgreso, parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSuperior, null, parentDoc.persona.fechaNacimiento, false, moment(parentDoc.base.fechaEgreso).diff(parentDoc.persona.fechaNacimiento,'years')<1?parentDoc._type=='notaSeulEgreso'?parentDoc.base.fechaIngresoHospitalario:parentDoc.base.fechaIngreso:parentDoc.base.fechaEgreso, parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
     {{default return=""}}
+  {{/function}}
+
+  {{#function id="obtenerFechaMaximaDosMeses"}}
+    {{define type="param" id="fecha"}}
+    {{default return="=moment.max([moment(@fecha), moment().subtract(2, 'months').startOf('day')]).format()"}}
   {{/function}}
 {{/define}}
 
