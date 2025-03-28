@@ -12897,7 +12897,7 @@
   {{#action id="notaSolicitudCirugia" source="notaSolicitudCirugia" label="Solicitud Programación Cirugía" transform="copiarCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="activos" confirm="=calc.hasValue(_items[0]._name)" confirmMessage="=_items[0]._name+'<br><strong>¿Desea Continuar?</strong>'" confirmTitle="=calc.concat('Solicitud Activa',_items[0]._created.folio)" confirmHeight="600" confirmWidth="500" btnSolid="true" error="=fn('errorDatosSeguro', persona, contexto, detalle)"}}
     {{param tipoSolicitud="='cirugia'"}}
     {{param persona="=_id"}}
-    {{ask field="fechaPropuesta" type="date" label="Fecha Propuesta para la Cirugía" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Propuesta Incorrecta"}}
+    {{ask field="fechaPropuesta" type="date" label="Fecha Propuesta para la Cirugía" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('months',6).format()" errorMessage="Fecha Propuesta Incorrecta"}}
   {{/action}}
   {{#action id="notaSolicitudCirugiaAmbulatoria" source="notaSolicitudCirugiaAmbulatoria" label="Solicitud Programación Cirugía Ambulatoria" transform="copiarCirugiaAmbulatoria" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="activos" confirm="=calc.hasValue(_items[0]._name)" confirmMessage="=_items[0]._name+'<br><strong>¿Desea Continuar?</strong>'" confirmTitle="=calc.concat('Solicitud Activa',_items[0]._created.folio)" confirmHeight="600" confirmWidth="500" btnSolid="true" error="=fn('errorDatosSeguro', persona, contexto, detalle)"}}
     {{param tipoSolicitud="='cirugiaAmbulatoria'"}}
@@ -12906,7 +12906,7 @@
   {{#action id="notaSolicitudTococirugia" source="notaSolicitudTococirugia" label="Solicitud Tococirugía" transform="copiarTococirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange"  onlyPost="true" fromSource="solicitud" fromView="activos" confirm="=calc.hasValue(_items[0]._name)" confirmMessage="=_items[0]._name+'<br><strong>¿Desea Continuar?</strong>'" confirmTitle="=calc.concat('Solicitud Activa',_items[0]._created.folio)" confirmHeight="600" confirmWidth="500" btnSolid="true" error="=fn('errorDatosSeguro', persona, contexto, detalle)"}}
     {{param tipoSolicitud="='tococirugia'"}}
     {{param persona="=_id"}}
-    {{ask field="fechaPropuesta" type="date" label="Fecha Propuesta para la Tococirugía" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Propuesta Incorrecta"}}
+    {{ask field="fechaPropuesta" type="date" label="Fecha Propuesta para la Tococirugía" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('months',6).format()" errorMessage="Fecha Propuesta Incorrecta"}}
   {{/action}}
 
   {{action id="notaSolicitudHemocomponente" source="notaSolicitudHemocomponente" label="Solicitud Hemocomponentes" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
