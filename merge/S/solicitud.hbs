@@ -6399,6 +6399,15 @@
     {{/find}}
   {{/view}}
 
+  {{#view id="resumenTableros"}}
+    {{#pipeline}}
+      {{filter field="_created.establishment" in="=user.establishment"}}
+      {{filter field="base.servicio" eq="=servicio"}}
+      {{group field="_updated.moment" as="tema"}}
+      {{group field="_id" type="count" as="conteo"}}
+    {{/pipeline}}
+  {{/view}}
+
   {{#transform id="copiar"}}
     {{update section="persona" value="=persona"}}
   {{/transform}}

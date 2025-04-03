@@ -26,6 +26,7 @@
         {{set folioCertificadoUtilizado="=@folioCertificadoDefuncion||@folioCertificadoNacimiento||@folioCertificadoMuerteFetal"}}
   		{{/update}}
   	{{/onChange}}
+    {{validator type="expr" notValidIf="=@folioCertificadoNacimiento&&fn('validaCertificadoNacimiento',@folioCertificadoNacimiento)" message="Certificado Nacimiento Inválido"}}
     {{validator type="expr" notValidIf="=@folioCertificadoDefuncion&&fn('validaCertificadoDefuncion',@folioCertificadoDefuncion)" message="Certificado Defunción Inválido"}}
     {{validator type="expr" notValidIf="=@folioCertificadoMuerteFetal&&fn('validaCertificadoMuerteFetal',@folioCertificadoMuerteFetal)" message="Certificado Muerte Fetal Inválido"}}
     {{validator type="expr" notValidIf="=condicionNacimiento=='nacidoVivo'&&reanimacionNeonatal=='noAplica'" message="Reanimación Neonatal inválido"}}
