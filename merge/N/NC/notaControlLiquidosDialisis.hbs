@@ -1,0 +1,11 @@
+{{#define id="notaControlLiquidosDialisis"}}
+  {{#section id="base"}}
+    {{#field id="controlLiquidosDialisis"}}
+      {{#onCreate}}
+        {{#update section="base"}}
+          {{set fechaHoraRegistro="=fechaHoraRegistro"}}
+        {{/update}}
+      {{/onCreate}}
+    {{/field}}
+  {{/section}}
+{{/define}}

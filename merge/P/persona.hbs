@@ -4663,6 +4663,7 @@
     {{update section="tallerHemodinamico" value="=@datos.tallerHemodinamico"}}
     {{update section="resultadosAuxiliaresDx" value="=@datos.resultadosAuxiliaresDx"}}
     {{update section="controlLiquidos" value="=@datos.controlLiquidos"}}
+    {{update section="controlLiquidosDialisis" value="=@datos.controlLiquidosDialisis"}}
     {{update section="escalas" value="=@datos.escalas"}}
     {{update section="registroEscalasPediatrica" value="=@datos.registroEscalasPediatrica"}}
     {{update section="prevencionCaidasPediatrica" value="=@datos.prevencionCaidasPediatrica"}}
@@ -10628,6 +10629,7 @@
     {{item action="notaNanda" text="Diagnósticos Enfermería (NANDA)"}}
     {{item action="notaNic" text="Intervenciones Enfermería (NIC)"}}
     {{item action="notaControlLiquidos" text="Control Líquidos"}}
+    {{item action="notaControlLiquidosDialisis" text="Control Líquidos Diálisis"}}
     {{!-- {{item action="notaPerfilGasometrico" text="Perfil Gasométrico"}} --}}
     {{item action="notaCateterSondaDrenaje" text="Catéteres, Sondas o Drenajes"}}
     {{item action="notaNoc" text="Resultados Esperados Enfermería (NOC)"}}
@@ -11446,6 +11448,7 @@
   {{action id="notaRegistroEscalas" source="notaRegistroEscalas" label="Escalas" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaRegistroEstudioHistopatologico" source="notaRegistroEstudioHistopatologico" label="Registro Estudio Histopatológico" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaControlLiquidos" source="notaControlLiquidos" label="Control Líquidos" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{action id="notaControlLiquidosDialisis" source="notaControlLiquidosDialisis" label="Control Líquidos Diálisis" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaAlergia" source="notaAlergia" label="Alergias" transform="copiarAlergia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaAntecedentes" source="notaAntecedentes" label="Antecedentes" transform="copiarAntecedentes" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{!-- {{action id="notaAntecedentesFamiliares" source="notaAntecedentesFamiliares" label="Antecedentes Familiares" transform="copiarAntecedentes" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}} --}}
