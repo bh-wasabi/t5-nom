@@ -10646,6 +10646,165 @@
     {{#if malformacionesCongenitas}}<br>Malformaciones Congenitas: {{_malformacionesCongenitas}}{{/if}}
     {{#if diagnosticoFisuraEmbarazo}}<br>Diagnóstico Fisura durante Embarazo: {{_diagnosticoFisuraEmbarazo}}{{/if}}
   {{/template}}  
+
+	{{#template id="datosDialisisHemodialisis"}}
+		{{#if tipoDialisis}}<br>Tipo Dialisis: {{_tipoDialisis}}{{/if}}
+		{{#if diasInstalado}}<br>Dias Instalación: {{diasInstalado}}{{/if}}
+		{{#if fechaValoracion}}<br>Fecha Valoración: {{date fechaValoracion "DD/MMM/YYYY"}}{{/if}}
+		{{#if resultadoValoracion}}<br>Resultado: {{resultadoValoracion}}{{/if}}
+	{{/template}}
+
+  {{#template id="datosVigilanciaAngioacceso"}}
+		{{#if tipoAngioacceso}}<br>Tipo Angioacceso: {{tipoAngioacceso}}{{/if}}
+		{{#if calibre}}<br>Calibre: {{calibre}}{{/if}}
+		{{#if fechaInstalacion}}<br>Fecha Instalación: {{date fechaInstalacion "DD/MMM/YYYY"}}{{/if}}
+		{{#if fechaCuracion}}<br>Fecha Curación: {{date fechaCuracion "DD/MMM/YYYY"}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosVigilanciaCateteres"}}
+		{{#if tipoValoracionCateter}}<br>Tipo Valoración: {{_tipoValoracionCateter}}{{/if}}
+		{{#if tipoCateter}}<br>Descripción Cateter: {{tipoCateter}}{{/if}}
+		{{#if sitioAnatomico}}<br>Sitio Anatomico: {{sitioAnatomico}}{{/if}}
+		{{#if lugarInstalacion}}<br>Lugar Instalación: {{lugarInstalacion}}{{/if}}
+		{{#if diasInstalado}}<br>Dias Instalación: {{diasInstalado}}{{/if}}
+		{{#if fechaValoracion}}<br>Fecha Valoración: {{date fechaValoracion "DD/MMM/YYYY"}}{{/if}}
+		{{#if resultadoValoracion}}<br>Resultado: {{resultadoValoracion}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosVigilanciaVentilacion"}}
+		{{#if tipoVigilanciaVentilacion}}<br>Tipo Vigilancia: {{_tipoVigilanciaVentilacion}}{{/if}}
+		{{#if diasInstalado}}<br>Días Instalación: {{diasInstalado}}{{/if}}
+		{{#if fechaValoracion}}<br>Fecha Valoración: {{date fechaValoracion "DD/MMM/YYYY"}}{{/if}}
+		{{#if resultadoValoracion}}<br>Resultado: {{resultadoValoracion}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosVigilanciaEventosQuirurgicos"}}
+		{{#if cirugiaRealizada}}<br>Cirugía Realizada: {{_cirugiaRealizada}}{{/if}}
+		{{#if fechaCirugia}}<br>Fecha Cirugia: {{date fechaCirugia "DD/MMM/YYYY"}}{{/if}}
+		{{#if tipoCirugia}}<br>Tipo Cirugia: {{tipoCirugia}}{{/if}}
+		{{#if profilaxisAntibiotica}}<br>Profilaxis Antibiótica (60 Minutos antes de la Incisión): {{profilaxisAntibiotica}}{{/if}}
+		{{#if tricotomia}}<br>Tricotomia (Con Cortador Electríco o Tijeras): {{tricotomia}}{{/if}}
+		{{#if temperaturaCorporal}}<br>Temperatura Corporal se Mantiene no Menor a 35 Grados: {{temperaturaCorporal}}{{/if}}
+		{{#if nivelesGlucosa}}<br>Niveles de Glucosa Postoperatoria se mantiene entre 110 y 180 mg/dl: {{nivelesGlucosa}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosVigilanciaCateterUrinario"}}
+		{{#if tipoValoracionCateterUrinario}}<br>Tipo Valoración Cateter Urinario: {{_tipoValoracionCateterUrinario}}{{/if}}
+		{{#if tipoCateterUrinario}}<br>Descripción Cateter: {{tipoCateterUrinario}}{{/if}}
+		{{#if sitioAnatomico}}<br>Sitio Anatomico: {{sitioAnatomico}}{{/if}}
+		{{#if lugarInstalacion}}<br>Lugar Instalación: {{lugarInstalacion}}{{/if}}
+		{{#if diasInstalado}}<br>Días Instalación: {{diasInstalado}}{{/if}}
+		{{#if fechaValoracion}}<br>Fecha Valoración: {{date fechaValoracion "DD/MMM/YYYY"}}{{/if}}
+		{{#if resultadoValoracion}}<br>Resultado: {{resultadoValoracion}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosVigilanciaDrenajes"}}
+		{{#if descripcionDrenaje}}<br>Descripción Drenaje: {{descripcionDrenaje}}{{/if}}
+		{{#if sitioAnatomico}}<br>Sitio Anatomico: {{sitioAnatomico}}{{/if}}
+		{{#if lugarInstalacion}}<br>Lugar Instalación: {{lugarInstalacion}}{{/if}}
+		{{#if diasInstalado}}<br>Días Instalación: {{diasInstalado}}{{/if}}
+		{{#if fechaValoracion}}<br>Fecha Valoración: {{date fechaValoracion "DD/MMM/YYYY"}}{{/if}}
+		{{#if resultadoValoracion}}<br>Resultado: {{resultadoValoracion}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosVigilanciaClinica"}}
+		{{#if sris}}<br>SRIS: {{_sris}}{{/if}}
+		{{#if fechaValoracion}}<br>Fecha Valoración: {{date fechaValoracion "DD/MMM/YYYY"}}{{/if}}
+		{{#if resultadoValoracion}}<br>Resultado: {{resultadoValoracion}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosVigilanciaCultivos"}}
+		{{#if tipoCultivo}}<br>Tipo Cultivo: {{tipoCultivo}}{{/if}}
+		{{#if fechaToma}}<br>Fecha Toma: {{date fechaToma "DD/MMM/YYYY"}}{{/if}}
+		{{#if microorganismo}}<br>Microorganismo: {{microorganismo}}{{/if}}
+		{{#if sensibilidad}}<br>Sensibilidad: {{sensibilidad}}{{/if}}
+		{{#if resistencia}}<br>Resistencia: {{resistencia}}{{/if}}
+		{{#if tipoAislamiento}}<br>Tipo Aislamiento: {{tipoAislamiento}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosFavi"}}
+		{{#if fechaInstalacion}}<br>Fecha Instalación: {{date fechaInstalacion "DD/MMM/YYYY"}}{{/if}}
+		{{#if fechaCuracion}}<br>Fecha Curación: {{date fechaCuracion "DD/MMM/YYYY"}}{{/if}}
+		{{#if calibreAgujas}}<br>Calibre Agujas: {{calibreAgujas}}{{/if}}
+		{{#if preHemodialisis}}<br>Pre Hemodiálisis: {{preHemodialisis}}{{/if}}
+		{{#if transHemodialisis}}<br>Trans Hemodiálisis: {{transHemodialisis}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosPlanAltaPrevencionRehabilitacion"}}
+		{{#if signosSintomasAlertaRiesgoVida}}<br>Signos y Síntomas de Alerta que Ponen en Riesgo la Vida: {{signosSintomasAlertaRiesgoVida}}{{/if}}
+		{{#if ministracionMedicamentosReaccionesAdversas}}<br>Ministración de Medicamentos y Reacciones Adversas: {{ministracionMedicamentosReaccionesAdversas}}{{/if}}
+		{{#if controlCitas}}<br>Control Citas: {{controlCitas}}{{/if}}
+		{{#if tipoDieta}}<br>Tipo Dieta: {{tipoDieta}}{{/if}}
+		{{#if habitosHigienicos}}<br>Hábitos Higiénicos: {{habitosHigienicos}}{{/if}}
+		{{#if ejercicioRecreacion}}<br>Ejercicio/Recreación: {{ejercicioRecreacion}}{{/if}}
+		{{#if ejercerValoresCreencias}}<br>Ejercer Valores y Creencias: {{ejercerValoresCreencias}}{{/if}}
+		{{#if cuidadosFistulaArteriovenosaInternaFavi}}<br>Cuidados Fístula Arteriovenosa Interna (FAVI): {{cuidadosFistulaArteriovenosaInternaFavi}}{{/if}}
+		{{#if cuidadosCateterMahurkarCasa}}<br>Cuidados Catéter Mahurkar en Casa: {{cuidadosCateterMahurkarCasa}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosFuncionamientoEquipoMedico"}}
+		{{#if tratamientoAgua}}<br>Tratamiento Agua: {{_tratamientoAgua}}{{/if}}
+		{{#if tomasOxigenoAire}}<br>Tomas Oxígeno y Aire: {{_tomasOxigenoAire}}{{/if}}
+		{{#if carroReanimacion}}<br>Carro Reanimación: {{_carroReanimacion}}{{/if}}
+		{{#if prendeFormaCorrecta}}<br>Prende Forma Correcta: {{_prendeFormaCorrecta}}{{/if}}
+		{{#if cumpleDesinfeccion}}<br>Cumple Desinfección: {{_cumpleDesinfeccion}}{{/if}}
+		{{#if pasoTest}}<br>Pasó Test: {{_pasoTest}}{{/if}}
+		{{#if datosFugaAgua}}<br>Datos Fuga Agua: {{_datosFugaAgua}}{{/if}}
+		{{#if conductividad}}<br>Conductividad: {{_conductividad}}{{/if}}
+		{{#if siObservaciones}}{{#if especifiqueObservaciones}}<br>Observaciones: {{especifiqueObservaciones}}{{/if}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosVerificacionPreHemodialisis"}}
+		{{#if pacienteCorrecto}}<br>Paciente Correcto: {{_pacienteCorrecto}}{{/if}}
+		{{#if pesoCorrecto}}<br>Peso Correcto: {{_pesoCorrecto}}{{/if}}
+		{{#if riesgoDeHemorragia}}<br>Riesgo Hemorragia: {{_riesgoDeHemorragia}}{{/if}}
+		{{#if riesgoDeHipotension}}<br>Riesgo Hipotensión: {{_riesgoDeHipotension}}{{/if}}
+		{{#if prescripcionCorrecta}}<br>Prescripción Correcta: {{_prescripcionCorrecta}}{{/if}}
+		{{#if alergias}}<br>Alergias: {{_alergias}}{{/if}}
+		{{#if realizoDobleVerificacionDeDosisHeparina}}<br>Realizó Doble Verificación Dosis Heparina: {{_realizoDobleVerificacionDeDosisHeparina}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosTiempoFuera"}}
+		{{#if pesoCorrecto}}<br>Paciente Correcto: {{_pesoCorrecto}}{{/if}}
+		{{#if filtroCorrecto}}<br>Filtro Correcto: {{_filtroCorrecto}}{{/if}}
+		{{#if prescripcionCorrecta}}<br>Prescripción Correcta: {{_prescripcionCorrecta}}{{/if}}
+		{{#if riesgoDeSangrado}}<br>Riesgo Sangrado: {{_riesgoDeSangrado}}{{/if}}
+		{{#if angioaccesoEnAdecuadasCondiciones}}<br>Angioacceso Adecuadas Condiciones: {{_angioaccesoEnAdecuadasCondiciones}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosPreHemodialisis"}}
+		{{#if pesoSeco}}<br>Peso Seco: {{_pesoSeco}}{{/if}}
+		{{#if pesoDeUltimaHemodialisis}}<br>Peso Ultima Hemodiálisis: {{_pesoDeUltimaHemodialisis}}{{/if}}
+		{{#if pesoPreHemodialisis}}<br>Peso Pre Hemodiálisis: {{_pesoPreHemodialisis}}{{/if}}
+		{{#if volumenGanado}}<br>Volumen Ganado: {{_volumenGanado}}{{/if}}
+		{{#if volumenAperder}}<br>Volumen a Perder: {{_volumenAperder}}{{/if}}
+	{{/template}}
+
+  {{#template id="datosPosHemodialisis"}}
+		{{#if pesoPosHd}}<br>Peso Pos Hemodiálisis: {{pesoPosHd}}{{/if}}
+		{{#if ufConseguida}}<br>Ultrafiltrado Conseguido: {{ufConseguida}}{{/if}}
+		{{#if ktAvanzado}}<br>Kt/V Avanzado: {{ktAvanzado}}{{/if}}
+		{{#if volSangre}}<br>Volumen Sangre: {{volSangre}}{{/if}}
+		{{#if complicaciones}}<br>Complicaciones: {{complicaciones}}{{/if}}
+	{{/template}}
+
+  {{#template id="datosSomatometriaAvanzada"}}
+		{{#if perimetroCefalico}}<br>Perímetro Cefálico (cm): {{perimetroCefalico}}{{/if}}
+		{{#if perimetroToracico}}<br>Perímetro Torácico (cm): {{perimetroToracico}}{{/if}}
+		{{#if perimetroAbdominal}}<br>Perímetro Abdominal (cm): {{perimetroAbdominal}}{{/if}}
+		{{#if perimetroAbdominalMomentoToma}}<br>Perímetro Abdominal (Momento Toma): {{_perimetroAbdominalMomentoToma}}{{/if}}
+		{{#if perimetroBraquial}}<br>Perímetro Braquial (cm): {{perimetroBraquial}}{{/if}}
+		{{#if perimetroInferior}}<br>Perímetro Inferior (cm): {{perimetroInferior}}{{/if}}
+		{{#if longitudPie}}<br>Longitud Pie (cm): {{longitudPie}}{{/if}}
+	{{/template}}
+
+  {{#template id="datosInfeccionesIaas"}}
+		{{#if tipoInfeccion}}<br>Tipo Infección: {{tipoInfeccion}}{{/if}}
+		{{#if fechaInfeccion}}<br>Fecha Infección: {{date fechaInfeccion "DD/MMM/YYYY"}}{{/if}}
+		{{#if microorganismoInfeccion}}<br>Microorganismo Infección: {{microorganismoInfeccion}}{{/if}}
+		{{#if servicioInfeccion}}<br>Servicio: {{servicioInfeccion}}{{/if}}
+	{{/template}}
+  
   {{!-- Tarea 3716 --}}
   {{#template id="datosDispositivoStent"}}
     {{#if tipoDispositivo}}<br>Tipo Dispositivo: {{_tipoDispositivo}}{{/if}}
@@ -10867,5 +11026,31 @@
 	{{/template}}
 	{{#template id="seulInterconsulta"}}
 		{{_interconsulta}}
+	{{/template}}
+
+	{{#template id="datosModeloEvaluacionDominio"}}
+		{{#if archivoExpediente}}<br>Custodia, Conservación y Archivo Expediente Clínico: {{archivoExpediente}}{{/if}}
+		{{#if elaboracionExpediente}}<br>Elaboración e Integración Expediente Clínico: {{elaboracionExpediente}}{{/if}}
+		{{#if historiaClinica}}<br>Historia Clínica: {{historiaClinica}}{{/if}}
+		{{#if notaUrgencias}}<br>Nota Urgencias: {{notaUrgencias}}{{/if}}
+		{{#if notaIngresoHospitalizacion}}<br>Nota Ingreso Hospitalización: {{notaIngresoHospitalizacion}}{{/if}}
+		{{#if notaEvolucion}}<br>Nota Evolución: {{notaEvolucion}}{{/if}}
+		{{#if notaReferencia}}<br>Nota Referencia: {{notaReferencia}}{{/if}}
+		{{#if notaInterconsulta}}<br>Nota Interconsulta: {{notaInterconsulta}}{{/if}}
+		{{#if notaPrequirurgica}}<br>Nota Pre-Quirúrgica: {{notaPrequirurgica}}{{/if}}
+		{{#if notaPreanestesica}}<br>Nota Pre-Anestésica: {{notaPreanestesica}}{{/if}}
+		{{#if notaPostquirurgica}}<br>Nota Post-Quirúrgica: {{notaPostquirurgica}}{{/if}}
+		{{#if notaPostanestesica}}<br>Nota Post-Anestésica: {{notaPostanestesica}}{{/if}}
+		{{#if notaEgreso}}<br>Nota Egreso: {{notaEgreso}}{{/if}}
+		{{#if hojaEnfermeria}}<br>Hoja Enfermería: {{hojaEnfermeria}}{{/if}}
+		{{#if servicioAuxiliarDiagnostico}}<br>Servicio Auxiliar Diagnóstico Tratamiento: {{servicioAuxiliarDiagnostico}}{{/if}}
+		{{#if registroTransfusion}}<br>Registro Transfusión Unidades Sangre: {{registroTransfusion}}{{/if}}
+		{{#if trabajoSocial}}<br>Trabajo Social: {{trabajoSocial}}{{/if}}
+		{{#if cartaConsentimiento}}<br>Carta Consentimiento Bajo Información: {{cartaConsentimiento}}{{/if}}
+		{{#if hojaEgresoVoluntario}}<br>Hoja Egreso Voluntario: {{hojaEgresoVoluntario}}{{/if}}
+		{{#if hojaNotificacionMp}}<br>Hoja Notificación Ministerio Público: {{hojaNotificacionMp}}{{/if}}
+		{{#if notaDefuncion}}<br>Nota Defunción / Muerte Fetal: {{notaDefuncion}}{{/if}}
+		{{#if analisisClinico}}<br>Análisis Clínico: {{analisisClinico}}{{/if}}
+		{{#if evidenciaConsultaGuia}}<br>Evidencia Consulta Guías Prática Clínica: {{evidenciaConsultaGuia}}{{/if}}
 	{{/template}}
 {{/markup}}

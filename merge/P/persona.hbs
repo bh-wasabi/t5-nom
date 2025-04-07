@@ -7742,6 +7742,10 @@
   {{action id="notaRecomendacionesElectrodiagnostico" source="notaRecomendacionesElectrodiagnostico" label="Recomendaciones Electrodiagnóstico" transform="copiarRecomendacionesElectrodiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{!-- SRB --}}
 
+  {{action id="notaPosHemodialisis" source="notaPosHemodialisis" label="Pos Hemodiálisis" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+
+  {{action id="notaValoracionInicialHemodialisis" source="notaValoracionInicialHemodialisis" label="Valoración Inicial Hemodiálisis" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+
   {{!-- racc --}}
   {{#transform id="copiarHistoriaClinicaPediatrico"}}
     {{update section="contexto" value="=contexto"}}
@@ -10766,6 +10770,28 @@
     {{item action="notaTransenfermeria8h" text="Transenfermería (Últimas 8 Horas)"}}
   {{/menu}}
 
+  {{action id="menuRegistroClinicoEnfermeriaHemodialisis" hide="true" type="menu" menu="menuRegistroClinicoEnfermeriaHemodialisis" label="Registro Clínico Enfermería Hemodiálisis" color="deep-orange"}}
+  {{#menu id="menuRegistroClinicoEnfermeriaHemodialisis" color="deep-orange"}}
+    {{item action="notaValoracionEnfermeriaPediatrico" text="Valoración Enfermería Pediátrico"}}
+    {{item action="notaRegistroEscalasPediatrica" text="Registro Escalas Pediatricas"}}
+    {{item action="notaSignosVitalesSomatometriaPediatrica" text="Registro Signos Vitales y Somatometría Pediátricos"}}
+    {{item action="notaValoracionInicialHemodialisis" text="Valoración Inicial Hemodiálisis"}}
+    {{item action="notaPosHemodialisis" text="Pos Hemodiálisis"}}
+    {{item action="notaPlanAltaPrevencionRehabilitacion" text="Plan Alta/Atención Primaria Salud/Rehabilitación"}}
+    {{item action="notaNic" text="Intervenciones Enfermería (NIC)"}}
+    {{item action="notaNoc" text="Resultados Esperados Enfermería (NOC)"}}
+    {{item action="notaNanda" text="Diagnósticos Enfermería (NANDA)"}}
+    {{item action="notaControlLiquidos" text="Control Líquidos"}}
+    {{item action="notaConsultoPlanesCuidados" text="Consultó Planes Cuidado"}}
+    {{item action="notaPrevencionCaidasPediatrica" text="Prevención de Caídas Pediátricas"}}
+    {{item action="notaPrevencionUlceraDecubitoPediatrica" text="Prevención de Úlcera por Decúbito Pediátrico"}}
+    {{item action="notaCuidadoHeridasPediatrica" text="Cuidados de Heridas Pediátrico"}}
+    {{item action="notaCuidadosAccesoVascularPediatrica" text="Cuidados Acceso Vascular Pediátrico"}}
+    {{item action="notaLibreEnfermeria" text="Nota Libre Enfermería"}}
+    {{item action="notaAsignacionEnfermeraResponsableTurno" text="Asignación Enfermero(a) Responsable Turno"}}
+    {{item action="notaTransenfermeria12h" text="Transenfermería (Últimas 12 Horas)"}}
+  {{/menu}}
+
   {{action id="letraA1" hide="true" type="menu" menu="letraA1" label="A1" color="deep-orange"}}
   {{#menu id="letraA1" color="deep-orange"}}  
     {{item action="notaAceptacionFamiliarDonacion" text="Aceptación Familiar a Donación"}}
@@ -12467,6 +12493,7 @@
   {{action id="notaAltaServicioAjuste" source="notaAltaServicioAjuste" label="Alta Servicio (Ajuste)" transform="copiarDiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" superUser="true"}}
 
   {{action id="notaContrarreferencia" source="notaContrarreferencia" label="Contrarreferencia" transform="copiarDatosReferencia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{action id="notaAsignarCita" source="notaAsignarCita" label="Asignar Cita" transform="copiarCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaCita" source="notaCita" label="Cita" transform="copiarCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
   {{action id="notaAutorizacion" source="notaAutorizacion" label="Autorización" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
   {{action id="notaConsentimientoInformado" source="notaConsentimientoInformado" label="Consentimiento Informado" transform="copiarResponsable" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
@@ -12650,6 +12677,7 @@
   {{!-- Investigación y Enseñanza --}}
   {{action id="notaSolicitudProtocoloInvestigacion" source="notaSolicitudProtocoloInvestigacion" label="Solicitud Protocolo Investigación" transform="copiarProtocoloInvestigacion" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
   {{action id="notaEvaluacionSatisfaccionPresentacionCurso" source="notaEvaluacionSatisfaccionPresentacionCurso" label="Evaluación de Satisfacción (Presentación o Curso)" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
+  {{action id="notaModeloEvaluacionDominio" source="notaModeloEvaluacionDominio" label="Modelo Evaluación Dominio" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
 
   {{!-- Rehabilitacion --}}
   {{action id="notaEvaluacionTerapiasRehabilitacion" source="notaEvaluacionTerapiasRehabilitacion" label="Evaluación Terapia Física y Rehabilitación" transform="copiarDiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
@@ -12728,6 +12756,10 @@
   {{!-- Otros --}}
   {{action id="notaGestionAmbulancias" source="notaGestionAmbulancias" label="Gestión Ambulancias" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
   {{action id="notaPromocionReduccionRiesgosSalud" source="notaPromocionReduccionRiesgosSalud" label="Promoción y Reducción de Riesgos a la Salud" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
+
+  {{action id="notaSeguimientoCateter" source="notaSeguimientoCateter" label="Seguimiento Catéter Venoso Central" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  
+  {{action id="notaResultadoHemocultivoInsercion" source="notaResultadoHemocultivoInsercion" label="Resultado Hemocultivo Inserción" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
 
   {{action id="cirugiaPostoperatoria" hide="true" type="menu" menu="cirugiaPostoperatoria" label="Postoperatoria" color="deep-orange"}}  
   {{#menu id="cirugiaPostoperatoria" color="deep-orange"}}
@@ -13683,6 +13715,9 @@
 
   {{action id="notaSolicitudDocumentacion" source="notaSolicitudDocumentacion" hide="true" transform="copiar" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" label="Solicitud Documentacion"}}
   {{action id="notaSolicitudEvaluacion" source="notaSolicitudEvaluacion" hide="true" transform="copiarSubMoment" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" label="Solicitud Evaluación"}}
+
+  {{action id="programacionCheckList" source="notaProgramarSolicitud" label="Programar" transform="copiarReprogramar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" btnSolid="true" condition="=control.autorizacionCirugia"}}
+  {{action id="notaCheckCirugia" source="notaCheckCirugia" label="Check List Programación" transform="copiarCheckCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" btnSolid="true" condition="=!control.autorizacionCirugia"}}
 
   {{action id="miEscritorioAgregar" hide="true" type="menu" menu="miEscritorioAgregar" label="Agregar" color="deep-orange"}}
   {{#menu id="miEscritorioAgregar" color="deep-orange"}}
@@ -15287,6 +15322,19 @@
 
   {{action id="notaSalePacienteServicio" source="notaSalePacienteServicio" label="=fn('salePacienteServicio', _params.service)" transform="copiarCamaServicio" hide="true" type="add-subdoc" visibleMode="close" color="primary" btnSolid="true" onlyPost="true" condition="=fn('puedeSalir', contexto)"}}
   {{action id="notaSalePacienteHospitalizacion" source="notaSalePacienteHospitalizacion" label="Sale Paciente Hospitalización" transform="copiarCama" hide="true" type="add-subdoc" visibleMode="close" color="primary" btnSolid="true" onlyPost="true" condition="=fn('puedeSalir', contexto)"}}
+
+  {{action id="notaEvaluacionLavadoManos" source="notaEvaluacionLavadoManos" label="Evaluación Lavado Manos" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+
+  {{#transform id="copiarVigilanciaEpidemiologica"}}
+    {{update section="contexto" value="=contexto"}}
+    {{update section="persona" transform="copiarPersona"}}
+    {{#update section="base"}}
+      {{set cirugiasRealizadas="=calc.pluckRef(_items, 'base.cirugia.base.cirugiaRealizar.base._procedimientoCirugia')"}}
+    {{/update}}
+  {{/transform}}
+  {{#action id="notaVigilanciaEpidemiologica" source="notaVigilanciaEpidemiologica" label="Vigilancia Epidemiológica" transform="copiarVigilanciaEpidemiologica" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="solicitud" fromView="solicitudCirugiaFinalizados"}}
+    {{param persona="=_id"}}
+  {{/action}}
 
   {{!-- {{action id="notaControlAcceso" source="notaControlAcceso" label="Control Acceso" transform="copiarControlAcceso" hide="true" type="add-subdoc" visibleMode="close" color="teal" icon="android-lock" onlyPost="true" userRole="controlAcceso"}} --}}
   {{action id="menuFix" hide="true" type="menu" menu="menuFix" label="Ajustes" color="blue-grey" superUser="true"}}
