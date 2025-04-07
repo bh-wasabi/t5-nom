@@ -10637,6 +10637,34 @@
     {{#if fechaNacimientoHijoInmediatoAnterior}}<br>Fecha Nacimiento Hijo Inmediato Anterior: {{date fechaNacimientoHijoInmediatoAnterior "DD/MMM/YYYY"}}{{/if}}
     {{#if ordenNacimientoRecienNacido}}<br>Orden Nacimiento Recién Nacido: {{number ordenNacimientoRecienNacido "##"}}{{/if}}
   {{/template}}  
+
+  {{#template id="datosListaVerificacionHemodialisis"}}
+		{{#if pasoTestFunciones}}<br>¿Cuenta con Expediente Clínico?: {{_pasoTestFunciones}}{{/if}}
+		{{#if cuentaExpedienteClinico}}<br>¿Cuenta con Ficha de Identificación?: {{_cuentaExpedienteClinico}}{{/if}}
+		{{#if cuentaFichaIdentificacion}}<br>¿Cuenta con Brazalete de Identificación?: {{_cuentaFichaIdentificacion}}{{/if}}
+		{{#if laboratoriosRecientes}}<br>¿Tiene Laboratorios recientes?: {{_laboratoriosRecientes}}{{/if}}
+		{{#if equipoPreparado}}<br>¿Equipo Preparado para la Sesión?: {{_equipoPreparado}}{{/if}}
+	{{/template}}
+
+  {{#template id="datosTransHemodialisisVigilancia"}}
+		<br>Bacteremia Trans Hemodialisis: {{_bacteremiaTransHemodialisis}}
+		{{#if tieneBacteria}}{{#if microorganismosReportadosCultivos}}<br>Microorganismos reporados en Cultivos: {{microorganismosReportadosCultivos}}{{/if}}{{/if}}
+		<br>¿Tratamiento con Antibiótico?: {{_tratamientoAntibiotico}}
+		{{#if tieneAntibiotico}}{{#if nombreAntibiotico}}<br>Nombre del Antibiótico: {{nombreAntibiotico}}{{/if}}{{/if}}
+		{{#if tieneAntibiotico}}{{#if diasTratamientoAntibiotico}}<br>Dias de Tratamiento: {{diasTratamientoAntibiotico}}{{/if}}{{/if}}
+	{{/template}}
+
+  {{#template id="datosBarrerasAprendizaje"}}
+		<br>Limitaciones: {{_limitaciones}}
+		<br>Nivel Educativo: {{_nivelEducativo}}
+	{{/template}}
+
+	{{#template id="datosTemaEducativo"}}
+		<br>Técnica Educativa: {{_tecnicaEducativa}}
+		<br>Nivel Comprensión: {{_nivelComprension}}
+		<br>Disposición Aprender: {{_disposicionAprender}}
+	{{/template}}
+  
   {{#template id="datosAntecedentesPerinatalesLphSeguimiento"}}
     {{#if semanasGestacion}}<br>Semanas Gestación: {{semanasGestacion}}{{/if}}
     {{#if complicacionesEmbarazo}}<br>Complicaciones en Embarazo: {{_complicacionesEmbarazo}}{{/if}}
