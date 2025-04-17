@@ -2485,6 +2485,12 @@
     {{default return="='CLUES Inválido (El Establecimiento no es de Urgencias)'"}}
   {{/function}}
 
+  {{#function id="errorCluesConsultaExterna"}}
+    {{define type="param" id="cluesSis"}}
+    {{when cluesSis="='si'" return="=''"}}
+    {{default return="=cluesSis==='si'?'':'CLUES Inválido (El Establecimiento no es de Consulta Externa)'"}}
+  {{/function}}
+
   {{#function id="validaCluesPreconsulta"}}
     {{define type="param" id="tipoAbreviacion"}}
     {{define type="param" id="subAbreviacion"}}
