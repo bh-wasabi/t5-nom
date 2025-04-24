@@ -44,6 +44,8 @@
     {{#update section="prestadorServicios"}}
       {{set condition="=prestadorServicios.paisNacimiento=='MX'" clave="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'), 16, true)"}}
       {{set condition="=prestadorServicios.paisNacimiento!='MX'" clave="=fn('CURP_GENERICO')"}}
+      {{set condition="=prestadorServicios.paisNacimiento=='MX'" claveCompleta="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'), 18, true)"}}
+      {{set condition="=prestadorServicios.paisNacimiento!='MX'" claveCompleta="=fn('CURP_GENERICO')"}}
     {{/update}}
   {{/action}}
   {{!-- Tarea 5604 --}}
