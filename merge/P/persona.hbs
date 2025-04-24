@@ -5578,7 +5578,9 @@
       {{!-- {{set somatometria="=detalle.somatometria"}} --}}
       {{!-- {{set _somatometria="=detalle._somatometria"}} --}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
+      {{setRef ref="atencionObstetricas.base.esCluesCancer" value="=fn('validaCluesCancer',user.establishmentData)"}}
       {{setRef ref="atencionObstetricas.base.esMujer" value="=persona.genero=='mujer'"}}
+      {{setRef ref="atencionObstetricas.base.esMujerEsCluesCancer" value="=persona.genero=='mujer'&&fn('validaCluesCancer',user.establishmentData)"}}
       {{setRef ref="atencionObstetricas.base.esMujerIntersexual" value="=persona.genero=='mujer'||persona.genero=='intersexual'"}}
       {{setRef ref="signosVitales.base.genero" value="=persona.genero"}}
       {{setRef ref="signosVitales.base.edadActual" value="=persona.edadActual"}}

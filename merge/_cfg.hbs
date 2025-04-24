@@ -2500,6 +2500,16 @@
     {{default return="true"}}
   {{/function}}
 
+  {{#function id="validaCluesCancer"}}
+    {{define type="param" id="establecimiento"}}
+    
+    {{when condition="=calc.in(establecimiento.cluesInstitucion, ['SSA','IMB','SME']) && establecimiento.cluesTipoUnidad === '2' && calc.in(establecimiento.cluesTipoAbreviacion, ['99','M','N','O'])" return="true"}}
+    {{when condition="=calc.in(establecimiento.cluesInstitucion, ['SSA','IMB','SME']) && establecimiento.cluesTipoUnidad === '1' && calc.in(establecimiento.cluesSubAbreviacion, ['T07','UNE05','UNE07','UNE11','UNE99'])" return="true"}}
+    
+    {{default return="false"}}
+  {{/function}}
+
+
   {{#function id="errorPacientePlanificacionFamiliar"}}
     {{define type="param" id="genero"}}
     {{define type="param" id="edad"}}
