@@ -7,6 +7,7 @@
       {{!-- {{editor display="base.codigo"}} --}}
       {{!-- {{editor display="base.subclave"}} --}}
     {{/field}}
+    {{validator type="expr" notValidIf="=calc.arrayLength(@medicamentosMinistrados)>6" message="No puede haber más de 6 medicamentos ministrados"}}
   {{/section}}
 
   {{#view id="buscarPlanAltaEnfermeria"}}
