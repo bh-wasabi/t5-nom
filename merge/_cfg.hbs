@@ -2706,8 +2706,11 @@
     {{define type="param" id="fechaNacimiento"}}
     {{define type="param" id="fechaIngreso"}}
     {{define type="param" id="fechaEgreso"}}
+    {{define type="param" id="ultimaNota"}}
     {{define type="param" id="tipologia"}}
     {{define type="param" id="subtipologia"}}
+    {{when condition="=moment(fechaIngreso).isAfter(ultimaNota._created.date)" return="='Fecha Ingreso no puede ser posterior a la Última Nota (' + ultimaNota._name + ' - ' + moment(ultimaNota._created.date).format('DD/MMM/YYYY') + ')'"}}
+    {{when condition="=moment(fechaEgreso).isBefore(ultimaNota._created.date)" return="='Fecha Egreso no puede ser anterior a la Última Nota (' + ultimaNota._name + ' - ' + moment(ultimaNota._created.date).format('DD/MMM/YYYY') + ')'"}}
     {{when condition="=moment(fechaIngreso).isSame(fechaEgreso)" return="'Las fechas deben ser distintas'"}}
     {{when condition="=moment(fechaEgreso).isBefore(fechaIngreso)" return="'Fecha Egreso no debe ser menor a la Fecha Ingreso'"}}
     {{when condition="=moment(fechaIngreso).isAfter()" return="'Fecha Ingreso no puede ser mayor a la fecha actual'"}}
