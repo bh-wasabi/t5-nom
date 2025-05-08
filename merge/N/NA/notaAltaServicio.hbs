@@ -1,7 +1,7 @@
 {{#define id="notaAltaServicio"}}
   {{#action 
     id="afectar"
-    error="=fn('validarNotaAltaServicio',base.otrosDiagnosticos,base.seleccionarOtrosDiagnosticos,comorbilidades,base.procedimientoEgresos,base.procedimientoDiagnosticosTerapeuticosQuirurgicos,procedimientosRealizados)"
+    error="=fn('validarNotaAltaServicio',base.otrosDiagnosticos,base.seleccionarOtrosDiagnosticos,comorbilidades,base.procedimientoEgresos,base.procedimientoDiagnosticosTerapeuticosQuirurgicos,procedimientosRealizados,base.interconsultas,notaSolicitudInterconsulta)"
     confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteEdad'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteEdad')))||calc.in('SI', calc.pluckRef(base.interconsultas,'base.excedeLimiteEdad'))"
     confirmMessage="Diagnóstico, Procedimiento o Interconsulta Excede Límite Edad<br>¿Desea continuar?"
   }}
@@ -77,7 +77,7 @@
     {{validator type="expr" notValidIf="=calc.findDuplicates(calc.pluck(@procedimientoDiagnosticosTerapeuticosQuirurgicos,'_name'))" message="Procedimientos Duplicados"}}
     {{validator type="expr" notValidIf="=calc.arrayLength(otrosDiagnosticos,seleccionarOtrosDiagnosticos)>6" message="Máximo 6 Comorbilidades"}}
     {{validator type="expr" notValidIf="=calc.arrayLength(@procedimientoEgresos,@procedimientoDiagnosticosTerapeuticosQuirurgicos)>6" message="Máximo 6 Procedimientos"}}
-    {{validator type="expr" notValidIf="=@interconsultas.length>3" message="Máximo 3 Interconsultas"}}
+    {{validator type="expr" notValidIf="=calc.arrayLength(@interconsultas)>6" message="Máximo 6 Interconsultas"}}
     {{validator type="expr" validIf="=!@CLUES||cluesEstatus=='EN OPERACION'||(@cluesFechaBaja&&moment(@fechaIngreso||undefined).add(-90,'days').format('YYYY-MM-DD')<=@cluesFechaBaja)" message="CLUES Fuera de Operación"}}
   {{/section}}
   {{#grid id="solicitudesEgreso" section="solicitudesEgreso" allowInsert="false" allowRemove="false"}}

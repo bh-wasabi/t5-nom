@@ -2651,6 +2651,14 @@
     {{default return="['DOMICILIO','TRASLADO A OTRA UNIDAD MEDICA','TRASLADO OTRA UNIDAD MEDICA','OTRA UNIDAD MEDICA','UNIDAD MEDICA','SERVICIO ESPECIALIZADO ATENCION A LA VIOLENCIA','SERVICIO ESPECIALIZADO ATENCION A VIOLENCIA','SERVICIO ESPECIALIZADO ATENCION VIOLENCIA','SERVICIO ATENCION A LA VIOLENCIA','SERVICIO ATENCION A VIOLENCIA','SERVICIO ATENCION VIOLENCIA','ATENCION A LA VIOLENCIA','ATENCION A VIOLENCIA','ATENCION VIOLENCIA','CONSULTA EXTERNA','CONSULTA','DEFUNCION','FALLECIMIENTO','MUERTE','REFUGIO O ALBERGUE','REFUGIO','ALBERGUE','REFUGIO/ALBERGUE','DIF','HOSPITALIZACION','MINISTERIO PUBLICO','MP','GRUPO DE AYUDA MUTUA','GRUPO AYUDA MUTUA','GRUPO DE AYUDA','GRUPO AYUDA','OTRO','OTROS','OTRA','OTRAS']"}}
   {{/function}}
 
+  {{#function id="servicioTerapiaIntensiva"}}
+    {{default return="['unidadCoronaria','unidadTerapiaIntensivaQuirurgica','unidadTerapiaIntensiva','unidadTerapiaIntensivaQuirurgicaPediatrica','unidadTerapiaIntensivaPediatrica','unidadCuidadosIntensivosNeonatales']"}}
+  {{/function}}
+
+  {{#function id="servicioTerapiaIntermedia"}}
+    {{default return="['unidadTerapiaIntermedia','crecimientoDesarrollo','unidadCuidadosIntermediosNeonatales']"}}
+  {{/function}}
+
   {{#function id="sugerirTipoPersonal"}}
     {{define type="param" id="tipoPersonal"}}
     {{when tipoPersonal="'medicoPasante'" return="'1'"}}
@@ -2764,8 +2772,11 @@
     {{define type="param" id="procedimientoEgresos"}}
     {{define type="param" id="seleccionarProcedimientos"}}
     {{define type="param" id="procedimientos"}}
+    {{define type="param" id="interconsultas"}}
+    {{define type="param" id="notaSolicitudInterconsulta"}}
     {{when condition="=calc.arrayLength(seleccionarOtrosDiagnosticos)<calc.arrayLength(comorbilidades)&&calc.arrayLength(otrosDiagnosticos,seleccionarOtrosDiagnosticos)<6" return="Faltan Comorbilidades por Seleccionar"}}
     {{when condition="=calc.arrayLength(seleccionarProcedimientos)<calc.arrayLength(procedimientos)&&calc.arrayLength(procedimientoEgresos,seleccionarProcedimientos)<6" return="Faltan Procedimientos por Seleccionar"}}
+    {{when condition="=calc.arrayLength(interconsultas)<calc.arrayLength(notaSolicitudInterconsulta)&&calc.arrayLength(interconsultas)<6" return="Faltan Interconsultas por Seleccionar"}}
     {{default return=""}}
   {{/function}}
 
@@ -2781,6 +2792,12 @@
     {{default return=""}}
   {{/function}}
 
+  {{#function id="validarCedulaDuplicada"}}
+    {{define type="param" id="datosEspecialidad"}}
+    {{when condition="=calc.hasDuplicates(calc.pluckRef(datosEspecialidad,'base.cedulaEspecialidad'))" return="='Tiene Cédula Especialidad Duplicada'"}}
+    {{default return=""}}
+  {{/function}}
+
   {{#function id="validarCausaExterna"}}
     {{define type="param" id="afeccionPrincipal" default="{}" notNull="true"}}
     {{define type="param" id="afeccionPrincipalReseleccionada" default="{}" notNull="true"}}
@@ -2793,6 +2810,20 @@
     {{when condition="=!(calc.getRef(@afeccionPrincipal,'base.tieneCausaExterna')||calc.getRef(@afeccionPrincipalReseleccionada,'base.tieneCausaExterna')||!calc.isEmpty(@otrosDiagnosticos)&&calc.pluckRef(@otrosDiagnosticos,'base.tieneCausaExterna').includes(true))&&!calc.isEmpty(calc.getRef(@causaExterna,'base.descripcionCausaExterna'))" return="'Falta Diagnóstico que requiera Descripción Causa Externa'"}}
     {{when condition="=!(calc.getRef(@afeccionPrincipal,'base.tieneFolioLesion')||calc.getRef(@afeccionPrincipalReseleccionada,'base.tieneFolioLesion'))&&!calc.isEmpty(calc.getRef(@causaExterna,'base.folioLesion'))" return="'Falta Diagnóstico que requiera Folio Lesión'"}}
     {{default return="''"}}
+  {{/function}}
+
+  {{#function id="validarTerapiaIntensiva"}}
+    {{define type="param" id="servicioIngreso"}}
+    {{define type="param" id="servicioAdicional"}}
+    {{when condition="=calc.arrayInArray(calc.mergeArrays(servicioIngreso,servicioAdicional),fn('servicioTerapiaIntensiva'))" return="true"}}
+    {{default return="false"}}
+  {{/function}}
+
+  {{#function id="validarTerapiaIntermedia"}}
+    {{define type="param" id="servicioIngreso"}}
+    {{define type="param" id="servicioAdicional"}}  
+    {{when condition="=calc.arrayInArray(calc.mergeArrays(servicioIngreso,servicioAdicional),fn('servicioTerapiaIntermedia'))" return="true"}}
+    {{default return="false"}}
   {{/function}}
 
   {{#function id="obtenerDatosProcedimiento"}}
@@ -2824,6 +2855,12 @@
   {{#function id="obtenerFechaMaximaDosMeses"}}
     {{define type="param" id="fecha"}}
     {{default return="=moment.max([moment(@fecha), moment().subtract(2, 'months').startOf('day')]).format()"}}
+  {{/function}}
+
+  {{#function id="calcularEdadPorFechaAtencion"}}
+    {{define type="param" id="fechaAtencion"}}
+    {{define type="param" id="fechaNacimiento"}}
+    {{default return="=moment(@fechaAtencion).diff(moment(@fechaNacimiento), 'years')"}}
   {{/function}}
 {{/define}}
 

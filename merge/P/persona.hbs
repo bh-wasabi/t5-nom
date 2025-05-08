@@ -5206,8 +5206,8 @@
       {{set esHombre="=!esMujer"}}
       {{set edadActual="=persona.edadActual"}}
       {{set _edadActual="=persona._edadActual"}}
-      {{set tipoServicioSisMenor="=moment(fechaAtencion).diff(persona.fechaNacimiento,'years')<18"}}
-      {{set tipoServicioSisMayor="=moment(fechaAtencion).diff(persona.fechaNacimiento,'years')>=60"}}
+      {{set tipoServicioSisMenor="=fn('calcularEdadPorFechaAtencion',fechaAtencion,persona.fechaNacimiento)<18"}}
+      {{set tipoServicioSisMayor="=fn('calcularEdadPorFechaAtencion',fetchaAtencion,persona.fechaNacimiento)>=60"}}
       {{set primeraConsultaAno="=_items.length?'no':'si'"}}
       {{setRef ref="signosVitales.base.fechaHoraRegistro" value="=_params.fechaAtencion"}}
     {{/update}}
@@ -5544,9 +5544,9 @@
       {{set fechaConsulta="=_params.fechaAtencion"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
-      {{set esMujerEntre9y59="=esMujer&&moment(fechaConsulta).diff(persona.fechaNacimiento,'years')>=9&&moment(fechaConsulta).diff(persona.fechaNacimiento,'years')<=59"}}
-      {{set tipoServicioSisMenor="=moment(fechaConsulta).diff(persona.fechaNacimiento,'years')<18"}}
-      {{set tipoServicioSisMayor="=moment(fechaConsulta).diff(persona.fechaNacimiento,'years')>=60"}}
+      {{set esMujerEntre9y59="=esMujer&&fn('calcularEdadPorFechaAtencion',fechaConsulta,persona.fechaNacimiento)>=9&&fn('calcularEdadPorFechaAtencion',fechaConsulta,persona.fechaNacimiento)<=59"}}
+      {{set tipoServicioSisMenor="=fn('calcularEdadPorFechaAtencion',fechaConsulta,persona.fechaNacimiento)<18"}}
+      {{set tipoServicioSisMayor="=fn('calcularEdadPorFechaAtencion',fechaConsulta,persona.fechaNacimiento)>=60"}}
       {{set fechaNacimiento="=persona.fechaNacimiento"}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
       {{set esNeonatal="=calc.fromNowDays(persona.fechaNacimiento)<29"}}
@@ -5610,8 +5610,8 @@
       {{set fechaAtencion="=_params.fechaAtencion"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
-      {{set tipoServicioSisMenor="=moment(fechaAtencion).diff(persona.fechaNacimiento,'years')<18"}}
-      {{set tipoServicioSisMayor="=moment(fechaAtencion).diff(persona.fechaNacimiento,'years')>=60"}}
+      {{set tipoServicioSisMenor="=fn('calcularEdadPorFechaAtencion',fechaAtencion,persona.fechaNacimiento)<18"}}
+      {{set tipoServicioSisMayor="=fn('calcularEdadPorFechaAtencion',fetchaAtencion,persona.fechaNacimiento)>=60"}}
       {{set primeraConsultaAno="=_items.length?'no':'si'"}}
       {{setRef ref="signosVitales.base.fechaHoraRegistro" value="=_params.fechaAtencion"}}
     {{/update}}
@@ -5630,8 +5630,8 @@
       {{set fechaNacimiento="=persona.fechaNacimiento"}}
       {{set edadActual="=persona.edadActual"}}
       {{set _edadActual="=persona._edadActual"}}
-      {{set tipoServicioSisMenor="=moment(fechaAtencion).diff(persona.fechaNacimiento,'years')<18"}}
-      {{set tipoServicioSisMayor="=moment(fechaAtencion).diff(persona.fechaNacimiento,'years')>=60"}}
+      {{set tipoServicioSisMenor="=fn('calcularEdadPorFechaAtencion',fechaAtencion,persona.fechaNacimiento)<18"}}
+      {{set tipoServicioSisMayor="=fn('calcularEdadPorFechaAtencion',fetchaAtencion,persona.fechaNacimiento)>=60"}}
       {{set primeraConsultaAno="=_items.length?'no':'si'"}}
       {{set edad="=calc.fromNowYears(persona.fechaNacimiento)"}}
       {{set noPsicologoEsHombre="=!calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])&&persona.genero=='hombre'"}}
@@ -12480,6 +12480,9 @@
     fromSource4="notaInicialUrgencias"
     fromView4="buscarInicialUrgencias"
     toSection4="notaInicialUrgencias"
+    fromSource5="notaSolicitudInterconsulta"
+    fromView5="buscarInterconsulta"
+    toSection5="notaSolicitudInterconsulta"
     error="=fn('validarInicialUrgencias', contexto, detalle)||fn('validarPlanAltaEnfermeria', contexto, detalle)||fn('validarDerechohabiencia', contexto, detalle)||fn('errorDatosSeguro', persona, contexto, detalle)||fn('validarFechaEgresoUrgencias',persona.fechaNacimiento,fn('hospitalizacionDesde', contexto),_ask.fechaEgreso)"
     errorType="info"
   }}

@@ -2,7 +2,14 @@
   {{param name="=_params.service==='tesoreria'?'Cajero':'Usuario'"}}
   {{action id="eliminar" hide="true"}}
 
-  {{action id="afectar" confirm="=calc.contieneMalaPalabra(prestadorServicios.clave)" confirmWidth="500" confirmHeight="290" confirmMessage="='CURP contiene palabra altisonante (' + prestadorServicios.clave.substr(0,4) + ')<br><br>Si desea continuar presione Si.<br>De lo contrario presione No y modifique el dato colocando una X en el segundo caracter.'"}}
+  {{action
+    id="afectar"
+    error="=fn('validarCedulaDuplicada', prestadorServicios.datosEspecialidad)"
+    confirm="=calc.contieneMalaPalabra(prestadorServicios.clave)"
+    confirmWidth="500"
+    confirmHeight="290"
+    confirmMessage="='CURP contiene palabra altisonante (' + prestadorServicios.clave.substr(0,4) + ')<br><br>Si desea continuar presione Si.<br>De lo contrario presione No y modifique el dato colocando una X en el segundo caracter.'"
+  }}
 
   {{!-- {{action id="afectarTodo" condition="=true" type="affect-all" label="Procesar Todo..." color="red" btnSolid="true" visibleMode="close" confirm="true" confirmMessage="¿Desea Procesar en Lote?" superUser="true"}} --}}
 
@@ -249,7 +256,7 @@
     {{/field}}
     {{validator type="expr" notValidIf="=calc.in(@entidadNacimiento,['99','00'])" message="Entidad Nacimiento Inválida"}}
     {{validator type="expr" validIf="=calc.fromNowYears(@fechaNacimiento)>=18" message="Error, Menor a 18 Años"}}
-    {{validator type="expr" validIf="=calc.fromNowYears(@fechaNacimiento)<90" message="Error, Mayor a 90 Años"}}{{!-- cambios 2024-05-29 --}}
+    {{validator type="expr" validIf="=calc.fromNowYears(@fechaNacimiento)<=90" message="Error, Mayor a 90 Años"}}{{!-- cambios 2024-05-29 --}}
     {{validator type="expr" condition="=fn('cedulaObligatoria',base.tipoPersonalNom??'')" notValidIf="=fn('faltaCedulaEspecialidad',@datosEspecialidad)" message="Falta Cédula Especialidad"}}
     {{validator type="expr" notValidIf="=paisNacimiento==='MX'&&prestadorServicios.clave===fn('CURP_GENERICO')" message="CURP Inválido para nacido en México"}}
     {{validator type="expr" validIf="=fn('validaCaracter17Curp',prestadorServicios.clave,prestadorServicios.fechaNacimiento)||prestadorServicios.clave===fn('CURP_GENERICO')" message="CURP Inválido (Caracter 17)"}}
