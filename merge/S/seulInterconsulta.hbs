@@ -3,7 +3,7 @@
     {{#field id="interconsulta"}}
       {{#editor}}
         {{param persona="=_mainDoc.persona.id"}}
-        {{param tipoSolicitud="interconsulta"}}
+        {{param episodio="_mainDoc.persona.episodio"}}
       {{/editor}}
       {{#onChange}}
         {{set claveServicioInterconsultante="=base.interconsulta.base.servicioInterconsultante"}}

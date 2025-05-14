@@ -12469,7 +12469,7 @@
     color="deep-orange"
     onlyPost="true"
     fromSource="solicitud"
-    fromView="historialSolicitudes"
+    fromView="sugerirProcedimientosRealizados"
     toSection="procedimientosRealizados"
     fromSource2="notaEvolucion"
     fromView2="comorbilidades"
@@ -12488,6 +12488,7 @@
   }}
     {{param persona="=_id"}}
     {{param tipoSolicitud="procedimiento,cirugia"}}
+    {{param episodio="=contexto.episodio"}}
     {{param request="=_params._id"}}
     {{param tipoEpisodio="=fn('tipoEpisodio', contexto)"}}
     {{param desde="=fn('hospitalizacionDesde', contexto)"}}
@@ -12623,12 +12624,17 @@
     fromView2="comorbilidades"
     fromSource3="nota"
     fromView3="nomFechaUltimaNota"
+    fromSource4="solicitud"
+    fromView4="sugerirProcedimientosRealizados"
+    toSection4="procedimientosRealizados"
     error="=fn('validarDerechohabiencia', contexto, detalle)||fn('errorCluesEgreso',user.establishmentData.cluesTipoUnidad,user.establishmentData.cluesTipoAbreviacion)||fn('errorDatosSeguro', persona, contexto, detalle)||fn('validarFechaEgreso',persona.fechaNacimiento,_ask.fechaIngresoHospitalario,_ask.fechaEgreso,_items3[0],user.establishmentData.cluesTipoAbreviacion,user.establishmentData.cluesSubAbreviacion)"
     errorType="info"
   }}
     {{param persona="=_id"}}
     {{param tipoEpisodio="=fn('tipoEpisodio', contexto)"}}
     {{param desde="=fn('hospitalizacionDesde', contexto)"}}
+    {{param episodio="=contexto.episodio"}}
+    {{param tipoSolicitud="procedimiento,cirugia,tococirugia"}}
     {{ask field="fechaIngresoHospitalario" type="datetime" label="Fecha Ingreso Hospitalario" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()"}}
     {{ask field="fechaEgreso" type="datetime" label="Fecha Egreso" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Egreso Incorrecta"}}
   {{/action}}

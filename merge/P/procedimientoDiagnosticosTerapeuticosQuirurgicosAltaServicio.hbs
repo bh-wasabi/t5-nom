@@ -2,22 +2,27 @@
   {{#section id="base"}}
     {{field id="esEnQuirofano" type="expr" value="=enQuirofanoOFuera=='en'"}}
     {{#field id="procedimientosRealizados"}}
-      {{#editor display="procedimiento"}}
-        {{param persona="=_mainDoc.persona.id"}}
-        {{param tipoSolicitud="procedimiento,cirugia,tococirugia"}}
-        {{#onChange clearFields="enQuirofanoOFuera,tipoAnestesia,descripcionProcedimiento"}}
-          {{set procedimientoCie9="=fn('obtenerDatosProcedimiento',_parent.type,'procedimientoCie9',base)"}}
-          {{set codigoCie9="=fn('obtenerDatosProcedimiento',_parent.type,'procedimientoCie9',base)"}}
-          {{set limiteSexo="=fn('obtenerDatosProcedimiento',_parent.type,'limiteSexo',base)"}}
-          {{set limiteInferior="=fn('obtenerDatosProcedimiento',_parent.type,'limiteInferior',base)"}}
-          {{set limiteSuperior="=fn('obtenerDatosProcedimiento',_parent.type,'limiteSuperior',base)"}}
-          {{set excedeLimiteEdad="=fn('obtenerDatosProcedimiento',_parent.type,'excedeLimiteEdad',base,_parentDoc)"}}
-          {{set otrasValidaciones="=fn('obtenerDatosProcedimiento',_parent.type,'otrasValidaciones',base)"}}
+      {{#editor}}
+        {{#onChange clearFields="enQuirofanoOFuera,tipoAnestesia,tiempoProcedimientoCie9,cirujano,cedulaCirujano,descripcionProcedimiento"}}
+          {{set limiteSexo="=datos.limiteSexo"}}
+          {{set limiteInferior="=datos.limiteInferior"}}
+          {{set limiteSuperior="=datos.limiteSuperior"}}
+          {{set otrasValidaciones="=datos.otrasValidaciones"}}
+          {{set excedeLimiteEdad="=calc.meetsAgeLimit(datos.limiteInferior, null, _parentDoc.persona.fechaNacimiento, true, moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years')<1?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaEgreso, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(datos.limiteSuperior, null, _parentDoc.persona.fechaNacimiento, false, moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years')<1?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaEgreso, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
+          {{set enQuirofanoOFuera="=datosQuirofano.enQuirofanoOFuera"}}
+          {{set _enQuirofanoOFuera="=datosQuirofano._enQuirofanoOFuera"}}
+          {{set tipoAnestesia="=datosQuirofano.tipoAnestesia"}}
+          {{set _tipoAnestesia="=datosQuirofano._tipoAnestesia"}}
+          {{set tiempoProcedimientoCie9="=datosQuirofano.tiempoProcedimientoCie9"}}
+          {{set cirujano="=datosQuirofano.cirujano"}}
+          {{set _cirujano="=datosQuirofano._cirujano"}}
+          {{set cedulaCirujano="=datosQuirofano.cedulaCirujano"}}
+          {{set descripcionProcedimiento="=datosQuirofano.especificacion"}}
         {{/onChange}}
       {{/editor}}
     {{/field}}
     {{#field id="enQuirofanoOFuera"}}
-      {{onChange clearFields="cirujano,cedulaCirujano"}}
+      {{onChange clearFields="tiempoProcedimientoCie9,cirujano,cedulaCirujano"}}
     {{/field}}
 		{{#field id="cirujano"}}
 			{{#onChange}}

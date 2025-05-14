@@ -2826,32 +2826,6 @@
     {{default return="false"}}
   {{/function}}
 
-  {{#function id="obtenerDatosProcedimiento"}}
-    {{define type="param" id="parentType"}}
-    {{define type="param" id="campo"}}
-    {{define type="param" id="base"}}
-    {{define type="param" id="parentDoc"}}
-    {{when condition="=parentType=='notaSolicitudProcedimiento'&&campo=='procedimientoCie9'" return="=base.procedimiento.base.codigoCie9"}}
-    {{when condition="=parentType=='notaSolicitudProcedimiento'&&campo=='limiteSexo'" return="=base.procedimiento.base.limiteSexo"}}
-    {{when condition="=parentType=='notaSolicitudProcedimiento'&&campo=='limiteInferior'" return="=base.procedimiento.base.limiteInferior"}}
-    {{when condition="=parentType=='notaSolicitudProcedimiento'&&campo=='limiteSuperior'" return="=base.procedimiento.base.limiteSuperior"}}
-    {{when condition="=parentType=='notaSolicitudProcedimiento'&&campo=='otrasValidaciones'" return="=base.procedimiento.base.otrasValidaciones"}}
-    {{when condition="=parentType=='notaSolicitudProcedimiento'&&campo=='excedeLimiteEdad'" return="=calc.meetsAgeLimit(base.procedimiento.base.limiteInferior, null, parentDoc.persona.fechaNacimiento, true, moment(parentDoc.base.fechaEgreso).diff(parentDoc.persona.fechaNacimiento,'years')<1?parentDoc._type=='notaSeulEgreso'?parentDoc.base.fechaIngresoHospitalario:parentDoc.base.fechaIngreso:parentDoc.base.fechaEgreso, parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(base.procedimiento.base.limiteSuperior, null, parentDoc.persona.fechaNacimiento, false, moment(parentDoc.base.fechaEgreso).diff(parentDoc.persona.fechaNacimiento,'years')<1?parentDoc._type=='notaSeulEgreso'?parentDoc.base.fechaIngresoHospitalario:parentDoc.base.fechaIngreso:parentDoc.base.fechaEgreso, parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
-    {{when condition="=parentType=='notaSolicitudCirugia'&&campo=='procedimientoCie9'" return="=base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.cirugiaCie9"}}
-    {{when condition="=parentType=='notaSolicitudCirugia'&&campo=='limiteSexo'" return="=base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSexo"}}
-    {{when condition="=parentType=='notaSolicitudCirugia'&&campo=='limiteInferior'" return="=base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteInferior"}}
-    {{when condition="=parentType=='notaSolicitudCirugia'&&campo=='limiteSuperior'" return="=base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSuperior"}}
-    {{when condition="=parentType=='notaSolicitudCirugia'&&campo=='otrasValidaciones'" return="=base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.otrasValidaciones"}}
-    {{when condition="=parentType=='notaSolicitudCirugia'&&campo=='excedeLimiteEdad'" return="=calc.meetsAgeLimit(base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteInferior, null, parentDoc.persona.fechaNacimiento, true, moment(parentDoc.base.fechaEgreso).diff(parentDoc.persona.fechaNacimiento,'years')<1?parentDoc._type=='notaSeulEgreso'?parentDoc.base.fechaIngresoHospitalario:parentDoc.base.fechaIngreso:parentDoc.base.fechaEgreso, parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSuperior, null, parentDoc.persona.fechaNacimiento, false, moment(parentDoc.base.fechaEgreso).diff(parentDoc.persona.fechaNacimiento,'years')<1?parentDoc._type=='notaSeulEgreso'?parentDoc.base.fechaIngresoHospitalario:parentDoc.base.fechaIngreso:parentDoc.base.fechaEgreso, parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
-    {{when condition="=parentType=='notaSolicitudTococirugia'&&campo=='procedimientoCie9'" return="=base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.cirugiaCie9"}}
-    {{when condition="=parentType=='notaSolicitudTococirugia'&&campo=='limiteSexo'" return="=base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSexo"}}
-    {{when condition="=parentType=='notaSolicitudTococirugia'&&campo=='limiteInferior'" return="=base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteInferior"}}
-    {{when condition="=parentType=='notaSolicitudTococirugia'&&campo=='limiteSuperior'" return="=base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSuperior"}}
-    {{when condition="=parentType=='notaSolicitudTococirugia'&&campo=='otrasValidaciones'" return="=base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.otrasValidaciones"}}
-    {{when condition="=parentType=='notaSolicitudTococirugia'&&campo=='excedeLimiteEdad'" return="=calc.meetsAgeLimit(base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteInferior, null, parentDoc.persona.fechaNacimiento, true, moment(parentDoc.base.fechaEgreso).diff(parentDoc.persona.fechaNacimiento,'years')<1?parentDoc._type=='notaSeulEgreso'?parentDoc.base.fechaIngresoHospitalario:parentDoc.base.fechaIngreso:parentDoc.base.fechaEgreso, parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSuperior, null, parentDoc.persona.fechaNacimiento, false, moment(parentDoc.base.fechaEgreso).diff(parentDoc.persona.fechaNacimiento,'years')<1?parentDoc._type=='notaSeulEgreso'?parentDoc.base.fechaIngresoHospitalario:parentDoc.base.fechaIngreso:parentDoc.base.fechaEgreso, parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
-    {{default return=""}}
-  {{/function}}
-
   {{#function id="obtenerFechaMaximaDosMeses"}}
     {{define type="param" id="fecha"}}
     {{default return="=moment.max([moment(@fecha), moment().subtract(2, 'months').startOf('day')]).format()"}}
@@ -3486,7 +3460,7 @@
 
   {{#template id="cirugia"}}
     {{#if suspender}}(Suspendido) {{/if}}
-    <br>Cirujano: {{cirugiaRealizar.base._cirujano}} / {{cirugiaRealizar.base._especialidad}}
+    {{!-- <br>Cirujano: {{cirugiaRealizar.base._cirujano}} / {{cirugiaRealizar.base._especialidad}} --}}
     <br>Procedimiento: {{cirugiaRealizar.base._procedimientoCirugia}} {{cirugiaRealizar.base._equipoEspecialRequerido}}
     <br>Diagnóstico Qx: {{cirugiaRealizar.base.diagnosticoQuirurgico}}
     <br>Fecha Propuesta: {{date cirugiaRealizar.base.fechaPropuesta "DD/MMM/YYYY h:mma"}} ({{cirugiaRealizar.base._duracionEstimada}})
@@ -3514,7 +3488,7 @@
 
   {{#template id="tococirugia"}}
     {{#if suspender}}(Suspendido) {{/if}}
-    <br>Cirujano: {{cirugiaRealizar.base._cirujano}} / {{cirugiaRealizar.base._especialidad}}
+    {{!-- <br>Cirujano: {{cirugiaRealizar.base._cirujano}} / {{cirugiaRealizar.base._especialidad}} --}}
     <br>Procedimiento: {{cirugiaRealizar.base._procedimientoCirugia}} {{cirugiaRealizar.base._equipoEspecialRequerido}}
     <br>Diagnóstico Qx: {{cirugiaRealizar.base.diagnosticoQuirurgico}}
     <br>Fecha Propuesta: {{date cirugiaRealizar.base.fechaPropuesta "DD/MMM/YYYY h:mma"}} ({{cirugiaRealizar.base._duracionEstimada}})
