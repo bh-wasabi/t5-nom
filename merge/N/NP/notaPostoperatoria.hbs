@@ -1,7 +1,9 @@
 {{#define id="notaPostoperatoria"}}
   {{#section id="base"}}
     {{field id="esHospitalizacion" type="expr" value="=tipoEpisodio=='hospitalizacion'"}}
+    {{validator type="expr" notValidIf="=calc.arrayInArray(calc.pluckRef(@procedimientoCirugia,'base.codigoCie9'),@procedimientoRealizado)" message="Tiene Procedimientos Duplicados"}}
   {{/section}}
+
   {{#transform id="copiarCancelacion"}}
     {{update section="persona" value="persona"}}
     {{update section="contexto" value="contexto"}}

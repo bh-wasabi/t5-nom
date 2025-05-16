@@ -4,6 +4,7 @@
     {{#field id="procedimientosRealizados"}}
       {{#editor}}
         {{#onChange clearFields="enQuirofanoOFuera,tipoAnestesia,tiempoProcedimientoCie9,cirujano,cedulaCirujano,descripcionProcedimiento"}}
+          {{set codigoCie9="datos.cie9"}}
           {{set limiteSexo="=datos.limiteSexo"}}
           {{set limiteInferior="=datos.limiteInferior"}}
           {{set limiteSuperior="=datos.limiteSuperior"}}

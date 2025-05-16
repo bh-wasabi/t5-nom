@@ -6045,6 +6045,7 @@
       {{set _afeccionPrincipal="=_items&&calc.getRef(_items[0], 'base._afeccionPrincipal')"}}
       {{set otrosDiagnosticos="=_items&&calc.getRef(_items[0], 'base.otrosDiagnosticos')"}}
       {{set _otrosDiagnosticos="=_items&&calc.getRef(_items[0], 'base._otrosDiagnosticos')"}}
+      {{set procedimientoRealizado="=calc.pluckRef(procedimientosRealizados,'id')"}}
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
   {{/transform}}
@@ -12801,8 +12802,9 @@
     {{item action="notaSeguridadPerfusion" text="Seguridad Perfusión"}}
   {{/menu}}
   
-  {{#action id="notaPostoperatoria" source="notaPostoperatoria" label="Postoperatoria" transform="copiarSolicitudTipoCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaEvolucion" fromView="ultimaEvolucion"}}
+  {{#action id="notaPostoperatoria" source="notaPostoperatoria" label="Postoperatoria" transform="copiarSolicitudTipoCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaEvolucion" fromView="ultimaEvolucion" fromSource2="solicitud" fromView2="sugerirProcedimientosRealizados" toSection2="procedimientosRealizados"}}
     {{param persona="_id"}}
+    {{param episodio="=contexto.episodio"}}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
   {{/action}}
   {{action id="notaPostoperatoriaAjuste" source="notaPostoperatoriaAjuste" label="Postoperatoria (Ajuste)" transform="copiarSolicitudTipoCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" superUser="true"}}
