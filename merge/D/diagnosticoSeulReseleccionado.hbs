@@ -3,9 +3,7 @@
     {{field id="tieneCausaExterna" type="expr" value="=calc.in('CAUSA',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaEgresos','notaTempEgresos','notaSeulEgreso','notaLesiones','notaTempLesiones','notaSeulLesiones','notaEvolucion'])"}}
     {{field id="tieneMorfologia" type="expr" value="=calc.in('MORFOLOGIA',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaEgresos','notaSeulEgreso','notaEvolucion'])"}}
     {{field id="tieneFolioLesion" type="expr" value="=calc.in('FOLIO_LESION',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaEgresos','notaSeulEgreso','notaEvolucion'])"}}
-    {{field id="tienePlanHidratacion" type="expr" value="=calc.in('PLAN_HIDRATACION',calc.splitAndTrim(requiereCampos))&&edadActual<5&&calc.in(docType,['notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaUrgencias','notaEvolucion'])"}}
     {{field id="mostrarSobres" type="expr" value="=calc.in(@planHidratacion,['planA','planB'])"}}
-    {{field id="tienePlanInfeccionesRespiratorias" type="expr" value="=calc.in('PLAN_RESPIRATORIAS',calc.splitAndTrim(requiereCampos))&&edadActual<5&&calc.in(docType,['notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaUrgencias','notaEvolucion'])"}}
     {{#field id="diagnostico"}}
       {{#editor}}
         {{param esSeul="=true"}}
@@ -27,6 +25,8 @@
         {{set docType="=_parentDoc._type"}}
         {{set edadActual="=_parentDoc.persona.edadActual"}}
         {{set requiereCampos="=REQUIERE_CAMPOS"}}
+        {{set tienePlanHidratacion="=calc.in('PLAN_HIDRATACION',calc.splitAndTrim(REQUIERE_CAMPOS))&&((calc.in(_parentDoc._type,['notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaUrgencias'])?moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years')<=5:_parentDoc.persona.edadActual<=5)||calc.getRef(_mainDoc,'nomDatos.desconoceFechaNacimiento')=='si')&&calc.in(_parentDoc._type,['notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaUrgencias','notaEvolucion'])"}}
+        {{set tienePlanInfeccionesRespiratorias="=calc.in('PLAN_RESPIRATORIAS',calc.splitAndTrim(REQUIERE_CAMPOS))&&((calc.in(_parentDoc._type,['notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaUrgencias'])?moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years'):_parentDoc.persona.edadActual<=5)||calc.getRef(_mainDoc,'nomDatos.desconoceFechaNacimiento')=='si')&&calc.in(_parentDoc._type,['notaTempUrgencias','notaInicialUrgencias','notaAltaServicio','notaUrgencias','notaEvolucion'])"}}
       {{/onChange}}
     {{/field}}
     {{#field id="planHidratacion"}}

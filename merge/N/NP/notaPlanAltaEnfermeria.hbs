@@ -1,13 +1,15 @@
 {{#define id="notaPlanAltaEnfermeria"}}
+  {{action
+    id="afectar"
+    error="=(calc.arrayLength(sugerirMedicamentosMinistrados)<=6?calc.arrayLength(base.medicamentosMinistrados)!=calc.arrayLength(sugerirMedicamentosMinistrados):calc.arrayLength(base.medicamentosMinistrados)!=6)?'Error: Faltan Medicamentos por reportar':null"
+  }}
   {{#section id="base"}}
     {{#field id="medicamentosMinistrados"}}
       {{#editor display="base.medicamento.base.subclave"}}
         {{param persona="=persona.id"}}
       {{/editor}}
-      {{!-- {{editor display="base.codigo"}} --}}
-      {{!-- {{editor display="base.subclave"}} --}}
     {{/field}}
-    {{validator type="expr" notValidIf="=calc.arrayLength(@medicamentosMinistrados)>6" message="No puede haber más de 6 medicamentos ministrados"}}
+    {{validator type="expr" notValidIf="=calc.arrayLength(@medicamentosMinistrados)>6" message="No puede haber más de 6 medicamentos ministrados."}}
   {{/section}}
 
   {{#view id="buscarPlanAltaEnfermeria"}}

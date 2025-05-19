@@ -2532,14 +2532,12 @@
     {{when condition="=certificado.slice(0,2)=='25'&&calc.forceNumber(certificado)>250999999" return="true"}}
     {{!-- Para 2024 debe ser menor de 241000000 --}}
     {{when condition="=certificado.slice(0,2)=='24'&&calc.forceNumber(certificado)>240999999" return="true"}}
-    {{!-- Para 2023 debe ser menor de 231000000 --}}
-    {{when condition="=certificado.slice(0,2)=='23'&&calc.forceNumber(certificado)>230999999" return="true"}}
-    {{!-- Para 2023 debe ser menor de 231110000 --}}
-    {{!-- {{when condition="=certificado.slice(0,2)=='23'&&calc.forceNumber(certificado)>231110000" return="true"}} --}}
-    {{!-- Para 2022 debe ser menor de 221650000 --}}
-    {{!-- {{when condition="=certificado.slice(0,2)=='22'&&calc.forceNumber(certificado)>221650000" return="true"}} --}}
-    {{!-- Para 2021 debe ser menor de 212838000 --}}
-    {{!-- {{when condition="=certificado.slice(0,2)=='21'&&calc.forceNumber(certificado)>212838000" return="true"}} --}}
+    {{!-- Para 2023 debe ser menor o igual a 231110000 --}}
+    {{when condition="=certificado.slice(0,2)=='23'&&calc.forceNumber(certificado)>231110000" return="true"}}
+    {{!-- Para 2022 debe ser menor o igual a 221650000 --}}
+    {{when condition="=certificado.slice(0,2)=='22'&&calc.forceNumber(certificado)>221650000" return="true"}}
+    {{!-- Para 2021 debe ser menor o igual 212838000 --}}
+    {{when condition="=certificado.slice(0,2)=='21'&&calc.forceNumber(certificado)>212838000" return="true"}}
     {{default return="false"}}
   {{/function}}
 
