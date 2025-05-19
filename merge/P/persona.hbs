@@ -5711,7 +5711,7 @@
       {{set servicio="=contexto.servicio"}}
       {{set _servicio="=contexto._servicio"}}
       {{setRef ref="eventoLesion.base.fechaOcurreEvento" value="=_params.fechaEvento"}}
-      {{setRef ref="eventoLesion.base.horaEvento" value="=(_params.fechaEvento).substr(11,5)"}}
+      {{setRef ref="eventoLesion.base.horaEvento" value="=_params.desconoceHoraEvento=='si'?'99:99':(_params.fechaEvento).substr(11,5)"}}
       {{setRef ref="eventoLesion.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
       {{setRef ref="eventoLesion.base.diaFestivo" value=""}}
       {{setRef ref="eventoLesion.base.direccion.base.esLesion" value="true"}}
@@ -12421,10 +12421,11 @@
   {{action id="notaCompatibilidadHemocomponentes" source="notaCompatibilidadHemocomponentes" label="Compatibilidad Hemocomponentes" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaRegistroHemocomponentes" source="notaRegistroHemocomponentes" label="Registro Hemocomponentes" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaRegistroLesiones" source="notaRegistroLesiones" label="Registro Lesiones" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
-  {{#action id="notaSeulLesiones" source="notaSeulLesiones" label="SEUL Lesiones" transform="copiarSeulLesiones" fromSource="notaSeulLesiones" fromView="buscarPorEpisodio" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" error="=fn('validarDerechohabiencia', contexto, detalle)||fn('errorDatosSeguro', persona, contexto, detalle)||(_items[0]&&'Nota Lesión Activa: '+_items[0]._name)" errorType="info"}}
+  {{#action id="notaSeulLesiones" source="notaSeulLesiones" label="Lesiones" transform="copiarSeulLesiones" fromSource="notaSeulLesiones" fromView="buscarPorEpisodio" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" error="=fn('validarDerechohabiencia', contexto, detalle)||fn('errorDatosSeguro', persona, contexto, detalle)||(_items[0]&&'Nota Lesión Activa: '+_items[0]._name)" errorType="info"}}
     {{param persona="=_id"}}
     {{param episodio="=contexto.episodio"}}
-    {{ask field="fechaEvento" type="datetime" label="Fecha y Hora Evento" required="true" value="=moment().format()" min="=fn('obtenerFechaMaximaDosMeses',persona.fechaNacimiento)" max="=moment().add('minutes',1).format()"}}
+    {{ask field="fechaEvento" type="datetime" label="Fecha Evento" required="true" value="=moment().format()" min="=fn('obtenerFechaMaximaDosMeses',persona.fechaNacimiento)" max="=moment().add('minutes',1).format()"}}
+    {{ask field="desconoceHoraEvento" type="select" label="Desconoce Hora Evento" keys="no,si" names="No,Sí" required="true"}}    
   {{/action}}
   {{action id="notaReaccionesTransfusionales" source="notaReaccionesTransfusionales" label="Reacciones Transfusionales" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaInduccionOtorgada" source="notaInduccionOtorgada" label="Inducción Otorgada" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
@@ -12712,7 +12713,7 @@
   {{action id="notaSolicitudCirugiaUrgente" source="notaSolicitudCirugia" subType="urgente" subTypeName="Solicitud Cirugía Urgente" label="Cirugía Urgente" transform="copiarCirugiaUrgente" hide="true" type="add-subdoc" visibleMode="close" color="primary" onlyPost="true" btnSolid="true" condition="=!fn('estaInternado', contexto)"}}
   {{#action id="notaSolicitudUrgencias" source="notaSolicitudUrgencias" label="Nueva Atención Triage" transform="copiarDatosReferencia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true" condition="=!fn('estaInternado', contexto)" error="=fn('errorCluesUrgencias',user.establishmentData.cluesTipoUnidad,user.establishmentData.cluesTipoAbreviacion)" errorType="info"}}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
-    {{ask field="desconoceHoraIngreso" type="select" label="Desconoce Hora Atención" keys="si,no" names="Sí,No" required="true"}}
+    {{ask field="desconoceHoraIngreso" type="select" label="Desconoce Hora Atención" keys="no,si" names="No,Sí" required="true"}}
   {{/action}}
 
   {{action id="urgenciasOtros" hide="true" type="menu" menu="urgenciasOtros" label="Otros" color="deep-orange"}}  

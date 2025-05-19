@@ -3,6 +3,15 @@
     {{field id="esOtroServicioAtencion" type="expr" value="=@servicioAtencionLesion==='otro'"}}
     {{field id="esOtraAreaAfectada" type="expr" value="=@areaAnatomica==='otros'"}}
     {{field id="esOtraConsecuencia" type="expr" value="=@consecuenciaLesion==='otra'"}}
+    {{#field id="servicioAtencionLesion"}}
+      {{onChange clearFields="especifiqueServicioAtencion"}}
+    {{/field}}
+    {{#field id="areaAnatomica"}}
+      {{onChange clearFields="otraAreaAfectada"}}
+    {{/field}}
+    {{#field id="consecuenciaLesion"}}
+      {{onChange clearFields="especifiqueConsecuencia"}}
+    {{/field}}
     {{validator type="expr" validIf="=!calc.in(@consecuenciaLesion,['aborto','embarazo'])||esMujer&&calc.in(@consecuenciaLesion,['aborto','embarazo'])&&(edad>=9&&edad<=49)" message="Error en Consecuencia Lesion"}}
     {{validator type="expr" validIf="=@tipoAtencionLesion.length<6" message="Máximo 5 Tipo Atención"}}
     {{validator type="expr" validIf="=!@descripcionAfeccion||calc.matchIfPattern('^[A-z].{1,249}$', @descripcionAfeccion)" message="Verificar Descripción"}}

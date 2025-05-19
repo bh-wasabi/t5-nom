@@ -100,7 +100,7 @@
     {{validator type="expr" notValidIf="=@tipoParentesco=='conyugue'&&@edadAgresor==''" message="Edad del Agresor Requerida"}}
     {{validator type="expr" notValidIf="=@tipoDroga.length>1&&(calc.in('ninguna',@tipoDroga)||calc.in('seIgnora',@tipoDroga))" message="Drogas Incorrectas"}}
     {{validator type="expr" notValidIf="=@tipoIntencionalidad=='violenciaFamiliar'&&calc.in(@tipoParentesco,['sinParentesco','desconocido'])" message="Parentesco Agresor Inválido"}}
-    {{validator type="expr" notValidIf="=@tipoIntencionalidad=='violenciaNoFamiliar'&&!calc.in(@tipoParentesco,['sinParentesco','desconocido'])" message="Parentesco Agresor Inválido"}}
+    {{validator type="expr" notValidIf="=@tipoIntencionalidad=='violenciaNoFamiliar'&&@numeroAgresores=='unico'&&!calc.in(@tipoParentesco,['sinParentesco','desconocido'])" message="Parentesco Agresor Inválido"}}
     {{validator type="expr" validIf="=!@edadAgresor||(@edadAgresor>=3&&@edadAgresor<=99)||(@edadAgresor=='999'&&@tipoParentesco!='conyugue')" message="Edad Agresor Inválida"}}
     {{validator type="expr" notValidIf="=calc.in(calc.upperCase(calc.normalize(@otroAgente)),fn('especifiqueAgenteLesionInvalido'))" message="Otro Agente Inválido"}}
     {{validator type="expr" notValidIf="=mostrarAgenteLesion&&agenteLesion==='noAplica'" message="Agente Lesión Inválido"}}
