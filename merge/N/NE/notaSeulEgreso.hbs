@@ -15,7 +15,7 @@
   
  	{{#section id="base"}}
     {{#field id="pacientePsiquiatrico"}}
-      {{onChange clearFields="tipoUnidadPsiquiatrica,tipoServicioPsiquiatrico,HospitalParcial"}}
+      {{onChange clearFields="tipoUnidadPsiquiatrica,tipoServicioPsiquiatrico,hospitalParcial"}}
     {{/field}}
     {{#field id="motivoEgreso"}}
       {{onChange clearFields="notificoMP,folioCertificadoDefuncion,signosVitales,fechaHoraDefuncion,cluesTraslado,cluesEstatus,cluesFechaBaja"}}
@@ -33,8 +33,8 @@
   		{{#update}}
         {{set gestas="=fn('calcularGestas',antecedentesEmbarazos.base.paras,antecedentesEmbarazos.base.abortos,antecedentesEmbarazos.base.cesareas,esEmbarazo?1:0)"}}
         {{set foliosUtilizadosNacimiento="=_.compact(calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProducto'),'base.folioCertificadoNacimiento'))"}}
-        {{set foliosUtilizadosMuerteFetal="=_.compact(calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProducto'),'base.folioCertificadoMuerteFetal'))"}}
-        {{set foliosUtilizadosDefuncion="=_.compact([].concat([@folioCertificadoDefuncion],calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProducto'),'base.folioCertificadoDefuncion'),calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProductoAborto'),'base.folioCertificadoDefuncion')))"}}
+        {{set foliosUtilizadosDefuncion="=_.compact(calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProducto'),'base.folioCertificadoDefuncion'))"}}
+        {{set foliosUtilizadosMuerteFetal="=_.compact([].concat([@folioCertificadoMuerteFetal],calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProducto'),'base.folioCertificadoMuerteFetal'),calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProductoAborto'),'base.folioCertificadoMuerteFetal')))"}}
   		{{/update}}
   	{{/onChange}}
   {{/section}}

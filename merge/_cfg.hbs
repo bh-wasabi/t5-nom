@@ -11074,11 +11074,8 @@
 	{{/template}}
 	{{#template id="datosInformacionProductoAborto"}}
 		{{#if condicionNacimiento}}<br>Condición al Nacimiento: {{_condicionNacimiento}}{{/if}}
-		{{#if tipoNacimiento}}<br>Tipo de Nacimiento: {{_tipoNacimiento}}{{/if}}
-		{{#if tipoProcedimientoAborto}}<br>Tipo Procedimiento Aborto: {{_tipoProcedimientoAborto}}{{/if}}
 		{{#if condicionNacidoVivo}}<br>Condición Nacido Vivo: {{_condicionNacidoVivo}}{{/if}}
-		{{#if siVivo}}{{#if folioCertificadoNacimiento}}<br>Folio Certificado Nacimiento: {{folioCertificadoNacimiento}}{{/if}}{{/if}}
-		{{#if siMuerto}}{{#if folioCertificadoDefuncion}}<br>Folio Certificado Defunción: {{folioCertificadoDefuncion}}{{/if}}{{/if}}
+		{{#if folioCertificadoMuerteFetal}}<br>Folio Certificado Muerte Fetal: {{folioCertificadoMuerteFetal}}{{/if}}
 	{{/template}}
   {{#template id="destinoDespuesLesion"}}
     {{#if destinoAtencionLesion}}<br>Destino después de la Atención: {{_destinoAtencionLesion}}{{/if}}
