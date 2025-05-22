@@ -5698,6 +5698,7 @@
     {{#update section="base"}}
       {{set fechaEvento="=_params.fechaEvento"}}
       {{set horaEvento="=(_params.fechaEvento).substr(11,5)"}}
+      {{set desconoceHoraEvento="=_params.desconoceHoraEvento"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
@@ -7907,7 +7908,21 @@
     {{param desde="=moment().format('YYYY')"}}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('obtenerFechaMaximaDosMeses',persona.fechaNacimiento)" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
   {{/action}}
-  {{#action id="notaPlanificacionFamiliar" source="notaPlanificacionFamiliar" label="Planificación Familiar" transform="copiarPlanificacionFamiliar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="nota" fromView="ultima" error="=fn('errorCluesConsultaExterna',user.establishmentData.cluesSis)" errorType="info"}}
+  {{#action
+    id="notaPlanificacionFamiliar"
+    source="notaPlanificacionFamiliar"
+    label="Planificación Familiar"
+    transform="copiarPlanificacionFamiliar"
+    hide="true"
+    type="add-subdoc"
+    visibleMode="close"
+    color="deep-orange"
+    onlyPost="true"
+    fromSource="nota"
+    fromView="ultima"
+    error="=fn('validarPacientePlanificacionFamiliar',calc.getRef(user,'establishmentData.cluesSis'),persona.genero,moment(_ask.fechaAtencion).diff(persona.fechaNacimiento,'years'))"
+    errorType="info"
+  }}
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('obtenerFechaMaximaDosMeses',persona.fechaNacimiento)" max="=moment().add('minutes',1).format()" errorMessage="Fecha Incorrecta"}}

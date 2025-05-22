@@ -2502,18 +2502,17 @@
 
   {{#function id="validaCluesCancer"}}
     {{define type="param" id="establecimiento"}}
-    
     {{when condition="=calc.in(establecimiento.cluesInstitucion, ['SSA','IMB','SME']) && establecimiento.cluesTipoUnidad === '2' && calc.in(establecimiento.cluesTipoAbreviacion, ['99','M','N','O'])" return="true"}}
     {{when condition="=calc.in(establecimiento.cluesInstitucion, ['SSA','IMB','SME']) && establecimiento.cluesTipoUnidad === '1' && calc.in(establecimiento.cluesSubAbreviacion, ['T07','UNE05','UNE07','UNE11','UNE99'])" return="true"}}
-    
     {{default return="false"}}
   {{/function}}
 
-
-  {{#function id="errorPacientePlanificacionFamiliar"}}
+  {{#function id="validarPacientePlanificacionFamiliar"}}
+    {{define type="param" id="cluesSis" default="='no'"}}
     {{define type="param" id="genero"}}
     {{define type="param" id="edad"}}
-    {{default return="=(genero==='mujer'&&edad>=9&&edad<=59)||(calc.in(genero,['hombre','intersexual'])&&edad>=9&&edad<=70)?'':'Verificar Sexo y Edad Paciente'"}}
+    {{when cluesSis="='no'" return="='CLUES Inválido (El Establecimiento no es de Consulta Externa)'"}}
+    {{default return="=(genero==='mujer'&&edad>=9&&edad<=59)||(calc.in(genero,['hombre','intersexual'])&&edad>=9&&edad<=70)?'':'Edad Inválida (El Paciente no es candidato a Planificación Familiar)'"}}
   {{/function}}
 
   {{#function id="validaCertificadoDefuncion"}}
@@ -2606,7 +2605,7 @@
   {{/function}}
 
   {{#function id="procedimientoEsterilizacion"}}
-    {{default return="['6370','6371','6372','6373','6374','6621','6622','6629','6631','6632','6639','6651','6652','6663']"}}
+    {{default return="['6370','6371','6372','6373','6374','6621','6622','6629','6631','6632','6639','6663']"}}
   {{/function}}
 
   {{#function id="procedimientoCesarea"}}
@@ -2834,6 +2833,26 @@
     {{define type="param" id="fechaNacimiento"}}
     {{default return="=moment(@fechaAtencion).diff(moment(@fechaNacimiento), 'years')"}}
   {{/function}}
+
+  {{#function id="validarFechaAtencionLesion"}}
+    {{define type="param" id="fechaEvento"}}
+    {{define type="param" id="horaEvento"}}
+    {{define type="param" id="fechaAtencion"}}
+    {{define type="param" id="horaAtencion"}}
+    {{!-- 1) Si la fecha de atención es antes de la del evento → inválido --}}
+    {{when condition="=moment(@fechaAtencion).startOf('day').isBefore(moment(@fechaEvento).startOf('day'))" return="true"}}
+    {{!-- 2) Si la fecha de atención es después de la del evento → válido --}}
+    {{when condition="=moment(@fechaAtencion).startOf('day').isAfter(moment(@fechaEvento).startOf('day'))" return="false"}}
+    {{!-- 3) Estamos en el mismo día --}}
+    {{!-- 3a) Si hay hora desconocida → válido --}}
+    {{when condition="=@horaEvento=='99:99' || @horaAtencion=='99:99'" return="false"}}
+    {{!-- 3b) Ambas horas conocidas pero atención ≤ evento → inválido --}}
+    {{when condition="=@horaEvento!='99:99' && @horaAtencion!='99:99' && (moment(@fechaEvento + ' ' + @horaEvento, 'YYYY-MM-DD HH:mm').isSame(moment(@fechaAtencion + ' ' + @horaAtencion, 'YYYY-MM-DD HH:mm')) || moment(@fechaEvento + ' ' + @horaEvento, 'YYYY-MM-DD HH:mm').isAfter(moment(@fechaAtencion + ' ' + @horaAtencion, 'YYYY-MM-DD HH:mm')))" return="true"}}
+    {{!-- 3c) Resto de casos (misma fecha y atención > evento) → válido --}}
+    {{default return="false"}}
+  {{/function}}
+
+
 {{/define}}
 
 {{#markup}}
