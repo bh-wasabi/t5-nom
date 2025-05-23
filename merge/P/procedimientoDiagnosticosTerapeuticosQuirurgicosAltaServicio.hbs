@@ -9,7 +9,6 @@
           {{set limiteInferior="=datos.limiteInferior"}}
           {{set limiteSuperior="=datos.limiteSuperior"}}
           {{set otrasValidaciones="=datos.otrasValidaciones"}}
-          {{set excedeLimiteEdad="=calc.meetsAgeLimit(datos.limiteInferior, null, _parentDoc.persona.fechaNacimiento, true, moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years')<1?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaEgreso, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(datos.limiteSuperior, null, _parentDoc.persona.fechaNacimiento, false, moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years')<1?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaEgreso, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
           {{set enQuirofanoOFuera="=datosQuirofano.enQuirofanoOFuera"}}
           {{set _enQuirofanoOFuera="=datosQuirofano._enQuirofanoOFuera"}}
           {{set tipoAnestesia="=datosQuirofano.tipoAnestesia"}}
@@ -19,6 +18,8 @@
           {{set _cirujano="=datosQuirofano._cirujano"}}
           {{set cedulaCirujano="=datosQuirofano.cedulaCirujano"}}
           {{set descripcionProcedimiento="=datosQuirofano.especificacion"}}
+          {{set excedeLimiteEdad="=calc.meetsAgeLimit(datos.limiteInferior, null, _parentDoc.persona.fechaNacimiento, true, moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years')<1?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaEgreso, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(datos.limiteSuperior, null, _parentDoc.persona.fechaNacimiento, false, moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years')<1?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaEgreso, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
+          {{set excedeLimiteSexo="=datos.limiteSexo=='NO'?'NO':_parentDoc.persona.genero=='intersexual'?'SI':calc.meetsSexLimit(datos.limiteSexo=='HOMBRE'?'HOMBRE':datos.limiteSexo=='MUJER'?'MUJER':'NO', _parentDoc.persona.genero)?'NO':'SI'"}}
         {{/onChange}}
       {{/editor}}
     {{/field}}

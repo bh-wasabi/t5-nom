@@ -18,7 +18,7 @@
         {{set apellidoPaternoMedicoInterconsultado="=base.interconsulta.base.apellidoPaternoMedicoInterconsultado"}}
         {{set apellidoMaternoMedicoInterconsultado="=base.interconsulta.base.apellidoMaternoMedicoInterconsultado"}}
         {{set cedulaMedicoInterconsultado="=base.interconsulta.base.cedulaMedicoInterconsultado"}}
-        {{set excedeLimiteEdad="=moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years')>=18&&calc.in(base.interconsulta.base.servicioInterconsultado,fn('servicioEspecialidadPediatria'))||(_parentDoc.persona.genero==='mujer'&&calc.in(base.interconsulta.base.servicioInterconsultado,fn('servicioEspecialidadGinecoobstetricia'))&&(moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years')<9||moment(_parentDoc.base.fechaInterconsulta).diff(_parentDoc.persona.fechaNacimiento,'years')>59))?'SI':'NO'"}}
+        {{set excedeLimiteEdad="=_mainDoc.nomDatos.desconoceFechaNacimiento=='no'&&moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years')>=18&&calc.in(base.interconsulta.base.servicioInterconsultado,fn('servicioEspecialidadPediatria'))||(_parentDoc.persona.genero==='mujer'&&calc.in(base.interconsulta.base.servicioInterconsultado,fn('servicioEspecialidadGinecoobstetricia'))&&(moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years')<9||moment(_parentDoc.base.fechaInterconsulta).diff(_parentDoc.persona.fechaNacimiento,'years')>59))?'SI':'NO'"}}
       {{/onChange}}
     {{/field}}
   {{/section}}
