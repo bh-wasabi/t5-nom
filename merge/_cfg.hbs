@@ -2852,7 +2852,10 @@
     {{default return="false"}}
   {{/function}}
 
-
+  {{#function id="validarEgreso"}}
+    {{define type="param" id="detalle"}}
+    {{default return="=!calc.getRef(detalle,'notaIngreso.base.fechaAtencion')&&'Falta Nota de Ingreso'"}}
+  {{/function}}
 {{/define}}
 
 {{#markup}}

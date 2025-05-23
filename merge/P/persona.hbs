@@ -5135,7 +5135,7 @@
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
     {{update section="nomDatos" transform="copiarNomDatos"}}
-    {{#update section="base" newRef="servicios"}}
+    {{#update section="base" newRef="afeccionPrincipal,afeccionPrincipalReseleccionada"}}
       {{set fechaIngresoHospitalario="=_params.fechaIngresoHospitalario"}}
       {{set fechaEgreso="=_params.fechaEgreso"}}
       {{set esMujer="=persona.esMujer"}}
@@ -5161,39 +5161,31 @@
       {{set _antecedenteFamiliar="=detalle.antecedentes._antecedenteFamiliar"}}
       {{!-- {{set signosVitales="=detalle.signosVitales"}}
       {{set _signosVitales="=detalle._signosVitales"}} --}}
-      {{set somatometria="=contexto.episodio==detalle.notaEvolucion.contexto.episodio&&detalle.notaEvolucion.base.somatometria"}}
-      {{set _somatometria="=contexto.episodio==detalle.notaEvolucion.contexto.episodio&&detalle.notaEvolucion.base._somatometria"}} 
+      {{set somatometria="=calc.getRef(_.first(ultimaNotaEvolucion),'base.somatometria')"}}
+      {{set _somatometria="=calc.getRef(_.first(ultimaNotaEvolucion),'base._somatometria')"}}
       {{set somatometriaIngreso="=contexto.episodio==detalle.notaIngreso.contexto.episodio&&detalle.notaIngreso.base.somatometria"}}
       {{set _somatometriaIngreso="=contexto.episodio==detalle.notaIngreso.contexto.episodio&&detalle.notaIngreso.base._somatometria"}}
       {{set motivoEgreso="=(contexto.estaDifunto)?'defuncion':null"}}
       {{set fechaHoraDefuncion="=contexto.defuncion.fechaHoraDefuncion"}}
       {{set diasEstancia="=moment(fechaHoraDefuncion).diff(moment(fechaIngresoHospitalario), 'day')"}}
       {{set evolucion="=contexto.defuncion.comentarios"}}
-      {{!-- {{set afeccionPrincipal="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&calc.recalcLimiteEdadDiagnostico(detalle.notaSeulLesiones.base.afeccionPrincipal, persona.fechaNacimiento, moment(_params.fechaEgreso).diff(persona.fechaNacimiento,'years')<1?_params.fechaIngresoHospitalario:_params.fechaEgreso)"}}
-      {{set _afeccionPrincipal="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&detalle.notaSeulLesiones.base._afeccionPrincipal"}}
-      {{set afeccionPrincipalReseleccionada="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&calc.recalcLimiteEdadDiagnostico(detalle.notaSeulLesiones.base.afeccionPrincipalReseleccionada, persona.fechaNacimiento, moment(_params.fechaEgreso).diff(persona.fechaNacimiento,'years')<1?_params.fechaIngresoHospitalario:_params.fechaEgreso)"}}
-      {{set _afeccionPrincipalReseleccionada="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&detalle.notaSeulLesiones.base._afeccionPrincipalReseleccionada"}}
-      {{set otrosDiagnosticos="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&calc.recalcLimiteEdadDiagnostico(detalle.notaSeulLesiones.base.otrosDiagnosticos, persona.fechaNacimiento, moment(_params.fechaEgreso).diff(persona.fechaNacimiento,'years')<1?_params.fechaIngresoHospitalario:_params.fechaEgreso)"}}
-      {{set _otrosDiagnosticos="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&detalle.notaSeulLesiones.base._otrosDiagnosticos"}} --}}
-      {{set afeccionPrincipal="=contexto.episodio==detalle.notaEvolucion.contexto.episodio&&calc.recalcLimiteEdadDiagnostico(detalle.notaEvolucion.base.afeccionPrincipal, persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngresoHospitalario:fechaEgreso)"}}
-      {{set _afeccionPrincipal="=contexto.episodio==detalle.notaEvolucion.contexto.episodio&&detalle.notaEvolucion.base._afeccionPrincipal"}}
-      {{set afeccionPrincipalReseleccionada="=contexto.episodio==detalle.notaEvolucion.contexto.episodio&&calc.recalcLimiteEdadDiagnostico(detalle.notaEvolucion.base.afeccionPrincipalReseleccionada, persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngresoHospitalario:fechaEgreso)"}}
-      {{set _afeccionPrincipalReseleccionada="=contexto.episodio==detalle.notaEvolucion.contexto.episodio&&detalle.notaEvolucion.base._afeccionPrincipalReseleccionada"}}
-      {{set otrosDiagnosticos="=contexto.episodio==detalle.notaEvolucion.contexto.episodio&&calc.recalcLimiteEdadDiagnostico(detalle.notaEvolucion.base.otrosDiagnosticos, persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngresoHospitalario:fechaEgreso)"}}
-      {{set _otrosDiagnosticos="=contexto.episodio==detalle.notaEvolucion.contexto.episodio&&detalle.notaEvolucion.base._otrosDiagnosticos"}}
+      {{set afeccionPrincipal="=calc.recalcLimiteEdadDiagnostico(calc.getRef(_.first(ultimaNotaEvolucion),'base.afeccionPrincipal'), persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngresoHospitalario:fechaEgreso)"}}
+      {{set _afeccionPrincipal="=calc.getRef(_.first(ultimaNotaEvolucion),'base._afeccionPrincipal')"}}
+      {{set afeccionPrincipalReseleccionada="=calc.recalcLimiteEdadDiagnostico(calc.getRef(_.first(ultimaNotaEvolucion),'base.afeccionPrincipalReseleccionada'), persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngresoHospitalario:fechaEgreso)"}}
+      {{set _afeccionPrincipalReseleccionada="=calc.getRef(_.first(ultimaNotaEvolucion),'base._afeccionPrincipalReseleccionada')"}}
+      {{set otrosDiagnosticos="=calc.recalcLimiteEdadDiagnostico(calc.getRef(_.first(ultimaNotaEvolucion),'base.otrosDiagnosticos'), persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngresoHospitalario:fechaEgreso)"}}
+      {{set _otrosDiagnosticos="=calc.getRef(_.first(ultimaNotaEvolucion),'base._otrosDiagnosticos')"}}
       {{set datosMujer="=contexto.episodio==detalle.notaAtencionParto.contexto.episodio&&detalle.notaAtencionParto.base.datosMujer"}}
       {{set _datosMujer="=contexto.episodio==detalle.notaAtencionParto.contexto.episodio&&detalle.notaAtencionParto.base._datosMujer"}}
       {{set antecedentesEmbarazos="=contexto.episodio==detalle.notaInformacionEmbarazoPartograma.contexto.episodio&&detalle.notaInformacionEmbarazoPartograma.base.antecedentesEmbarazos"}}
       {{set _antecedentesEmbarazos="=contexto.episodio==detalle.notaInformacionEmbarazoPartograma.contexto.episodio&&detalle.notaInformacionEmbarazoPartograma.base._antecedentesEmbarazos"}}
       {{set pacientePsiquiatrico="=calc.in(user.establishmentData.cluesTipoAbreviacion,['Y','HPSIQ','HPSIQMF'])&&calc.in(user.establishmentData.cluesSubAbreviacion,['99','NES','INP','SAP'])?'si':'no'"}}
-      {{setRef ref="servicios.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
-      {{setRef ref="servicios.base.genero" value="=persona.genero"}}
       {{setRef ref="afeccionPrincipal.base.folioLesion" value="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&detalle.notaSeulLesiones._created.folio"}}
       {{setRef ref="afeccionPrincipalReseleccionada.base.folioLesion" value="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&detalle.notaSeulLesiones._created.folio"}}
       {{setRef ref="afeccionPrincipalReseleccionada.base.esEgreso" value="true"}}
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
-    {{update section="comorbilidades" value="=calc.subItemsMap(_items2, 'base.otrosDiagnosticos', '=base.detalle+`#`+base.diagnostico', '=base.nombre')"}}
+    {{update section="comorbilidades" value="=calc.subItemsMap(ultimaNotaEvolucion, 'base.otrosDiagnosticos', '=base.detalle+`#`+base.diagnostico', '=base.nombre')"}}
   {{/transform}}
 
   {{#transform id="copiarDetecciones"}}
@@ -12660,13 +12652,14 @@
     fromView="solicitudesEgreso"
     toSection="solicitudesEgreso"
     fromSource2="notaEvolucion"
-    fromView2="comorbilidades"
+    fromView2="ultimaEvolucion"
+    toSection2="ultimaNotaEvolucion"
     fromSource3="nota"
     fromView3="nomFechaUltimaNota"
     fromSource4="solicitud"
     fromView4="sugerirProcedimientosRealizados"
     toSection4="procedimientosRealizados"
-    error="=fn('validarDerechohabiencia', contexto, detalle)||fn('errorCluesEgreso',user.establishmentData.cluesTipoUnidad,user.establishmentData.cluesTipoAbreviacion)||fn('errorDatosSeguro', persona, contexto, detalle)||fn('validarFechaEgreso',persona.fechaNacimiento,_ask.fechaIngresoHospitalario,_ask.fechaEgreso,_items3[0],user.establishmentData.cluesTipoAbreviacion,user.establishmentData.cluesSubAbreviacion)"
+    error="=fn('validarEgreso', detalle)||fn('validarDerechohabiencia', contexto, detalle)||fn('errorCluesEgreso',user.establishmentData.cluesTipoUnidad,user.establishmentData.cluesTipoAbreviacion)||fn('errorDatosSeguro', persona, contexto, detalle)||fn('validarFechaEgreso',persona.fechaNacimiento,_ask.fechaIngresoHospitalario,_ask.fechaEgreso,_items3[0],user.establishmentData.cluesTipoAbreviacion,user.establishmentData.cluesSubAbreviacion)"
     errorType="info"
   }}
     {{param persona="=_id"}}
@@ -12674,7 +12667,7 @@
     {{param desde="=fn('hospitalizacionDesde', contexto)"}}
     {{param episodio="=contexto.episodio"}}
     {{param tipoSolicitud="procedimiento,cirugia,tococirugia"}}
-    {{ask field="fechaIngresoHospitalario" type="datetime" label="Fecha Ingreso Hospitalario" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()"}}
+    {{ask field="fechaIngresoHospitalario" readOnly="true" type="datetime" label="Fecha Ingreso Hospitalario" required="true" value="=calc.getRef(detalle,'notaIngreso.base.fechaAtencion')||moment()"}}
     {{ask field="fechaEgreso" type="datetime" label="Fecha Egreso" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Egreso Incorrecta"}}
   {{/action}}
   {{action id="notaEgresoAjuste" source="notaEgresoAjuste" label="Egreso (Ajuste)" transform="copiarDiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" superUser="true"}}
