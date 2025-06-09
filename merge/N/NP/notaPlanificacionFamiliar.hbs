@@ -5,13 +5,14 @@
     {{/update}}
   {{/action}}
 
-  {{!-- {{#section id="base"}}
-    {{#field id="relacionTemporal"}}
-      {{#onChange}}
-        {{setRef ref="afeccionPrincipal.base.relacionTemporal" value="=relacionTemporal"}}
-      {{/onChange}}
-    {{/field}}
-  {{/section}} --}}
+  {{#section id="base"}}
+    {{#onChange}}
+  		{{#update}}
+        {{set diagnostico="=calc.mergeArrays(@afeccionPrincipal,@otrosDiagnosticos)"}}
+        {{set _diagnostico="=_.pluck(base.diagnostico, '_name').join(', ')"}}
+  		{{/update}}
+  	{{/onChange}}
+  {{/section}}
   
   {{#section id="metodos"}}
     {{#field id="revisionColocacionMetodoQuirurgico"}}

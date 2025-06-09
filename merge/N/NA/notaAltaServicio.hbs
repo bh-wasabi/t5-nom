@@ -49,6 +49,8 @@
     {{#onChange}}
   		{{#update}}
         {{set foliosUtilizadosDefuncion="=_.compact([@folioCertificadoDefuncion])"}}
+        {{set diagnostico="=calc.mergeArrays(@afeccionPrincipal,@afeccionPrincipalReseleccionada,@otrosDiagnosticos)"}}
+        {{set _diagnostico="=_.pluck(base.diagnostico, '_name').join(', ')"}}
   		{{/update}}
   	{{/onChange}}
     {{validator type="expr" notValidIf="=@folioCertificadoDefuncion&&fn('validaCertificadoDefuncion',@folioCertificadoDefuncion)" message="Certificado Defunción Inválido"}}

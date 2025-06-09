@@ -1127,6 +1127,11 @@
     {{default return="='2019'"}}
   {{/function}}
 
+  {{#function id="ultimaAtencion"}}
+    {{define type="param" id="contexto"}}
+    {{default return="=calc.getRef(contexto, 'fechaUltimaAtencion')"}}
+  {{/function}}
+
   {{#function id="diasHospitalizado"}}
     {{define type="param" id="contexto"}}
     {{default return="=moment().diff(moment(fn('hospitalizacionDesde', contexto)), 'days')"}}

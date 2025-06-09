@@ -5018,8 +5018,6 @@
       {{set esHombre="=!esMujer"}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
       {{set esNeonatal="=calc.fromNowDays(persona.fechaNacimiento)<29"}}
-      {{set diagnostico="=detalle.diagnostico"}}
-      {{set _diagnostico="=detalle._diagnostico"}}
       {{set alergia="=detalle.alergia"}}
       {{set _alergia="=detalle._alergia"}}
       {{set discapacidad="=detalle.discapacidad"}}
@@ -5065,8 +5063,6 @@
       {{set esHombre="=!esMujer"}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
       {{set esNeonatal="=calc.fromNowDays(persona.fechaNacimiento)<29"}}
-      {{set diagnostico="=detalle.diagnostico"}}
-      {{set _diagnostico="=detalle._diagnostico"}}
       {{set alergia="=detalle.alergia"}}
       {{set _alergia="=detalle._alergia"}}
       {{set discapacidad="=detalle.discapacidad"}}
@@ -5079,14 +5075,9 @@
       {{set _servicio="=contexto._servicio||contexto.ingreso.servicio"}}
       {{set antecedenteFamiliar="=detalle.antecedentes.antecedenteFamiliar"}}
       {{set _antecedenteFamiliar="=detalle.antecedentes._antecedenteFamiliar"}}
-      {{!-- {{set signosVitales="=detalle.signosVitales"}}
-      {{set _signosVitales="=detalle._signosVitales"}}
-      {{set somatometria="=detalle.somatometria"}}
-      {{set _somatometria="=detalle._somatometria"}} --}}
       {{set somatometriaPediatrica="=detalle.somatometriaPediatrica"}}
       {{set _somatometriaPediatrica="=detalle._somatometriaPediatrica"}}
       {{set fechaNacimiento="=persona.fechaNacimiento"}}
-      {{!-- {{set fechaIngresoUrgencias="=contexto.urgencias.desde"}} --}}
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
   {{/transform}}
@@ -5145,8 +5136,6 @@
       {{set procedenciaIngreso="=contexto.ingreso.procedenciaIngreso"}}
       {{set _procedenciaIngreso="=contexto.ingreso._procedenciaIngreso"}}
       {{set fechaNacimiento="=persona.fechaNacimiento"}}
-      {{set diagnostico="=detalle.diagnostico"}}
-      {{set _diagnostico="=detalle._diagnostico"}}
       {{set alergia="=detalle.alergia"}}
       {{set _alergia="=detalle._alergia"}}
       {{set discapacidad="=detalle.discapacidad"}}
@@ -5155,12 +5144,8 @@
       {{set _medico="=contexto._medico||contexto.ingreso._medico"}}     
       {{set especialidad="=contexto.especialidad||contexto.ingreso.especialidad"}}
       {{set _especialidad="=contexto._especialidad||contexto.ingreso._especialidad"}}
-      {{!-- {{set servicio="=contexto.servicio||contexto.ingreso.servicio"}} --}}
-      {{!-- {{set _servicio="=contexto._servicio||contexto.ingreso.servicio"}} --}}
       {{set antecedenteFamiliar="=detalle.antecedentes.antecedenteFamiliar"}}
       {{set _antecedenteFamiliar="=detalle.antecedentes._antecedenteFamiliar"}}
-      {{!-- {{set signosVitales="=detalle.signosVitales"}}
-      {{set _signosVitales="=detalle._signosVitales"}} --}}
       {{set somatometria="=calc.getRef(_.first(ultimaNotaEvolucion),'base.somatometria')"}}
       {{set _somatometria="=calc.getRef(_.first(ultimaNotaEvolucion),'base._somatometria')"}}
       {{set somatometriaIngreso="=contexto.episodio==detalle.notaIngreso.contexto.episodio&&detalle.notaIngreso.base.somatometria"}}
@@ -5221,8 +5206,6 @@
       {{set esHombre="=!esMujer"}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
       {{set esNeonatal="=calc.fromNowDays(persona.fechaNacimiento)<29"}}
-      {{set diagnostico="=detalle.diagnostico"}}
-      {{set _diagnostico="=detalle._diagnostico"}}
       {{set alergia="=detalle.alergia"}}
       {{set _alergia="=detalle._alergia"}}
       {{set discapacidad="=detalle.discapacidad"}}
@@ -5550,25 +5533,12 @@
       {{set grupoEtnico="=persona.grupoEtnico"}}
       {{set _grupoEtnico="=persona._grupoEtnico"}}
       {{set primeraConsultaAno="=_items.length?'no':'si'"}}
-      {{!-- {{set primerConsultaUneme="=primeraConsultaAno"}} --}}
-      {{!-- {{set primeraUemeSaih="=primeraConsultaAno"}} --}}
       {{set menor="=calc.fromNowYears(persona.fechaNacimiento)>=10&&calc.fromNowYears(persona.fechaNacimiento)<=19"}}
     {{/update}}
     {{#update section="analisis"}}
-      {{set diagnostico="=detalle.diagnostico"}}
-      {{set _diagnostico="=detalle._diagnostico"}}
       {{setRef ref="saludNino.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
     {{/update}}
-    {{#update section="diagnosticos"}}
-      {{set diagnostico="=detalle.diagnostico"}}
-      {{set _diagnostico="=detalle._diagnostico"}}
-    {{/update}}
-    {{!-- {{#update section="exploracion" newRef="atencionObstetricas"}} --}}
     {{#update section="exploracion" newRef="signosVitales"}}
-      {{!-- {{set signosVitales="=detalle.signosVitales"}} --}}
-      {{!-- {{set _signosVitales="=detalle._signosVitales"}} --}}
-      {{!-- {{set somatometria="=detalle.somatometria"}} --}}
-      {{!-- {{set _somatometria="=detalle._somatometria"}} --}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
       {{setRef ref="atencionObstetricas.base.esCluesCancer" value="=fn('validaCluesCancer',user.establishmentData)"}}
       {{setRef ref="atencionObstetricas.base.esMujer" value="=persona.genero=='mujer'"}}
@@ -5650,8 +5620,6 @@
       {{setRef ref="signosVitales.base.fechaHoraRegistro" value="=_params.fechaAtencion"}}
     {{/update}}
     {{#update section="diagnosticos"}}
-      {{!-- {{set diagnostico="=detalle.diagnostico"}} --}}
-      {{!-- {{set _diagnostico="=detalle._diagnostico"}} --}}
       {{set placaBacterian=""}}
       {{set tecnicaCepillado=""}}
       {{set usoHiloDental=""}}
@@ -12521,7 +12489,7 @@
     {{param desde="=fn('hospitalizacionDesde', contexto)"}}
     {{!-- {{ask field="fechaIngreso" type="datetime" label="Fecha Ingreso" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()"}} --}}
     {{ask field="fechaEgreso" type="datetime" label="Fecha Egreso" required="true" value="=moment().format()" min="=moment(fn('hospitalizacionDesde', contexto)).add('minutes',1)" max="=moment().add('minutes',1).format()" errorMessage="Fecha Egreso Incorrecta"}}
-    {{ask field="desconoceHoraEgreso" type="select" label="Desconoce Hora Egreso" keys="si,no" names="Si,No" required="true"}}
+    {{ask field="desconoceHoraEgreso" type="select" label="Desconoce Hora Egreso" keys="no,si" names="No,Sí" required="true"}}
   {{/action}}
   {{action id="notaAltaServicioAjuste" source="notaAltaServicioAjuste" label="Alta Servicio (Ajuste)" transform="copiarDiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" superUser="true"}}
 
@@ -12668,7 +12636,7 @@
     {{param episodio="=contexto.episodio"}}
     {{param tipoSolicitud="procedimiento,cirugia,tococirugia"}}
     {{ask field="fechaIngresoHospitalario" readOnly="true" type="datetime" label="Fecha Ingreso Hospitalario" required="true" value="=calc.getRef(detalle,'notaIngreso.base.fechaAtencion')||moment()"}}
-    {{ask field="fechaEgreso" type="datetime" label="Fecha Egreso" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Egreso Incorrecta"}}
+    {{ask field="fechaEgreso" type="datetime" label="Fecha Egreso" required="true" value="=moment().format()" min="=fn('ultimaAtencion', contexto)||fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Egreso Incorrecta"}}
   {{/action}}
   {{action id="notaEgresoAjuste" source="notaEgresoAjuste" label="Egreso (Ajuste)" transform="copiarDiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" superUser="true"}}
   {{action id="notaSolicitudPrestamoExpediente" source="notaSolicitudPrestamoExpediente" label="Solicitud Prestamo Expediente Clínico" transform="copiarDiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}

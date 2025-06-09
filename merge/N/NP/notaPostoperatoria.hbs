@@ -1,6 +1,14 @@
 {{#define id="notaPostoperatoria"}}
   {{#section id="base"}}
     {{field id="esHospitalizacion" type="expr" value="=tipoEpisodio=='hospitalizacion'"}}
+
+    {{#onChange}}
+  		{{#update}}
+        {{set diagnostico="=calc.mergeArrays(@afeccionPrincipal,@afeccionPrincipalReseleccionada,@otrosDiagnosticos)"}}
+        {{set _diagnostico="=_.pluck(base.diagnostico, '_name').join(', ')"}}
+  		{{/update}}
+  	{{/onChange}}
+
     {{validator type="expr" notValidIf="=calc.arrayInArray(calc.pluckRef(@procedimientoCirugia,'base.codigoCie9'),@procedimientoRealizado)" message="Tiene Procedimientos Duplicados"}}
   {{/section}}
 

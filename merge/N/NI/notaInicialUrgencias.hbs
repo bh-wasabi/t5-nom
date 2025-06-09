@@ -1,16 +1,11 @@
 {{#define id="notaInicialUrgencias"}}
-  {{#action id="afectar" confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))" confirmMessage="Diagnóstico Excede Límite Edad<br>¿Desea continuar?"}}
+  {{#action id="afectar" confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))" confirmMessage="Diagnóstico Excede Límite Edad<br>¿Desea continuar?"}}
     {{#update section="base"}}
-      {{set excedeLimiteEdad="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))?'SI':'NO'"}}
+      {{set excedeLimiteEdad="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))?'SI':'NO'"}}
     {{/update}}
   {{/action}}
   
   {{#section id="base"}}
-    {{!-- {{field id="fueraHospital" type="expr" value="=!@continuaAtencionFueraUrgencias"}}
-    {{field id="casa" type="expr" value="=continuaAtencionEnUrgencias=='casa'"}}
-    {{field id="noCasa" type="expr" value="=!casa"}}
-    {{field id="enUrgencias" type="expr" value="=continuaAtencionEnUrgencias&&noCasa"}}
-    {{field id="fueraUrgencias" type="expr" value="=!enUrgencias"}} --}}
     {{field id="esMujerMayor9" type="expr" value="=esMujer&&moment(base.fechaIngreso).diff(persona.fechaNacimiento,'years')>=9&&moment(base.fechaIngreso).diff(persona.fechaNacimiento,'years')<=59"}}
     {{field id="esFertil" type="expr" value="=mujerFertil=='embarazo'"}}
     {{field id="tieneCondicionAlta" type="expr" value="=(continuaAtencionFueraUrgencias||seEnviaA)"}}
@@ -27,6 +22,14 @@
         {{set cluesFechaBaja="=FECHA_EFECTIVA_BAJA"}}
       {{/onChange}}
     {{/field}}
+
+    {{#onChange}}
+  		{{#update}}
+        {{set diagnostico="=calc.mergeArrays(@afeccionPrincipal,@otrosDiagnosticos)"}}
+        {{set _diagnostico="=_.pluck(base.diagnostico, '_name').join(', ')"}}
+  		{{/update}}
+  	{{/onChange}}
+
     {{validator type="expr" validIf="=(calc.number(@edadGestacional)>=0&&calc.number(@edadGestacional)<=45)||(calc.number(@edadGestacional)==99)" message="Error en la Edad Gestacional"}}
     {{validator type="expr" notValidIf="=@mujerFertil=='embarazo'&&@edadGestacional=='0'" message="Error en la Edad Gestacional"}}
     {{validator type="expr" validIf="=!@numeroSobres||(@numeroSobres>=1&&@numeroSobres<=20)" message="Error en Número de Sobres (1-20)"}}

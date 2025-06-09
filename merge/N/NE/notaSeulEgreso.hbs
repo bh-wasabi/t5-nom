@@ -35,6 +35,8 @@
         {{set foliosUtilizadosNacimiento="=_.compact(calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProducto'),'base.folioCertificadoNacimiento'))"}}
         {{set foliosUtilizadosDefuncion="=_.compact(calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProducto'),'base.folioCertificadoDefuncion'))"}}
         {{set foliosUtilizadosMuerteFetal="=_.compact([].concat([@folioCertificadoMuerteFetal],calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProducto'),'base.folioCertificadoMuerteFetal'),calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProductoAborto'),'base.folioCertificadoMuerteFetal')))"}}
+        {{set diagnostico="=calc.mergeArrays(@afeccionPrincipal,@afeccionPrincipalReseleccionada,@otrosDiagnosticos)"}}
+        {{set _diagnostico="=_.pluck(base.diagnostico, '_name').join(', ')"}}
   		{{/update}}
   	{{/onChange}}
   {{/section}}

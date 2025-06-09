@@ -53,5 +53,12 @@
     {{#field id="contrarreferido"}}
       {{onChange clearFields="referidoPor"}}
     {{/field}}
+
+    {{#onChange}}
+      {{#update section="base"}}
+        {{set diagnostico="=calc.mergeArrays(@afeccionPrincipal,@otrosDiagnosticos)"}}
+        {{set _diagnostico="=_.pluck(base.diagnostico, '_name').join(', ')"}}
+      {{/update}}
+    {{/onChange}}
   {{/section}}
 {{/define}}

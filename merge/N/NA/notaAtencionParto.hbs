@@ -1,6 +1,12 @@
 {{#define id="notaAtencionParto"}}
   {{#section id="base"}}
     {{field id="otroAtendioParto" type="expr" value="=atendioParto=='otro'"}}
+    {{#onChange}}
+  		{{#update}}
+        {{set diagnostico="=calc.mergeArrays(@afeccionPrincipal,@otrosDiagnosticos)"}}
+        {{set _diagnostico="=_.pluck(base.diagnostico, '_name').join(', ')"}}
+  		{{/update}}
+  	{{/onChange}}
   {{/section}}
   {{#view id="totalPartosCesareas"}}
     {{#pipeline}}

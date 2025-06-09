@@ -18,6 +18,14 @@
   {{/section}}
   {{#section id="diagnosticos"}}
     {{field id="esMayor6" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=6"}}
+
+    {{#onChange}}
+      {{#update section="base"}}
+        {{set diagnostico="=calc.mergeArrays(@afeccionPrincipal,@otrosDiagnosticos)"}}
+        {{set _diagnostico="=_.pluck(base.diagnostico, '_name').join(', ')"}}
+      {{/update}}
+    {{/onChange}}
+
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')),'R69X')" message="Tiene Diagnósticos Duplicados"}}
   {{/section}}
   {{!-- Todas las validaciones se realizan con regEx en metadata --}}
