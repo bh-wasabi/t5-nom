@@ -2782,6 +2782,13 @@
     {{default return=""}}
   {{/function}}
 
+  {{#function id="validarNotaEgresoAlProcesar"}}
+    {{define type="param" id="base"}}
+    {{when condition="=calc.getRef(base,'gestas')>25" return="='Error: Número de Gestas excede el límite permitido (25)'"}}
+    {{when condition="=calc.isEmpty(calc.getRef(base,'afeccionPrincipalReseleccionada.base.tipoAtencion'))" return="='Error: Falta Indicar Tipo de Atención de Afección Principal Reseleccionada'"}}
+    {{default return="=null"}}
+  {{/function}}
+
   {{#function id="validarServicioSaludMental"}}
     {{define type="param" id="esPsicologoPsiquiatra" default="false" notNull="true"}}
     {{define type="param" id="seRealizoPsicoterapia" default="individual" notNull="true"}}
@@ -5120,6 +5127,10 @@
   
   {{#template id="somatometria"}} 
     Peso: {{peso}} kg, Talla: {{estatura}} m, IMC: {{number imc "#.##"}}, Superficie Corporal: {{number superficieCorporal "#.##"}} m²{{#if cintura}}, Circunferencia Cintura (cm): {{cintura}}{{/if}}
+  {{/template}}
+  
+  {{#template id="somatometriaSeul"}} 
+    Peso: {{peso}} kg, Talla: {{estatura}} m, Circunferencia Cintura: {{cintura}} cm{{#if conocePesoEstatura}}, IMC: {{number imc "#.##"}}, Superficie Corporal: {{number superficieCorporal "#.##"}} m²{{/if}}
   {{/template}}
 
   {{#template id="escalaBallard"}}

@@ -1,7 +1,7 @@
 {{#define id="notaSeulEgreso"}}
   {{#action 
     id="afectar"
-    error="=base.gestas>25?'Error: Número de Gestas excede el límite permitido (25)':null"
+    error="=fn('validarNotaEgresoAlProcesar',base)"
     confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteEdad'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteSexo'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteSexo')))"
     confirmMessage="Diagnóstico o Procedimiento Excede Límite Edad o Sexo<br>¿Desea continuar?"
   }}

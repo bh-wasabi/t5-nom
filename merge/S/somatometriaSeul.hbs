@@ -1,0 +1,8 @@
+{{#define id="somatometriaSeul"}}
+  {{#section id="base"}}
+    {{field id="conocePesoEstatura" type="expr" value="=peso!='999'&&estatura!='999'"}}
+    {{!-- como el nombre se calcula antes, hay que agregar este campo en el excel --}}
+    {{field id="imc" type="calc" value="=fn('imc', base)" format="#.##"}}
+    {{field id="superficieCorporal" type="calc" value="=fn('bsa', base)" format="#.##"}}
+  {{/section}}
+{{/define}}
