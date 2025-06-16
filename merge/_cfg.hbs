@@ -2768,18 +2768,14 @@
   {{/function}}
 
   {{#function id="validarNotaAltaServicio"}}
-    {{define type="param" id="otrosDiagnosticos"}}
-    {{define type="param" id="seleccionarOtrosDiagnosticos"}}
+    {{define type="param" id="base"}}
     {{define type="param" id="comorbilidades"}}
-    {{define type="param" id="procedimientoEgresos"}}
-    {{define type="param" id="seleccionarProcedimientos"}}
     {{define type="param" id="procedimientos"}}
     {{define type="param" id="interconsultas"}}
-    {{define type="param" id="notaSolicitudInterconsulta"}}
-    {{when condition="=calc.arrayLength(seleccionarOtrosDiagnosticos)<calc.arrayLength(comorbilidades)&&calc.arrayLength(otrosDiagnosticos,seleccionarOtrosDiagnosticos)<6" return="Faltan Comorbilidades por Seleccionar"}}
-    {{when condition="=calc.arrayLength(seleccionarProcedimientos)<calc.arrayLength(procedimientos)&&calc.arrayLength(procedimientoEgresos,seleccionarProcedimientos)<6" return="Faltan Procedimientos por Seleccionar"}}
-    {{when condition="=calc.arrayLength(interconsultas)<calc.arrayLength(notaSolicitudInterconsulta)&&calc.arrayLength(interconsultas)<6" return="Faltan Interconsultas por Seleccionar"}}
-    {{default return=""}}
+    {{when condition="=calc.arrayLength(base.seleccionarOtrosDiagnosticos)<calc.arrayLength(comorbilidades)&&calc.arrayLength(base.otrosDiagnosticos,base.seleccionarOtrosDiagnosticos)<6" return="Faltan Comorbilidades por Seleccionar"}}
+    {{when condition="=calc.arrayLength(base.procedimientoDiagnosticosTerapeuticosQuirurgicos)<calc.arrayLength(procedimientos)&&calc.arrayLength(base.procedimientoEgresos,base.procedimientoDiagnosticosTerapeuticosQuirurgicos)<6" return="Faltan Procedimientos por Seleccionar"}}
+    {{when condition="=calc.arrayLength(base.interconsultas)<calc.arrayLength(interconsultas)&&calc.arrayLength(base.interconsultas)<6" return="Faltan Interconsultas por Seleccionar"}}
+    {{default return="null"}}
   {{/function}}
 
   {{#function id="validarNotaEgresoAlProcesar"}}
@@ -5126,10 +5122,6 @@
   {{/template}}
   
   {{#template id="somatometria"}} 
-    Peso: {{peso}} kg, Talla: {{estatura}} m, IMC: {{number imc "#.##"}}, Superficie Corporal: {{number superficieCorporal "#.##"}} m²{{#if cintura}}, Circunferencia Cintura (cm): {{cintura}}{{/if}}
-  {{/template}}
-  
-  {{#template id="somatometriaSeul"}} 
     Peso: {{peso}} kg, Talla: {{estatura}} m, Circunferencia Cintura: {{cintura}} cm{{#if conocePesoEstatura}}, IMC: {{number imc "#.##"}}, Superficie Corporal: {{number superficieCorporal "#.##"}} m²{{/if}}
   {{/template}}
 

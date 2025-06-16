@@ -1,7 +1,7 @@
 {{#define id="notaAltaServicio"}}
   {{#action 
     id="afectar"
-    error="=fn('validarNotaAltaServicio',base.otrosDiagnosticos,base.seleccionarOtrosDiagnosticos,comorbilidades,base.procedimientoEgresos,base.procedimientoDiagnosticosTerapeuticosQuirurgicos,procedimientosRealizados,base.interconsultas,notaSolicitudInterconsulta)"
+    error="=fn('validarNotaAltaServicio',base,comorbilidades,procedimientosRealizados,interconsultasRealizadas)"
     confirm="=nomDatos.desconoceFechaNacimiento=='no'&&calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteEdad'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteEdad')))||calc.in('SI', calc.pluckRef(base.interconsultas,'base.excedeLimiteEdad'))"
     confirmMessage="Diagnóstico, Procedimiento o Interconsulta Excede Límite Edad<br>¿Desea continuar?"
   }}
@@ -56,9 +56,16 @@
     {{validator type="expr" notValidIf="=@folioCertificadoDefuncion&&fn('validaCertificadoDefuncion',@folioCertificadoDefuncion)" message="Certificado Defunción Inválido"}}
     {{validator type="expr" notValidIf="=moment(@fechaEgreso).diff(@fechaIngreso,'days')>40" message="No deben pasar <strong>40 Días</strong> entre <strong>Fecha Desde</strong> y <strong>Fecha Hasta</strong>"}}
     {{validator type="expr" notValidIf="=@CLUES==user.establishmentData.clues" message="CLUES Inválido"}}
+
+    {{!-- PROCEDIMIENTOS DUPLICADOS --}}
+    {{validator type="expr" notValidIf="=calc.findDuplicates(calc.mergeArrays(calc.pluckRef(procedimientoEgresos,'base.procedimientoCie9'),calc.pluckRef(procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.codigoCie9')))" message="Tiene Procedimientos Duplicados"}}
     
+    {{!-- DIAGNOSTICOS DUPLICADOS --}}
     {{validator type="expr" notValidIf="=calc.findDuplicates(calc.mergeArrays(@seleccionarOtrosDiagnosticos&&@seleccionarOtrosDiagnosticos.map((val)=>val.substr(val.indexOf('#')+1,val.length)),@afeccionPrincipal.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')))" message="Tiene Diagnósticos Duplicados"}}
     {{validator type="expr" notValidIf="=calc.findDuplicates(calc.mergeArrays(@seleccionarOtrosDiagnosticos&&@seleccionarOtrosDiagnosticos.map((val)=>val.substr(val.indexOf('#')+1,val.length)),@afeccionPrincipalReseleccionada&&@afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')))" message="Tiene Diagnósticos Duplicados"}}
+    
+    {{!-- INTERCONSULTAS DUPLICADAS --}}
+    {{validator type="expr" notValidIf="=calc.findDuplicates(calc.pluck(@interconsultas,'_name'))" message="Interconsultas Duplicadas"}}
 
     {{!-- PARTO --}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.validoSeul, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.validoSeul, calc.pluckRef(@otrosDiagnosticos, 'base.validoSeul')), null, 'PARTO')" message="Tiene Diagnósticos de tipo PARTO Duplicados"}}
@@ -75,8 +82,6 @@
     {{validator type="expr" notValidIf="=calc.arrayInArray(fn('diagnosticoDefuncion'),calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico'), @seleccionarOtrosDiagnosticos&&@seleccionarOtrosDiagnosticos.map((val)=>val.substr(val.indexOf('#')+1,val.length))))&&motivoAltaServicio!='defuncion'" message="Motivo Alta Servicio Inválido (Existen diagnósticos de DEFUNCIÓN)"}}
     
     {{validator type="expr" notValidIf="=_.last(calc.mergeArrays(@seleccionarOtrosDiagnosticos.map(d=>d.split('#')[1]),calc.pluckRef(@otrosDiagnosticos,'base.diagnostico')))=='P95X'" message="Código P95X no puede ser seleccionado como última Comorbilidad"}}
-    {{validator type="expr" notValidIf="=calc.findDuplicates(calc.pluck(@interconsultas,'_name'))" message="Interconsultas Duplicadas"}}
-    {{validator type="expr" notValidIf="=calc.findDuplicates(calc.pluck(@procedimientoDiagnosticosTerapeuticosQuirurgicos,'_name'))" message="Procedimientos Duplicados"}}
     {{validator type="expr" notValidIf="=calc.arrayLength(otrosDiagnosticos,seleccionarOtrosDiagnosticos)>6" message="Máximo 6 Comorbilidades"}}
     {{validator type="expr" notValidIf="=calc.arrayLength(@procedimientoEgresos,@procedimientoDiagnosticosTerapeuticosQuirurgicos)>6" message="Máximo 6 Procedimientos"}}
     {{validator type="expr" notValidIf="=calc.arrayLength(@interconsultas)>6" message="Máximo 6 Interconsultas"}}
