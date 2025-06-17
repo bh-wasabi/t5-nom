@@ -16,6 +16,7 @@
     {{validator type="expr" validIf="=persona.fechaNacimiento<fechaAtencion1" message="Error en la fecha atención"}}
     {{validator type="expr" notValidIf="=catServicios=='ODONTOPEDIATRÍA'&&esMayor18" message="Servicio Atención Inválido (Mayor de 18 Años)"}}
   {{/section}}
+
   {{#section id="diagnosticos"}}
     {{field id="esMayor6" type="expr" value="=moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years')>=6"}}
 
@@ -28,6 +29,7 @@
 
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')),'R69X')" message="Tiene Diagnósticos Duplicados"}}
   {{/section}}
+  
   {{!-- Todas las validaciones se realizan con regEx en metadata --}}
   {{!-- {{#section id="restauracion"}}
     {{validator type="expr" validIf="=!@numeroFosetasSelladas||(@numeroFosetasSelladas>=0&&@numeroFosetasSelladas<=32)" message="Fosetas o Fisuras Selladas Inválido"}}
@@ -40,6 +42,7 @@
     {{validator type="expr" validIf="=!@numeroEstraccionesPermanentes||(@numeroEstraccionesPermanentes>=0&&@numeroEstraccionesPermanentes<=9)" message="Extracciones Dientes Permanentes Inválido"}}
     {{validator type="expr" validIf="=!@numeroPiezasTerapiaPulpar||(@numeroPiezasTerapiaPulpar>=0&&@numeroPiezasTerapiaPulpar<=9)" message="Piezas Dentales Terapia Pulpar Inválido"}}
   {{/section}} --}}
+  
   {{#section id="farmacos"}}
     {{field id="telemedicina" type="expr" value="=@solicitaTelemedicina=='si'?'En Tiempo Real':''"}}
     {{field id="teleconsulta" type="expr" value="=(@solicitaTeleconsulta=='si'&&calc.isNotEmpty(estudiosTeleconsulta))?'Diferida':''"}}
@@ -68,8 +71,9 @@
     {{validator type="expr" notValidIf="=calc.in('noAplica',@estudiosTeleconsulta)&&@estudiosTeleconsulta.length>1" message="Estudios Teleconsulta 'No Aplica' debe ser único"}}
     {{validator type="expr" notValidIf="=@solicitaTeleconsulta=='si'&&calc.in('noAplica',@estudiosTeleconsulta)" message="Estudios Teleconsulta 'No Aplica' únicamente sin Teleconsulta"}}
   {{/section}}
-{{!--RACC VISTA  --}}
- {{#view id="ultima"}}
+  
+  {{!--RACC VISTA  --}}
+  {{#view id="ultima"}}
    {{#find limit="1"}}
      {{include field="_name"}}
      {{sort field="_id" direction="asc"}}
