@@ -26,6 +26,7 @@
         {{set docType="=_parentDoc._type"}}
         {{set edadActual="=_parentDoc.persona.edadActual"}}
         {{set requiereCampos="=REQUIERE_CAMPOS"}}
+        {{set afeccionPrincipal="=AF_PRIN"}}
       {{/onChange}}
     {{/field}}    
     {{validator type="expr" validIf="=calc.meetsSexLimit(limiteSexo, _parentDoc.persona.genero)" message="No Corresponde el Sexo del Paciente"}}
@@ -33,5 +34,6 @@
     {{!-- {{validator type="expr" validIf="=calc.meetsAgeLimit(limiteSuperior, desde, _parentDoc.persona.fechaNacimiento, false)" message="No Corresponde la Edad del Paciente con el Límite Superior"}} --}}
     {{validator type="expr" validIf="=calc.isEmpty(@detalle)||@detalle.length>1" message="Descripción (Mínimo 2 Caracteres)"}}
     {{validator type="expr" notValidIf="=_parentDoc.persona.genero=='intersexual'&&limiteSexo!='NO'" message="Diagnóstico Incorrecto para Intersexual"}}
+    {{validator type="expr" notValidIf="=afeccionPrincipal=='NO'" message="Diagnóstico Inválido para Lesiones"}}
   {{/section}}
 {{/define}}
