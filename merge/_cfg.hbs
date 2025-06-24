@@ -2797,6 +2797,17 @@
     {{default return=""}}
   {{/function}}
 
+  {{!-- {{#function id="validarServicioSaludMental2"}}
+    {{define type="param" id="base"}}
+    {{define type="param" id="diagnosticos"}}
+    {{define type="param" id="persona"}}
+    {{when condition="=calc.getRef(diagnosticos,'esPsicologoPsiquiatra')&&!calc.in(calc.getRef(diagnosticos,'seRealizoPsicoterapia'),['grupal','pareja','familiar'])&&calc.in(calc.getRef(base,'catServicios'),['GERONTOLOGÍA','PSICOGERIATRÍA'])&&moment(calc.getRef(base,'fechaAtencion')).diff(calc.getRef(persona,'fechaNacimiento'),'years')<60" return="='Servicio Atención ' + calc.getRef(base,'catServicios') + ' válido para terapia GRUPAL, PAREJA o FAMILIAR'"}}
+    {{when condition="=calc.getRef(diagnosticos,'esPsicologoPsiquiatra')&&!calc.in(calc.getRef(diagnosticos,'seRealizoPsicoterapia'),['grupal','pareja','familiar'])&&calc.getRef(base,'catServicios')=='PAIDOPSIQUIATRÍA'&&moment(calc.getRef(base,'fechaAtencion')).diff(calc.getRef(persona,'fechaNacimiento'),'years')>=18" return="'Servicio Atención PAIDOPSIQUIATRÍA válido para terapia GRUPAL, PAREJA o FAMILIAR'"}}
+    {{when condition="=!calc.getRef(diagnosticos,'esPsicologoPsiquiatra')&&calc.in(calc.getRef(base,'catServicios'),['GERONTOLOGÍA','PSICOGERIATRÍA'])&&moment(calc.getRef(base,'fechaAtencion')).diff(calc.getRef(persona,'fechaNacimiento'),'years')<60" return="='Servicio Atención ' + calc.getRef(base,'catServicios') + ' Inválido para la Edad del Paciente'"}}
+    {{when condition="=!calc.getRef(diagnosticos,'esPsicologoPsiquiatra')&&calc.getRef(base,'catServicios')=='PAIDOPSIQUIATRÍA'&&moment(calc.getRef(base,'fechaAtencion')).diff(calc.getRef(persona,'fechaNacimiento'),'years')>=18" return="='Servicio Atención ' + calc.getRef(base,'catServicios') + ' Inválido para la Edad del Paciente'"}}
+    {{default return=""}}
+  {{/function}} --}}
+
   {{#function id="validarCedulaDuplicada"}}
     {{define type="param" id="datosEspecialidad"}}
     {{when condition="=calc.hasDuplicates(calc.pluckRef(datosEspecialidad,'base.cedulaEspecialidad'))" return="='Tiene Cédula Especialidad Duplicada'"}}
@@ -2863,6 +2874,26 @@
   {{#function id="validarEgreso"}}
     {{define type="param" id="detalle"}}
     {{default return="=!calc.getRef(detalle,'notaIngreso.base.fechaAtencion')&&'Falta Nota de Ingreso'"}}
+  {{/function}}
+
+  {{#function id="confirmarSaludMental"}}
+    {{define type="param" id="base"}}
+    {{define type="param" id="diagnosticos"}}
+    {{define type="param" id="persona"}}
+    {{!-- 1) Si el campo seRealizoPsicoterapia es grupal, pareja o familiar -> válido --}}
+    {{when condition="=calc.in(calc.getRef(diagnosticos,'seRealizoPsicoterapia'),['grupal','pareja','familiar'])" return="false"}}
+    {{!-- 2) Si Afección Principal excede límite edad -> inválido --}}
+    {{when condition="=calc.getRef(base,'afeccionPrincipal.base.excedeLimiteEdad')=='SI'" return="true"}}
+    {{!-- 3) Si en Otros Diagnósticos, alguno excede límite edad -> inválido --}}
+    {{when condition="=calc.in('SI',calc.pluckRef(calc.getRef(base,'otrosDiagnosticos'),'base.excedeLimiteEdad'))" return="true"}}
+    {{!-- 4) Si Afección Principal excede límite sexo -> inválido --}}
+    {{when condition="=calc.getRef(base,'afeccionPrincipal.base.limiteSexo')!=='NO'&&calc.getRef(base,'afeccionPrincipal.base.limiteSexo')!==calc.upperCase(calc.getRef(persona,'genero'))" return="true"}}
+    {{!-- 5) Si persona es 'hombre' y en Otros Diagnósticos, tiene diagnóstico de MUJER -> inválido --}}
+    {{when condition="=calc.getRef(persona,'genero')==='hombre'&&calc.in('MUJER',calc.pluckRef(calc.getRef(base,'otrosDiagnosticos'),'base.limiteSexo'))" return="true"}}
+    {{!-- 6) Si persona es 'mujer' y en Otros Diagnósticos, tiene diagnóstico de HOMBRE -> inválido --}}
+    {{when condition="=calc.getRef(persona,'genero')==='mujer'&&calc.in('HOMBRE',calc.pluckRef(calc.getRef(base,'otrosDiagnosticos'),'base.limiteSexo'))" return="true"}}
+    {{!-- De lo contrario -> válido --}}
+    {{default return="false"}}
   {{/function}}
 {{/define}}
 
