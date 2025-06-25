@@ -4939,6 +4939,9 @@
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
     {{update section="nomDatos" transform="copiarNomDatos"}}
+    {{#update section="base"}}
+      {{set fechaAtencion="=_params.fechaAtencion"}}
+    {{/update}}
     {{update section="dependenciaLista" value="=_.union([nomDatos.datosSeguro.base.dependencia],calc.pluckRef(nomDatos,'datosSeguro.base.dependencia2'))"}}
     {{update section="resumen" value="=resumen" temp="true"}}
   {{/transform}}
@@ -11483,7 +11486,9 @@
     {{param persona="=_id"}}
   {{/action}}
   {{action id="notaDatosSeguro" source="notaDatosSeguro" label="Datos Seguro" transform="copiarDatosSeguro" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
-  {{action id="notaDerechohabienciaEgreso" source="notaDerechohabienciaEgreso" label="Derechohabiencia Egreso" transform="copiarDerechohabienciaEgreso" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{#action id="notaDerechohabienciaEgreso" source="notaDerechohabienciaEgreso" label="Derechohabiencia Egreso" transform="copiarDerechohabienciaEgreso" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+    {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
+  {{/action}}
   {{action id="notaCancelacionCita" source="notaCancelacionCita" label="Cancelación Cita" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaPrimeraVezClinicaSueno" source="notaPrimeraVezClinicaSueno" label="Primera Vez Clínica Sueño" transform="copiarDiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaReporteMedicoPolisomnografia" source="notaReporteMedicoPolisomnografia" label="Reporte Médico Polisomnográfia" transform="copiarDiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}

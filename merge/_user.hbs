@@ -51,8 +51,8 @@
     {{#update section="prestadorServicios"}}
       {{set condition="=prestadorServicios.paisNacimiento=='MX'" clave="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'), 16, true)"}}
       {{set condition="=prestadorServicios.paisNacimiento!='MX'" clave="=fn('CURP_GENERICO')"}}
-      {{set condition="=prestadorServicios.paisNacimiento=='MX'" claveCompleta="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'), 18, true)"}}
-      {{set condition="=prestadorServicios.paisNacimiento!='MX'" claveCompleta="=fn('CURP_GENERICO')"}}
+      {{set condition="=prestadorServicios.paisNacimiento=='MX'" claveCompleta="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'), 18, true)" claveCompleta2="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'), 18, false)"}}
+      {{set condition="=prestadorServicios.paisNacimiento!='MX'" claveCompleta="=fn('CURP_GENERICO')" claveCompleta2="=fn('CURP_GENERICO')"}}
     {{/update}}
   {{/action}}
   {{!-- Tarea 5604 --}}
@@ -255,6 +255,8 @@
       {{/onChange}}
     {{/field}}
     {{validator type="expr" notValidIf="=calc.in(@entidadNacimiento,['99','00'])" message="Entidad Nacimiento Inválida"}}
+    {{validator type="expr" notValidIf="=paisNacimiento=='MX'&&entidadNacimiento=='NE'" message="Entidad Nacimiento Inválida (Nacido en México)"}}
+    {{validator type="expr" notValidIf="=paisNacimiento!='MX'&&entidadNacimiento!='NE'" message="Entidad Nacimiento Inválida (Nacido en el Extranjero)"}}
     {{validator type="expr" validIf="=calc.fromNowYears(@fechaNacimiento)>=18" message="Error, Menor a 18 Años"}}
     {{validator type="expr" validIf="=calc.fromNowYears(@fechaNacimiento)<=90" message="Error, Mayor a 90 Años"}}{{!-- cambios 2024-05-29 --}}
     {{validator type="expr" condition="=fn('cedulaObligatoria',base.tipoPersonalNom??'')" notValidIf="=fn('faltaCedulaEspecialidad',@datosEspecialidad)" message="Falta Cédula Especialidad"}}
