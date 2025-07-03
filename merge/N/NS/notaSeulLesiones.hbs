@@ -13,7 +13,7 @@
   {{param folioControl="base.foliosUtilizadosDefuncion"}}
   
   {{#section id="base"}}
-    {{field id="esMujerMayor9" type="expr" value="=esMujer&&(calc.fromNowYears(persona.fechaNacimiento)>=9||calc.fromNowYears(persona.fechaNacimiento<=59))"}}
+    {{field id="esMujerMayor9" type="expr" value="=esMujer&&moment(@fechaEvento).diff(moment(persona.fechaNacimiento),'years')>=9&&moment(@fechaEvento).diff(moment(persona.fechaNacimiento),'years')<=59"}}
     {{field id="esFertil" type="expr" value="=mujerFertil=='embarazo'||mujerFertil=='puerperio'"}}
     {{field id="tieneClues" type="expr" value="=usuarioReferido=='unidadMedica'"}}
     {{#field id="mujerFertil"}}
@@ -56,7 +56,6 @@
     {{validator type="expr" notValidIf="=(calc.getRef(@afeccionPrincipal,'base.tieneCausaExterna')||calc.getRef(@afeccionPrincipalReseleccionada,'base.tieneCausaExterna')||@otrosDiagnosticos&&calc.pluckRef(@otrosDiagnosticos,'base.tieneCausaExterna').includes(true))&&calc.isEmpty(calc.getRef(@causaExterna,'base.descripcionCausaExterna'))" message="Falta Indicar Descripción Causa Externa"}}
     {{validator type="expr" notValidIf="=!(calc.getRef(@afeccionPrincipal,'base.tieneCausaExterna')||calc.getRef(@afeccionPrincipalReseleccionada,'base.tieneCausaExterna')||@otrosDiagnosticos&&calc.pluckRef(@otrosDiagnosticos,'base.tieneCausaExterna').includes(true))&&!calc.isEmpty(calc.getRef(@causaExterna,'base.causaExterna'))" message="Falta Diagnóstico que requiera Causa Externa"}}
     {{validator type="expr" notValidIf="=!(calc.getRef(@afeccionPrincipal,'base.tieneCausaExterna')||calc.getRef(@afeccionPrincipalReseleccionada,'base.tieneCausaExterna')||@otrosDiagnosticos&&calc.pluckRef(@otrosDiagnosticos,'base.tieneCausaExterna').includes(true))&&!calc.isEmpty(calc.getRef(@causaExterna,'base.descripcionCausaExterna'))" message="Falta Diagnóstico que requiera Descripción Causa Externa"}}
-
   {{/section}}
 
   {{#section id="circunstanciasEvento"}}
