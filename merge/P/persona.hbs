@@ -12441,6 +12441,7 @@
   {{action id="notaResumenClinico" source="notaResumenClinico" label="Resumen Clínico" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
   {{#action id="notaEvolucion" source="notaEvolucion" label="Evolución" transform="copiarEvolucion" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaEvolucion" fromView="ultimaEvolucion"}}
     {{param persona="_id"}}
+    {{param episodio="=contexto.episodio"}}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
   {{/action}}
   
@@ -12750,6 +12751,7 @@
   {{action id="notaValoracionPreperfusion" source="notaValoracionPreperfusion" label="Valoración Preperfusión" transform="copiarSolicitudTipoCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
   {{#action id="notaPostanestesica" source="notaPostanestesica" label="Postanestésica" transform="copiarSolicitudTipoCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaEvolucion" fromView="ultimaEvolucion"}}
     {{param persona="_id"}}
+    {{param episodio="=contexto.episodio"}}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
   {{/action}}
   {{action id="notaUnidadCuidadosPostanestesicos" source="notaUnidadCuidadosPostanestesicos" label="Unidad Cuidados Postanestésicos" transform="copiarSolicitudTipoCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
@@ -12759,6 +12761,7 @@
   {{action id="cirugiaPreoperatoria" hide="true" type="menu" menu="cirugiaPreoperatoria" label="Preoperatoria" color="deep-orange"}}      
   {{#action id="notaPreoperatoria" source="notaPreoperatoria" label="Preoperatoria" transform="copiarSolicitudTipoCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaEvolucion" fromView="ultimaEvolucion"}}
     {{param persona="_id"}}
+    {{param episodio="=contexto.episodio"}}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
   {{/action}}
   {{#menu id="cirugiaPreoperatoria" color="deep-orange"}}
