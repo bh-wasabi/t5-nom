@@ -2785,6 +2785,15 @@
     {{default return="=null"}}
   {{/function}}
 
+  {{!-- {{#function id="validarNotaPlanificacionFamiliar" debug="true"}}
+    {{define type="param" id="base"}}
+    {{define type="param" id="metodos"}}
+    {{define type="param" id="orientacionConsejeria"}}
+    {{when condition="=calc.isEmpty(base.afeccionPrincipal)&&calc.getRef(metodos,'revisionColocacionMetodoQuirurgico')==='noAplica'&&calc.isFalse(calc.getRef(metodos,'puerperaAceptaFamiliar'))" return="='Error: Se debe registrar Afección Principal, Orientación Consejería y/o Métodos de Planificación Familiar'"}}
+    '=calc.isEmpty(base.afeccionPrincipal)&&calc.isFalse(orientacionConsejeria.orientacionPlanificacionFamiliar)&&calc.isFalse(orientacionConsejeria.orientacionIts)&&calc.isFalse(orientacionConsejeria.orientacionPrevencionEmbarazo)&&calc.isFalse(orientacionConsejeria.orientacionSaludSexual)&&metodos.revisionColocacionMetodoQuirurgico==='noAplica'&&calc.isFalse(metodos.puerpera.base.puerperaAceptaFamiliar)
+    {{default return="='Error al Procesar Nota Planificación Familiar'"}}
+  {{/function}} --}}
+
   {{#function id="validarServicioSaludMental"}}
     {{define type="param" id="esPsicologoPsiquiatra" default="false" notNull="true"}}
     {{define type="param" id="seRealizoPsicoterapia" default="individual" notNull="true"}}
