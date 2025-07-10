@@ -7769,6 +7769,31 @@
     {{/update}}
   {{/transform}}
 
+  {{#transform id="copiarPreAlta"}}
+    {{update section="contexto" value="=contexto"}}
+    {{update section="persona" transform="copiarPersona"}}
+    {{update section="nomDatos" transform="copiarNomDatos"}}
+    {{#update section="base"}}
+      {{set fechaAtencion="=_params.fechaAtencion"}}
+      {{set esMujer="=persona.esMujer"}}
+      {{set esHombre="=!esMujer"}}
+      {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
+      {{set esNeonatal="=calc.fromNowDays(persona.fechaNacimiento)<29"}}
+      {{set nivelSocioeconomico="=fn('nivelSocioeconomico', detalle, contexto)"}}
+      {{set _nivelSocioeconomico="=fn('_nivelSocioeconomico', detalle, contexto)"}}
+      {{set listaPrecios="=fn('listaPrecios', detalle, contexto, persona)"}}
+      {{set _listaPrecios="=fn('_listaPrecios', detalle, contexto, persona)"}}
+      {{set riesgoEpidemiologico="=detalle.riesgoEpidemiologico"}}
+      {{set _riesgoEpidemiologico="=detalle._riesgoEpidemiologico"}}
+      {{set servicio="=(_params._type=='cama'&&_params.base.servicio)||contexto.servicio"}}
+      {{set _servicio="=(_params._type=='cama'&&_params.base._servicio)||contexto._servicio"}}
+      {{set central="=(_params._type=='cama'&&_params.base.central)||contexto.central"}}
+      {{set _central="=(_params._type=='cama'&&_params.base._central)||contexto._central"}}
+      {{set cama="=(_params._type=='cama'&&_params._id)||contexto.cama"}}
+      {{set _cama="=(_params._type=='cama'&&_params._name)||contexto._cama"}}
+    {{/update}}
+  {{/transform}}
+
   {{!-- Tarea #3712  --}}
   {{action id="notaSeguimientoHepatitisC" source="notaSeguimientoHepatitisC" label="Hepatitis C Seguimiento" transform="copiarHepatitisSeguimiento" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{!-- Tarea #3712  --}}
@@ -12344,7 +12369,9 @@
   {{action id="notaNutricionPaso2" source="notaNutricionPaso2" label="Nutrición Paso 2" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaNutricionPaso3" source="notaNutricionPaso3" label="Nutrición Paso 3" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaNutricionPaso4" source="notaNutricionPaso4" label="Nutrición Paso 4" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
-  {{action id="notaPreAlta" source="notaPreAlta" label="Pre Alta" transform="copiarCama" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{#action id="notaPreAlta" source="notaPreAlta" label="Pre Alta" transform="copiarPreAlta" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+    {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('ultimaAtencion', contexto)||fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Incorrecta"}}
+  {{/action}}
   {{action id="notaSuspenderPreAlta" source="notaSuspenderPreAlta" label="Suspender Pre Alta" transform="copiarCama" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaSuspenderEgreso" source="notaSuspenderEgreso" label="Suspender Egreso" transform="copiarCama" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaProductividadClilph" source="notaProductividadClilph" label="Productividad Clilph" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
