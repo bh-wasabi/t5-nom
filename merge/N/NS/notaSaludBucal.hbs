@@ -47,9 +47,7 @@
     {{field id="telemedicina" type="expr" value="=@solicitaTelemedicina=='si'?'Tiempo Real':''"}}
     {{field id="teleconsulta" type="expr" value="=(@solicitaTeleconsulta=='si'&&calc.isNotEmpty(estudiosTeleconsulta))?'Diferida':''"}}
     {{#field id="solicitaTelemedicina"}}
-      {{#onChange clearFields="solicitaTeleconsulta,estudiosTeleconsulta,modalidad"}}
-        {{set modalidad="=@solicitaTelemedicina=='si'?'Tiempo Real':''"}}
-      {{/onChange}}
+      {{onChange clearFields="solicitaTeleconsulta,estudiosTeleconsulta,modalidad"}}
     {{/field}}
     {{#field id="solicitaTeleconsulta"}}
       {{#onChange}}
@@ -74,12 +72,12 @@
   
   {{!--RACC VISTA  --}}
   {{#view id="ultima"}}
-   {{#find limit="1"}}
-     {{include field="_name"}}
-     {{sort field="_id" direction="asc"}}
-     {{filter field="base.estatus" eq="='afectado'"}}
-     {{filter condition="=persona" field="persona.id" eq="=persona"}}
-     {{!-- {{filter condition="=desde" field="_create.date" gt="=desde"}} --}}
-   {{/find}}
- {{/view}}
+    {{#find limit="1"}}
+      {{include field="_name"}}
+      {{sort field="_id" direction="asc"}}
+      {{filter field="base.estatus" eq="='afectado'"}}
+      {{filter condition="=persona" field="persona.id" eq="=persona"}}
+      {{!-- {{filter condition="=desde" field="_create.date" gt="=desde"}} --}}
+    {{/find}}
+  {{/view}}
 {{/define}}

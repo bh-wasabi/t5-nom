@@ -20,9 +20,7 @@
       {{onChange clearFields="referidoPor"}}
     {{/field}}
     {{#field id="telemedicina"}}
-      {{#onChange clearFields="solicitaTeleconsulta,estudiosTeleconsulta,modalidad"}}
-        {{set modalidad="=@telemedicina=='si'?'Tiempo Real':''"}}
-      {{/onChange}}
+      {{onChange clearFields="solicitaTeleconsulta,estudiosTeleconsulta,modalidad"}}
     {{/field}}
     {{#field id="solicitaTeleconsulta"}}
       {{#onChange}}

@@ -95,6 +95,8 @@
 
   {{#view id="ultimaAltaServicio"}}
     {{#find limit="1"}}
+      {{include field="base.fechaEgreso"}}
+      {{include field="base.horaEgreso"}}
       {{include field="contexto.episodio"}}
       {{filter field="base.estatus" eq="afectado"}}
       {{filter field="persona.id" eq="=persona"}}

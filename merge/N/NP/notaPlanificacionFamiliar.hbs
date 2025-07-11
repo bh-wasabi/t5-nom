@@ -11,11 +11,11 @@
 
   {{#section id="base"}}
     {{#onChange}}
-  		{{#update}}
+      {{#update}}
         {{set diagnostico="=calc.mergeArrays(@afeccionPrincipal,@otrosDiagnosticos)"}}
         {{set _diagnostico="=_.pluck(base.diagnostico, '_name').join(', ')"}}
-  		{{/update}}
-  	{{/onChange}}
+      {{/update}}
+    {{/onChange}}
   {{/section}}
   
   {{#section id="metodos"}}
@@ -32,9 +32,7 @@
 
   {{#section id="condicion"}}
     {{#field id="solicitaTelemedicina"}}
-      {{#onChange clearFields="solicitaTeleconsulta,estudiosTeleconsulta,modalidad"}}
-        {{set modalidad="=@solicitaTelemedicina=='si'?'Tiempo Real':''"}}
-      {{/onChange}}
+      {{onChange clearFields="solicitaTeleconsulta,estudiosTeleconsulta,modalidad"}}
     {{/field}}
     {{#field id="solicitaTeleconsulta"}}
       {{#onChange}}
