@@ -92,4 +92,14 @@
     {{column field="_moment" width="250" readOnly="true"}}
     {{column field="accion" width="90"}}
   {{/grid}}
+
+  {{#view id="ultimaAltaServicio"}}
+    {{#find limit="1"}}
+      {{include field="contexto.episodio"}}
+      {{filter field="base.estatus" eq="afectado"}}
+      {{filter field="persona.id" eq="=persona"}}
+      {{filter field="contexto.episodio" eq="=episodio" isNumber="true"}}
+      {{sort field="base.fechaEgreso" direction="desc"}}
+    {{/find}}
+  {{/view}}
 {{/define}}

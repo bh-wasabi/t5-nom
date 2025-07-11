@@ -2771,6 +2771,12 @@
     {{default return="=@detalle.notaPlanAltaEnfermeria.contexto.episodio==@contexto.episodio?'Ya Existe Nota Plan Alta Enfermería':null"}}
   {{/function}}
 
+  {{#function id="validarNotaAltaServicioExiste" debug="true"}}
+    {{define type="param" id="contexto"}}
+    {{define type="param" id="detalle" default="={}"}}
+    {{default return="=calc.getRef(detalle,'notaAltaServicio.contexto.episodio')===calc.getRef(contexto,'episodio')?null:'Falta Nota Alta Servicio'"}}
+  {{/function}}
+
   {{#function id="validarNotaAltaServicio"}}
     {{define type="param" id="base"}}
     {{define type="param" id="comorbilidades"}}

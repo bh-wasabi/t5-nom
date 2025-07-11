@@ -10438,6 +10438,7 @@
     {{item action="notaSolicitudInterconsulta" text="Solicitud Interconsulta" beginGroup="true"}}
     {{item action="notaSolicitudMedicamento" text="Solicitud Medicamento"}}
     {{item action="notaSolicitudProcedimiento" text="Solicitud Procedimiento"}}
+    {{item action="notaSolicitudIngresoHospitalario" text="Solicitud Ingreso Hospitalario" beginGroup="true"}}
   {{/menu}}
 
   {{action id="menuUtilizacion" hide="true" type="menu" menu="menuUtilizacion" label="Aplicación" color="deep-orange"}}
@@ -15374,7 +15375,23 @@
     {{param desde="=fn('hospitalizacionDesde', contexto)||fn('ambulatorioDesde', contexto)"}}
   {{/action}}
   {{action id="notaPasaPacienteProcedimientoQx" source="notaPasaPacienteProcedimientoQx" label="Pasa Paciente a Procedimiento Qx" transform="copiarSolicitudContexto" hide="true" type="add-subdoc" visibleMode="close" color="primary" btnSolid="true" onlyPost="true" condition="=calc.in('procedimientoQx', _params.join.contexto.urgencias.flags)"}}
-  {{action id="notaPasaPacienteHospitalizacion" source="notaPasaPacienteHospitalizacion" transform="copiarSolicitudContexto" label="Pasa Paciente a Hospitalización" transform="copiarSolicitudContexto" hide="true" type="add-subdoc" visibleMode="close" color="primary" btnSolid="true" onlyPost="true" condition="=fn('tieneCamaReservada', contexto)"}}    {{!-- ||fn('estaHospitalizalizado', contexto) --}}
+  {{#action 
+    id="notaPasaPacienteHospitalizacion"
+    source="notaPasaPacienteHospitalizacion"
+    transform="copiarSolicitudContexto"
+    label="Pasa Paciente a Hospitalización"
+    hide="true"
+    type="add-subdoc"
+    visibleMode="close"
+    color="primary"
+    btnSolid="true"
+    onlyPost="true"
+    condition="=fn('tieneCamaReservada', contexto)"
+    error="fn('validarNotaAltaServicioExiste', contexto, detalle)"
+    errorType="info"
+  }}
+    {{param episodio="=contexto.episodio"}}
+  {{/action}}
   {{action id="notaRegresaPacienteHospitalizacion" source="notaRegresaPacienteHospitalizacion" transform="copiarSolicitudContexto" label="Regresa Paciente a Hospitalización" transform="copiarSolicitudContexto" hide="true" type="add-subdoc" visibleMode="close" color="primary" btnSolid="true" onlyPost="true" condition="=fn('estaHospitalizalizado', contexto)"}}    {{!-- || --}}
   {{#action id="notaPasaPacienteHospitalizacionProcedimientoQx" source="notaPasaPacienteHospitalizacionProcedimientoQx" transform="copiarSolicitudCama" label="Pasa Paciente a Hospitalización" transform="copiarSolicitudContexto" hide="true" type="add-subdoc" visibleMode="close" color="primary" btnSolid="true" onlyPost="true" condition="=fn('tieneCamaReservada', contexto)"}}   {{!-- fromSource="nota" fromView="notaRequerida" error="=(!_items.length)?'Nota Preoperatoria Requerida':null" errorType="info" --}}  {{!-- ||fn('estaHospitalizalizado', contexto) --}}
   {{!--   {{param persona="=_id"}}

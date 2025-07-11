@@ -34,9 +34,7 @@
       {{onChange clearFields="saludNino,cancerMenores,enfermedadesDiarreicasAgudas,infeccionesRespiratoriasAgudas"}}
     {{/field}}
     {{#field id="telemedicina"}}
-      {{#onChange clearFields="teleconsulta,estudiosTeleconsulta,modalidad"}}
-        {{set modalidad="=@telemedicina=='si'?'Tiempo Real':''"}}
-      {{/onChange}}
+      {{onChange clearFields="teleconsulta,estudiosTeleconsulta,modalidad"}}
     {{/field}}
     {{#field id="teleconsulta"}}
       {{#onChange}}

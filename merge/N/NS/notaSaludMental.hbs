@@ -21,7 +21,7 @@
     {{/field}}
     {{#field id="telemedicina"}}
       {{#onChange clearFields="solicitaTeleconsulta,estudiosTeleconsulta,modalidad"}}
-        {{set modalidad="=@telemedicina=='si'?'En Tiempo Real':''"}}
+        {{set modalidad="=@telemedicina=='si'?'Tiempo Real':''"}}
       {{/onChange}}
     {{/field}}
     {{#field id="solicitaTeleconsulta"}}
@@ -38,10 +38,10 @@
     {{/field}}
     
     {{#onChange}}
-  		{{#update}}
+      {{#update}}
         {{set diagnostico="=calc.mergeArrays(@afeccionPrincipal,@otrosDiagnosticos)"}}
         {{set _diagnostico="=_.pluck(base.diagnostico, '_name').join(', ')"}}
-  		{{/update}}
-  	{{/onChange}}
+      {{/update}}
+    {{/onChange}}
   {{/section}}
 {{/define}}
