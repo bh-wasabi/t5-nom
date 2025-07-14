@@ -1,6 +1,7 @@
 {{#define id="notaSeulEgreso"}}
   {{#action 
     id="afectar"
+    error="=fn('validarNotaEgresoAlProcesar',base)"
     confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteEdad'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteSexo'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteSexo')))"
     confirmMessage="Diagnóstico o Procedimiento Excede Límite Edad o Sexo<br>¿Desea continuar?"
   }}
@@ -14,7 +15,7 @@
   
  	{{#section id="base"}}
     {{#field id="pacientePsiquiatrico"}}
-      {{onChange clearFields="tipoUnidadPsiquiatrica,tipoServicioPsiquiatrico,HospitalParcial"}}
+      {{onChange clearFields="tipoUnidadPsiquiatrica,tipoServicioPsiquiatrico,hospitalParcial"}}
     {{/field}}
     {{#field id="motivoEgreso"}}
       {{onChange clearFields="notificoMP,folioCertificadoDefuncion,signosVitales,fechaHoraDefuncion,cluesTraslado,cluesEstatus,cluesFechaBaja"}}
@@ -32,8 +33,10 @@
   		{{#update}}
         {{set gestas="=fn('calcularGestas',antecedentesEmbarazos.base.paras,antecedentesEmbarazos.base.abortos,antecedentesEmbarazos.base.cesareas,esEmbarazo?1:0)"}}
         {{set foliosUtilizadosNacimiento="=_.compact(calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProducto'),'base.folioCertificadoNacimiento'))"}}
-        {{set foliosUtilizadosMuerteFetal="=_.compact(calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProducto'),'base.folioCertificadoMuerteFetal'))"}}
-        {{set foliosUtilizadosDefuncion="=_.compact([].concat([@folioCertificadoDefuncion],calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProducto'),'base.folioCertificadoDefuncion'),calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProductoAborto'),'base.folioCertificadoDefuncion')))"}}
+        {{set foliosUtilizadosDefuncion="=_.compact(calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProducto'),'base.folioCertificadoDefuncion'))"}}
+        {{set foliosUtilizadosMuerteFetal="=_.compact([].concat([@folioCertificadoMuerteFetal],calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProducto'),'base.folioCertificadoMuerteFetal'),calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProductoAborto'),'base.folioCertificadoMuerteFetal')))"}}
+        {{set diagnostico="=calc.mergeArrays(@afeccionPrincipal,@afeccionPrincipalReseleccionada,@otrosDiagnosticos)"}}
+        {{set _diagnostico="=_.pluck(base.diagnostico, '_name').join(', ')"}}
   		{{/update}}
   	{{/onChange}}
   {{/section}}

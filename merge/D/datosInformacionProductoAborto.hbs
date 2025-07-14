@@ -1,7 +1,13 @@
 {{#define id="datosInformacionProductoAborto"}}
  	{{#section id="base"}}
-    {{field id="siVivo" type="expr" value="=condicionNacimiento=='nacidoVivo'"}}
-    {{field id="siMuerto" type="expr" value="=condicionNacimiento=='nacidoMuerto'"}}
-    {{validator type="expr" notValidIf="=@folioCertificadoDefuncion&&fn('validaCertificadoDefuncion',@folioCertificadoDefuncion)" message="Certificado Defunción Inválido"}}
+    {{#field id="folioCertificadoMuerteFetal"}}
+      {{onChange clearFields="folioCertificadoUtilizado"}}
+    {{/field}}
+    {{#onChange}}
+  		{{#update}}
+        {{set folioCertificadoUtilizado="=@folioCertificadoMuerteFetal"}}
+  		{{/update}}
+  	{{/onChange}}
+    {{validator type="expr" notValidIf="=@folioCertificadoMuerteFetal&&fn('validaCertificadoMuerteFetal',@folioCertificadoMuerteFetal)" message="Certificado Muerte Fetal Inválido"}}
   {{/section}}
 {{/define}}

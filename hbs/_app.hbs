@@ -92,7 +92,7 @@
 
 [.#unless esRH.]
   [.#if esHIS.]
-      {{#item text="Ver"}}  {{!-- newTab="true" --}}
+      {{#item text="Ver" excludeUserRole="excluirMenuVer"}}  {{!-- newTab="true" --}}
         {{item text="Pacientes" href="/persona/pacientes"}}
         [.#if n3.]
         {{item text="Pacientes en Paris" href="/persona/pacientesEnParis" userRole="medico"}}
@@ -335,7 +335,7 @@ x        {{item text="Cajas" href="/_caja/cubo" newTab="true"}}
         {{item newTab="true" text="Centricity" userRole="medico" href="ie:http://10.150.21.18/AMI/HTML/Webviewer.html?view&un=MEDICO&pw=MEDICO3"}}
         [./if.]
       {{/item}}    
-      {{#item text="Registro"}}
+      {{#item text="Registro" excludeUserRole="excluirMenuRegistro"}}
         {{item text="Planeación Agendas" href="/planAgenda/lista" userRole="registroPlaneacionAgendas"}}
         {{item text="Pacientes" href="/paciente/lista" userRole="registroPacientes" beginGroup="true"}}      
         {{item text="Usuarios" href="/_user/lista" userLevel="usuarios,configuracion"}}
@@ -409,7 +409,7 @@ x        {{item text="Cajas" href="/_caja/cubo" newTab="true"}}
         [./if.]
       {{/item}}
       [.#if n3.]
-      {{#item text="Otros Módulos"}}
+      {{#item text="Otros Módulos" excludeUserRole="excluirMenuOtrosModulos"}}
         {{item text="Ambulancias" userRole="ambulancias" href="/biblioteca/_ambulancias"}}
         {{item text="Apoyo a la Administración" userRole="registroInfraestructura" href="/biblioteca/_apoyoAdministracion"}}
         {{item text="Área Médicos" userRole="registroInfraestructura" href="/biblioteca/_areaMedicos"}}

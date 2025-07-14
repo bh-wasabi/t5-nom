@@ -34,9 +34,7 @@
       {{onChange clearFields="saludNino,cancerMenores,enfermedadesDiarreicasAgudas,infeccionesRespiratoriasAgudas"}}
     {{/field}}
     {{#field id="telemedicina"}}
-      {{#onChange clearFields="teleconsulta,estudiosTeleconsulta,modalidad"}}
-        {{set modalidad="=@telemedicina=='si'?'En Tiempo Real':''"}}
-      {{/onChange}}
+      {{onChange clearFields="teleconsulta,estudiosTeleconsulta,modalidad"}}
     {{/field}}
     {{#field id="teleconsulta"}}
       {{#onChange}}
@@ -53,5 +51,12 @@
     {{#field id="contrarreferido"}}
       {{onChange clearFields="referidoPor"}}
     {{/field}}
+
+    {{#onChange}}
+      {{#update section="base"}}
+        {{set diagnostico="=calc.mergeArrays(@afeccionPrincipal,@otrosDiagnosticos)"}}
+        {{set _diagnostico="=_.pluck(base.diagnostico, '_name').join(', ')"}}
+      {{/update}}
+    {{/onChange}}
   {{/section}}
 {{/define}}

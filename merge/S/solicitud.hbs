@@ -369,18 +369,71 @@
       {{include field="base._especialidad"}}
       {{include field="_updated._moment"}}
       {{include field="control._subMoment"}}
-      {{include field="base.procedimiento"}}
-      {{include field="base.cirugia"}}
-      {{include field="base.tococirugia"}}
       {{filter field="_updated.moment" eq="='finalizado'"}}
       {{filter condition="=persona" field="persona.id" eq="=persona"}}
       {{filter condition="=servicio" field="base.servicio" eq="=servicio"}}
       {{filter condition="=desde" field="_moment.finalizado.date" gt="=desde"}}
       {{filter condition="=hasta" field="_moment.finalizado.date" lt="=moment(hasta).add(1,'day').format('YYYY-MM-DD')"}}
-      {{filter condition="=tipoSolicitud" field="base.tipoSolicitud" in="=tipoSolicitud"}}
       {{sort field="_moment.finalizado.date" direction="desc"}}
     {{/find}}
-    {{map field="procedimiento" type="expr" value="=calc.isEmpty(base.procedimiento)?calc.isEmpty(base.cirugia)?base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base._cirugiaCie9:base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base._cirugiaCie9:base.procedimiento.base._codigoCie9"}}
+  {{/view}}
+
+  {{#view id="sugerirProcedimientosRealizados" onlyMapped2="true"}}
+    {{#find limit="-1"}}
+      {{include field="base.cirugia"}}
+      {{include field="base.tococirugia"}}
+      {{include field="base.procedimiento"}}
+      {{filter field="_updated.moment" eq="='finalizado'"}}
+      {{filter field="base.tipoSolicitud" in="procedimiento,cirugia,tococirugia"}}
+      {{filter field="contexto.episodio" eq="=episodio" isNumber="true"}}
+      {{filter field="persona.id" eq="=persona"}}
+      {{filter field="base.procedimiento.base.codigoCie9" exists="true" or="true"}}
+      {{filter field="base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia.base.cirugiaCie9" exists="true" or="true"}}
+      {{filter field="base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia.base.cirugiaCie9" exists="true" or="true"}}
+      {{filter field="base.tococirugia.base.cirugiaCie9" exists="true" or="true"}}
+      {{filter field="base.cirugia.base.cirugiaCie9" exists="true" or="true"}}
+    {{/find}}
+    {{unwind field="base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia" includeAll="true"}}
+    {{unwind field="base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia" includeAll="true"}}
+    {{map field="id" value="=calc.getRef(base.cirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base.cirugiaCie9')||calc.getRef(base.tococirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base.cirugiaCie9')||calc.getRef(base.procedimiento,'base.codigoCie9')||calc.getRef(base.cirugia,'base.cirugiaCie9')||calc.getRef(base.tococirugia,'base.cirugiaCie9')"}}
+    {{map field="nombre" value="=calc.getRef(base.cirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base._cirugiaCie9')||calc.getRef(base.tococirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base._cirugiaCie9')||calc.getRef(base.procedimiento,'base._codigoCie9')||calc.getRef(base.cirugia,'base._cirugiaCie9')||calc.getRef(base.tococirugia,'base._cirugiaCie9')"}}
+    {{map field="datos" value="={cie9:calc.getRef(base.cirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base.cirugiaCie9')||calc.getRef(base.tococirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base.cirugiaCie9')||calc.getRef(base.procedimiento,'base.codigoCie9')||calc.getRef(base.cirugia,'base.cirugiaCie9')||calc.getRef(base.tococirugia,'base.cirugiaCie9'),limiteSexo:calc.getRef(base.cirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base.limiteSexo')||calc.getRef(base.tococirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base.limiteSexo')||calc.getRef(base.procedimiento,'base.limiteSexo')||calc.getRef(base.cirugia,'base.limiteSexo')||calc.getRef(base.tococirugia,'base.limiteSexo'),limiteInferior:calc.getRef(base.cirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base.limiteInferior')||calc.getRef(base.tococirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base.limiteInferior')||calc.getRef(base.procedimiento,'base.limiteInferior')||calc.getRef(base.cirugia,'base.limiteInferior')||calc.getRef(base.tococirugia,'base.limiteInferior'),limiteSuperior:calc.getRef(base.cirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base.limiteSuperior')||calc.getRef(base.tococirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base.limiteSuperior')||calc.getRef(base.procedimiento,'base.limiteSuperior')||calc.getRef(base.cirugia,'base.limiteSuperior')||calc.getRef(base.tococirugia,'base.limiteSuperior'),otrasValidaciones:calc.getRef(base.cirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base.otrasValidaciones')||calc.getRef(base.tococirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base.otrasValidaciones')||calc.getRef(base.procedimiento,'base.otrasValidaciones')||calc.getRef(base.cirugia,'base.otrasValidaciones')||calc.getRef(base.tococirugia,'base.otrasValidaciones')}"}}
+    {{map field="datosQuirofano" value="={enQuirofanoOFuera:calc.getRef(base.cirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base.enQuirofanoOFuera')||calc.getRef(base.tococirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base.enQuirofanoOFuera')||calc.getRef(base.cirugia,'base.enQuirofanoOFuera')||calc.getRef(base.tococirugia,'base.enQuirofanoOFuera'),_enQuirofanoOFuera:calc.getRef(base.cirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base._enQuirofanoOFuera')||calc.getRef(base.tococirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base._enQuirofanoOFuera')||calc.getRef(base.cirugia,'base._enQuirofanoOFuera')||calc.getRef(base.tococirugia,'base._enQuirofanoOFuera'),tipoAnestesia:calc.getRef(base.cirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base.tipoAnestesia')||calc.getRef(base.tococirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base.tipoAnestesia')||calc.getRef(base.cirugia,'base.tipoAnestesia')||calc.getRef(base.tococirugia,'base.tipoAnestesia'),_tipoAnestesia:calc.getRef(base.cirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base._tipoAnestesia')||calc.getRef(base.tococirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base._tipoAnestesia')||calc.getRef(base.cirugia,'base._tipoAnestesia')||calc.getRef(base.tococirugia,'base._tipoAnestesia'),tiempoProcedimientoCie9:calc.getRef(base.cirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base.tiempoProcedimientoCie9')||calc.getRef(base.tococirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base.tiempoProcedimientoCie9')||calc.getRef(base.cirugia,'base.tiempoProcedimientoCie9')||calc.getRef(base.tococirugia,'base.tiempoProcedimientoCie9'),cirujano:calc.getRef(base.cirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base.cirujano')||calc.getRef(base.tococirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base.cirujano')||calc.getRef(base.cirugia,'base.cirujano')||calc.getRef(base.tococirugia,'base.cirujano'),_cirujano:calc.getRef(base.cirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base._cirujano')||calc.getRef(base.tococirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base._cirujano')||calc.getRef(base.cirugia,'base._cirujano')||calc.getRef(base.tococirugia,'base._cirujano'),cedulaCirujano:calc.getRef(base.cirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base.cedulaCirujano')||calc.getRef(base.tococirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base.cedulaCirujano')||calc.getRef(base.cirugia,'base.cedulaCirujano')||calc.getRef(base.tococirugia,'base.cedulaCirujano'),especificacion:calc.getRef(base.cirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base.especificacion')||calc.getRef(base.tococirugia,'base.cirugiaRealizar.base.procedimientoCirugia.base.especificacion')||calc.getRef(base.cirugia,'base.especificacion')||calc.getRef(base.tococirugia,'base.especificacion')}"}}
+    {{sort field="nombre" direction="asc" having="=id" distinct="id"}}
+  {{/view}}
+
+  {{#view id="sugerirInterconsultas"}}
+    {{#find limit="-1"}}
+      {{filter field="_updated.moment" eq="='finalizado'"}}
+      {{filter field="base.tipoSolicitud" eq="='interconsulta'"}}
+      {{filter field="contexto.episodio" eq="=episodio" isNumber="true"}}
+      {{filter field="persona.id" eq="=persona"}}
+      {{sort field="_moment.finalizado.date" direction="desc"}}
+    {{/find}}
+  {{/view}}
+
+  {{#view id="reporteGeneral"}}
+    {{#find limit="-1"}}
+      {{include field="_created"}}
+      {{include field="_updated"}}
+      {{include field="_date"}}
+      {{include field="_parent"}}
+      {{include field="persona"}}
+      {{include field="base"}}
+      {{include field="info"}}
+      {{include field="control"}}
+      {{sort field="_date" direction="asc"}}
+      {{filter condition="=tipoSolicitud" field="base.tipoSolicitud" eq="=tipoSolicitud"}}
+      {{filter condition="=servicio" field="base.servicio" eq="=servicio"}}
+      {{filter condition="=categoria" field="base.categoria" eq="=categoria"}}
+      {{filter condition="=desde" field="_created.date" gt="=desde"}}
+      {{filter condition="=hasta" field="_created.date" lt="=moment(hasta).add(1,'day').format('YYYY-MM-DD')"}}
+    {{/find}}
+    {{calc field="importe" type="expr" value="=calc.round(control.importe,2)"}}
+    {{calc field="porCobrar" type="expr" value="=calc.round(control.porCobrar,2)"}}
+    {{calc field="porPagar" type="expr" value="=calc.round(control.porPagar,2)"}}
+    {{calc field="cobrado" type="expr" value="=importe-porCobrar"}}
+    {{calc field="pagado" type="expr" value="=importe-porPagar"}}
   {{/view}}
 
   {{#view id="reporteConsultaExterna"}}

@@ -21,6 +21,8 @@
       {{set condition="=calc.isEmpty(base.apellidoMaterno)" apellidoMaterno="='XX'"}}
       {{!-- {{set condition="=calc.isEmpty(base.generoSocial)" generoSocial="='noEspecificado'"}} --}}
       {{set clave="=base.desconoceFechaNacimiento=='no'?calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, base.generoCurp, base.entidadNacimiento, moment(base.fechaNacimiento).format('YYYY-MM-DD'),16,true):'XXXX999999XXXXXX99'"}}
+      {{set claveCompleta="=base.desconoceFechaNacimiento=='no'?calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, base.generoCurp, base.entidadNacimiento, moment(base.fechaNacimiento).format('YYYY-MM-DD'),18,true):'XXXX999999XXXXXX99'"}}
+      {{set claveCompleta2="=base.desconoceFechaNacimiento=='no'?calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, base.generoCurp, base.entidadNacimiento, moment(base.fechaNacimiento).format('YYYY-MM-DD'),18,false):'XXXX999999XXXXXX99'"}}
     {{/update}}
   {{/action}}
 

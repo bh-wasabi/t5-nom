@@ -2,4 +2,7 @@
   {{param attribute1="=fn('paramCodigoUrgencias', calc.getRef(base, 'urgencias.base'))"}}
   {{param attribute2="=fn('paramTipoPaciente', base)"}}
   {{param attribute3="=fn('paramUrgenciaEspecial', calc.getRef(base, 'urgencias.base'))"}}
+  {{#section id="base"}}
+    {{field id="esMujerFertil" type="expr" value="=esMujer&&moment(fechaAtencion).diff(persona.fechaNacimiento,'years')>=9"}}
+  {{/section}}
 {{/define}}

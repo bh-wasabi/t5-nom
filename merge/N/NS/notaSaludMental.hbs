@@ -1,12 +1,12 @@
 {{#define id="notaSaludMental"}}
   {{#action 
     id="afectar"
-    confirm="=!calc.in(diagnosticos.seRealizoPsicoterapia,['grupal','pareja','familiar'])&&calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))"
-    confirmMessage="Diagnóstico Excede Límite Edad<br>¿Desea continuar?"
+    confirm="=fn('confirmarSaludMental',base,diagnosticos,persona)"
+    confirmMessage="Diagnóstico Excede Límite Edad o Sexo<br>¿Desea continuar?"
     error="=fn('validarServicioSaludMental',diagnosticos.esPsicologoPsiquiatra,diagnosticos.seRealizoPsicoterapia,base.catServicios,moment(base.fechaAtencion).diff(persona.fechaNacimiento,'years'))"
   }}
     {{#update section="base"}}
-      {{set excedeLimiteEdad="=!calc.in(diagnosticos.seRealizoPsicoterapia,['grupal','pareja','familiar'])&&calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))?'SI':'NO'"}}
+      {{set excedeLimiteEdad="=fn('confirmarSaludMental',base,diagnosticos,persona)?'SI':'NO'"}}
     {{/update}}
   {{/action}}
 
@@ -20,9 +20,7 @@
       {{onChange clearFields="referidoPor"}}
     {{/field}}
     {{#field id="telemedicina"}}
-      {{#onChange clearFields="solicitaTeleconsulta,estudiosTeleconsulta,modalidad"}}
-        {{set modalidad="=@telemedicina=='si'?'En Tiempo Real':''"}}
-      {{/onChange}}
+      {{onChange clearFields="solicitaTeleconsulta,estudiosTeleconsulta,modalidad"}}
     {{/field}}
     {{#field id="solicitaTeleconsulta"}}
       {{#onChange}}
@@ -36,5 +34,12 @@
         {{set modalidad="=calc.in(estudiosTeleconsulta,['noAplica'])?'No Aplica':modalidad"}}
       {{/onChange}}
     {{/field}}
+    
+    {{#onChange}}
+      {{#update}}
+        {{set diagnostico="=calc.mergeArrays(@afeccionPrincipal,@otrosDiagnosticos)"}}
+        {{set _diagnostico="=_.pluck(base.diagnostico, '_name').join(', ')"}}
+      {{/update}}
+    {{/onChange}}
   {{/section}}
 {{/define}}

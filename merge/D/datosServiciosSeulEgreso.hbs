@@ -3,17 +3,25 @@
     {{field id="siServicioNormal" type="expr" value="tipoServicioOtorgado=='normal'"}}
     {{field id="siOtraProcedencia" type="expr" value="=procedenciaIngreso=='otro'"}}
     {{field id="siReferido" type="expr" value="=procedenciaIngreso=='referido'"}}
-    {{!-- {{field id="siServicioAdicional" type="expr" value="=numeroServicio=='uno'||numeroServicio=='dos'"}} --}}
-    {{field id="tieneTerapiaIntensiva" type="expr" value="=calc.arrayInArray(@claveServicioAdicional,['unidadCoronaria','unidadTerapiaIntensivaQuirurgica','unidadTerapiaIntensiva','unidadTerapiaIntensivaQuirurgicaPediatrica','unidadTerapiaIntensivaPediatrica','unidadCuidadosIntensivosNeonatales'])"}}
-    {{field id="tieneTerapiaIntermedia" type="expr" value="=calc.arrayInArray(@claveServicioAdicional,['unidadTerapiaIntermedia','crecimientoDesarrollo','unidadCuidadosIntermediosNeonatales'])"}}
+    {{field id="tieneTerapiaIntensiva" type="expr" value="=fn('validarTerapiaIntensiva', @servicioIngreso, @claveServicioAdicional)"}}
+    {{field id="tieneTerapiaIntermedia" type="expr" value="=fn('validarTerapiaIntermedia', @servicioIngreso, @claveServicioAdicional)"}}
     {{#field id="tipoServicioOtorgado"}}
       {{onChange clearFields="servicioIngreso,claveServicioEgreso,numeroServicio,claveServicioAdicional,procedenciaIngreso,especifiqueProcedencia,otraProcedencia,cluesProcedencia,terapiaIntensiva,terapiaIntermedia"}}
+    {{/field}}
+    {{#field id="servicioIngreso"}}
+      {{onChange clearFields="terapiaIntensiva,terapiaIntermedia"}}
     {{/field}}
     {{#field id="claveServicioAdicional"}}
       {{onChange clearFields="terapiaIntensiva,terapiaIntermedia"}}
     {{/field}}
     {{#field id="procedenciaIngreso"}}
-      {{onChange clearFields="especifiqueProcedencia,cluesProcedencia"}}
+      {{onChange clearFields="especifiqueProcedencia,cluesProcedencia,cluesEstatus,cluesFechaBaja"}}
+    {{/field}}
+    {{#field id="cluesProcedencia"}}
+      {{#onChange clearFields="cluesEstatus,cluesFechaBaja"}}
+        {{set cluesEstatus="=ESTATUS_OPERACION"}}
+        {{set cluesFechaBaja="=FECHA_EFECTIVA_BAJA"}}
+      {{/onChange}}
     {{/field}}
     {{#onChange}}
   		{{#update}}
@@ -24,7 +32,7 @@
     {{validator type="expr" notValidIf="=@cluesProcedencia==user.establishmentData.clues" message="CLUES Procedencia Inválido"}}
     {{validator type="expr" validIf="=!calc.in(calc.upperCase(calc.normalize(@especifiqueProcedencia)),fn('especifiqueProcedenciaInvalido'))" message="Especifique Procedencia Inválida"}}
     {{validator type="expr" notValidIf="=@claveServicioAdicional.length>2" message="Máximo dos Servicios Adicionales"}}
-    {{validator type="expr" notValidIf="=calc.in(@claveServicioEgreso,@claveServicioAdicional)" message="='Servicio ' + @_claveServicioEgreso + ' Duplicado'"}}
+    {{validator type="expr" notValidIf="=calc.in(@servicioIngreso,@claveServicioAdicional)" message="='Servicio ' + @_servicioIngreso + ' Duplicado'"}}
     
     {{validator type="expr" notValidIf="=calc.getRef(_parentDoc,'nomDatos.desconoceFechaNacimiento')=='no'&&moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years')>=18&&calc.in(@servicioIngreso,fn('servicioEspecialidadPediatria'))" message="Servicio Ingreso Inválido (Paciente Mayor de Edad)"}}
     {{validator type="expr" notValidIf="=calc.getRef(_parentDoc,'nomDatos.desconoceFechaNacimiento')=='no'&&moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years')>=18&&calc.in(@claveServicioEgreso,fn('servicioEspecialidadPediatria'))" message="Clave Servicio Egreso Inválido (Paciente Mayor de Edad)"}}
@@ -37,5 +45,8 @@
     {{validator type="expr" notValidIf="=_parentDoc.persona.genero!=='mujer'&&calc.in(@servicioIngreso,['ginecologia','urologiaGinecologica'])" message="Servicio Ingreso Inválido (Paciente No Mujer)"}}
     {{validator type="expr" notValidIf="=_parentDoc.persona.genero!=='mujer'&&calc.in(@claveServicioEgreso,['ginecologia','urologiaGinecologica'])" message="Clave Servicio Egreso Inválido (Paciente No Mujer)"}}
     {{validator type="expr" notValidIf="=_parentDoc.persona.genero!=='mujer'&&calc.arrayInArray(['ginecologia','urologiaGinecologica'],@claveServicioAdicional)" message="Clave Servicio Adicional Inválido (Paciente No Mujer)"}}
+
+    {{validator type="expr" notValidIf="=cluesEstatus=='FUERA DE OPERACION'&&@cluesFechaBaja&&moment(calc.getRef(_parentDoc,'base.fechaIngresoHospitalario')).diff(@cluesFechaBaja, 'days')>90" message="CLUES Fuera de Operación"}}
+    {{validator type="expr" notValidIf="=cluesProcedencia==user.establishmentData.clues" message="CLUES Procedencia Inválido"}}
   {{/section}}
 {{/define}}

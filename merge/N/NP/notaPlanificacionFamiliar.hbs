@@ -1,35 +1,38 @@
 {{#define id="notaPlanificacionFamiliar"}}
-  {{#action id="afectar" confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))" confirmMessage="Diagnóstico Excede Límite Edad<br>¿Desea continuar?"}}
+  {{#action 
+    id="afectar"
+    confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))"
+    confirmMessage="Diagnóstico Excede Límite Edad<br>¿Desea continuar?"
+  }}
     {{#update section="base"}}
       {{set excedeLimiteEdad="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))?'SI':'NO'"}}
     {{/update}}
   {{/action}}
 
-  {{!-- {{#section id="base"}}
-    {{#field id="relacionTemporal"}}
-      {{#onChange}}
-        {{setRef ref="afeccionPrincipal.base.relacionTemporal" value="=relacionTemporal"}}
-      {{/onChange}}
-    {{/field}}
-  {{/section}} --}}
+  {{#section id="base"}}
+    {{#onChange}}
+      {{#update}}
+        {{set diagnostico="=calc.mergeArrays(@afeccionPrincipal,@otrosDiagnosticos)"}}
+        {{set _diagnostico="=_.pluck(base.diagnostico, '_name').join(', ')"}}
+      {{/update}}
+    {{/onChange}}
+  {{/section}}
   
   {{#section id="metodos"}}
     {{#field id="revisionColocacionMetodoQuirurgico"}}
       {{onChange clearFields="puerperaAceptaFamiliar,puerperaMetodoPlanificacion,numeroCicloEntregadosOral,numeroCiclosEntregadosInyectableMensual,numeroCiclosEntregadosInyectableBimestral,numeroCiclosEntregadosInyectableTrimestral,implanteSubdermico,numeroCiclosEntregadosParcheDermico,diu,diuMedicado,numeroPerservativosEntregados,numeroPerservativosEntregadosFemeninos,numeroOtrosMetodosEntregados,seEntregoAnticoncepcionEmergencia,altaAzoospermia"}}
     {{/field}}
     {{#field id="puerperaAceptaFamiliar"}}
-      {{onChange clearFields="puerperaMetodoPlanificacion,numeroCicloEntregadosOral,numeroCiclosEntregadosInyectableMensual,numeroCiclosEntregadosInyectableBimestral,numeroCiclosEntregadosInyectableTrimestral,implanteSubdermico,numeroCiclosEntregadosParcheDermico,diu,diuMedicado"}}
+      {{onChange clearFields="puerperaMetodoPlanificacion,numeroCicloEntregadosOral,numeroCiclosEntregadosInyectableMensual,numeroCiclosEntregadosInyectableBimestral,numeroCiclosEntregadosInyectableTrimestral,implanteSubdermico,implanteSubdermico2,numeroCiclosEntregadosParcheDermico,diu,diuMedicado"}}
     {{/field}}
     {{#field id="puerperaMetodoPlanificacion"}}
-      {{onChange clearFields="numeroCicloEntregadosOral,numeroCiclosEntregadosInyectableMensual,numeroCiclosEntregadosInyectableBimestral,numeroCiclosEntregadosInyectableTrimestral,implanteSubdermico,numeroCiclosEntregadosParcheDermico,diu,diuMedicado"}}
+      {{onChange clearFields="numeroCicloEntregadosOral,numeroCiclosEntregadosInyectableMensual,numeroCiclosEntregadosInyectableBimestral,numeroCiclosEntregadosInyectableTrimestral,implanteSubdermico,implanteSubdermico2,numeroCiclosEntregadosParcheDermico,diu,diuMedicado"}}
     {{/field}}
   {{/section}}
 
   {{#section id="condicion"}}
     {{#field id="solicitaTelemedicina"}}
-      {{#onChange clearFields="solicitaTeleconsulta,estudiosTeleconsulta,modalidad"}}
-        {{set modalidad="=@solicitaTelemedicina=='si'?'En Tiempo Real':''"}}
-      {{/onChange}}
+      {{onChange clearFields="solicitaTeleconsulta,estudiosTeleconsulta,modalidad"}}
     {{/field}}
     {{#field id="solicitaTeleconsulta"}}
       {{#onChange}}

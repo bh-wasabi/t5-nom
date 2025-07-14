@@ -1127,6 +1127,11 @@
     {{default return="='2019'"}}
   {{/function}}
 
+  {{#function id="ultimaAtencion"}}
+    {{define type="param" id="contexto"}}
+    {{default return="=calc.getRef(contexto, 'fechaUltimaAtencion')"}}
+  {{/function}}
+
   {{#function id="diasHospitalizado"}}
     {{define type="param" id="contexto"}}
     {{default return="=moment().diff(moment(fn('hospitalizacionDesde', contexto)), 'days')"}}
@@ -2485,6 +2490,12 @@
     {{default return="='CLUES Inválido (El Establecimiento no es de Urgencias)'"}}
   {{/function}}
 
+  {{#function id="errorCluesConsultaExterna"}}
+    {{define type="param" id="cluesSis"}}
+    {{when cluesSis="='si'" return="=''"}}
+    {{default return="=cluesSis==='si'?'':'CLUES Inválido (El Establecimiento no es de Consulta Externa)'"}}
+  {{/function}}
+
   {{#function id="validaCluesPreconsulta"}}
     {{define type="param" id="tipoAbreviacion"}}
     {{define type="param" id="subAbreviacion"}}
@@ -2494,10 +2505,19 @@
     {{default return="true"}}
   {{/function}}
 
-  {{#function id="errorPacientePlanificacionFamiliar"}}
+  {{#function id="validaCluesCancer"}}
+    {{define type="param" id="establecimiento"}}
+    {{when condition="=calc.in(establecimiento.cluesInstitucion, ['SSA','IMB','SME']) && establecimiento.cluesTipoUnidad === '2' && calc.in(establecimiento.cluesTipoAbreviacion, ['99','M','N','O'])" return="true"}}
+    {{when condition="=calc.in(establecimiento.cluesInstitucion, ['SSA','IMB','SME']) && establecimiento.cluesTipoUnidad === '1' && calc.in(establecimiento.cluesSubAbreviacion, ['T07','UNE05','UNE07','UNE11','UNE99'])" return="true"}}
+    {{default return="false"}}
+  {{/function}}
+
+  {{#function id="validarPacientePlanificacionFamiliar"}}
+    {{define type="param" id="cluesSis" default="='no'"}}
     {{define type="param" id="genero"}}
     {{define type="param" id="edad"}}
-    {{default return="=(genero==='mujer'&&edad>=9&&edad<=59)||(calc.in(genero,['hombre','intersexual'])&&edad>=9&&edad<=70)?'':'Verificar Sexo y Edad Paciente'"}}
+    {{when cluesSis="='no'" return="='CLUES Inválido (El Establecimiento no es de Consulta Externa)'"}}
+    {{default return="=(genero==='mujer'&&edad>=9&&edad<=59)||(calc.in(genero,['hombre','intersexual'])&&edad>=9&&edad<=70)?'':'Edad Inválida (El Paciente no es candidato a Planificación Familiar)'"}}
   {{/function}}
 
   {{#function id="validaCertificadoDefuncion"}}
@@ -2516,14 +2536,12 @@
     {{when condition="=certificado.slice(0,2)=='25'&&calc.forceNumber(certificado)>250999999" return="true"}}
     {{!-- Para 2024 debe ser menor de 241000000 --}}
     {{when condition="=certificado.slice(0,2)=='24'&&calc.forceNumber(certificado)>240999999" return="true"}}
-    {{!-- Para 2023 debe ser menor de 231000000 --}}
-    {{when condition="=certificado.slice(0,2)=='23'&&calc.forceNumber(certificado)>230999999" return="true"}}
-    {{!-- Para 2023 debe ser menor de 231110000 --}}
-    {{!-- {{when condition="=certificado.slice(0,2)=='23'&&calc.forceNumber(certificado)>231110000" return="true"}} --}}
-    {{!-- Para 2022 debe ser menor de 221650000 --}}
-    {{!-- {{when condition="=certificado.slice(0,2)=='22'&&calc.forceNumber(certificado)>221650000" return="true"}} --}}
-    {{!-- Para 2021 debe ser menor de 212838000 --}}
-    {{!-- {{when condition="=certificado.slice(0,2)=='21'&&calc.forceNumber(certificado)>212838000" return="true"}} --}}
+    {{!-- Para 2023 debe ser menor o igual a 231110000 --}}
+    {{when condition="=certificado.slice(0,2)=='23'&&calc.forceNumber(certificado)>231110000" return="true"}}
+    {{!-- Para 2022 debe ser menor o igual a 221650000 --}}
+    {{when condition="=certificado.slice(0,2)=='22'&&calc.forceNumber(certificado)>221650000" return="true"}}
+    {{!-- Para 2021 debe ser menor o igual 212838000 --}}
+    {{when condition="=certificado.slice(0,2)=='21'&&calc.forceNumber(certificado)>212838000" return="true"}}
     {{default return="false"}}
   {{/function}}
 
@@ -2587,12 +2605,16 @@
     {{default return="['O800','O801','O808','O809','O810','O811','O812','O813','O814','O815','O820','O821','O822','O828','O829','O830','O831','O832','O833','O834','O838','O839']"}}
   {{/function}}
 
+  {{#function id="diagnosticoNacimientoDistocico"}}
+    {{default return="['O801','O808','O810','O811','O812','O813','O814','O815','O830','O831','O832']"}}
+  {{/function}}
+
   {{#function id="diagnosticoCesarea"}}
     {{default return="['O820','O821','O822','O828','O829','O842']"}}
   {{/function}}
 
   {{#function id="procedimientoEsterilizacion"}}
-    {{default return="['6370','6371','6372','6373','6374','6621','6622','6629','6631','6632','6639','6651','6652','6663']"}}
+    {{default return="['6370','6371','6372','6373','6374','6621','6622','6629','6631','6632','6639','6663']"}}
   {{/function}}
 
   {{#function id="procedimientoCesarea"}}
@@ -2633,6 +2655,14 @@
 
   {{#function id="especifiqueDestinoAtencionLesionInvalido"}}
     {{default return="['DOMICILIO','TRASLADO A OTRA UNIDAD MEDICA','TRASLADO OTRA UNIDAD MEDICA','OTRA UNIDAD MEDICA','UNIDAD MEDICA','SERVICIO ESPECIALIZADO ATENCION A LA VIOLENCIA','SERVICIO ESPECIALIZADO ATENCION A VIOLENCIA','SERVICIO ESPECIALIZADO ATENCION VIOLENCIA','SERVICIO ATENCION A LA VIOLENCIA','SERVICIO ATENCION A VIOLENCIA','SERVICIO ATENCION VIOLENCIA','ATENCION A LA VIOLENCIA','ATENCION A VIOLENCIA','ATENCION VIOLENCIA','CONSULTA EXTERNA','CONSULTA','DEFUNCION','FALLECIMIENTO','MUERTE','REFUGIO O ALBERGUE','REFUGIO','ALBERGUE','REFUGIO/ALBERGUE','DIF','HOSPITALIZACION','MINISTERIO PUBLICO','MP','GRUPO DE AYUDA MUTUA','GRUPO AYUDA MUTUA','GRUPO DE AYUDA','GRUPO AYUDA','OTRO','OTROS','OTRA','OTRAS']"}}
+  {{/function}}
+
+  {{#function id="servicioTerapiaIntensiva"}}
+    {{default return="['unidadCoronaria','unidadTerapiaIntensivaQuirurgica','unidadTerapiaIntensiva','unidadTerapiaIntensivaQuirurgicaPediatrica','unidadTerapiaIntensivaPediatrica','unidadCuidadosIntensivosNeonatales']"}}
+  {{/function}}
+
+  {{#function id="servicioTerapiaIntermedia"}}
+    {{default return="['unidadTerapiaIntermedia','crecimientoDesarrollo','unidadCuidadosIntermediosNeonatales']"}}
   {{/function}}
 
   {{#function id="sugerirTipoPersonal"}}
@@ -2690,8 +2720,11 @@
     {{define type="param" id="fechaNacimiento"}}
     {{define type="param" id="fechaIngreso"}}
     {{define type="param" id="fechaEgreso"}}
+    {{define type="param" id="ultimaNota"}}
     {{define type="param" id="tipologia"}}
     {{define type="param" id="subtipologia"}}
+    {{when condition="=moment(fechaIngreso).isAfter(ultimaNota._created.date)" return="='Fecha Ingreso no puede ser posterior a la Última Nota (' + ultimaNota._name + ' - ' + moment(ultimaNota._created.date).format('DD/MMM/YYYY') + ')'"}}
+    {{when condition="=moment(fechaEgreso).isBefore(ultimaNota._created.date)" return="='Fecha Egreso no puede ser anterior a la Última Nota (' + ultimaNota._name + ' - ' + moment(ultimaNota._created.date).format('DD/MMM/YYYY') + ')'"}}
     {{when condition="=moment(fechaIngreso).isSame(fechaEgreso)" return="'Las fechas deben ser distintas'"}}
     {{when condition="=moment(fechaEgreso).isBefore(fechaIngreso)" return="'Fecha Egreso no debe ser menor a la Fecha Ingreso'"}}
     {{when condition="=moment(fechaIngreso).isAfter()" return="'Fecha Ingreso no puede ser mayor a la fecha actual'"}}
@@ -2738,17 +2771,38 @@
     {{default return="=@detalle.notaPlanAltaEnfermeria.contexto.episodio==@contexto.episodio?'Ya Existe Nota Plan Alta Enfermería':null"}}
   {{/function}}
 
-  {{#function id="validarNotaAltaServicio"}}
-    {{define type="param" id="otrosDiagnosticos"}}
-    {{define type="param" id="seleccionarOtrosDiagnosticos"}}
-    {{define type="param" id="comorbilidades"}}
-    {{define type="param" id="procedimientoEgresos"}}
-    {{define type="param" id="seleccionarProcedimientos"}}
-    {{define type="param" id="procedimientos"}}
-    {{when condition="=calc.arrayLength(seleccionarOtrosDiagnosticos)<calc.arrayLength(comorbilidades)&&calc.arrayLength(otrosDiagnosticos,seleccionarOtrosDiagnosticos)<6" return="Faltan Comorbilidades por Seleccionar"}}
-    {{when condition="=calc.arrayLength(seleccionarProcedimientos)<calc.arrayLength(procedimientos)&&calc.arrayLength(procedimientoEgresos,seleccionarProcedimientos)<6" return="Faltan Procedimientos por Seleccionar"}}
-    {{default return=""}}
+  {{#function id="validarNotaAltaServicioExiste"}}
+    {{define type="param" id="contexto"}}
+    {{define type="param" id="detalle" default="={}"}}
+    {{default return="=calc.getRef(detalle,'notaAltaServicio.contexto.episodio')===calc.getRef(contexto,'episodio')?null:'Falta Nota Alta Servicio'"}}
   {{/function}}
+
+  {{#function id="validarNotaAltaServicio"}}
+    {{define type="param" id="base"}}
+    {{define type="param" id="comorbilidades"}}
+    {{define type="param" id="procedimientos"}}
+    {{define type="param" id="interconsultas"}}
+    {{when condition="=calc.arrayLength(base.seleccionarOtrosDiagnosticos)<calc.arrayLength(comorbilidades)&&calc.arrayLength(base.otrosDiagnosticos,base.seleccionarOtrosDiagnosticos)<6" return="Faltan Comorbilidades por Seleccionar"}}
+    {{when condition="=calc.arrayLength(base.procedimientoDiagnosticosTerapeuticosQuirurgicos)<calc.arrayLength(procedimientos)&&calc.arrayLength(base.procedimientoEgresos,base.procedimientoDiagnosticosTerapeuticosQuirurgicos)<6" return="Faltan Procedimientos por Seleccionar"}}
+    {{when condition="=calc.arrayLength(base.interconsultas)<calc.arrayLength(interconsultas)&&calc.arrayLength(base.interconsultas)<6" return="Faltan Interconsultas por Seleccionar"}}
+    {{default return="null"}}
+  {{/function}}
+
+  {{#function id="validarNotaEgresoAlProcesar"}}
+    {{define type="param" id="base"}}
+    {{when condition="=calc.getRef(base,'gestas')>25" return="='Error: Número de Gestas excede el límite permitido (25)'"}}
+    {{when condition="=calc.isEmpty(calc.getRef(base,'afeccionPrincipalReseleccionada.base.tipoAtencion'))" return="='Error: Falta Indicar Tipo de Atención de Afección Principal Reseleccionada'"}}
+    {{default return="=null"}}
+  {{/function}}
+
+  {{!-- {{#function id="validarNotaPlanificacionFamiliar" debug="true"}}
+    {{define type="param" id="base"}}
+    {{define type="param" id="metodos"}}
+    {{define type="param" id="orientacionConsejeria"}}
+    {{when condition="=calc.isEmpty(base.afeccionPrincipal)&&calc.getRef(metodos,'revisionColocacionMetodoQuirurgico')==='noAplica'&&calc.isFalse(calc.getRef(metodos,'puerperaAceptaFamiliar'))" return="='Error: Se debe registrar Afección Principal, Orientación Consejería y/o Métodos de Planificación Familiar'"}}
+    '=calc.isEmpty(base.afeccionPrincipal)&&calc.isFalse(orientacionConsejeria.orientacionPlanificacionFamiliar)&&calc.isFalse(orientacionConsejeria.orientacionIts)&&calc.isFalse(orientacionConsejeria.orientacionPrevencionEmbarazo)&&calc.isFalse(orientacionConsejeria.orientacionSaludSexual)&&metodos.revisionColocacionMetodoQuirurgico==='noAplica'&&calc.isFalse(metodos.puerpera.base.puerperaAceptaFamiliar)
+    {{default return="='Error al Procesar Nota Planificación Familiar'"}}
+  {{/function}} --}}
 
   {{#function id="validarServicioSaludMental"}}
     {{define type="param" id="esPsicologoPsiquiatra" default="false" notNull="true"}}
@@ -2759,6 +2813,23 @@
     {{when condition="=@esPsicologoPsiquiatra&&!calc.in(@seRealizoPsicoterapia,['grupal','pareja','familiar'])&&@servicioAtencion=='PAIDOPSIQUIATRÍA'&&@edad>=18" return="'Servicio Atención PAIDOPSIQUIATRÍA válido para terapia GRUPAL, PAREJA o FAMILIAR'"}}
     {{when condition="=!@esPsicologoPsiquiatra&&calc.in(@servicioAtencion,['GERONTOLOGÍA','PSICOGERIATRÍA'])&&@edad<60" return="='Servicio Atención ' + @servicioAtencion + ' Inválido para la Edad del Paciente'"}}
     {{when condition="=!@esPsicologoPsiquiatra&&@servicioAtencion=='PAIDOPSIQUIATRÍA'&&@edad>=18" return="='Servicio Atención ' + @servicioAtencion + ' Inválido para la Edad del Paciente'"}}
+    {{default return=""}}
+  {{/function}}
+
+  {{!-- {{#function id="validarServicioSaludMental2"}}
+    {{define type="param" id="base"}}
+    {{define type="param" id="diagnosticos"}}
+    {{define type="param" id="persona"}}
+    {{when condition="=calc.getRef(diagnosticos,'esPsicologoPsiquiatra')&&!calc.in(calc.getRef(diagnosticos,'seRealizoPsicoterapia'),['grupal','pareja','familiar'])&&calc.in(calc.getRef(base,'catServicios'),['GERONTOLOGÍA','PSICOGERIATRÍA'])&&moment(calc.getRef(base,'fechaAtencion')).diff(calc.getRef(persona,'fechaNacimiento'),'years')<60" return="='Servicio Atención ' + calc.getRef(base,'catServicios') + ' válido para terapia GRUPAL, PAREJA o FAMILIAR'"}}
+    {{when condition="=calc.getRef(diagnosticos,'esPsicologoPsiquiatra')&&!calc.in(calc.getRef(diagnosticos,'seRealizoPsicoterapia'),['grupal','pareja','familiar'])&&calc.getRef(base,'catServicios')=='PAIDOPSIQUIATRÍA'&&moment(calc.getRef(base,'fechaAtencion')).diff(calc.getRef(persona,'fechaNacimiento'),'years')>=18" return="'Servicio Atención PAIDOPSIQUIATRÍA válido para terapia GRUPAL, PAREJA o FAMILIAR'"}}
+    {{when condition="=!calc.getRef(diagnosticos,'esPsicologoPsiquiatra')&&calc.in(calc.getRef(base,'catServicios'),['GERONTOLOGÍA','PSICOGERIATRÍA'])&&moment(calc.getRef(base,'fechaAtencion')).diff(calc.getRef(persona,'fechaNacimiento'),'years')<60" return="='Servicio Atención ' + calc.getRef(base,'catServicios') + ' Inválido para la Edad del Paciente'"}}
+    {{when condition="=!calc.getRef(diagnosticos,'esPsicologoPsiquiatra')&&calc.getRef(base,'catServicios')=='PAIDOPSIQUIATRÍA'&&moment(calc.getRef(base,'fechaAtencion')).diff(calc.getRef(persona,'fechaNacimiento'),'years')>=18" return="='Servicio Atención ' + calc.getRef(base,'catServicios') + ' Inválido para la Edad del Paciente'"}}
+    {{default return=""}}
+  {{/function}} --}}
+
+  {{#function id="validarCedulaDuplicada"}}
+    {{define type="param" id="datosEspecialidad"}}
+    {{when condition="=calc.hasDuplicates(calc.pluckRef(datosEspecialidad,'base.cedulaEspecialidad'))" return="='Tiene Cédula Especialidad Duplicada'"}}
     {{default return=""}}
   {{/function}}
 
@@ -2776,35 +2847,72 @@
     {{default return="''"}}
   {{/function}}
 
-  {{#function id="obtenerDatosProcedimiento"}}
-    {{define type="param" id="parentType"}}
-    {{define type="param" id="campo"}}
-    {{define type="param" id="base"}}
-    {{define type="param" id="parentDoc"}}
-    {{when condition="=parentType=='notaSolicitudProcedimiento'&&campo=='procedimientoCie9'" return="=base.procedimiento.base.codigoCie9"}}
-    {{when condition="=parentType=='notaSolicitudProcedimiento'&&campo=='limiteSexo'" return="=base.procedimiento.base.limiteSexo"}}
-    {{when condition="=parentType=='notaSolicitudProcedimiento'&&campo=='limiteInferior'" return="=base.procedimiento.base.limiteInferior"}}
-    {{when condition="=parentType=='notaSolicitudProcedimiento'&&campo=='limiteSuperior'" return="=base.procedimiento.base.limiteSuperior"}}
-    {{when condition="=parentType=='notaSolicitudProcedimiento'&&campo=='otrasValidaciones'" return="=base.procedimiento.base.otrasValidaciones"}}
-    {{when condition="=parentType=='notaSolicitudProcedimiento'&&campo=='excedeLimiteEdad'" return="=calc.meetsAgeLimit(base.procedimiento.base.limiteInferior, null, parentDoc.persona.fechaNacimiento, true, moment(parentDoc.base.fechaEgreso).diff(parentDoc.persona.fechaNacimiento,'years')<1?parentDoc._type=='notaSeulEgreso'?parentDoc.base.fechaIngresoHospitalario:parentDoc.base.fechaIngreso:parentDoc.base.fechaEgreso, parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(base.procedimiento.base.limiteSuperior, null, parentDoc.persona.fechaNacimiento, false, moment(parentDoc.base.fechaEgreso).diff(parentDoc.persona.fechaNacimiento,'years')<1?parentDoc._type=='notaSeulEgreso'?parentDoc.base.fechaIngresoHospitalario:parentDoc.base.fechaIngreso:parentDoc.base.fechaEgreso, parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
-    {{when condition="=parentType=='notaSolicitudCirugia'&&campo=='procedimientoCie9'" return="=base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.cirugiaCie9"}}
-    {{when condition="=parentType=='notaSolicitudCirugia'&&campo=='limiteSexo'" return="=base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSexo"}}
-    {{when condition="=parentType=='notaSolicitudCirugia'&&campo=='limiteInferior'" return="=base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteInferior"}}
-    {{when condition="=parentType=='notaSolicitudCirugia'&&campo=='limiteSuperior'" return="=base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSuperior"}}
-    {{when condition="=parentType=='notaSolicitudCirugia'&&campo=='otrasValidaciones'" return="=base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.otrasValidaciones"}}
-    {{when condition="=parentType=='notaSolicitudCirugia'&&campo=='excedeLimiteEdad'" return="=calc.meetsAgeLimit(base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteInferior, null, parentDoc.persona.fechaNacimiento, true, moment(parentDoc.base.fechaEgreso).diff(parentDoc.persona.fechaNacimiento,'years')<1?parentDoc._type=='notaSeulEgreso'?parentDoc.base.fechaIngresoHospitalario:parentDoc.base.fechaIngreso:parentDoc.base.fechaEgreso, parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(base.cirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSuperior, null, parentDoc.persona.fechaNacimiento, false, moment(parentDoc.base.fechaEgreso).diff(parentDoc.persona.fechaNacimiento,'years')<1?parentDoc._type=='notaSeulEgreso'?parentDoc.base.fechaIngresoHospitalario:parentDoc.base.fechaIngreso:parentDoc.base.fechaEgreso, parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
-    {{when condition="=parentType=='notaSolicitudTococirugia'&&campo=='procedimientoCie9'" return="=base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.cirugiaCie9"}}
-    {{when condition="=parentType=='notaSolicitudTococirugia'&&campo=='limiteSexo'" return="=base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSexo"}}
-    {{when condition="=parentType=='notaSolicitudTococirugia'&&campo=='limiteInferior'" return="=base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteInferior"}}
-    {{when condition="=parentType=='notaSolicitudTococirugia'&&campo=='limiteSuperior'" return="=base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSuperior"}}
-    {{when condition="=parentType=='notaSolicitudTococirugia'&&campo=='otrasValidaciones'" return="=base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.otrasValidaciones"}}
-    {{when condition="=parentType=='notaSolicitudTococirugia'&&campo=='excedeLimiteEdad'" return="=calc.meetsAgeLimit(base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteInferior, null, parentDoc.persona.fechaNacimiento, true, moment(parentDoc.base.fechaEgreso).diff(parentDoc.persona.fechaNacimiento,'years')<1?parentDoc._type=='notaSeulEgreso'?parentDoc.base.fechaIngresoHospitalario:parentDoc.base.fechaIngreso:parentDoc.base.fechaEgreso, parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(base.tococirugia.base.cirugiaRealizar.base.procedimientoCirugia[0].base.limiteSuperior, null, parentDoc.persona.fechaNacimiento, false, moment(parentDoc.base.fechaEgreso).diff(parentDoc.persona.fechaNacimiento,'years')<1?parentDoc._type=='notaSeulEgreso'?parentDoc.base.fechaIngresoHospitalario:parentDoc.base.fechaIngreso:parentDoc.base.fechaEgreso, parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
-    {{default return=""}}
+  {{#function id="validarTerapiaIntensiva"}}
+    {{define type="param" id="servicioIngreso"}}
+    {{define type="param" id="servicioAdicional"}}
+    {{when condition="=calc.arrayInArray(calc.mergeArrays(servicioIngreso,servicioAdicional),fn('servicioTerapiaIntensiva'))" return="true"}}
+    {{default return="false"}}
+  {{/function}}
+
+  {{#function id="validarTerapiaIntermedia"}}
+    {{define type="param" id="servicioIngreso"}}
+    {{define type="param" id="servicioAdicional"}}  
+    {{when condition="=calc.arrayInArray(calc.mergeArrays(servicioIngreso,servicioAdicional),fn('servicioTerapiaIntermedia'))" return="true"}}
+    {{default return="false"}}
   {{/function}}
 
   {{#function id="obtenerFechaMaximaDosMeses"}}
     {{define type="param" id="fecha"}}
     {{default return="=moment.max([moment(@fecha), moment().subtract(2, 'months').startOf('day')]).format()"}}
+  {{/function}}
+
+  {{#function id="calcularEdadPorFechaAtencion"}}
+    {{define type="param" id="fechaAtencion"}}
+    {{define type="param" id="fechaNacimiento"}}
+    {{default return="=moment(@fechaAtencion).diff(moment(@fechaNacimiento), 'years')"}}
+  {{/function}}
+
+  {{#function id="validarFechaAtencionLesion"}}
+    {{define type="param" id="fechaEvento"}}
+    {{define type="param" id="horaEvento"}}
+    {{define type="param" id="fechaAtencion"}}
+    {{define type="param" id="horaAtencion"}}
+    {{!-- 1) Si la fecha de atención es antes de la del evento → inválido --}}
+    {{when condition="=moment(@fechaAtencion).startOf('day').isBefore(moment(@fechaEvento).startOf('day'))" return="true"}}
+    {{!-- 2) Si la fecha de atención es después de la del evento → válido --}}
+    {{when condition="=moment(@fechaAtencion).startOf('day').isAfter(moment(@fechaEvento).startOf('day'))" return="false"}}
+    {{!-- 3) Estamos en el mismo día --}}
+    {{!-- 3a) Si hay hora desconocida → válido --}}
+    {{when condition="=@horaEvento=='99:99' || @horaAtencion=='99:99'" return="false"}}
+    {{!-- 3b) Ambas horas conocidas pero atención ≤ evento → inválido --}}
+    {{when condition="=@horaEvento!='99:99' && @horaAtencion!='99:99' && (moment(@fechaEvento + ' ' + @horaEvento, 'YYYY-MM-DD HH:mm').isSame(moment(@fechaAtencion + ' ' + @horaAtencion, 'YYYY-MM-DD HH:mm')) || moment(@fechaEvento + ' ' + @horaEvento, 'YYYY-MM-DD HH:mm').isAfter(moment(@fechaAtencion + ' ' + @horaAtencion, 'YYYY-MM-DD HH:mm')))" return="true"}}
+    {{!-- 3c) Resto de casos (misma fecha y atención > evento) → válido --}}
+    {{default return="false"}}
+  {{/function}}
+
+  {{#function id="validarEgreso"}}
+    {{define type="param" id="detalle"}}
+    {{default return="=!calc.getRef(detalle,'notaIngreso.base.fechaAtencion')&&'Falta Nota de Ingreso'"}}
+  {{/function}}
+
+  {{#function id="confirmarSaludMental"}}
+    {{define type="param" id="base"}}
+    {{define type="param" id="diagnosticos"}}
+    {{define type="param" id="persona"}}
+    {{!-- 1) Si el campo seRealizoPsicoterapia es grupal, pareja o familiar -> válido --}}
+    {{when condition="=calc.in(calc.getRef(diagnosticos,'seRealizoPsicoterapia'),['grupal','pareja','familiar'])" return="false"}}
+    {{!-- 2) Si Afección Principal excede límite edad -> inválido --}}
+    {{when condition="=calc.getRef(base,'afeccionPrincipal.base.excedeLimiteEdad')=='SI'" return="true"}}
+    {{!-- 3) Si en Otros Diagnósticos, alguno excede límite edad -> inválido --}}
+    {{when condition="=calc.in('SI',calc.pluckRef(calc.getRef(base,'otrosDiagnosticos'),'base.excedeLimiteEdad'))" return="true"}}
+    {{!-- 4) Si Afección Principal excede límite sexo -> inválido --}}
+    {{when condition="=calc.getRef(base,'afeccionPrincipal.base.limiteSexo')!=='NO'&&calc.getRef(base,'afeccionPrincipal.base.limiteSexo')!==calc.upperCase(calc.getRef(persona,'genero'))" return="true"}}
+    {{!-- 5) Si persona es 'hombre' y en Otros Diagnósticos, tiene diagnóstico de MUJER -> inválido --}}
+    {{when condition="=calc.getRef(persona,'genero')==='hombre'&&calc.in('MUJER',calc.pluckRef(calc.getRef(base,'otrosDiagnosticos'),'base.limiteSexo'))" return="true"}}
+    {{!-- 6) Si persona es 'mujer' y en Otros Diagnósticos, tiene diagnóstico de HOMBRE -> inválido --}}
+    {{when condition="=calc.getRef(persona,'genero')==='mujer'&&calc.in('HOMBRE',calc.pluckRef(calc.getRef(base,'otrosDiagnosticos'),'base.limiteSexo'))" return="true"}}
+    {{!-- De lo contrario -> válido --}}
+    {{default return="false"}}
   {{/function}}
 {{/define}}
 
@@ -3430,7 +3538,7 @@
 
   {{#template id="cirugia"}}
     {{#if suspender}}(Suspendido) {{/if}}
-    <br>Cirujano: {{cirugiaRealizar.base._cirujano}} / {{cirugiaRealizar.base._especialidad}}
+    {{!-- <br>Cirujano: {{cirugiaRealizar.base._cirujano}} / {{cirugiaRealizar.base._especialidad}} --}}
     <br>Procedimiento: {{cirugiaRealizar.base._procedimientoCirugia}} {{cirugiaRealizar.base._equipoEspecialRequerido}}
     <br>Diagnóstico Qx: {{cirugiaRealizar.base.diagnosticoQuirurgico}}
     <br>Fecha Propuesta: {{date cirugiaRealizar.base.fechaPropuesta "DD/MMM/YYYY h:mma"}} ({{cirugiaRealizar.base._duracionEstimada}})
@@ -3458,7 +3566,7 @@
 
   {{#template id="tococirugia"}}
     {{#if suspender}}(Suspendido) {{/if}}
-    <br>Cirujano: {{cirugiaRealizar.base._cirujano}} / {{cirugiaRealizar.base._especialidad}}
+    {{!-- <br>Cirujano: {{cirugiaRealizar.base._cirujano}} / {{cirugiaRealizar.base._especialidad}} --}}
     <br>Procedimiento: {{cirugiaRealizar.base._procedimientoCirugia}} {{cirugiaRealizar.base._equipoEspecialRequerido}}
     <br>Diagnóstico Qx: {{cirugiaRealizar.base.diagnosticoQuirurgico}}
     <br>Fecha Propuesta: {{date cirugiaRealizar.base.fechaPropuesta "DD/MMM/YYYY h:mma"}} ({{cirugiaRealizar.base._duracionEstimada}})
@@ -4534,7 +4642,7 @@
     {{#if cantidad}}<br>Cantidad (ml): {{cantidad}}{{/if}}
     {{#if notaPequena}}<br>Nota: {{notaPequena}}{{/if}}
     {{#if tiemposQuirurgicos}}<br>Tiempo Quirúrgico: {{_tiemposQuirurgicos}}{{/if}}
-  {{/template}}  
+  {{/template}}
 
   {{#template id="indicacion"}}
     {{#if seleccionarDiagnostico}}<br>Diagnósticos: {{_seleccionarDiagnostico}}{{/if}}
@@ -5064,7 +5172,7 @@
   {{/template}}
   
   {{#template id="somatometria"}} 
-    Peso: {{peso}} kg, Talla: {{estatura}} m, IMC: {{number imc "#.##"}}, Superficie Corporal: {{number superficieCorporal "#.##"}} m²{{#if cintura}}, Circunferencia Cintura (cm): {{cintura}}{{/if}}
+    Peso: {{peso}} kg, Talla: {{estatura}} m, Circunferencia Cintura: {{cintura}} cm{{#if conocePesoEstatura}}, IMC: {{number imc "#.##"}}, Superficie Corporal: {{number superficieCorporal "#.##"}} m²{{/if}}
   {{/template}}
 
   {{#template id="escalaBallard"}}
@@ -8962,7 +9070,7 @@
     {{#if diagnosticoLesion}}<br>Código CIE de la Afección principal: {{_diagnosticoLesion}}{{/if}}
   {{/template}}
   {{#template id="atencionPrehospitalariaLesion"}}
-    {{#if seOtorgaAtencionPrehospitalaria}}<br>¿Se otorga atención Pre-Hospitalaria?: {{_seOtorgaAtencionPrehospitalaria}}{{/if}}
+    <br>¿Se otorga atención Pre-Hospitalaria?: {{_seOtorgaAtencionPrehospitalaria}}
     {{#if tiempoTranscurridoAtencionHospital}}<br>¿Cuanto tiempo transcurre de la atención prehospitalaria al arribo a unidad  médica?: {{tiempoTranscurridoAtencionHospital}}{{/if}}
     {{#if tipoDroga}}<br>¿Se encontraba bajo el efecto de alguna droga?: {{_tipoDroga}}{{/if}}
   {{/template}}
@@ -10637,6 +10745,34 @@
     {{#if fechaNacimientoHijoInmediatoAnterior}}<br>Fecha Nacimiento Hijo Inmediato Anterior: {{date fechaNacimientoHijoInmediatoAnterior "DD/MMM/YYYY"}}{{/if}}
     {{#if ordenNacimientoRecienNacido}}<br>Orden Nacimiento Recién Nacido: {{number ordenNacimientoRecienNacido "##"}}{{/if}}
   {{/template}}  
+
+  {{#template id="datosListaVerificacionHemodialisis"}}
+		{{#if pasoTestFunciones}}<br>¿Cuenta con Expediente Clínico?: {{_pasoTestFunciones}}{{/if}}
+		{{#if cuentaExpedienteClinico}}<br>¿Cuenta con Ficha de Identificación?: {{_cuentaExpedienteClinico}}{{/if}}
+		{{#if cuentaFichaIdentificacion}}<br>¿Cuenta con Brazalete de Identificación?: {{_cuentaFichaIdentificacion}}{{/if}}
+		{{#if laboratoriosRecientes}}<br>¿Tiene Laboratorios recientes?: {{_laboratoriosRecientes}}{{/if}}
+		{{#if equipoPreparado}}<br>¿Equipo Preparado para la Sesión?: {{_equipoPreparado}}{{/if}}
+	{{/template}}
+
+  {{#template id="datosTransHemodialisisVigilancia"}}
+		<br>Bacteremia Trans Hemodialisis: {{_bacteremiaTransHemodialisis}}
+		{{#if tieneBacteria}}{{#if microorganismosReportadosCultivos}}<br>Microorganismos reporados en Cultivos: {{microorganismosReportadosCultivos}}{{/if}}{{/if}}
+		<br>¿Tratamiento con Antibiótico?: {{_tratamientoAntibiotico}}
+		{{#if tieneAntibiotico}}{{#if nombreAntibiotico}}<br>Nombre del Antibiótico: {{nombreAntibiotico}}{{/if}}{{/if}}
+		{{#if tieneAntibiotico}}{{#if diasTratamientoAntibiotico}}<br>Dias de Tratamiento: {{diasTratamientoAntibiotico}}{{/if}}{{/if}}
+	{{/template}}
+
+  {{#template id="datosBarrerasAprendizaje"}}
+		<br>Limitaciones: {{_limitaciones}}
+		<br>Nivel Educativo: {{_nivelEducativo}}
+	{{/template}}
+
+	{{#template id="datosTemaEducativo"}}
+		<br>Técnica Educativa: {{_tecnicaEducativa}}
+		<br>Nivel Comprensión: {{_nivelComprension}}
+		<br>Disposición Aprender: {{_disposicionAprender}}
+	{{/template}}
+  
   {{#template id="datosAntecedentesPerinatalesLphSeguimiento"}}
     {{#if semanasGestacion}}<br>Semanas Gestación: {{semanasGestacion}}{{/if}}
     {{#if complicacionesEmbarazo}}<br>Complicaciones en Embarazo: {{_complicacionesEmbarazo}}{{/if}}
@@ -10646,6 +10782,165 @@
     {{#if malformacionesCongenitas}}<br>Malformaciones Congenitas: {{_malformacionesCongenitas}}{{/if}}
     {{#if diagnosticoFisuraEmbarazo}}<br>Diagnóstico Fisura durante Embarazo: {{_diagnosticoFisuraEmbarazo}}{{/if}}
   {{/template}}  
+
+	{{#template id="datosDialisisHemodialisis"}}
+		{{#if tipoDialisis}}<br>Tipo Dialisis: {{_tipoDialisis}}{{/if}}
+		{{#if diasInstalado}}<br>Dias Instalación: {{diasInstalado}}{{/if}}
+		{{#if fechaValoracion}}<br>Fecha Valoración: {{date fechaValoracion "DD/MMM/YYYY"}}{{/if}}
+		{{#if resultadoValoracion}}<br>Resultado: {{resultadoValoracion}}{{/if}}
+	{{/template}}
+
+  {{#template id="datosVigilanciaAngioacceso"}}
+		{{#if tipoAngioacceso}}<br>Tipo Angioacceso: {{tipoAngioacceso}}{{/if}}
+		{{#if calibre}}<br>Calibre: {{calibre}}{{/if}}
+		{{#if fechaInstalacion}}<br>Fecha Instalación: {{date fechaInstalacion "DD/MMM/YYYY"}}{{/if}}
+		{{#if fechaCuracion}}<br>Fecha Curación: {{date fechaCuracion "DD/MMM/YYYY"}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosVigilanciaCateteres"}}
+		{{#if tipoValoracionCateter}}<br>Tipo Valoración: {{_tipoValoracionCateter}}{{/if}}
+		{{#if tipoCateter}}<br>Descripción Cateter: {{tipoCateter}}{{/if}}
+		{{#if sitioAnatomico}}<br>Sitio Anatomico: {{sitioAnatomico}}{{/if}}
+		{{#if lugarInstalacion}}<br>Lugar Instalación: {{lugarInstalacion}}{{/if}}
+		{{#if diasInstalado}}<br>Dias Instalación: {{diasInstalado}}{{/if}}
+		{{#if fechaValoracion}}<br>Fecha Valoración: {{date fechaValoracion "DD/MMM/YYYY"}}{{/if}}
+		{{#if resultadoValoracion}}<br>Resultado: {{resultadoValoracion}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosVigilanciaVentilacion"}}
+		{{#if tipoVigilanciaVentilacion}}<br>Tipo Vigilancia: {{_tipoVigilanciaVentilacion}}{{/if}}
+		{{#if diasInstalado}}<br>Días Instalación: {{diasInstalado}}{{/if}}
+		{{#if fechaValoracion}}<br>Fecha Valoración: {{date fechaValoracion "DD/MMM/YYYY"}}{{/if}}
+		{{#if resultadoValoracion}}<br>Resultado: {{resultadoValoracion}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosVigilanciaEventosQuirurgicos"}}
+		{{#if cirugiaRealizada}}<br>Cirugía Realizada: {{_cirugiaRealizada}}{{/if}}
+		{{#if fechaCirugia}}<br>Fecha Cirugia: {{date fechaCirugia "DD/MMM/YYYY"}}{{/if}}
+		{{#if tipoCirugia}}<br>Tipo Cirugia: {{tipoCirugia}}{{/if}}
+		{{#if profilaxisAntibiotica}}<br>Profilaxis Antibiótica (60 Minutos antes de la Incisión): {{profilaxisAntibiotica}}{{/if}}
+		{{#if tricotomia}}<br>Tricotomia (Con Cortador Electríco o Tijeras): {{tricotomia}}{{/if}}
+		{{#if temperaturaCorporal}}<br>Temperatura Corporal se Mantiene no Menor a 35 Grados: {{temperaturaCorporal}}{{/if}}
+		{{#if nivelesGlucosa}}<br>Niveles de Glucosa Postoperatoria se mantiene entre 110 y 180 mg/dl: {{nivelesGlucosa}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosVigilanciaCateterUrinario"}}
+		{{#if tipoValoracionCateterUrinario}}<br>Tipo Valoración Cateter Urinario: {{_tipoValoracionCateterUrinario}}{{/if}}
+		{{#if tipoCateterUrinario}}<br>Descripción Cateter: {{tipoCateterUrinario}}{{/if}}
+		{{#if sitioAnatomico}}<br>Sitio Anatomico: {{sitioAnatomico}}{{/if}}
+		{{#if lugarInstalacion}}<br>Lugar Instalación: {{lugarInstalacion}}{{/if}}
+		{{#if diasInstalado}}<br>Días Instalación: {{diasInstalado}}{{/if}}
+		{{#if fechaValoracion}}<br>Fecha Valoración: {{date fechaValoracion "DD/MMM/YYYY"}}{{/if}}
+		{{#if resultadoValoracion}}<br>Resultado: {{resultadoValoracion}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosVigilanciaDrenajes"}}
+		{{#if descripcionDrenaje}}<br>Descripción Drenaje: {{descripcionDrenaje}}{{/if}}
+		{{#if sitioAnatomico}}<br>Sitio Anatomico: {{sitioAnatomico}}{{/if}}
+		{{#if lugarInstalacion}}<br>Lugar Instalación: {{lugarInstalacion}}{{/if}}
+		{{#if diasInstalado}}<br>Días Instalación: {{diasInstalado}}{{/if}}
+		{{#if fechaValoracion}}<br>Fecha Valoración: {{date fechaValoracion "DD/MMM/YYYY"}}{{/if}}
+		{{#if resultadoValoracion}}<br>Resultado: {{resultadoValoracion}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosVigilanciaClinica"}}
+		{{#if sris}}<br>SRIS: {{_sris}}{{/if}}
+		{{#if fechaValoracion}}<br>Fecha Valoración: {{date fechaValoracion "DD/MMM/YYYY"}}{{/if}}
+		{{#if resultadoValoracion}}<br>Resultado: {{resultadoValoracion}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosVigilanciaCultivos"}}
+		{{#if tipoCultivo}}<br>Tipo Cultivo: {{tipoCultivo}}{{/if}}
+		{{#if fechaToma}}<br>Fecha Toma: {{date fechaToma "DD/MMM/YYYY"}}{{/if}}
+		{{#if microorganismo}}<br>Microorganismo: {{microorganismo}}{{/if}}
+		{{#if sensibilidad}}<br>Sensibilidad: {{sensibilidad}}{{/if}}
+		{{#if resistencia}}<br>Resistencia: {{resistencia}}{{/if}}
+		{{#if tipoAislamiento}}<br>Tipo Aislamiento: {{tipoAislamiento}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosFavi"}}
+		{{#if fechaInstalacion}}<br>Fecha Instalación: {{date fechaInstalacion "DD/MMM/YYYY"}}{{/if}}
+		{{#if fechaCuracion}}<br>Fecha Curación: {{date fechaCuracion "DD/MMM/YYYY"}}{{/if}}
+		{{#if calibreAgujas}}<br>Calibre Agujas: {{calibreAgujas}}{{/if}}
+		{{#if preHemodialisis}}<br>Pre Hemodiálisis: {{preHemodialisis}}{{/if}}
+		{{#if transHemodialisis}}<br>Trans Hemodiálisis: {{transHemodialisis}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosPlanAltaPrevencionRehabilitacion"}}
+		{{#if signosSintomasAlertaRiesgoVida}}<br>Signos y Síntomas de Alerta que Ponen en Riesgo la Vida: {{signosSintomasAlertaRiesgoVida}}{{/if}}
+		{{#if ministracionMedicamentosReaccionesAdversas}}<br>Ministración de Medicamentos y Reacciones Adversas: {{ministracionMedicamentosReaccionesAdversas}}{{/if}}
+		{{#if controlCitas}}<br>Control Citas: {{controlCitas}}{{/if}}
+		{{#if tipoDieta}}<br>Tipo Dieta: {{tipoDieta}}{{/if}}
+		{{#if habitosHigienicos}}<br>Hábitos Higiénicos: {{habitosHigienicos}}{{/if}}
+		{{#if ejercicioRecreacion}}<br>Ejercicio/Recreación: {{ejercicioRecreacion}}{{/if}}
+		{{#if ejercerValoresCreencias}}<br>Ejercer Valores y Creencias: {{ejercerValoresCreencias}}{{/if}}
+		{{#if cuidadosFistulaArteriovenosaInternaFavi}}<br>Cuidados Fístula Arteriovenosa Interna (FAVI): {{cuidadosFistulaArteriovenosaInternaFavi}}{{/if}}
+		{{#if cuidadosCateterMahurkarCasa}}<br>Cuidados Catéter Mahurkar en Casa: {{cuidadosCateterMahurkarCasa}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosFuncionamientoEquipoMedico"}}
+		{{#if tratamientoAgua}}<br>Tratamiento Agua: {{_tratamientoAgua}}{{/if}}
+		{{#if tomasOxigenoAire}}<br>Tomas Oxígeno y Aire: {{_tomasOxigenoAire}}{{/if}}
+		{{#if carroReanimacion}}<br>Carro Reanimación: {{_carroReanimacion}}{{/if}}
+		{{#if prendeFormaCorrecta}}<br>Prende Forma Correcta: {{_prendeFormaCorrecta}}{{/if}}
+		{{#if cumpleDesinfeccion}}<br>Cumple Desinfección: {{_cumpleDesinfeccion}}{{/if}}
+		{{#if pasoTest}}<br>Pasó Test: {{_pasoTest}}{{/if}}
+		{{#if datosFugaAgua}}<br>Datos Fuga Agua: {{_datosFugaAgua}}{{/if}}
+		{{#if conductividad}}<br>Conductividad: {{_conductividad}}{{/if}}
+		{{#if siObservaciones}}{{#if especifiqueObservaciones}}<br>Observaciones: {{especifiqueObservaciones}}{{/if}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosVerificacionPreHemodialisis"}}
+		{{#if pacienteCorrecto}}<br>Paciente Correcto: {{_pacienteCorrecto}}{{/if}}
+		{{#if pesoCorrecto}}<br>Peso Correcto: {{_pesoCorrecto}}{{/if}}
+		{{#if riesgoDeHemorragia}}<br>Riesgo Hemorragia: {{_riesgoDeHemorragia}}{{/if}}
+		{{#if riesgoDeHipotension}}<br>Riesgo Hipotensión: {{_riesgoDeHipotension}}{{/if}}
+		{{#if prescripcionCorrecta}}<br>Prescripción Correcta: {{_prescripcionCorrecta}}{{/if}}
+		{{#if alergias}}<br>Alergias: {{_alergias}}{{/if}}
+		{{#if realizoDobleVerificacionDeDosisHeparina}}<br>Realizó Doble Verificación Dosis Heparina: {{_realizoDobleVerificacionDeDosisHeparina}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosTiempoFuera"}}
+		{{#if pesoCorrecto}}<br>Paciente Correcto: {{_pesoCorrecto}}{{/if}}
+		{{#if filtroCorrecto}}<br>Filtro Correcto: {{_filtroCorrecto}}{{/if}}
+		{{#if prescripcionCorrecta}}<br>Prescripción Correcta: {{_prescripcionCorrecta}}{{/if}}
+		{{#if riesgoDeSangrado}}<br>Riesgo Sangrado: {{_riesgoDeSangrado}}{{/if}}
+		{{#if angioaccesoEnAdecuadasCondiciones}}<br>Angioacceso Adecuadas Condiciones: {{_angioaccesoEnAdecuadasCondiciones}}{{/if}}
+	{{/template}}
+
+	{{#template id="datosPreHemodialisis"}}
+		{{#if pesoSeco}}<br>Peso Seco: {{_pesoSeco}}{{/if}}
+		{{#if pesoDeUltimaHemodialisis}}<br>Peso Ultima Hemodiálisis: {{_pesoDeUltimaHemodialisis}}{{/if}}
+		{{#if pesoPreHemodialisis}}<br>Peso Pre Hemodiálisis: {{_pesoPreHemodialisis}}{{/if}}
+		{{#if volumenGanado}}<br>Volumen Ganado: {{_volumenGanado}}{{/if}}
+		{{#if volumenAperder}}<br>Volumen a Perder: {{_volumenAperder}}{{/if}}
+	{{/template}}
+
+  {{#template id="datosPosHemodialisis"}}
+		{{#if pesoPosHd}}<br>Peso Pos Hemodiálisis: {{pesoPosHd}}{{/if}}
+		{{#if ufConseguida}}<br>Ultrafiltrado Conseguido: {{ufConseguida}}{{/if}}
+		{{#if ktAvanzado}}<br>Kt/V Avanzado: {{ktAvanzado}}{{/if}}
+		{{#if volSangre}}<br>Volumen Sangre: {{volSangre}}{{/if}}
+		{{#if complicaciones}}<br>Complicaciones: {{complicaciones}}{{/if}}
+	{{/template}}
+
+  {{#template id="datosSomatometriaAvanzada"}}
+		{{#if perimetroCefalico}}<br>Perímetro Cefálico (cm): {{perimetroCefalico}}{{/if}}
+		{{#if perimetroToracico}}<br>Perímetro Torácico (cm): {{perimetroToracico}}{{/if}}
+		{{#if perimetroAbdominal}}<br>Perímetro Abdominal (cm): {{perimetroAbdominal}}{{/if}}
+		{{#if perimetroAbdominalMomentoToma}}<br>Perímetro Abdominal (Momento Toma): {{_perimetroAbdominalMomentoToma}}{{/if}}
+		{{#if perimetroBraquial}}<br>Perímetro Braquial (cm): {{perimetroBraquial}}{{/if}}
+		{{#if perimetroInferior}}<br>Perímetro Inferior (cm): {{perimetroInferior}}{{/if}}
+		{{#if longitudPie}}<br>Longitud Pie (cm): {{longitudPie}}{{/if}}
+	{{/template}}
+
+  {{#template id="datosInfeccionesIaas"}}
+		{{#if tipoInfeccion}}<br>Tipo Infección: {{tipoInfeccion}}{{/if}}
+		{{#if fechaInfeccion}}<br>Fecha Infección: {{date fechaInfeccion "DD/MMM/YYYY"}}{{/if}}
+		{{#if microorganismoInfeccion}}<br>Microorganismo Infección: {{microorganismoInfeccion}}{{/if}}
+		{{#if servicioInfeccion}}<br>Servicio: {{servicioInfeccion}}{{/if}}
+	{{/template}}
+  
   {{!-- Tarea 3716 --}}
   {{#template id="datosDispositivoStent"}}
     {{#if tipoDispositivo}}<br>Tipo Dispositivo: {{_tipoDispositivo}}{{/if}}
@@ -10840,11 +11135,8 @@
 	{{/template}}
 	{{#template id="datosInformacionProductoAborto"}}
 		{{#if condicionNacimiento}}<br>Condición al Nacimiento: {{_condicionNacimiento}}{{/if}}
-		{{#if tipoNacimiento}}<br>Tipo de Nacimiento: {{_tipoNacimiento}}{{/if}}
-		{{#if tipoProcedimientoAborto}}<br>Tipo Procedimiento Aborto: {{_tipoProcedimientoAborto}}{{/if}}
 		{{#if condicionNacidoVivo}}<br>Condición Nacido Vivo: {{_condicionNacidoVivo}}{{/if}}
-		{{#if siVivo}}{{#if folioCertificadoNacimiento}}<br>Folio Certificado Nacimiento: {{folioCertificadoNacimiento}}{{/if}}{{/if}}
-		{{#if siMuerto}}{{#if folioCertificadoDefuncion}}<br>Folio Certificado Defunción: {{folioCertificadoDefuncion}}{{/if}}{{/if}}
+		{{#if folioCertificadoMuerteFetal}}<br>Folio Certificado Muerte Fetal: {{folioCertificadoMuerteFetal}}{{/if}}
 	{{/template}}
   {{#template id="destinoDespuesLesion"}}
     {{#if destinoAtencionLesion}}<br>Destino después de la Atención: {{_destinoAtencionLesion}}{{/if}}
@@ -10867,5 +11159,31 @@
 	{{/template}}
 	{{#template id="seulInterconsulta"}}
 		{{_interconsulta}}
+	{{/template}}
+
+	{{#template id="datosModeloEvaluacionDominio"}}
+		{{#if archivoExpediente}}<br>Custodia, Conservación y Archivo Expediente Clínico: {{archivoExpediente}}{{/if}}
+		{{#if elaboracionExpediente}}<br>Elaboración e Integración Expediente Clínico: {{elaboracionExpediente}}{{/if}}
+		{{#if historiaClinica}}<br>Historia Clínica: {{historiaClinica}}{{/if}}
+		{{#if notaUrgencias}}<br>Nota Urgencias: {{notaUrgencias}}{{/if}}
+		{{#if notaIngresoHospitalizacion}}<br>Nota Ingreso Hospitalización: {{notaIngresoHospitalizacion}}{{/if}}
+		{{#if notaEvolucion}}<br>Nota Evolución: {{notaEvolucion}}{{/if}}
+		{{#if notaReferencia}}<br>Nota Referencia: {{notaReferencia}}{{/if}}
+		{{#if notaInterconsulta}}<br>Nota Interconsulta: {{notaInterconsulta}}{{/if}}
+		{{#if notaPrequirurgica}}<br>Nota Pre-Quirúrgica: {{notaPrequirurgica}}{{/if}}
+		{{#if notaPreanestesica}}<br>Nota Pre-Anestésica: {{notaPreanestesica}}{{/if}}
+		{{#if notaPostquirurgica}}<br>Nota Post-Quirúrgica: {{notaPostquirurgica}}{{/if}}
+		{{#if notaPostanestesica}}<br>Nota Post-Anestésica: {{notaPostanestesica}}{{/if}}
+		{{#if notaEgreso}}<br>Nota Egreso: {{notaEgreso}}{{/if}}
+		{{#if hojaEnfermeria}}<br>Hoja Enfermería: {{hojaEnfermeria}}{{/if}}
+		{{#if servicioAuxiliarDiagnostico}}<br>Servicio Auxiliar Diagnóstico Tratamiento: {{servicioAuxiliarDiagnostico}}{{/if}}
+		{{#if registroTransfusion}}<br>Registro Transfusión Unidades Sangre: {{registroTransfusion}}{{/if}}
+		{{#if trabajoSocial}}<br>Trabajo Social: {{trabajoSocial}}{{/if}}
+		{{#if cartaConsentimiento}}<br>Carta Consentimiento Bajo Información: {{cartaConsentimiento}}{{/if}}
+		{{#if hojaEgresoVoluntario}}<br>Hoja Egreso Voluntario: {{hojaEgresoVoluntario}}{{/if}}
+		{{#if hojaNotificacionMp}}<br>Hoja Notificación Ministerio Público: {{hojaNotificacionMp}}{{/if}}
+		{{#if notaDefuncion}}<br>Nota Defunción / Muerte Fetal: {{notaDefuncion}}{{/if}}
+		{{#if analisisClinico}}<br>Análisis Clínico: {{analisisClinico}}{{/if}}
+		{{#if evidenciaConsultaGuia}}<br>Evidencia Consulta Guías Prática Clínica: {{evidenciaConsultaGuia}}{{/if}}
 	{{/template}}
 {{/markup}}

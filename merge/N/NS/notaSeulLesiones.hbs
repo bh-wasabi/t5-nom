@@ -13,7 +13,7 @@
   {{param folioControl="base.foliosUtilizadosDefuncion"}}
   
   {{#section id="base"}}
-    {{field id="esMujerMayor9" type="expr" value="=esMujer&&(calc.fromNowYears(persona.fechaNacimiento)>=9||calc.fromNowYears(persona.fechaNacimiento<=59))"}}
+    {{field id="esMujerMayor9" type="expr" value="=esMujer&&moment(@fechaEvento).diff(moment(persona.fechaNacimiento),'years')>=9&&moment(@fechaEvento).diff(moment(persona.fechaNacimiento),'years')<=59"}}
     {{field id="esFertil" type="expr" value="=mujerFertil=='embarazo'||mujerFertil=='puerperio'"}}
     {{field id="tieneClues" type="expr" value="=usuarioReferido=='unidadMedica'"}}
     {{#field id="mujerFertil"}}
@@ -32,9 +32,11 @@
   		{{#update}}
   			{{set cantidadAfectacionesTratadas="=otrosDiagnosticos.length"}}
         {{set foliosUtilizadosDefuncion="=_.compact([destinoDespuesLesion.base.folioCertificadoDefuncion])"}}
+        {{set diagnostico="=calc.mergeArrays(@afeccionPrincipal,@afeccionPrincipalReseleccionada,@otrosDiagnosticos)"}}
+        {{set _diagnostico="=_.pluck(base.diagnostico, '_name').join(', ')"}}
   		{{/update}}
   	{{/onChange}}
-    {{validator type="expr" notValidIf="=!calc.isEmpty(@atencionMedicaLesion.base.horaAtencion)&&@atencionMedicaLesion.base.horaAtencion<=@eventoLesion.base.horaEvento" message="Hora Evento debe ser menor a Hora Atención"}}
+    {{validator type="expr" notValidIf="=fn('validarFechaAtencionLesion',calc.getRef(eventoLesion,'base.fechaOcurreEvento'),calc.getRef(eventoLesion,'base.horaEvento'),calc.getRef(atencionMedicaLesion,'base.fechaAtencion'),calc.getRef(atencionMedicaLesion,'base.horaAtencion'))" message="Fecha Evento debe ser menor a Fecha Atención"}}
     
     {{validator type="expr" notValidIf="=atencionMedicaLesion.base.consecuenciaLesion=='defuncion'&&afectacionesTratadas[0].base.destinoAtencionLesion!='defuncion'" message="Verificar Destino en Afectaciones Tratadas"}}
     {{validator type="expr" notValidIf="=profesionalResponsableSalud.base.responsableAtencionMedica=='medicoTratante'&&(calc.in('tratamientoPsicologo',atencionMedicaLesion.base.tipoAtencionLesion)||calc.in('consergeria',atencionMedicaLesion.base.tipoAtencionLesion))" message="Profesional Responsable Salud Inválido"}}
@@ -46,16 +48,12 @@
     {{validator type="expr" notValidIf="=(profesionalResponsableSalud.base.responsableAtencionMedica=='trabajadoraSocial'&&!calc.in('consergeria',atencionMedicaLesion.base.tipoAtencionLesion))" message="Profesional Responsable Salud Inválido"}}
     {{validator type="expr" validIf="=calc.isEmpty(@edadGestacional)||(calc.number(@edadGestacional)>=1&&calc.number(@edadGestacional)<=45)||(calc.number(@edadGestacional)==99)" message="Error en la Edad Gestacional"}}
     {{validator type="expr" validIf="=calc.isEmpty(otrosDiagnosticos)||otrosDiagnosticos.length<7" message="Máximo 6 Afecciones Tratadas"}}
-    {{validator type="expr" notValidIf="=!calc.isEmpty(atencionMedicaLesion.base.fechaAtencion)&&!calc.isEmpty(eventoLesion.base.fechaOcurreEvento)&&moment(atencionMedicaLesion.base.fechaAtencion).isBefore(eventoLesion.base.fechaOcurreEvento)" message="Fecha Atención Médica Inválida"}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')), @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico)" message="Tiene Diagnósticos Duplicados"}}
-    {{validator type="expr" notValidIf="=calc.in('DEFUNCION', calc.mergeArrays(afeccionPrincipal.base.validoSeul, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.validoSeul, calc.pluckRef(@otrosDiagnosticos, 'base.validoSeul')))&&(calc.getRef(@atencionMedicaLesion, 'base.consecuenciaLesion')!='defuncion'||calc.getRef(@destinoDespuesLesion, 'base.destinoAtencionLesion')!='defuncion')" message="DEFUNCIÓN Mal Configurada"}}
+    {{validator type="expr" notValidIf="=calc.in('DEFUNCION', calc.mergeArrays(afeccionPrincipal.base.validoSeul, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.validoSeul, calc.pluckRef(@otrosDiagnosticos, 'base.validoSeul')))&&calc.getRef(@atencionMedicaLesion, 'base.consecuenciaLesion')!='defuncion'&&calc.getRef(@destinoDespuesLesion, 'base.destinoAtencionLesion')!='defuncion'" message="Destino Atención y Consecuencia Lesión deben ser Defunción debido a los Diagnósticos reportados"}}
     {{validator type="expr" validIf="=!@cluesReferido||cluesEstatus=='EN OPERACION'||(@cluesFechaBaja&&moment().add(-90,'days').format('YYYY-MM-DD')<=@cluesFechaBaja)" message="CLUES Fuera de Operación"}}
-
-    {{validator type="expr" notValidIf="=(calc.getRef(@afeccionPrincipal,'base.tieneCausaExterna')||calc.getRef(@afeccionPrincipalReseleccionada,'base.tieneCausaExterna')||@otrosDiagnosticos&&calc.pluckRef(@otrosDiagnosticos,'base.tieneCausaExterna').includes(true))&&calc.isEmpty(calc.getRef(@causaExterna,'base.causaExterna'))" message="Falta Indicar Causa Externa"}}
-    {{validator type="expr" notValidIf="=(calc.getRef(@afeccionPrincipal,'base.tieneCausaExterna')||calc.getRef(@afeccionPrincipalReseleccionada,'base.tieneCausaExterna')||@otrosDiagnosticos&&calc.pluckRef(@otrosDiagnosticos,'base.tieneCausaExterna').includes(true))&&calc.isEmpty(calc.getRef(@causaExterna,'base.descripcionCausaExterna'))" message="Falta Indicar Descripción Causa Externa"}}
-    {{validator type="expr" notValidIf="=!(calc.getRef(@afeccionPrincipal,'base.tieneCausaExterna')||calc.getRef(@afeccionPrincipalReseleccionada,'base.tieneCausaExterna')||@otrosDiagnosticos&&calc.pluckRef(@otrosDiagnosticos,'base.tieneCausaExterna').includes(true))&&!calc.isEmpty(calc.getRef(@causaExterna,'base.causaExterna'))" message="Falta Diagnóstico que requiera Causa Externa"}}
-    {{validator type="expr" notValidIf="=!(calc.getRef(@afeccionPrincipal,'base.tieneCausaExterna')||calc.getRef(@afeccionPrincipalReseleccionada,'base.tieneCausaExterna')||@otrosDiagnosticos&&calc.pluckRef(@otrosDiagnosticos,'base.tieneCausaExterna').includes(true))&&!calc.isEmpty(calc.getRef(@causaExterna,'base.descripcionCausaExterna'))" message="Falta Diagnóstico que requiera Descripción Causa Externa"}}
-
+    
+    {{validator type="expr" notValidIf="=calc.isEmpty(calc.getRef(@causaExterna,'base.causaExterna'))" message="Falta Indicar Causa Externa"}}
+    {{validator type="expr" notValidIf="=calc.isEmpty(calc.getRef(@causaExterna,'base.descripcionCausaExterna'))" message="Falta Indicar Descripción Causa Externa"}}
   {{/section}}
 
   {{#section id="circunstanciasEvento"}}
@@ -100,7 +98,7 @@
     {{validator type="expr" notValidIf="=@tipoParentesco=='conyugue'&&@edadAgresor==''" message="Edad del Agresor Requerida"}}
     {{validator type="expr" notValidIf="=@tipoDroga.length>1&&(calc.in('ninguna',@tipoDroga)||calc.in('seIgnora',@tipoDroga))" message="Drogas Incorrectas"}}
     {{validator type="expr" notValidIf="=@tipoIntencionalidad=='violenciaFamiliar'&&calc.in(@tipoParentesco,['sinParentesco','desconocido'])" message="Parentesco Agresor Inválido"}}
-    {{validator type="expr" notValidIf="=@tipoIntencionalidad=='violenciaNoFamiliar'&&!calc.in(@tipoParentesco,['sinParentesco','desconocido'])" message="Parentesco Agresor Inválido"}}
+    {{validator type="expr" notValidIf="=@tipoIntencionalidad=='violenciaNoFamiliar'&&@numeroAgresores=='unico'&&!calc.in(@tipoParentesco,['sinParentesco','desconocido'])" message="Parentesco Agresor Inválido"}}
     {{validator type="expr" validIf="=!@edadAgresor||(@edadAgresor>=3&&@edadAgresor<=99)||(@edadAgresor=='999'&&@tipoParentesco!='conyugue')" message="Edad Agresor Inválida"}}
     {{validator type="expr" notValidIf="=calc.in(calc.upperCase(calc.normalize(@otroAgente)),fn('especifiqueAgenteLesionInvalido'))" message="Otro Agente Inválido"}}
     {{validator type="expr" notValidIf="=mostrarAgenteLesion&&agenteLesion==='noAplica'" message="Agente Lesión Inválido"}}

@@ -837,6 +837,17 @@
     {{/find}}
   {{/view}}
 
+  {{#view id="nomFechaUltimaNota"}}
+    {{#find limit="1"}}
+      {{include field="_name"}}
+      {{include field="_created.date"}}
+      {{sort field="_created.date" direction="desc"}}
+      {{filter field="_isAffected" eq="true"}}
+      {{filter field="_created.establishment" eq="=user.establishment"}}
+      {{filter field="persona.id" eq="=persona"}}
+    {{/find}}
+  {{/view}}
+
   {{!-- {{#view id="totalDefunciones"}}
     {{#pipeline}}
       {{filter field="_created.date" gte="=calc.fromYearMonth(ejercicio,periodo)" required="true"}}

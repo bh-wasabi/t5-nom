@@ -34,8 +34,8 @@
   {{#view id="cie10sis"}}
     {{editor display="nombre"}}
     {{#search index="sis-23" type="_doc" filterParamsOnlySearch="true"}}
-      {{param DIA_CRONICOS="=edadActual<20?'NO':null"}}
-      {{param DIA_CAINFANTIL="=edadActual>18?'NO':null"}}
+      {{!-- {{param DIA_CRONICOS="=edadActual<20?'NO':null"}} --}}
+      {{!-- {{param DIA_CAINFANTIL="=edadActual>18?'NO':null"}} --}}
       {{param VALIDO_SM="=@esPrincipal&&calc.in(_type, ['notaSaludMental','notaTempSaludMental'])?'SI':null"}}
       {{param VALIDO_SB="=@esPrincipal&&calc.in(_type, ['notaSaludBucal','notaTempSaludBucal'])?user.others.tipoPersonalCE:null"}}
       {{param VALIDO_PF="=@esPrincipal&&calc.in(_type, ['notaPlanificacionFamiliar','notaTempPlanificacionFamiliar'])?'SI':null"}}

@@ -1,0 +1,10 @@
+{{#define id="notaPreoperatoria"}}
+  {{#section id="base"}}
+    {{#onChange}}
+  		{{#update}}
+        {{set diagnostico="=calc.mergeArrays(@afeccionPrincipal,@afeccionPrincipalReseleccionada,@otrosDiagnosticos)"}}
+        {{set _diagnostico="=_.pluck(base.diagnostico, '_name').join(', ')"}}
+  		{{/update}}
+  	{{/onChange}}
+  {{/section}}
+{{/define}}

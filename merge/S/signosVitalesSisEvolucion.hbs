@@ -23,5 +23,6 @@
     {{validator type="expr" validIf="=@tomaGlicemiaCapilar=='no'||@glicemiaCapilar==0||(@glicemiaCapilar>0&&@resultadoObtenido!='')" message="Seleccione un resultado"}}
     {{validator type="expr" validIf="=!@tirasControl||calc.in(@tirasControl,['0','1','2'])" message="Número Tiras Control Inválido"}}
     {{validator type="expr" notValidIf="=@glicemiaCapilar.substr(@glicemiaCapilar.length-1)=='.'" message="Glicemia Capilar Incorrecta"}}
+    {{validator type="expr" notValidIf="=@glicemiaCapilar>0&&@resultadoObtenido=='desconoce'" message="Resultado Obtenido por Inválido (Glucemia Capilar mayor a 0)"}}
   {{/section}}
 {{/define}}

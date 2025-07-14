@@ -11,5 +11,10 @@
         {{set estado="=estado"}}
       {{/onChange}}
     {{/field}}
+    {{#field id="desconoceAsentamiento"}}
+      {{#onChange clearFields="nombreAsentamiento"}}
+        {{set nombreAsentamiento="=desconoceAsentamiento=='sinInformacion'?'SIN INFORMACIÓN':desconoceAsentamiento=='noEspecificado'?'NO ESPECIFICADO':''"}}
+      {{/onChange}}
+    {{/field}}
   {{/section}}
 {{/define}}

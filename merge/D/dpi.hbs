@@ -144,6 +144,9 @@
       {{#update section="controlLiquidos"}}
         {{pivotNumber filterKey="seccion" filterValue="controlLiquidos" rowsToPivot="grupo,campo" colsToPivot="hora" aggregationDimension="valorNumerico" aggregator="sum" round="2"}}
       {{/update}}
+      {{#update section="controlLiquidosDialisis"}}
+        {{pivotNumber filterKey="seccion" filterValue="controlLiquidosDialisis" rowsToPivot="grupo,campo" colsToPivot="hora" aggregationDimension="valorNumerico" aggregator="sum" round="2"}}
+      {{/update}}
       {{#update section="escalas"}}
         {{pivotText filterKey="seccion" filterValue="escalas" keys="turno" pivotField="campo" values="valor" labels="A=Matutino,B=Vespertino,C=Nocturno,M=Matutino,V=Vespertino,N=Nocturno,E=Especial,AE=Especial"}}
       {{/update}}      

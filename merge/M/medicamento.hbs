@@ -53,6 +53,9 @@
         {{/onChange}}
       {{/editor}}
     {{/field}}
+    {{#field id="seleccionarSubclave"}}
+      {{editor items="=subclave"}}
+    {{/field}}
     {{field id="cantidadValidar" type="calc" value="=(@solicitarSinExistencia=='no')&&calc.safeDiv(dosis,presentacion)"}}
     {{#field id="loteEspecifico"}}
       {{#editor type="autocomplete" source="mov" view="loteEspecifico"}}
