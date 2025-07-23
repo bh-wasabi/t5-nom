@@ -13,7 +13,7 @@
 
   {{param folioControl="base.foliosUtilizadosNacimiento,base.foliosUtilizadosDefuncion,base.foliosUtilizadosMuerteFetal"}}
   
- 	{{#section id="base"}}
+  {{#section id="base"}}
     {{#field id="pacientePsiquiatrico"}}
       {{onChange clearFields="tipoUnidadPsiquiatrica,tipoServicioPsiquiatrico,hospitalParcial"}}
     {{/field}}
@@ -30,15 +30,15 @@
       {{/onChange}}
     {{/field}}
     {{#onChange}}
-  		{{#update}}
+      {{#update}}
         {{set gestas="=fn('calcularGestas',antecedentesEmbarazos.base.paras,antecedentesEmbarazos.base.abortos,antecedentesEmbarazos.base.cesareas,esEmbarazo?1:0)"}}
         {{set foliosUtilizadosNacimiento="=_.compact(calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProducto'),'base.folioCertificadoNacimiento'))"}}
         {{set foliosUtilizadosDefuncion="=_.compact(calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProducto'),'base.folioCertificadoDefuncion'))"}}
         {{set foliosUtilizadosMuerteFetal="=_.compact([].concat([@folioCertificadoMuerteFetal],calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProducto'),'base.folioCertificadoMuerteFetal'),calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProductoAborto'),'base.folioCertificadoMuerteFetal')))"}}
         {{set diagnostico="=calc.mergeArrays(@afeccionPrincipal,@afeccionPrincipalReseleccionada,@otrosDiagnosticos)"}}
         {{set _diagnostico="=_.pluck(base.diagnostico, '_name').join(', ')"}}
-  		{{/update}}
-  	{{/onChange}}
+      {{/update}}
+    {{/onChange}}
   {{/section}}
   {{#view id="totalEgresos"}}
     {{#pipeline}}

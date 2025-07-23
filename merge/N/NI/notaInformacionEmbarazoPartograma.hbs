@@ -1,9 +1,16 @@
 {{#define id="notaInformacionEmbarazoPartograma"}}
+  {{action id="afectar" error="=calc.getRef(base,'gestas')>25?'Error: Número de Gestas excede el límite permitido (25)':null"}}
+
   {{#section id="base"}}
     {{#field id="fechaUltimaMenstruacion"}}
       {{#onChange}}
         {{set fechaProbableParto="=fn('fechaProbableParto', fechaUltimaMenstruacion)"}}
       {{/onChange}}
     {{/field}}
+    {{#onChange}}
+      {{#update}}
+        {{set gestas="=fn('calcularGestas',antecedentesEmbarazos.base.paras,antecedentesEmbarazos.base.abortos,antecedentesEmbarazos.base.cesareas,0)"}}
+      {{/update}}
+    {{/onChange}}
   {{/section}}
 {{/define}}
