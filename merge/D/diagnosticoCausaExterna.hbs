@@ -4,7 +4,12 @@
     {{#field id="causaExterna"}}
       {{#onChange clearFields="descripcionCauseExterna,folioLesion"}}
         {{set docType="=_parentDoc._type"}}
+        {{set limiteSexo="=LSEX"}}
+        {{set limiteInferior="=LINF"}}
+        {{set limiteSuperior="=LSUP"}}
+        {{set excedeLimiteEdad="=calc.meetsAgeLimit(LINF, null, _parentDoc.persona.fechaNacimiento, true, _parentDoc._type=='notaSeulEgreso'?moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaEgreso:_parentDoc.base.fechaEvento, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(LSUP, null, _parentDoc.persona.fechaNacimiento, false, _parentDoc._type=='notaSeulEgreso'?moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaEgreso:_parentDoc.base.fechaEvento, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
       {{/onChange}}
     {{/field}}
+    {{validator type="expr" validIf="=calc.meetsSexLimit(limiteSexo, _parentDoc.persona.genero)" message="No Corresponde el Sexo del Paciente"}}
   {{/section}}
 {{/define}}
