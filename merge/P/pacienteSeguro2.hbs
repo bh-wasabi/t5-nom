@@ -5,17 +5,20 @@
     {{field id="tieneDependencia" type="expr" value="=tieneBeneficiario&&tipoBeneficiario=='derechohabiente'"}}
     {{field id="tieneOtro" type="expr" value="=calc.in(dependencia,['otra'])&&user.establishmentData.cluesIdEntidad=='09'"}}
     {{field id="ningunaDependencia" type="expr" value="=calc.in(@dependencia,['otra','imss','issste','pemex','sedena','semar','imssBienestar','issfam','opdImssBienestar'])"}}
-  	{{#field id="tipoPrograma"}}
+    {{#field id="tipoPrograma"}}
       {{#onChange clearFields="datosAfiliacion"}}
-      	{{set listaPrecios="=fn('listaPreciosSeguro', @tipoPrograma, @tipoBeneficiario)"}}
+        {{set listaPrecios="=fn('listaPreciosSeguro', @tipoPrograma, @tipoBeneficiario)"}}
         {{set vigencia="=vigencia||moment().add(3,'months').format('YYYY-MM-DD')"}}
       {{/onChange}}
     {{/field}}
-  	{{#field id="tipoBeneficiario"}}
+    {{#field id="tipoBeneficiario"}}
       {{#onChange}}
-      	{{set listaPrecios="=fn('listaPreciosSeguro', @tipoPrograma, @tipoBeneficiario)"}}
+        {{set listaPrecios="=fn('listaPreciosSeguro', @tipoPrograma, @tipoBeneficiario)"}}
         {{set vigencia="=vigencia||moment().add(3,'months').format('YYYY-MM-DD')"}}
       {{/onChange}}
+    {{/field}}
+    {{#field id="dependencia"}}
+      {{onChange clearFields="dependencia2"}}
     {{/field}}
     {{!-- Agregar Bloque - Tarea 3966 --}}
     {{validator type="expr" notValidIf="=calc.in(@dependencia,@dependencia2)||@dependencia2.length>1&&(calc.in('noEspecificado',@dependencia2)||calc.in('ninguna',@dependencia2)||calc.in('seIgnora',@dependencia2))" message="Otra Dependencia Incorrecta"}}

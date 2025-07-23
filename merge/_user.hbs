@@ -251,19 +251,19 @@
     {{field id="nacidoExtranjero" type="expr" value="=paisNacimiento!='MX'"}}
     {{#field id="paisNacimiento"}}
       {{#onChange condition="=paisNacimiento!='MX'" clearFields="entidadNacimiento"}}
-        {{set entidadNacimiento="='NE'"}}
+        {{set entidadNacimiento="='NA'"}}
       {{/onChange}}
     {{/field}}
     {{validator type="expr" notValidIf="=calc.in(@entidadNacimiento,['99','00'])" message="Entidad Nacimiento Inválida"}}
-    {{validator type="expr" notValidIf="=paisNacimiento=='MX'&&entidadNacimiento=='NE'" message="Entidad Nacimiento Inválida (Nacido en México)"}}
-    {{validator type="expr" notValidIf="=paisNacimiento!='MX'&&entidadNacimiento!='NE'" message="Entidad Nacimiento Inválida (Nacido en el Extranjero)"}}
+    {{validator type="expr" notValidIf="=paisNacimiento=='MX'&&entidadNacimiento=='NA'" message="Entidad Nacimiento Inválida (Nacido en México)"}}
+    {{validator type="expr" notValidIf="=paisNacimiento!='MX'&&entidadNacimiento!='NA'" message="Entidad Nacimiento Inválida (Nacido en el Extranjero)"}}
     {{validator type="expr" validIf="=calc.fromNowYears(@fechaNacimiento)>=18" message="Error, Menor a 18 Años"}}
     {{validator type="expr" validIf="=calc.fromNowYears(@fechaNacimiento)<=90" message="Error, Mayor a 90 Años"}}{{!-- cambios 2024-05-29 --}}
     {{validator type="expr" condition="=fn('cedulaObligatoria',base.tipoPersonalNom??'')" notValidIf="=fn('faltaCedulaEspecialidad',@datosEspecialidad)" message="Falta Cédula Especialidad"}}
-    {{validator type="expr" notValidIf="=paisNacimiento==='MX'&&prestadorServicios.clave===fn('CURP_GENERICO')" message="CURP Inválido para nacido en México"}}
-    {{validator type="expr" validIf="=fn('validaCaracter17Curp',prestadorServicios.clave,prestadorServicios.fechaNacimiento)||prestadorServicios.clave===fn('CURP_GENERICO')" message="CURP Inválido (Caracter 17)"}}
-    {{validator type="expr" validIf="=fn('validaCaracter18Curp',prestadorServicios.clave,prestadorServicios.fechaNacimiento)||prestadorServicios.clave===fn('CURP_GENERICO')" message="CURP Inválido (Caracter 18)"}}
-    {{validator type="expr" validIf="=(calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'),16,false)===clave.substr(0,16)||calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'),16,true)===prestadorServicios.clave.substr(0,16)||prestadorServicios.clave===fn('CURP_GENERICO'))&&prestadorServicios.clave.length===18" message="CURP Incorrecto"}}
+    {{validator type="expr" notValidIf="=paisNacimiento==='MX'&&clave===fn('CURP_GENERICO')" message="CURP Inválido para nacido en México"}}
+    {{validator type="expr" validIf="=fn('validaCaracter17Curp',clave,fechaNacimiento)||clave===fn('CURP_GENERICO')" message="CURP Inválido (Caracter 17)"}}
+    {{validator type="expr" validIf="=fn('validaCaracter18Curp',clave,fechaNacimiento)||clave===fn('CURP_GENERICO')" message="CURP Inválido (Caracter 18)"}}
+    {{validator type="expr" validIf="=(calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, generoCurp, entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'),16,false)===clave.substr(0,16)||calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, generoCurp, entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'),16,true)===clave.substr(0,16)||clave===fn('CURP_GENERICO'))&&clave.length===18" message="CURP Incorrecto"}}
     {{#onChange}}
       {{#update}}
         {{set tieneCurp="=clave?true:false"}}

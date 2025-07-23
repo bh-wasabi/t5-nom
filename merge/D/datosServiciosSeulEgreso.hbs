@@ -24,11 +24,11 @@
       {{/onChange}}
     {{/field}}
     {{#onChange}}
-  		{{#update}}
-  			{{set numeroServicio="=claveServicioAdicional.length"}}
-  		{{/update}}
-  	{{/onChange}}
-    {{validator type="expr" notValidIf="=procedenciaIngreso=='cuneroPatologico'&&moment().diff(moment(fechaNacimiento), 'months')>1" message="Procedencia Ingreso Inválida"}}
+      {{#update}}
+        {{set numeroServicio="=claveServicioAdicional.length"}}
+      {{/update}}
+    {{/onChange}}
+    {{validator type="expr" notValidIf="=procedenciaIngreso=='cuneroPatologico'&&(moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?moment(_parentDoc.base.fechaIngresoHospitalario).diff(moment(_parentDoc.persona.fechaNacimiento), 'months')>1:moment(_parentDoc.base.fechaEgreso).diff(moment(_parentDoc.persona.fechaNacimiento), 'months')>1)" message="Procedencia Ingreso Inválida (Paciente Mayor a 1 Mes)"}}
     {{validator type="expr" notValidIf="=@cluesProcedencia==user.establishmentData.clues" message="CLUES Procedencia Inválido"}}
     {{validator type="expr" validIf="=!calc.in(calc.upperCase(calc.normalize(@especifiqueProcedencia)),fn('especifiqueProcedenciaInvalido'))" message="Especifique Procedencia Inválida"}}
     {{validator type="expr" notValidIf="=@claveServicioAdicional.length>2" message="Máximo dos Servicios Adicionales"}}
