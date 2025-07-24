@@ -60,7 +60,7 @@
   {{param confirmUnSaved="true"}}
 
 [.#if esHRAEI.]
-  {{#menu id="menu-principal" name="HIS 2.1.8" showUserName="true" showTurnName="true"}}
+  {{#menu id="menu-principal" name="HIS" showUserName="true" showTurnName="true"}}
 [./if.]
 [.#if esCRAE.]
   {{#menu id="menu-principal" name="CRAE" showUserName="true" showTurnName="true"}}
@@ -490,6 +490,7 @@ x        {{item text="Cajas" href="/_caja/cubo" newTab="true"}}
         [./if.]
         {{item text="Cerrar Sesión" type="logout" beginGroup="true"}}
       {{/item}}
+      {{item text="Versión 2.2.1"}}
   [./if.]
 [./unless.]  
 [.#if esSIC.]

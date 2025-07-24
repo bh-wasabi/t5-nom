@@ -2517,7 +2517,7 @@
     {{define type="param" id="genero"}}
     {{define type="param" id="edad"}}
     {{when cluesSis="='no'" return="='CLUES Inválido (El Establecimiento no es de Consulta Externa)'"}}
-    {{default return="=(genero==='mujer'&&edad>=9&&edad<=59)||(calc.in(genero,['hombre','intersexual'])&&edad>=9&&edad<=70)?'':'Edad Inválida (El Paciente no es candidato a Planificación Familiar)'"}}
+    {{default return="=(genero==='mujer'&&edad>=10&&edad<=59)||(calc.in(genero,['hombre','intersexual'])&&edad>=10&&edad<=70)?'':'Edad Inválida (El Paciente no es candidato a Planificación Familiar)'"}}
   {{/function}}
 
   {{#function id="validaCertificadoDefuncion"}}
