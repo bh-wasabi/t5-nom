@@ -12719,7 +12719,19 @@
   {{action id="notaTiemposCoagulacion" source="notaTiemposCoagulacion" label="Tiempos de Coagulación" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaParametrosVentilatorios" source="notaParametrosVentilatorios" label="Parámetros Ventilatorios" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
 
-  {{#action id="notaInformacionEmbarazoPartograma" source="notaInformacionEmbarazoPartograma" label="Información Embarazo - Partograma" transform="copiarEmbarazo" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{#action
+    id="notaInformacionEmbarazoPartograma"
+    source="notaInformacionEmbarazoPartograma"
+    label="Información Embarazo - Partograma"
+    transform="copiarEmbarazo"
+    hide="true"
+    type="add-subdoc"
+    visibleMode="close"
+    color="deep-orange"
+    onlyPost="true"
+    error="=fn('validarNotaInformacionEmbarazoPartograma', persona)"
+    errorType="info"
+  }}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
   {{/action}}
   {{action id="notaExploracionFisicaPartograma" source="notaExploracionFisicaPartograma" label="Exploración Física - Partograma" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
@@ -12731,7 +12743,7 @@
   {{action id="notaCertificacionTipoSangre" source="notaCertificacionTipoSangre" label="Certificacion Tipo Sangre" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaEventoCardiorespiratorio" source="notaEventoCardiorespiratorio" label="Evento Cardiorespiratorio" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
 
-   {{!-- Urgencias --}}
+  {{!-- Urgencias --}}
   {{action id="urgenciasInicial" hide="true" type="menu" menu="urgenciasInicial" label="Inicial" color="deep-orange"}}  
   {{#menu id="urgenciasInicial" color="deep-orange"}}
     {{item action="notaActivarCodigoUrgencias" text="Activar Código Urgencias"}}
@@ -12880,7 +12892,18 @@
   {{!-- Ginecología y Obstetricia --}}
   {{action id="notaAtencionMujer" source="notaAtencionMujer" label="Atención a la Mujer" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" condition="=persona.esMujer"}}  
   {{action id="notaSOAP" source="notaSOAP" label="SOAP" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
-  {{#action id="notaAtencionParto" source="notaAtencionParto" label="Atención Postparto" transform="copiarResumenAtencionParto" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{#action
+    id="notaAtencionParto"
+    source="notaAtencionParto"
+    label="Atención Postparto"
+    transform="copiarResumenAtencionParto"
+    hide="true"
+    type="add-subdoc"
+    visibleMode="close"
+    color="deep-orange"
+    onlyPost="true"
+    error="=fn('validarNotaAtencionParto', persona)"
+  }}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
   {{/action}}
   {{#action id="notaHistoriaClinicaAtencionRecienNacido2" source="notaHistoriaClinicaAtencionRecienNacido2" label="Historia Clínica Atención Recien Nacido" transform="copiarEstudioSocioeconomico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="persona" fromView="datosMadre"}}
@@ -13028,7 +13051,27 @@
     {{param tipoSolicitud="='cirugiaAmbulatoria'"}}
     {{param persona="=_id"}}
   {{/action}}
-  {{#action id="notaSolicitudTococirugia" source="notaSolicitudTococirugia" label="Solicitud Tococirugía" transform="copiarTococirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange"  onlyPost="true" fromSource="solicitud" fromView="activos" confirm="=calc.hasValue(_items[0]._name)" confirmMessage="=_items[0]._name+'<br><strong>¿Desea Continuar?</strong>'" confirmTitle="=calc.concat('Solicitud Activa',_items[0]._created.folio)" confirmHeight="600" confirmWidth="500" btnSolid="true" error="=fn('errorDatosSeguro', persona, contexto, detalle)"}}
+  {{#action
+    id="notaSolicitudTococirugia"
+    source="notaSolicitudTococirugia"
+    label="Solicitud Tococirugía"
+    transform="copiarTococirugia"
+    hide="true"
+    type="add-subdoc"
+    visibleMode="close"
+    color="deep-orange"
+    onlyPost="true"
+    fromSource="solicitud"
+    fromView="activos"
+    confirm="=calc.hasValue(_items[0]._name)"
+    confirmMessage="=_items[0]._name+'<br><strong>¿Desea Continuar?</strong>'"
+    confirmTitle="=calc.concat('Solicitud Activa',_items[0]._created.folio)"
+    confirmHeight="600"
+    confirmWidth="500"
+    btnSolid="true"
+    error="=fn('validarNotaSolicitudTococirugia', persona)||fn('errorDatosSeguro', persona, contexto, detalle)"
+    errorType="info"
+  }}
     {{param tipoSolicitud="='tococirugia'"}}
     {{param persona="=_id"}}
     {{ask field="fechaPropuesta" type="date" label="Fecha Propuesta para la Tococirugía" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('months',6).format()" errorMessage="Fecha Propuesta Incorrecta"}}

@@ -2804,6 +2804,24 @@
     {{default return="='Error al Procesar Nota Planificación Familiar'"}}
   {{/function}} --}}
 
+  {{#function id="validarNotaAtencionParto"}}
+    {{define type="param" id="persona"}}
+    {{when condition="=persona.genero!='mujer'" return="='El Género del Paciente debe ser Mujer para Registrar Atención Postparto'"}}
+    {{default return="null"}}
+  {{/function}}
+
+  {{#function id="validarNotaInformacionEmbarazoPartograma"}}
+    {{define type="param" id="persona"}}
+    {{when condition="=persona.genero!='mujer'" return="='El Género del Paciente debe ser Mujer para Registrar Información de Embarazo y Partograma'"}}
+    {{default return="null"}}
+  {{/function}}
+
+  {{#function id="validarNotaSolicitudTococirugia"}}
+    {{define type="param" id="persona"}}
+    {{when condition="=persona.genero!='mujer'" return="='El Género del Paciente debe ser Mujer para Solicitar Tococirugía'"}}
+    {{default return="null"}}
+  {{/function}}
+
   {{#function id="validarServicioSaludMental"}}
     {{define type="param" id="esPsicologoPsiquiatra" default="false" notNull="true"}}
     {{define type="param" id="seRealizoPsicoterapia" default="individual" notNull="true"}}
@@ -2913,6 +2931,13 @@
     {{when condition="=calc.getRef(persona,'genero')==='mujer'&&calc.in('HOMBRE',calc.pluckRef(calc.getRef(base,'otrosDiagnosticos'),'base.limiteSexo'))" return="true"}}
     {{!-- De lo contrario -> válido --}}
     {{default return="false"}}
+  {{/function}}
+
+  {{#function id="confirmarRegistroPaciente"}}
+    {{define type="param" id="base"}}
+    {{when condition="=calc.contieneMalaPalabra(calc.getRef(base, 'paciente.base.clave'))" return="='CURP contiene palabra altisonante (' + calc.getRef(base,'paciente.base.clave').substr(0,4) + ')<br>Si desea continuar presione Sí.<br>De lo contrario, presione No y modifique el dato colocando una X en el segundo caracter.'"}}
+    {{when condition="=calc.getRef(base,'paciente.base.tipoAtencion')!=='consultaExterna'&&calc.getRef(base,'paciente.base.genero')==='intersexual'" return="='Se generará registro de paciente Intersexual<br>¿Desea continuar?'"}}
+    {{default return=""}}
   {{/function}}
 {{/define}}
 

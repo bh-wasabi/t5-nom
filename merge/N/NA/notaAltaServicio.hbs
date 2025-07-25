@@ -84,7 +84,7 @@
     {{validator type="expr" notValidIf="=_.last(calc.mergeArrays(@seleccionarOtrosDiagnosticos.map(d=>d.split('#')[1]),calc.pluckRef(@otrosDiagnosticos,'base.diagnostico')))=='P95X'" message="Código P95X no puede ser seleccionado como última Comorbilidad"}}
     {{validator type="expr" notValidIf="=calc.arrayLength(otrosDiagnosticos,seleccionarOtrosDiagnosticos)>6" message="Máximo 6 Comorbilidades"}}
     {{validator type="expr" notValidIf="=calc.arrayLength(@procedimientoEgresos,@procedimientoDiagnosticosTerapeuticosQuirurgicos)>6" message="Máximo 6 Procedimientos"}}
-    {{validator type="expr" notValidIf="=calc.arrayLength(@interconsultas)>6" message="Máximo 6 Interconsultas"}}
+    {{validator type="expr" notValidIf="=calc.arrayLength(@interconsultas)>3" message="Máximo 3 Interconsultas"}}
     {{validator type="expr" validIf="=!@CLUES||cluesEstatus=='EN OPERACION'||(@cluesFechaBaja&&moment(@fechaIngreso||undefined).add(-90,'days').format('YYYY-MM-DD')<=@cluesFechaBaja)" message="CLUES Fuera de Operación"}}
   {{/section}}
   {{#grid id="solicitudesEgreso" section="solicitudesEgreso" allowInsert="false" allowRemove="false"}}
