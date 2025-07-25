@@ -7,7 +7,6 @@
   }}
     {{#update section="base"}}
       {{set excedeLimiteEdad="=nomDatos.desconoceFechaNacimiento=='no'&&calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteEdad'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteEdad')))|calc.in('SI', calc.pluckRef(base.interconsultas,'base.excedeLimiteEdad'))?'SI':'NO'"}}
-      {{set excedeLimiteSexo="=persona.genero=='intersexual'||user.serviceProvider.generoCurp=='noBinario'?'SI':'NO'"}}
     {{/update}}
   {{/action}}
 

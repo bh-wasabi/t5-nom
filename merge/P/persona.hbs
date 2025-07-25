@@ -10143,49 +10143,49 @@
   {{#action id="exportarSinbaConsultaExterna" label="Exportar SINBA - Consulta Externa"  hide="true" type="download-text" fileName="='CEX-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.'+(_ask.modo=='error'?'err':'txt')" fileEncoding="latin1" fromApi="export/sinba/notaSisConsultaExterna" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
-    {{ask field="modo" type="select" label="Modo" keys="texto,cifrado,error" names="Texto,Cifrado,Error" value="texto"}}
+    {{ask field="modo" type="select" label="Modo" keys="texto,cifrado,error,errorCifrado" names="Texto,Cifrado,Excepciones,Excepciones Cifradas" value="texto"}}
   {{/action}}
 
   {{#action id="exportarSinbaLesiones" label="Exportar SINBA - Lesiones"  hide="true" type="download-text" fileName="='LES-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.'+(_ask.modo=='error'?'err':'txt')" fileEncoding="latin1" fromApi="export/sinba/notaSeulLesiones" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
-    {{ask field="modo" type="select" label="Modo" keys="texto,cifrado,error" names="Texto,Cifrado,Error" value="texto"}}
+    {{ask field="modo" type="select" label="Modo" keys="texto,cifrado,error,errorCifrado" names="Texto,Cifrado,Excepciones,Excepciones Cifradas" value="texto"}}
   {{/action}}
 
   {{#action id="exportarSinbaUrgencias" label="Exportar SINBA - Urgencias"  hide="true" type="download-text" fileName="='URG-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.'+(_ask.modo=='error'?'err':'txt')" fileEncoding="latin1" fromApi="export/sinba/notaAltaServicio" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
-    {{ask field="modo" type="select" label="Modo" keys="texto,cifrado,error" names="Texto,Cifrado,Error" value="texto"}}
+    {{ask field="modo" type="select" label="Modo" keys="texto,cifrado,error,errorCifrado" names="Texto,Cifrado,Excepciones,Excepciones Cifradas" value="texto"}}
   {{/action}}
 
   {{#action id="exportarSinbaEgresos" label="Exportar SINBA - Egresos"  hide="true" type="download-text" fileName="='EGR-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.'+(_ask.modo=='error'?'err':'txt')" fileEncoding="latin1" fromApi="export/sinba/notaSeulEgreso" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
-    {{ask field="modo" type="select" label="Modo" keys="texto,cifrado,error" names="Texto,Cifrado,Error" value="texto"}}
+    {{ask field="modo" type="select" label="Modo" keys="texto,cifrado,error,errorCifrado" names="Texto,Cifrado,Excepciones,Excepciones Cifradas" value="texto"}}
   {{/action}}
 
   {{#action id="exportarSinbaSaludBucal" label="Exportar SINBA - Salud Bucal"  hide="true" type="download-text" fileName="='CSB-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.'+(_ask.modo=='error'?'err':'txt')" fileEncoding="latin1" fromApi="export/sinba/notaSaludBucal" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
-    {{ask field="modo" type="select" label="Modo" keys="texto,cifrado,error" names="Texto,Cifrado,Error" value="texto"}}
+    {{ask field="modo" type="select" label="Modo" keys="texto,cifrado,error,errorCifrado" names="Texto,Cifrado,Excepciones,Excepciones Cifradas" value="texto"}}
   {{/action}}
 
   {{#action id="exportarSinbaSaludMental" label="Exportar SINBA - Salud Mental"  hide="true" type="download-text" fileName="='CSM-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.'+(_ask.modo=='error'?'err':'txt')" fileEncoding="latin1" fromApi="export/sinba/notaSaludMental" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
-    {{ask field="modo" type="select" label="Modo" keys="texto,cifrado,error" names="Texto,Cifrado,Error" value="texto"}}
+    {{ask field="modo" type="select" label="Modo" keys="texto,cifrado,error,errorCifrado" names="Texto,Cifrado,Excepciones,Excepciones Cifradas" value="texto"}}
   {{/action}}
 
   {{#action id="exportarSinbaPlanificacionFamiliar" label="Exportar SINBA - Planificación Familiar"  hide="true" type="download-text" fileName="='CPF-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.'+(_ask.modo=='error'?'err':'txt')" fileEncoding="latin1" fromApi="export/sinba/notaPlanificacionFamiliar" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
-    {{ask field="modo" type="select" label="Modo" keys="texto,cifrado,error" names="Texto,Cifrado,Error" value="texto"}}
+    {{ask field="modo" type="select" label="Modo" keys="texto,cifrado,error,errorCifrado" names="Texto,Cifrado,Excepciones,Excepciones Cifradas" value="texto"}}
   {{/action}}
 
   {{#action id="exportarSinbaDetecciones" label="Exportar SINBA - Detecciones"  hide="true" type="download-text" fileName="='CDT-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.'+(_ask.modo=='error'?'err':'txt')" fileEncoding="latin1" fromApi="export/sinba/notaDetecciones" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
-    {{ask field="modo" type="select" label="Modo" keys="texto,cifrado,error" names="Texto,Cifrado,Error" value="texto"}}
+    {{ask field="modo" type="select" label="Modo" keys="texto,cifrado,error,errorCifrado" names="Texto,Cifrado,Excepciones,Excepciones Cifradas" value="texto"}}
   {{/action}}
 
   {{report id="reporteExportarAfiliacion" source="ver" view="exportarAfiliacion"}}

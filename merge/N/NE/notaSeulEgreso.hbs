@@ -2,12 +2,12 @@
   {{#action 
     id="afectar"
     error="=fn('validarNotaEgresoAlProcesar',base)"
-    confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad'), calc.pluckRef([base.causaExterna], 'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteEdad'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteSexo'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteSexo')))"
+    confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteSexo'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad'), calc.pluckRef([base.causaExterna], 'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteEdad'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteSexo'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteSexo')))"
     confirmMessage="Diagnóstico o Procedimiento Excede Límite Edad o Sexo<br>¿Desea continuar?"
   }}
     {{#update section="base"}}
       {{set excedeLimiteEdad="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad'), calc.pluckRef([base.causaExterna], 'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteEdad'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteEdad')))?'SI':'NO'"}}
-      {{set excedeLimiteSexo="=calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteSexo'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteSexo')))||persona.genero=='intersexual'?'SI':'NO'"}}
+      {{set excedeLimiteSexo="=calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteSexo'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteSexo')))?'SI':'NO'"}}
     {{/update}}
   {{/action}}
 

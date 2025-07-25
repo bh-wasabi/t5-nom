@@ -248,10 +248,10 @@
 
   {{!-- Tarea #3976 RACC --}}
   {{#section id="prestadorServicios"}}
-    {{field id="nacidoExtranjero" type="expr" value="=paisNacimiento!='MX'"}}
+    {{field id="esMexicano" type="expr" value="=paisNacimiento=='MX'"}}
     {{#field id="paisNacimiento"}}
-      {{#onChange condition="=paisNacimiento!='MX'" clearFields="entidadNacimiento"}}
-        {{set entidadNacimiento="='NA'"}}
+      {{#onChange clearFields="entidadNacimiento"}}
+        {{set entidadNacimiento="=esMexicano?null:'NA'"}}
       {{/onChange}}
     {{/field}}
     {{validator type="expr" notValidIf="=calc.in(@entidadNacimiento,['99','00'])" message="Entidad Nacimiento Inválida"}}
