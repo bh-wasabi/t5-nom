@@ -1,7 +1,7 @@
 {{#define id="notaCertificacionNoExistePaciente"}}
   {{action 
     id="afectar"
-    confirm="=calc.contieneMalaPalabra(base.paciente.base.clave)||(base.paciente.base.tipoAtencion!='consultaExterna'&&base.paciente.base.genero=='intersexual')"
+    confirm="=fn('confirmarRegistroPaciente', base)"
     confirmWidth="400"
     confirmHeight="400"
     confirmMessage="=fn('confirmarRegistroPaciente', base)"

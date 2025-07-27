@@ -84,7 +84,7 @@
     {{validator type="expr" notValidIf="=calc.arrayLength(otrosDiagnosticos,seleccionarOtrosDiagnosticos)>6" message="Máximo 6 Comorbilidades"}}
     {{validator type="expr" notValidIf="=calc.arrayLength(@procedimientoEgresos,@procedimientoDiagnosticosTerapeuticosQuirurgicos)>6" message="Máximo 6 Procedimientos"}}
     {{validator type="expr" notValidIf="=calc.arrayLength(@interconsultas)>3" message="Máximo 3 Interconsultas"}}
-    {{validator type="expr" validIf="=!@CLUES||cluesEstatus=='EN OPERACION'||(@cluesFechaBaja&&moment(@fechaIngreso||undefined).add(-90,'days').format('YYYY-MM-DD')<=@cluesFechaBaja)" message="CLUES Fuera de Operación"}}
+    {{validator type="expr" validIf="=!@CLUES||cluesEstatus=='EN OPERACION'||(@cluesFechaBaja&&moment(@fechaEgreso).add(-90,'days').format('YYYY-MM-DD')<=@cluesFechaBaja)" message="CLUES Fuera de Operación"}}
   {{/section}}
   {{#grid id="solicitudesEgreso" section="solicitudesEgreso" allowInsert="false" allowRemove="false"}}
     {{column field="_name" width="800" readOnly="true"}}

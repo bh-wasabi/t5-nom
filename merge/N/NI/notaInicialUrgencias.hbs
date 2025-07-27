@@ -24,11 +24,11 @@
     {{/field}}
 
     {{#onChange}}
-  		{{#update}}
+      {{#update}}
         {{set diagnostico="=calc.mergeArrays(@afeccionPrincipal,@otrosDiagnosticos)"}}
         {{set _diagnostico="=_.pluck(base.diagnostico, '_name').join(', ')"}}
-  		{{/update}}
-  	{{/onChange}}
+      {{/update}}
+    {{/onChange}}
 
     {{validator type="expr" validIf="=(calc.number(@edadGestacional)>=0&&calc.number(@edadGestacional)<=45)||(calc.number(@edadGestacional)==99)" message="Error en la Edad Gestacional"}}
     {{validator type="expr" notValidIf="=@mujerFertil=='embarazo'&&@edadGestacional=='0'" message="Error en la Edad Gestacional"}}
