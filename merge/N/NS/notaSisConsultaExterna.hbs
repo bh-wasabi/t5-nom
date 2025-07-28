@@ -1,11 +1,12 @@
 {{#define id="notaSisConsultaExterna"}}
   {{#action 
     id="afectar"
-    confirm="=calc.in('SI', _.union(calc.pluckRef([_doc.analisis.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(_doc.analisis.otrosDiagnosticos, 'base.excedeLimiteEdad')))"
-    confirmMessage="Diagnóstico Excede Límite Edad<br>¿Desea continuar?"
+    confirm="=calc.in('SI', _.union(calc.pluckRef([_doc.analisis.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(_doc.analisis.otrosDiagnosticos, 'base.excedeLimiteEdad'),calc.pluckRef([_doc.analisis.afeccionPrincipal], 'base.excedeLimiteSexo'),calc.pluckRef(_doc.analisis.otrosDiagnosticos, 'base.excedeLimiteSexo')))"
+    confirmMessage="Diagnóstico Excede Límite Edad o Sexo<br>¿Desea continuar?"
   }}
     {{#update section="base"}}
       {{set excedeLimiteEdad="=calc.in('SI', _.union(calc.pluckRef([_doc.analisis.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(_doc.analisis.otrosDiagnosticos, 'base.excedeLimiteEdad')))?'SI':'NO'"}}
+      {{set excedeLimiteSexo="=calc.in('SI', _.union(calc.pluckRef([_doc.analisis.afeccionPrincipal], 'base.excedeLimiteSexo'),calc.pluckRef(_doc.analisis.otrosDiagnosticos, 'base.excedeLimiteSexo')))?'SI':'NO'"}}
     {{/update}}
   {{/action}}
   

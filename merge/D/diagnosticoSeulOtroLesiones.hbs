@@ -18,6 +18,7 @@
         {{set limiteInferior="=LINF"}}
         {{set limiteSuperior="=LSUP"}}
         {{set excedeLimiteEdad="=calc.meetsAgeLimit(LINF, desde, _parentDoc.persona.fechaNacimiento, true, _parentDoc.base.fechaEvento, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(LSUP, desde, _parentDoc.persona.fechaNacimiento, false, _parentDoc.base.fechaEvento, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
+        {{set excedeLimiteSexo="=calc.meetsSexLimitSeul(LSEX, _parentDoc.persona.genero)?'NO':'SI'"}}
         {{set validoLesiones="=VALIDO_LESIONES"}}
         {{set validoEgresos="=VALIDO_EGRESOS"}}
         {{set validoSeul="=VALIDO_SEUL"}}
@@ -27,10 +28,7 @@
         {{set edadActual="=_parentDoc.persona.edadActual"}}
         {{set requiereCampos="=REQUIERE_CAMPOS"}}
       {{/onChange}}
-    {{/field}}    
-    {{validator type="expr" validIf="=calc.meetsSexLimit(limiteSexo, _parentDoc.persona.genero)" message="No Corresponde el Sexo del Paciente"}}
-    {{!-- {{validator type="expr" validIf="=calc.meetsAgeLimit(limiteInferior, desde, _parentDoc.persona.fechaNacimiento, true)" message="No Corresponde la Edad del Paciente con el Límite Inferior"}} --}}
-    {{!-- {{validator type="expr" validIf="=calc.meetsAgeLimit(limiteSuperior, desde, _parentDoc.persona.fechaNacimiento, false)" message="No Corresponde la Edad del Paciente con el Límite Superior"}} --}}
+    {{/field}}
     {{validator type="expr" validIf="=@detalle.length>1" message="Descripción (Mínimo 2 Caracteres)"}}
     {{validator type="expr" notValidIf="=_parentDoc.persona.genero=='intersexual'&&limiteSexo!='NO'" message="Diagnóstico Incorrecto para Intersexual"}}
   {{/section}}

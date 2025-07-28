@@ -8,7 +8,7 @@
         {{set limiteSuperior="=calc.zeroFill(PRO_EDAD_FA,3)+(PRO_CVE_EDFA==1?'D':PRO_CVE_EDFA==2?'M':PRO_CVE_EDFA==3?'A':'')"}}
         {{!-- calc.meetsAgeLimit(valor, desde, fechaNacimiento, checarInferior, hoy, edadDesconocida) --}}
         {{set excedeLimiteEdad="=calc.meetsAgeLimit(calc.zeroFill(PRO_EDAD_IA,3)+(PRO_CVE_EDIA==1?'D':PRO_CVE_EDIA==2?'M':PRO_CVE_EDIA==3?'A':''), null, _parentDoc.persona.fechaNacimiento, true, moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years')<1?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaEgreso, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(calc.zeroFill(PRO_EDAD_FA,3)+(PRO_CVE_EDFA==1?'D':PRO_CVE_EDFA==2?'M':PRO_CVE_EDFA==3?'A':''), null, _parentDoc.persona.fechaNacimiento, false, moment(_parentDoc.base.fechaEgreso).diff(_parentDoc.persona.fechaNacimiento,'years')<1?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaEgreso, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
-        {{set excedeLimiteSexo="=SEX_TYPE==0?'NO':_parentDoc.persona.genero=='intersexual'?'SI':calc.meetsSexLimit(SEX_TYPE==1?'HOMBRE':SEX_TYPE==2?'MUJER':'NO', _parentDoc.persona.genero)?'NO':'SI'"}}
+        {{set excedeLimiteSexo="=SEX_TYPE==0?'NO':_parentDoc.persona.genero=='intersexual'?'SI':calc.meetsSexLimitSeul(SEX_TYPE==1?'HOMBRE':SEX_TYPE==2?'MUJER':'NO', _parentDoc.persona.genero)?'NO':'SI'"}}
         {{set otrasValidaciones="=PRO_TIPO_NOM"}}
       {{/onChange}}
     {{/field}}

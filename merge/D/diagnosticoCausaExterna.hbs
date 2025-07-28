@@ -1,5 +1,5 @@
 {{#define id="diagnosticoCausaExterna"}}
-  {{#section id="base"}}
+  {{#section id="base" confirm="=fn('confirmarLimiteEdadSexo',excedeLimiteEdad,excedeLimiteSexo)" confirmTitle="Confirmación" confirmMessage="No Corresponde la Edad o el Sexo del Paciente<br>¿Desea Continuar?"}}
     {{field id="esEgreso" type="expr" value="=calc.in(docType,['notaTempEgresos','notaEgresos','notaSeulEgreso'])"}}
     {{#field id="causaExterna"}}
       {{#onChange clearFields="descripcionCauseExterna,folioLesion"}}
@@ -8,8 +8,8 @@
         {{set limiteInferior="=LINF"}}
         {{set limiteSuperior="=LSUP"}}
         {{set excedeLimiteEdad="=calc.meetsAgeLimit(LINF, null, _parentDoc.persona.fechaNacimiento, true, _parentDoc._type=='notaSeulEgreso'?moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaEgreso:_parentDoc.base.fechaEvento, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(LSUP, null, _parentDoc.persona.fechaNacimiento, false, _parentDoc._type=='notaSeulEgreso'?moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaEgreso:_parentDoc.base.fechaEvento, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
+        {{set excedeLimiteSexo="=calc.meetsSexLimitSeul(LSEX, _parentDoc.persona.genero)?'NO':'SI'"}}
       {{/onChange}}
     {{/field}}
-    {{validator type="expr" validIf="=calc.meetsSexLimit(limiteSexo, _parentDoc.persona.genero)" message="No Corresponde el Sexo del Paciente"}}
   {{/section}}
 {{/define}}

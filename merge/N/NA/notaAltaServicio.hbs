@@ -6,7 +6,7 @@
     confirmMessage="Diagnóstico, Procedimiento o Interconsulta Excede Límite Edad<br>¿Desea continuar?"
   }}
     {{#update section="base"}}
-      {{set excedeLimiteEdad="=nomDatos.desconoceFechaNacimiento=='no'&&calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteEdad'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteEdad')))|calc.in('SI', calc.pluckRef(base.interconsultas,'base.excedeLimiteEdad'))?'SI':'NO'"}}
+      {{set excedeLimiteEdad="=nomDatos.desconoceFechaNacimiento=='no'&&calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))||calc.in('SI', _.union(calc.pluckRef(base.procedimientoEgresos,'base.excedeLimiteEdad'),calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.excedeLimiteEdad')))||calc.in('SI', calc.pluckRef(base.interconsultas,'base.excedeLimiteEdad'))?'SI':'NO'"}}
     {{/update}}
   {{/action}}
 
@@ -46,12 +46,12 @@
       {{/onChange}}
     {{/field}}
     {{#onChange}}
-  		{{#update}}
+      {{#update}}
         {{set foliosUtilizadosDefuncion="=_.compact([@folioCertificadoDefuncion])"}}
         {{set diagnostico="=calc.mergeArrays(@afeccionPrincipal,@afeccionPrincipalReseleccionada,@otrosDiagnosticos)"}}
         {{set _diagnostico="=_.pluck(base.diagnostico, '_name').join(', ')"}}
-  		{{/update}}
-  	{{/onChange}}
+      {{/update}}
+    {{/onChange}}
     {{validator type="expr" notValidIf="=@folioCertificadoDefuncion&&fn('validaCertificadoDefuncion',@folioCertificadoDefuncion)" message="Certificado Defunción Inválido"}}
     {{validator type="expr" notValidIf="=moment(@fechaEgreso).diff(@fechaIngreso,'days')>40" message="No deben pasar <strong>40 Días</strong> entre <strong>Fecha Desde</strong> y <strong>Fecha Hasta</strong>"}}
     {{validator type="expr" notValidIf="=@CLUES==user.establishmentData.clues" message="CLUES Inválido"}}

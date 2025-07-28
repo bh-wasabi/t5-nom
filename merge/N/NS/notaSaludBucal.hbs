@@ -2,11 +2,12 @@
   {{#action
     id="afectar"
     error="=!calc.hasValuesRef(_doc,'diagnosticos.placaBacterian,diagnosticos.tecnicaCepillado,diagnosticos.usoHiloDental,diagnosticos.limpiezaDental,diagnosticos.higieneProtesis,diagnosticos.examenTejidos,diagnosticos.autoexamenCavidad,diagnosticos.aplicacionTopicaFlour,diagnosticos.raspadoAlisado,diagnosticos.aplicacionBarniz,restauracion.actividadQxMenor,farmacos.prescripcionFarmacos,farmacos.orientacionSaludBucal,farmacos.conclusionTratamientoIntegral,restauracion.numeroFosetasSelladas,restauracion.numeroObturacionesAmalgamas,restauracion.numeroObturacionesResinas,restauracion.numeroObturacionesIonomeros,restauracion.numeroObturacionesAlcasite,restauracion.numeroObturacionesTemporales,restauracion.numeroExtraccionesTemporales,restauracion.numeroEstraccionesPermanentes,restauracion.numeroPiezasTerapiaPulpar,farmacos.atencionesAdicionales,farmacos.numeroRadiografiasDentales')?'Error: Faltan Servicios por Otorgar':null"
-    confirm="=calc.in('SI', _.union(calc.pluckRef([diagnosticos.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(diagnosticos.otrosDiagnosticos, 'base.excedeLimiteEdad')))"
+    confirm="=calc.in('SI', _.union(calc.pluckRef([diagnosticos.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(diagnosticos.otrosDiagnosticos, 'base.excedeLimiteEdad'),calc.pluckRef([diagnosticos.afeccionPrincipal], 'base.excedeLimiteSexo'),calc.pluckRef(diagnosticos.otrosDiagnosticos, 'base.excedeLimiteSexo')))"
     confirmMessage="Diagnóstico Excede Límite Edad<br>¿Desea continuar?"
   }}
     {{#update section="base"}}
       {{set excedeLimiteEdad="=calc.in('SI', _.union(calc.pluckRef([diagnosticos.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(diagnosticos.otrosDiagnosticos, 'base.excedeLimiteEdad')))?'SI':'NO'"}}
+      {{set excedeLimiteSexo="=calc.in('SI', _.union(calc.pluckRef([diagnosticos.afeccionPrincipal], 'base.excedeLimiteSexo'),calc.pluckRef(diagnosticos.otrosDiagnosticos, 'base.excedeLimiteSexo')))?'SI':'NO'"}}
     {{/update}}
   {{/action}}
 

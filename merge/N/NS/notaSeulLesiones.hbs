@@ -1,12 +1,12 @@
 {{#define id="notaSeulLesiones"}}
   {{#action
     id="afectar"
-    confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))"
-    confirmMessage="Diagnóstico Excede Límite Edad<br>¿Desea continuar?"
+    confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteSexo'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteSexo'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteSexo'),calc.pluckRef([base.causaExterna], 'base.excedeLimiteEdad'),calc.pluckRef([base.causaExterna], 'base.excedeLimiteSexo')))"
+    confirmMessage="Diagnóstico Excede Límite Edad o Sexo<br>¿Desea continuar?"
   }}
     {{#update section="base"}}
-      {{set excedeLimiteEdad="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad')))?'SI':'NO'"}}
-      {{set excedeLimiteSexo="=persona.genero=='intersexual'?'SI':'NO'"}}
+      {{set excedeLimiteEdad="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad'),calc.pluckRef([base.causaExterna], 'base.excedeLimiteEdad')))?'SI':'NO'"}}
+      {{set excedeLimiteSexo="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteSexo'),calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteSexo'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteSexo'),calc.pluckRef([base.causaExterna], 'base.excedeLimiteSexo')))?'SI':'NO'"}}
     {{/update}}
   {{/action}}
 

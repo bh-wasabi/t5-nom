@@ -2939,6 +2939,13 @@
     {{!-- {{when condition="=calc.getRef(base,'paciente.base.tipoAtencion')!=='consultaExterna'&&calc.getRef(base,'paciente.base.genero')==='intersexual'" return="='Se generará registro de paciente Intersexual<br>¿Desea continuar?'"}} --}}
     {{default return=""}}
   {{/function}}
+
+  {{#function id="confirmarLimiteEdadSexo"}}
+    {{define type="param" id="excedeLimiteEdad" default="='NO'"}}
+    {{define type="param" id="excedeLimiteSexo" default="='NO'"}}
+    {{when condition="=excedeLimiteEdad==='SI'||excedeLimiteSexo==='SI'" return="=true"}}
+    {{default return="=false"}}
+  {{/function}}
 {{/define}}
 
 {{#markup}}

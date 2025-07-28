@@ -92,7 +92,7 @@
     {{/find}}
   {{/view}}
 
-  {{#section id="base"}}
+  {{#section id="base" confirm="=calc.contieneMalaPalabra(clave)" confirmWidth="400" confirmHeight="400" confirmTitle="Confirmación" confirmMessage="='CURP contiene palabra altisonante (' + clave.substr(0,4) + ')<br>Si desea continuar presione Sí.<br>De lo contrario, presione No y modifique el dato colocando una X en el segundo caracter.'"}}
     {{field id="nombreCompleto" type="expr" label="Nombre" value="=calc.concat(@nombres, @apellidoPaterno, @apellidoMaterno)"}}
     {{field id="esMujer" type="expr" value="=base.genero==='mujer'"}}    
     {{field id="esMenor3Meses" type="expr" value="=moment().diff(moment(fechaNacimiento), 'months')<=3"}}
