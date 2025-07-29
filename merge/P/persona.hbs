@@ -4935,7 +4935,7 @@
     {{update section="resumen" value="=resumen"}}
   {{/transform}}
 
-   {{#transform id="copiarDerechohabienciaEgreso"}}
+  {{#transform id="copiarDerechohabienciaEgreso"}}
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
     {{update section="nomDatos" transform="copiarNomDatos"}}
@@ -5040,13 +5040,9 @@
       {{set somatometriaPediatrica="=detalle.somatometriaPediatrica"}}
       {{set _somatometriaPediatrica="=detalle._somatometriaPediatrica"}}
       {{set fechaNacimiento="=persona.fechaNacimiento"}}
-      {{!-- {{set fechaIngresoUrgencias="=contexto.urgencias.desde"}} --}}
-      {{set afeccionPrincipal="=calc.recalcLimiteEdadDiagnostico(detalle.notaInicialUrgencias.base.afeccionPrincipal, persona.fechaNacimiento, moment(_params.fechaEgreso).diff(persona.fechaNacimiento,'years')<1?_params.fechaIngreso:_params.fechaEgreso)"}}
-      {{set _afeccionPrincipal="=detalle.notaInicialUrgencias.base._afeccionPrincipal"}}
-      {{set afeccionPrincipalReseleccionada="=calc.recalcLimiteEdadDiagnostico(detalle.notaInicialUrgencias.base.afeccionPrincipalReseleccionada, persona.fechaNacimiento, moment(_params.fechaEgreso).diff(persona.fechaNacimiento,'years')<1?_params.fechaIngreso:_params.fechaEgreso)"}}
-      {{set _afeccionPrincipalReseleccionada="=detalle.notaInicialUrgencias.base._afeccionPrincipalReseleccionada"}}
-      {{set otrosDiagnosticos="=calc.recalcLimiteEdadDiagnostico(detalle.notaInicialUrgencias.base.otrosDiagnosticos, persona.fechaNacimiento, moment(_params.fechaEgreso).diff(persona.fechaNacimiento,'years')<1?_params.fechaIngreso:_params.fechaEgreso)"}}
-      {{set _otrosDiagnosticos="=detalle.notaInicialUrgencias.base._otrosDiagnosticos"}}
+      {{set afeccionPrincipal="=calc.recalcLimiteEdadDiagnostico(detalle.notaInicialUrgencias.base.afeccionPrincipal, persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1 ? fechaIngreso : fechaEgreso)"}}
+      {{set afeccionPrincipalReseleccionada="=calc.recalcLimiteEdadDiagnostico(detalle.notaInicialUrgencias.base.afeccionPrincipalReseleccionada, persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngreso:fechaEgreso)"}}
+      {{set otrosDiagnosticos="=_.union(calc.recalcLimiteEdadDiagnostico(detalle.notaInicialUrgencias.base.otrosDiagnosticos, persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngreso:fechaEgreso),_items2&&calc.recalcLimiteEdadDiagnostico(calc.pluckRef(_.first(_items2),'base.otrosDiagnosticos'), persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngreso:fechaEgreso))"}}
       {{set mujerFertil="=detalle.notaInicialUrgencias.base.mujerFertil"}}
       {{set _mujerFertil="=detalle.notaInicialUrgencias.base._mujerFertil"}}
       {{set edadGestacional="=detalle.notaInicialUrgencias.base.edadGestacional"}}
@@ -5168,6 +5164,7 @@
       {{set antecedentesEmbarazos="=contexto.episodio==detalle.notaInformacionEmbarazoPartograma.contexto.episodio&&detalle.notaInformacionEmbarazoPartograma.base.antecedentesEmbarazos"}}
       {{set _antecedentesEmbarazos="=contexto.episodio==detalle.notaInformacionEmbarazoPartograma.contexto.episodio&&detalle.notaInformacionEmbarazoPartograma.base._antecedentesEmbarazos"}}
       {{set pacientePsiquiatrico="=calc.in(user.establishmentData.cluesTipoAbreviacion,['Y','HPSIQ','HPSIQMF'])&&calc.in(user.establishmentData.cluesSubAbreviacion,['99','NES','INP','SAP'])?'si':'no'"}}
+      {{set tipoUnidadPsiquiatrica="=fn('esUnidadPsiquiatrica',user.establishmentData.cluesTipoAbreviacion,user.establishmentData.cluesSubAbreviacion)&&fn('obtenerTipoUnidad',user.establishmentData.cluesTipoUnidad)"}}
       {{setRef ref="afeccionPrincipal.base.folioLesion" value="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&detalle.notaSeulLesiones._created.folio"}}
       {{setRef ref="afeccionPrincipalReseleccionada.base.folioLesion" value="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&detalle.notaSeulLesiones._created.folio"}}
       {{setRef ref="afeccionPrincipalReseleccionada.base.esEgreso" value="true"}}

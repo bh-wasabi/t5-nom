@@ -2946,6 +2946,13 @@
     {{when condition="=excedeLimiteEdad==='SI'||excedeLimiteSexo==='SI'" return="=true"}}
     {{default return="=false"}}
   {{/function}}
+
+  {{#function id="obtenerTipoUnidad"}}
+    {{define type="param" id="tipoUnidad"}}
+    {{when tipoUnidad="1" return="hospitalContinuo"}}
+    {{when tipoUnidad="2" return="hospitalParcial"}}
+    {{when tipoUnidad="3" return="unidadCuidadosEspeciales"}}
+  {{/function}}
 {{/define}}
 
 {{#markup}}
