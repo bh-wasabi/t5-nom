@@ -2512,14 +2512,6 @@
     {{default return="false"}}
   {{/function}}
 
-  {{#function id="validarPacientePlanificacionFamiliar"}}
-    {{define type="param" id="cluesSis" default="='no'"}}
-    {{define type="param" id="genero"}}
-    {{define type="param" id="edad"}}
-    {{when cluesSis="='no'" return="='CLUES Inválido (El Establecimiento no es de Consulta Externa)'"}}
-    {{default return="=(genero==='mujer'&&edad>=10&&edad<=59)||(calc.in(genero,['hombre','intersexual'])&&edad>=10&&edad<=70)?'':'Edad Inválida (El Paciente no es candidato a Planificación Familiar)'"}}
-  {{/function}}
-
   {{#function id="validaCertificadoDefuncion"}}
     {{define type="param" id="certificado"}}
     {{!-- Debe tener 9 caracteres --}}
@@ -2709,11 +2701,26 @@
   {{/function}}
 
   {{#function id="validarConsultaExterna"}}
-    {{define type="param" id="fechaNacimiento"}}
-    {{define type="param" id="tipoPersonal"}}
-    {{define type="param" id="nombreTipoPersonal"}}
-    {{when condition="=moment().diff(moment(@fechaNacimiento), 'years')<59&&calc.in(@tipoPersonal,['licenciadoGerontologia','pasanteGerontologia'])" return="='No Corresponde la Edad del Paciente con el Tipo de Personal (' + @nombreTipoPersonal + ')'"}}
-    {{default return="''"}}
+    {{define type="param" id="persona"}}
+    {{define type="param" id="usuario"}}
+    {{when condition="=calc.in(persona.genero, ['noEspecificado', 'seIgnora'])" return="Género Inválido para Consulta Externa"}}
+    {{when condition="=moment().diff(moment(persona.fechaNacimiento), 'years')<59&&calc.in(calc.getRef(usuario, 'others.tipoPersonalNom'),['licenciadoGerontologia','pasanteGerontologia'])" return="='No Corresponde la Edad del Paciente con el Tipo de Personal (' + calc.getRef(usuario, 'others._tipoPersonalNom') + ')'"}}
+    {{default return=""}}
+  {{/function}}
+
+  {{#function id="validarNotaDetecciones"}}
+    {{define type="param" id="persona"}}
+    {{when condition="=calc.in(persona.genero, ['noEspecificado', 'seIgnora'])" return="Género Inválido para Detecciones"}}
+    {{default return=""}}
+  {{/function}}
+
+  {{#function id="validarNotaPlanificacionFamiliar"}}
+    {{define type="param" id="cluesSis" default="='no'"}}
+    {{define type="param" id="genero"}}
+    {{define type="param" id="edad"}}
+    {{when cluesSis="='no'" return="='CLUES Inválido (El Establecimiento no es de Consulta Externa)'"}}
+    {{when condition="=calc.in(genero, ['noEspecificado', 'seIgnora'])" return="Género Inválido para Planificación Familiar"}}
+    {{default return="=(genero==='mujer'&&edad>=10&&edad<=59)||(calc.in(genero,['hombre','intersexual'])&&edad>=10&&edad<=70)?'':'Edad Inválida (El Paciente no es candidato a Planificación Familiar)'"}}
   {{/function}}
 
   {{#function id="validarFechaEgreso"}}
@@ -2794,15 +2801,6 @@
     {{when condition="=calc.isEmpty(calc.getRef(base,'afeccionPrincipalReseleccionada.base.tipoAtencion'))" return="='Error: Falta Indicar Tipo de Atención de Afección Principal Reseleccionada'"}}
     {{default return="=null"}}
   {{/function}}
-
-  {{!-- {{#function id="validarNotaPlanificacionFamiliar" debug="true"}}
-    {{define type="param" id="base"}}
-    {{define type="param" id="metodos"}}
-    {{define type="param" id="orientacionConsejeria"}}
-    {{when condition="=calc.isEmpty(base.afeccionPrincipal)&&calc.getRef(metodos,'revisionColocacionMetodoQuirurgico')==='noAplica'&&calc.isFalse(calc.getRef(metodos,'puerperaAceptaFamiliar'))" return="='Error: Se debe registrar Afección Principal, Orientación Consejería y/o Métodos de Planificación Familiar'"}}
-    '=calc.isEmpty(base.afeccionPrincipal)&&calc.isFalse(orientacionConsejeria.orientacionPlanificacionFamiliar)&&calc.isFalse(orientacionConsejeria.orientacionIts)&&calc.isFalse(orientacionConsejeria.orientacionPrevencionEmbarazo)&&calc.isFalse(orientacionConsejeria.orientacionSaludSexual)&&metodos.revisionColocacionMetodoQuirurgico==='noAplica'&&calc.isFalse(metodos.puerpera.base.puerperaAceptaFamiliar)
-    {{default return="='Error al Procesar Nota Planificación Familiar'"}}
-  {{/function}} --}}
 
   {{#function id="validarNotaAtencionParto"}}
     {{define type="param" id="persona"}}

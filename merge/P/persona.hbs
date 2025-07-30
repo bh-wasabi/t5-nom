@@ -4924,7 +4924,7 @@
     {{update condition="=_params.servicio=='alimentacionPacientes'" section="programaActual" value="=detalle.datosContrato.programaActual"}} --}}
   {{/transform}}
 
-   {{#transform id="copiarDatosSeguro"}}
+  {{#transform id="copiarDatosSeguro"}}
     {{update section="persona" transform="copiarPersona"}}
     {{#update section="base"}}
       {{set seguro="=calc.firstObj(persona.seguro)"}}
@@ -4941,6 +4941,7 @@
     {{update section="nomDatos" transform="copiarNomDatos"}}
     {{#update section="base"}}
       {{set fechaAtencion="=_params.fechaAtencion"}}
+      {{set dependencia="=nomDatos.datosSeguro.base.dependencia"}}
     {{/update}}
     {{update section="dependenciaLista" value="=_.union([nomDatos.datosSeguro.base.dependencia],calc.pluckRef(nomDatos,'datosSeguro.base.dependencia2'))"}}
     {{update section="resumen" value="=resumen" temp="true"}}
@@ -5040,7 +5041,7 @@
       {{set somatometriaPediatrica="=detalle.somatometriaPediatrica"}}
       {{set _somatometriaPediatrica="=detalle._somatometriaPediatrica"}}
       {{set fechaNacimiento="=persona.fechaNacimiento"}}
-      {{set afeccionPrincipal="=calc.recalcLimiteEdadDiagnostico(detalle.notaInicialUrgencias.base.afeccionPrincipal, persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1 ? fechaIngreso : fechaEgreso)"}}
+      {{set afeccionPrincipal="=calc.recalcLimiteEdadDiagnostico(calc.pluckRef(_.first(_items2),'base.afeccionPrincipal'), persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngreso:fechaEgreso)||calc.recalcLimiteEdadDiagnostico(detalle.notaInicialUrgencias.base.afeccionPrincipal, persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1 ? fechaIngreso : fechaEgreso)"}}
       {{set afeccionPrincipalReseleccionada="=calc.recalcLimiteEdadDiagnostico(detalle.notaInicialUrgencias.base.afeccionPrincipalReseleccionada, persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngreso:fechaEgreso)"}}
       {{set otrosDiagnosticos="=_.union(calc.recalcLimiteEdadDiagnostico(detalle.notaInicialUrgencias.base.otrosDiagnosticos, persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngreso:fechaEgreso),_items2&&calc.recalcLimiteEdadDiagnostico(calc.pluckRef(_.first(_items2),'base.otrosDiagnosticos'), persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngreso:fechaEgreso))"}}
       {{set mujerFertil="=detalle.notaInicialUrgencias.base.mujerFertil"}}
@@ -5049,7 +5050,7 @@
       {{setRef ref="afeccionPrincipalReseleccionada.base.esEgreso" value="false"}}
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
-    {{update section="comorbilidades" value="=calc.subItemsMap(_items2, 'base.otrosDiagnosticos', '=base.detalle+`#`+base.diagnostico', '=base.nombre')"}}
+    {{!-- {{update section="comorbilidades" value="=calc.subItemsMap(_items2, 'base.otrosDiagnosticos', '=base.detalle+`#`+base.diagnostico', '=base.nombre')"}} --}}
   {{/transform}}
 
   {{#transform id="copiarDiagnosticoUrgencias"}}
@@ -7910,7 +7911,7 @@
     onlyPost="true"
     fromSource="nota" 
     fromView="ultima"
-    error="=calc.fn('validarConsultaExterna',persona.fechaNacimiento,user.others.tipoPersonalNom,user.others._tipoPersonalNom)||fn('errorCluesConsultaExterna',user.establishmentData.cluesSis)"
+    error="=calc.fn('validarConsultaExterna',persona,user)||fn('errorCluesConsultaExterna',user.establishmentData.cluesSis)"
     errorType="info"
   }}
     {{param persona="=_id"}}
@@ -7929,14 +7930,28 @@
     onlyPost="true"
     fromSource="nota"
     fromView="ultima"
-    error="=fn('validarPacientePlanificacionFamiliar',calc.getRef(user,'establishmentData.cluesSis'),persona.genero,moment(_ask.fechaAtencion).diff(persona.fechaNacimiento,'years'))"
+    error="=fn('validarNotaPlanificacionFamiliar',calc.getRef(user,'establishmentData.cluesSis'),persona.genero,moment(_ask.fechaAtencion).diff(persona.fechaNacimiento,'years'))"
     errorType="info"
   }}
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('obtenerFechaMaximaDosMeses',persona.fechaNacimiento)" max="=moment().add('minutes',1).format()" errorMessage="Fecha Incorrecta"}}
   {{/action}}
-  {{#action id="notaDetecciones" source="notaDetecciones" label="Detecciones" transform="copiarDetecciones" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="nota" fromView="ultima" error="=fn('errorCluesConsultaExterna',user.establishmentData.cluesSis)" errorType="info"}}
+  {{#action
+    id="notaDetecciones"
+    source="notaDetecciones"
+    label="Detecciones"
+    transform="copiarDetecciones"
+    hide="true"
+    type="add-subdoc"
+    visibleMode="close"
+    color="deep-orange"
+    onlyPost="true"
+    fromSource="nota"
+    fromView="ultima"
+    error="=fn('validarNotaDetecciones',persona)||fn('errorCluesConsultaExterna',user.establishmentData.cluesSis)"
+    errorType="info"
+  }}
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('obtenerFechaMaximaDosMeses',persona.fechaNacimiento)" max="=moment().add('minutes',1).format()" errorMessage="Fecha Incorrecta"}}
@@ -10137,49 +10152,49 @@
     {{item action="importarSMC" text="Importar SCM"}}
   {{/menu}}  
 
-  {{#action id="exportarSinbaConsultaExterna" label="Exportar SINBA - Consulta Externa"  hide="true" type="download-text" fileName="='CEX-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.'+(_ask.modo=='error'?'err':'txt')" fileEncoding="latin1" fromApi="export/sinba/notaSisConsultaExterna" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaConsultaExterna" label="Exportar SINBA - Consulta Externa"  hide="true" type="download-text" fileName="=(calc.in(_ask.modo,['error','errorCifrado'])?'EXCEPCIONES-':'')+'CEX-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/sinba/notaSisConsultaExterna" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
     {{ask field="modo" type="select" label="Modo" keys="texto,cifrado,error,errorCifrado" names="Texto,Cifrado,Excepciones,Excepciones Cifradas" value="texto"}}
   {{/action}}
 
-  {{#action id="exportarSinbaLesiones" label="Exportar SINBA - Lesiones"  hide="true" type="download-text" fileName="='LES-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.'+(_ask.modo=='error'?'err':'txt')" fileEncoding="latin1" fromApi="export/sinba/notaSeulLesiones" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaLesiones" label="Exportar SINBA - Lesiones"  hide="true" type="download-text" fileName="=(calc.in(_ask.modo,['error','errorCifrado'])?'EXCEPCIONES-':'')+'LES-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/sinba/notaSeulLesiones" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
     {{ask field="modo" type="select" label="Modo" keys="texto,cifrado,error,errorCifrado" names="Texto,Cifrado,Excepciones,Excepciones Cifradas" value="texto"}}
   {{/action}}
 
-  {{#action id="exportarSinbaUrgencias" label="Exportar SINBA - Urgencias"  hide="true" type="download-text" fileName="='URG-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.'+(_ask.modo=='error'?'err':'txt')" fileEncoding="latin1" fromApi="export/sinba/notaAltaServicio" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaUrgencias" label="Exportar SINBA - Urgencias"  hide="true" type="download-text" fileName="=(calc.in(_ask.modo,['error','errorCifrado'])?'EXCEPCIONES-':'')+'URG-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/sinba/notaAltaServicio" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
     {{ask field="modo" type="select" label="Modo" keys="texto,cifrado,error,errorCifrado" names="Texto,Cifrado,Excepciones,Excepciones Cifradas" value="texto"}}
   {{/action}}
 
-  {{#action id="exportarSinbaEgresos" label="Exportar SINBA - Egresos"  hide="true" type="download-text" fileName="='EGR-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.'+(_ask.modo=='error'?'err':'txt')" fileEncoding="latin1" fromApi="export/sinba/notaSeulEgreso" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaEgresos" label="Exportar SINBA - Egresos"  hide="true" type="download-text" fileName="=(calc.in(_ask.modo,['error','errorCifrado'])?'EXCEPCIONES-':'')+'EGR-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/sinba/notaSeulEgreso" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
     {{ask field="modo" type="select" label="Modo" keys="texto,cifrado,error,errorCifrado" names="Texto,Cifrado,Excepciones,Excepciones Cifradas" value="texto"}}
   {{/action}}
 
-  {{#action id="exportarSinbaSaludBucal" label="Exportar SINBA - Salud Bucal"  hide="true" type="download-text" fileName="='CSB-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.'+(_ask.modo=='error'?'err':'txt')" fileEncoding="latin1" fromApi="export/sinba/notaSaludBucal" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaSaludBucal" label="Exportar SINBA - Salud Bucal"  hide="true" type="download-text" fileName="=(calc.in(_ask.modo,['error','errorCifrado'])?'EXCEPCIONES-':'')+'CSB-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/sinba/notaSaludBucal" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
     {{ask field="modo" type="select" label="Modo" keys="texto,cifrado,error,errorCifrado" names="Texto,Cifrado,Excepciones,Excepciones Cifradas" value="texto"}}
   {{/action}}
 
-  {{#action id="exportarSinbaSaludMental" label="Exportar SINBA - Salud Mental"  hide="true" type="download-text" fileName="='CSM-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.'+(_ask.modo=='error'?'err':'txt')" fileEncoding="latin1" fromApi="export/sinba/notaSaludMental" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaSaludMental" label="Exportar SINBA - Salud Mental"  hide="true" type="download-text" fileName="=(calc.in(_ask.modo,['error','errorCifrado'])?'EXCEPCIONES-':'')+'CSM-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/sinba/notaSaludMental" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
     {{ask field="modo" type="select" label="Modo" keys="texto,cifrado,error,errorCifrado" names="Texto,Cifrado,Excepciones,Excepciones Cifradas" value="texto"}}
   {{/action}}
 
-  {{#action id="exportarSinbaPlanificacionFamiliar" label="Exportar SINBA - Planificación Familiar"  hide="true" type="download-text" fileName="='CPF-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.'+(_ask.modo=='error'?'err':'txt')" fileEncoding="latin1" fromApi="export/sinba/notaPlanificacionFamiliar" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaPlanificacionFamiliar" label="Exportar SINBA - Planificación Familiar"  hide="true" type="download-text" fileName="=(calc.in(_ask.modo,['error','errorCifrado'])?'EXCEPCIONES-':'')+'CPF-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/sinba/notaPlanificacionFamiliar" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
     {{ask field="modo" type="select" label="Modo" keys="texto,cifrado,error,errorCifrado" names="Texto,Cifrado,Excepciones,Excepciones Cifradas" value="texto"}}
   {{/action}}
 
-  {{#action id="exportarSinbaDetecciones" label="Exportar SINBA - Detecciones"  hide="true" type="download-text" fileName="='CDT-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.'+(_ask.modo=='error'?'err':'txt')" fileEncoding="latin1" fromApi="export/sinba/notaDetecciones" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
+  {{#action id="exportarSinbaDetecciones" label="Exportar SINBA - Detecciones"  hide="true" type="download-text" fileName="=(calc.in(_ask.modo,['error','errorCifrado'])?'EXCEPCIONES-':'')+'CDT-'+user.establishmentData.clues+'-'+moment(_ask.hasta).format('YYMM')+'.txt'" fileEncoding="latin1" fromApi="export/sinba/notaDetecciones" isText="true" visibleMode="close" color="blue-grey" onlyPost="true"}}
     {{ask field="desde" type="date" label="Desde" value="=moment().add(-1,'month').startOf('month').format('YYYY-MM-DD')"}}
     {{ask field="hasta" type="date" label="Hasta" value="=moment().add(-1,'month').endOf('month').format('YYYY-MM-DD')"}}
     {{ask field="modo" type="select" label="Modo" keys="texto,cifrado,error,errorCifrado" names="Texto,Cifrado,Excepciones,Excepciones Cifradas" value="texto"}}
@@ -12522,7 +12537,7 @@
     fromView="sugerirProcedimientosRealizados"
     toSection="procedimientosRealizados"
     fromSource2="notaEvolucion"
-    fromView2="comorbilidades"
+    fromView2="ultimaEvolucion"
     toSection2="notaEvolucion"
     fromSource3="notaPlanAltaEnfermeria"
     fromView3="buscarPlanAltaEnfermeria"
@@ -13807,7 +13822,7 @@
   {{!-- {{action id="notaAltaCandidatoRH" source="notaAltaCandidatoRH" label="Alta Candidato" hide="true" type="add-subdoc" visibleMode="close" color="indigo" isBrowserAction="true" onlyPost="true"}}   --}}
   {{action id="notaCertificacionNoExistePaciente" source="notaCertificacionNoExistePaciente" label="Certificación No Existe Paciente" hide="true" type="add-subdoc" visibleMode="close" color="indigo" isBrowserAction="true" onlyPost="true" beginGroup="true"}}  
   {{action id="notaAltaCliente" source="notaAltaCliente" label="Alta Cliente" hide="true" type="add-subdoc" visibleMode="close" color="indigo" isBrowserAction="true" onlyPost="true"}}  
-  {{action id="notaAltaDesconocido" source="notaAltaDesconocido" transform="copiarDesconocido" label="Alta Desconocido" hide="true" type="add-subdoc" visibleMode="close" color="indigo" isBrowserAction="true" onlyPost="true"}}  
+  {{action id="notaAltaDesconocido" source="notaAltaDesconocido" transform="copiarDesconocido" label="Alta Desconocido" hide="true" type="add-subdoc" visibleMode="close" color="indigo" isBrowserAction="true" onlyPost="true" userRole="altaDesconocido"}}
   {{action id="notaAltaUrgencias" source="notaAltaUrgencias" transform="copiarAltaUrgencias" label="Alta Urgencias" hide="true" type="add-subdoc" visibleMode="close" color="indigo" isBrowserAction="true" onlyPost="true"}}  
   {{action id="notaAltaRecienNacido" source="notaAltaRecienNacido" transform="copiarRecienNacido" label="Registro Recién Nacido" hide="true" type="add-subdoc" visibleMode="close" btnSolid="true" color="deep-orange" onlyPost="true"}}  
   {{action id="registroRecienNacido" source="notaAltaRecienNacido" transform="copiarRecienNacido2" label="Registro Recién Nacido" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" isBrowserAction="true"}}  
