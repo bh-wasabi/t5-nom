@@ -10323,6 +10323,18 @@
 		{{#if edadGestacional}}<br>Edad Gestacional: {{edadGestacional}}{{/if}}
 	{{/template}}
 
+	{{#template id="datosMujerSeulEgresoPostparto"}}
+		<br>Hubo Extracción o Expulsión: {{_huboExtraccionExpulsion}}
+		{{#if siHuboExtraccionExpulsion}}<br>Edad Gestacional: {{edadGestacional}}{{/if}}
+		{{#if edadGestacionalNo88}}<br>Tipo Atención Obstétrica: {{_tipoAtencionObstetrica}}{{/if}}
+		{{#if siParto}}<br>Producto Único o Múltiple: {{_tipoEmbarazo}}{{/if}}
+		{{#if siParto}}<br>Total Productos: {{totalProductos}}{{/if}}
+		{{#if siParto}}<br>Tipo Nacimiento: {{_tipoNacimiento}}{{/if}}
+		{{#if siAborto}}<br>Tipo Procedimiento Aborto: {{_tipoProcedimientoAborto}}{{/if}}
+		{{#if siParto}}<br>Información Producto: {{_datosInformacionProducto}}{{/if}}
+		{{#if siAborto}}<br>Información Producto: {{_datosInformacionProductoAborto}}{{/if}}
+	{{/template}}
+
   {{#template id="datosServiciosEgreso"}}
     {{#if procedenciaIngreso}}<br>Procedencia del Ingreso: {{_procedenciaIngreso}}{{/if}}
     {{#if servicioIngreso}}<br>Servicio Ingreso: {{_servicioIngreso}}{{/if}}
