@@ -4739,8 +4739,14 @@
       {{set expedienteInterno="=persona.expedienteInterno"}}
       {{set fechaNacimiento="=persona.fechaNacimiento"}}
       {{set genero="=persona.genero"}}
+      {{set generoSocial="=persona.generoSocial"}}
+      {{set generoCurp="=persona.generoCurp"}}
+      {{set paisNacimiento="=persona.paisNacimiento"}}
+      {{set _paisNacimiento="=persona._paisNacimiento"}}
       {{set entidadNacimiento="=persona.entidadNacimiento"}}
       {{set _entidadNacimiento="=persona._entidadNacimiento"}}
+      {{set nacionalidad="=persona.nacionalidad"}}
+      {{set _nacionalidad="=persona._nacionalidad"}}
       {{set estadoCivil="=persona.estadoCivil"}}
       {{set _estadoCivil="=persona._estadoCivil"}}
       {{set religion="=persona.religion"}}
@@ -4749,6 +4755,8 @@
       {{set _ocupacion="=persona._ocupacion"}}
       {{set escolaridad="=persona.escolaridad"}}
       {{set _escolaridad="=persona._escolaridad"}}
+      {{set sabeLeerEscribir="=persona.sabeLeerEscribir"}}
+      {{set _sabeLeerEscribir="=persona._sabeLeerEscribir"}}
       {{set grupoEtnico="=persona.grupoEtnico"}}
       {{set _grupoEtnico="=persona._grupoEtnico"}}
       {{set idiomasHabla="=persona.idiomasHabla"}}
@@ -4763,8 +4771,16 @@
       {{set _whatsApp="=persona._whatsApp"}}
       {{set direccion="=persona.direccion"}}
       {{set _direccion="=persona._direccion"}}
+      {{set tipoAtencion="=persona.tipoAtencion"}}
+      {{set _tipoAtencion="=persona._tipoAtencion"}}
+      {{set migrante="=persona.migrante"}}
+      {{set _migrante="=persona._migrante"}}
       {{set familiarResponsable="=persona.familiarResponsable"}}
       {{set _familiarResponsable="=persona._familiarResponsable"}}
+      {{set deudorResponsable="=persona.deudorResponsable"}}
+      {{set _deudorResponsable="=persona._deudorResponsable"}}
+      {{set seguro="=persona.seguro"}}
+      {{set _seguro="=persona._seguro"}}
       {{set tieneMovimientos="=_items.length>0"}}
     {{/update}}
   {{/transform}}
@@ -5165,7 +5181,7 @@
       {{set antecedentesEmbarazos="=contexto.episodio==detalle.notaInformacionEmbarazoPartograma.contexto.episodio&&detalle.notaInformacionEmbarazoPartograma.base.antecedentesEmbarazos"}}
       {{set _antecedentesEmbarazos="=contexto.episodio==detalle.notaInformacionEmbarazoPartograma.contexto.episodio&&detalle.notaInformacionEmbarazoPartograma.base._antecedentesEmbarazos"}}
       {{set pacientePsiquiatrico="=calc.in(user.establishmentData.cluesTipoAbreviacion,['Y','HPSIQ','HPSIQMF'])&&calc.in(user.establishmentData.cluesSubAbreviacion,['99','NES','INP','SAP'])?'si':'no'"}}
-      {{set tipoUnidadPsiquiatrica="=fn('esUnidadPsiquiatrica',user.establishmentData.cluesTipoAbreviacion,user.establishmentData.cluesSubAbreviacion)&&fn('obtenerTipoUnidad',user.establishmentData.cluesTipoUnidad)"}}
+      {{set tipoUnidadPsiquiatrica="=fn('esUnidadPsiquiatrica',user.establishmentData.cluesTipoAbreviacion,user.establishmentData.cluesSubAbreviacion)&&user.establishmentData.tipoUnidadPsiquiatrica"}}
       {{setRef ref="afeccionPrincipal.base.folioLesion" value="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&detalle.notaSeulLesiones._created.folio"}}
       {{setRef ref="afeccionPrincipalReseleccionada.base.folioLesion" value="=contexto.episodio==detalle.notaSeulLesiones.contexto.episodio&&detalle.notaSeulLesiones._created.folio"}}
       {{setRef ref="afeccionPrincipalReseleccionada.base.esEgreso" value="true"}}

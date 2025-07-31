@@ -2700,6 +2700,39 @@
     {{default return="false"}}
   {{/function}}
 
+  {{#function id="validarAltaPaciente" debug="true"}}
+    {{define type="param" id="base"}}
+    {{when condition="=calc.contieneMalaPalabra(base.clave)" return="true"}}
+    {{when condition="=base.tipoAtencion!='consultaExterna'&&base.genero=='intersexual'" return="true"}}
+    {{default return="false"}}
+  {{/function}}
+
+{{#function id="mensajeAltaPaciente"}}
+  {{define type="param" id="base"}}
+
+  {{when condition="=calc.contieneMalaPalabra(base.clave)&&base.tipoAtencion!='consultaExterna'&&base.genero=='intersexual'"
+    return="='Se han detectado dos condiciones especiales:<br><br>1. La CURP contiene una posible palabra altisonante (<strong>' + base.clave.substr(0,4) + '</strong>).<br>   - Si desea continuar, presione <strong>Sí</strong>.<br>   - Si no desea continuar, presione <strong>No</strong> y corrija la CURP colocando una <strong>X</strong> como segundo carácter.<br><br>2. El paciente será registrado como <strong>Intersexual</strong> (tipo de atención diferente a consulta externa).<br><br>¿Desea continuar con el registro?'"
+  }}
+
+  {{when condition="=calc.contieneMalaPalabra(base.clave)" 
+    return="='La CURP contiene una posible palabra altisonante (<strong>' + base.clave.substr(0,4) + '</strong>).<br><br>Si desea continuar, presione <strong>Sí</strong>.<br>De lo contrario, presione <strong>No</strong> y modifique la CURP colocando una <strong>X</strong> como segundo carácter.'"
+  }}
+
+  {{when condition="=base.tipoAtencion!='consultaExterna'&&base.genero=='intersexual'"
+    return="='El paciente será registrado como <strong>Intersexual</strong> (tipo de atención diferente a consulta externa)<br><br>¿Desea continuar con el registro?'"
+  }}
+
+  {{default return=""}}
+{{/function}}
+
+
+  {{#function id="confirmarRegistroPaciente"}}
+    {{define type="param" id="base"}}
+    {{when condition="=calc.contieneMalaPalabra(calc.getRef(base, 'paciente.base.clave'))" return="='CURP contiene palabra altisonante (' + calc.getRef(base,'paciente.base.clave').substr(0,4) + ')<br>Si desea continuar presione Sí.<br>De lo contrario, presione No y modifique el dato colocando una X en el segundo caracter.'"}}
+    {{!-- {{when condition="=calc.getRef(base,'paciente.base.tipoAtencion')!=='consultaExterna'&&calc.getRef(base,'paciente.base.genero')==='intersexual'" return="='Se generará registro de paciente Intersexual<br>¿Desea continuar?'"}} --}}
+    {{default return=""}}
+  {{/function}}  
+
   {{#function id="validarConsultaExterna"}}
     {{define type="param" id="persona"}}
     {{define type="param" id="usuario"}}
@@ -2929,13 +2962,6 @@
     {{when condition="=calc.getRef(persona,'genero')==='mujer'&&calc.in('HOMBRE',calc.pluckRef(calc.getRef(base,'otrosDiagnosticos'),'base.limiteSexo'))" return="true"}}
     {{!-- De lo contrario -> válido --}}
     {{default return="false"}}
-  {{/function}}
-
-  {{#function id="confirmarRegistroPaciente"}}
-    {{define type="param" id="base"}}
-    {{when condition="=calc.contieneMalaPalabra(calc.getRef(base, 'paciente.base.clave'))" return="='CURP contiene palabra altisonante (' + calc.getRef(base,'paciente.base.clave').substr(0,4) + ')<br>Si desea continuar presione Sí.<br>De lo contrario, presione No y modifique el dato colocando una X en el segundo caracter.'"}}
-    {{!-- {{when condition="=calc.getRef(base,'paciente.base.tipoAtencion')!=='consultaExterna'&&calc.getRef(base,'paciente.base.genero')==='intersexual'" return="='Se generará registro de paciente Intersexual<br>¿Desea continuar?'"}} --}}
-    {{default return=""}}
   {{/function}}
 
   {{#function id="confirmarLimiteEdadSexo"}}

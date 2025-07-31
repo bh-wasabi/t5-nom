@@ -9,6 +9,7 @@
     {{/find}}
   {{/view}}
   {{#section id="base"}}
+    {{field id="esUnidadPsiquiatrica" type="expr" value="=fn('esUnidadPsiquiatrica',cluesTipoAbreviacion,cluesSubAbreviacion)"}}
     {{#field id="establecimiento"}}
       {{onChange clearFields="almacenGeneral,almacenFarmacia,almacenFarmaciaGratuita,almacenMateriales,almacenCeyeEsterilizado,almacenCeyeEsterilizadoQuirofanos,almacenCeyeSucio"}}
     {{/field}}
@@ -48,7 +49,7 @@
       {{/editor}}
     {{/field}}
     {{#field id="clues"}}
-      {{#onChange clearFields="cluesSubAbreviacion,cluesTipoAbreviacion,cluesServicioAmigable,cluesTieneEspirometro,cluesEstatusOperacion,cluesFechaEfectivaBaja,cluesTipoUnidad,cluesIdEntidad"}}
+      {{#onChange clearFields="tipoUnidadPsiquiatrica,cluesSubAbreviacion,cluesTipoAbreviacion,cluesServicioAmigable,cluesTieneEspirometro,cluesEstatusOperacion,cluesFechaEfectivaBaja,cluesTipoUnidad,cluesIdEntidad"}}
         {{set cluesInstitucion="=@institucion"}}
         {{set cluesSubAbreviacion="=@sub_abreviacion"}}
         {{set cluesTipoAbreviacion="=@tip_abreviacion"}}

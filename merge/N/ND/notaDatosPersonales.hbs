@@ -1,9 +1,9 @@
 {{#define id="notaDatosPersonales"}}
-  {{#action id="sugerirCurp" hide="true" type="update"}}
+  {{!-- {{#action id="sugerirCurp" hide="true" type="update"}}
     {{#update section="base"}}
       {{set clave="=calc.curp(nombres, apellidoPaterno, apellidoMaterno, genero, entidadNacimiento, fechaNacimiento)"}}
     {{/update}}
-  {{/action}}
+  {{/action}} --}}
   {{action id="oficio" type="report-markdown" fileName="=_name" value="=oficio.texto" templateSource="plantillaOficio" templateId="=oficio.plantillaOficio" label="Oficio" color="grey" visibleMode="close" forceReadOnly="true" hide="true"}}
   {{action id="preliminar" subAction="oficio"}}
 

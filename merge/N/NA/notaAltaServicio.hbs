@@ -57,7 +57,7 @@
     {{validator type="expr" notValidIf="=@CLUES==user.establishmentData.clues" message="CLUES Inválido"}}
 
     {{!-- PROCEDIMIENTOS DUPLICADOS --}}
-    {{validator type="expr" notValidIf="=calc.findDuplicates(calc.mergeArrays(calc.pluckRef(procedimientoEgresos,'base.procedimientoCie9'),calc.pluckRef(procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.codigoCie9')))" message="Tiene Procedimientos Duplicados"}}
+    {{!-- {{validator type="expr" notValidIf="=calc.findDuplicates(calc.mergeArrays(calc.pluckRef(procedimientoEgresos,'base.procedimientoCie9'),calc.pluckRef(procedimientoDiagnosticosTerapeuticosQuirurgicos,'base.codigoCie9')))" message="Tiene Procedimientos Duplicados"}} --}}
     
     {{!-- DIAGNOSTICOS DUPLICADOS --}}
     {{validator type="expr" notValidIf="=calc.findDuplicates(calc.mergeArrays(@seleccionarOtrosDiagnosticos&&@seleccionarOtrosDiagnosticos.map((val)=>val.substr(val.indexOf('#')+1,val.length)),@afeccionPrincipal.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')))" message="Tiene Diagnósticos Duplicados"}}

@@ -1,10 +1,10 @@
 {{#define id="notaCertificacionNoExistePaciente"}}
   {{action 
     id="afectar"
-    confirm="=fn('confirmarRegistroPaciente', base)"
+    confirm="=fn('validarAltaPaciente', base.paciente)"
     confirmWidth="400"
-    confirmHeight="400"
-    confirmMessage="=fn('confirmarRegistroPaciente', base)"
+    confirmHeight="500"
+    confirmMessage="=fn('mensajeAltaPaciente', base.paciente)"
   }}
 
   {{#section id="base"}}
