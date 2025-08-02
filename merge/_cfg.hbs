@@ -2757,14 +2757,15 @@
   {{/function}}
 
   {{#function id="validarFechaEgreso"}}
+    {{define type="param" id="validarFechaNota"}}
     {{define type="param" id="fechaNacimiento"}}
     {{define type="param" id="fechaIngreso"}}
     {{define type="param" id="fechaEgreso"}}
     {{define type="param" id="ultimaNota"}}
     {{define type="param" id="tipologia"}}
     {{define type="param" id="subtipologia"}}
-    {{when condition="=moment(fechaIngreso).isAfter(ultimaNota._created.date)" return="='Fecha Ingreso no puede ser posterior a la Última Nota (' + ultimaNota._name + ' - ' + moment(ultimaNota._created.date).format('DD/MMM/YYYY') + ')'"}}
-    {{when condition="=moment(fechaEgreso).isBefore(ultimaNota._created.date)" return="='Fecha Egreso no puede ser anterior a la Última Nota (' + ultimaNota._name + ' - ' + moment(ultimaNota._created.date).format('DD/MMM/YYYY') + ')'"}}
+    {{when condition="=validarFechaNota&&moment(fechaIngreso).isAfter(ultimaNota._created.date)" return="='Fecha Ingreso no puede ser posterior a la Última Nota (' + ultimaNota._name + ' - ' + moment(ultimaNota._created.date).format('DD/MMM/YYYY') + ')'"}}
+    {{when condition="=validarFechaNota&&moment(fechaEgreso).isBefore(ultimaNota._created.date)" return="='Fecha Egreso no puede ser anterior a la Última Nota (' + ultimaNota._name + ' - ' + moment(ultimaNota._created.date).format('DD/MMM/YYYY') + ')'"}}
     {{when condition="=moment(fechaIngreso).isSame(fechaEgreso)" return="'Las fechas deben ser distintas'"}}
     {{when condition="=moment(fechaEgreso).isBefore(fechaIngreso)" return="'Fecha Egreso no debe ser menor a la Fecha Ingreso'"}}
     {{when condition="=moment(fechaIngreso).isAfter()" return="'Fecha Ingreso no puede ser mayor a la fecha actual'"}}
@@ -2817,15 +2818,15 @@
     {{default return="=calc.getRef(detalle,'notaAltaServicio.contexto.episodio')===calc.getRef(contexto,'episodio')?null:'Falta Nota Alta Servicio'"}}
   {{/function}}
 
-  {{#function id="validarNotaAltaServicio"}}
+  {{#function id="validarNotaAltaServicio" debug="true"}}
     {{define type="param" id="base"}}
     {{define type="param" id="comorbilidades"}}
     {{define type="param" id="procedimientos"}}
     {{define type="param" id="interconsultas"}}
-    {{when condition="=calc.arrayLength(base.seleccionarOtrosDiagnosticos)<calc.arrayLength(comorbilidades)&&calc.arrayLength(base.otrosDiagnosticos,base.seleccionarOtrosDiagnosticos)<6" return="Faltan Comorbilidades por Seleccionar"}}
+    {{when condition="=calc.arrayLength(base.otrosDiagnosticos)<calc.arrayLength(comorbilidades)&&calc.arrayLength(base.otrosDiagnosticos)<6" return="Faltan Comorbilidades por Seleccionar"}}
     {{when condition="=calc.arrayLength(base.procedimientoDiagnosticosTerapeuticosQuirurgicos)<calc.arrayLength(procedimientos)&&calc.arrayLength(base.procedimientoEgresos,base.procedimientoDiagnosticosTerapeuticosQuirurgicos)<6" return="Faltan Procedimientos por Seleccionar"}}
-    {{when condition="=calc.arrayLength(base.interconsultas)<calc.arrayLength(interconsultas)&&calc.arrayLength(base.interconsultas)<6" return="Faltan Interconsultas por Seleccionar"}}
-    {{default return="null"}}
+    {{when condition="=calc.arrayLength(base.interconsultas)<calc.arrayLength(interconsultas)&&calc.arrayLength(base.interconsultas)<3" return="Faltan Interconsultas por Seleccionar"}}
+    {{default return=""}}
   {{/function}}
 
   {{#function id="validarNotaEgresoAlProcesar"}}
@@ -10198,10 +10199,10 @@
 	{{/template}}
 
   {{#template id="datosEmbarazoActualAvanzados"}} 
-    {{#if amniocentesis}}<br>Amniocentésis: {{_amniocentesis}}{{/if}}
+    <br>Amniocentésis: {{_amniocentesis}}{{/if}}
     {{#if tieneAmniocentesis}}{{#if desdeQueTrimestre}}<br>A partir del: {{_desdeQueTrimestre}}{{/if}}{{/if}}
     {{#if tieneAmniocentesis}}{{#if dondeRecibioConsultas}}<br>Dónde recibió las consultas: {{dondeRecibioConsultas}}{{/if}}{{/if}}
-    {{#if inmunizada}}<br>Esta Inmunizada: {{_inmunizada}}{{/if}}
+    <br>Esta Inmunizada: {{_inmunizada}}{{/if}}
     {{#if isoinmunizada}}<br>Esta Isoinmunizada: {{_isoinmunizada}}{{/if}}
     {{#if medicamentosDuranteEsteEmbarazo}}<br>Toma Medicamentos Específicos para el Embarazo: {{_medicamentosDuranteEsteEmbarazo}}{{/if}}
     {{#if tomaMedicamentosDuranteEsteEmbarazo}}{{#if medicamentosDuranteEsteEmbarazoCuales}}<br>Cuáles: {{_medicamentosDuranteEsteEmbarazoCuales}}{{/if}}{{/if}}
@@ -10218,26 +10219,33 @@
     {{#if primeraVezAltoRiesgo}}<br>Primera Vez Alto Riesgo: {{_primeraVezAltoRiesgo}}{{/if}}
   {{/template}}  
 
-  {{#template id="datosEmbarazoActualAvanzadosSis"}} 
-    {{#if amniocentesis}}<br>Amniocentésis: {{_amniocentesis}}{{/if}}
-    {{#if tieneAmniocentesis}}{{#if desdeQueTrimestre}}<br>A partir del: {{_desdeQueTrimestre}}{{/if}}{{/if}}
-    {{#if tieneAmniocentesis}}{{#if dondeRecibioConsultas}}<br>Dónde recibió las consultas: {{dondeRecibioConsultas}}{{/if}}{{/if}}
-    {{#if inmunizada}}<br>Esta Inmunizada: {{_inmunizada}}{{/if}}
-    {{#if isoinmunizada}}<br>Esta Isoinmunizada: {{_isoinmunizada}}{{/if}}
-    {{#if medicamentosDuranteEsteEmbarazo}}<br>Toma Medicamentos Específicos para el Embarazo: {{_medicamentosDuranteEsteEmbarazo}}{{/if}}
-    {{#if tomaMedicamentosDuranteEsteEmbarazo}}{{#if medicamentosDuranteEsteEmbarazoCuales}}<br>Cuáles: {{_medicamentosDuranteEsteEmbarazoCuales}}{{/if}}{{/if}}
-    {{#if atencionEmbarazada}}<br>Atención Embarazada: {{_atencionEmbarazada}}{{/if}}
-    {{#if complicacionesEmbarazo}}<br>Complicaciones Embarazo: {{_complicacionesEmbarazo}}{{/if}}
-    {{#if numeroConsultasRecibidas}}<br>Número Consultas que ha Recibido: {{numeroConsultasRecibidas}}{{/if}}
-    {{#if patologiaMaterna}}<br>Patología Materna en Embarazo Actual: {{_patologiaMaterna}}{{/if}}
-    {{#if patologiaMaternaDetalles}}<br>Detalles Patología Materna: {{patologiaMaternaDetalles}}{{/if}}
-    {{#if pruebasRapidasRealizadas}}<br>Le han Realizado Pruebas Rápidas en este Embarazo: {{_pruebasRapidasRealizadas}}{{/if}}
-    {{#if tienePruebasRapidasRealizadas}}{{#if pruebasRapidasRealizadasCuales}}<br>Cuáles: {{_pruebasRapidasRealizadasCuales}}{{/if}}{{/if}}
-    {{#if titulacionAntiCuerpos}}<br>Titulación anticuerpos: {{_titulacionAntiCuerpos}}{{/if}}
-    {{#if vacunasDuranteEmbarazo}}<br>Ha Recibido Vacunas Durante este Embarazo: {{_vacunasDuranteEmbarazo}}{{/if}}
-    {{#if tieneVacunasDuranteEmbarazo}}{{#if vacunasDuranteEmbarazoCuales}}<br>Cuáles: {{_vacunasDuranteEmbarazoCuales}}{{/if}}{{/if}}
-    {{#if primeraVezAltoRiesgo}}<br>Primera Vez Alto Riesgo: {{_primeraVezAltoRiesgo}}{{/if}}
-  {{/template}}  
+	{{#template id="datosEmbarazoActualAvanzadosSis"}}
+		<br>Amniocentésis: {{_amniocentesis}}
+		{{#if tieneAmniocentesis}}<br>A partir del: {{_desdeQueTrimestre}}{{/if}}
+		{{#if tieneAmniocentesis}}<br>Dónde recibió las consultas: {{dondeRecibioConsultas}}{{/if}}
+		<br>Esta Inmunizada: {{_inmunizada}}
+		<br>Esta Isoinmunizada: {{_isoinmunizada}}
+		<br>Prescripción Ácido Fólico / Otras Acciones: {{_medicamentosDuranteEsteEmbarazo}}
+		{{#if tomaMedicamentosDuranteEsteEmbarazo}}<br>Cuáles: {{_medicamentosDuranteEsteEmbarazoCuales}}{{/if}}
+		<br>Traslado Embarazada: {{_complicacionTraslado}}
+		<br>Otras Acciones Traslado AME: {{_accionesTraslado}}
+		<br>Atención Prenatal: {{_atencionPrenatal}}
+		<br>Trimestre Primer Consulta: {{_trimestrePrimerConsultaEmbarazo}}
+		<br>Relación Temporal Embarazo: {{_atencionEmbarazada}}
+		{{#if inicial}}<br>Plan Seguridad: {{_planSeguridad1}}{{/if}}
+		{{#if subsecuente}}<br>Plan Seguridad: {{_planSeguridad}}{{/if}}
+		{{#if tieneAtencion}}<br>Trimestre Gestacional: {{_trimestreGestacional}}{{/if}}
+		{{#if tieneAtencion}}<br>Complicaciones Embarazo: {{_complicacionesEmbarazo}}{{/if}}
+		<br>Número Consultas que ha Recibido: {{numeroConsultasRecibidas}}
+		<br>Patología Materna en Embarazo Actual: {{_patologiaMaterna}}
+		<br>Detalles Patología Materna: {{patologiaMaternaDetalles}}
+		<br>Le han Realizado Pruebas Rápidas en este Embarazo: {{_pruebasRapidasRealizadas}}
+		{{#if tienePruebasRapidasRealizadas}}<br>Cuáles: {{_pruebasRapidasRealizadasCuales}}{{/if}}
+		<br>Titulación anticuerpos: {{_titulacionAntiCuerpos}}
+		<br>Ha Recibido Vacunas Durante este Embarazo: {{_vacunasDuranteEmbarazo}}
+		{{#if tieneVacunasDuranteEmbarazo}}<br>Cuáles: {{_vacunasDuranteEmbarazoCuales}}{{/if}}
+		<br>Primera Vez Alto Riesgo: {{_primeraVezAltoRiesgo}}
+	{{/template}} 
 
   {{#template id="datosBanderaDefuncion"}}
     {{#if banderaSospechaImportancia}}<br>Sospecha Importancia Epidemiológica: {{_banderaSospechaImportancia}}{{/if}}

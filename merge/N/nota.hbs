@@ -840,7 +840,9 @@
   {{#view id="nomFechaUltimaNota"}}
     {{#find limit="1"}}
       {{include field="_name"}}
+      {{include field="fecha"}}
       {{include field="_created.date"}}
+      {{sort field="fecha" direction="desc"}}
       {{sort field="_created.date" direction="desc"}}
       {{filter field="_isAffected" eq="true"}}
       {{filter field="_created.establishment" eq="=user.establishment"}}

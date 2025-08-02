@@ -4289,6 +4289,7 @@
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
     {{#update section="base"}}
+      {{set fechaAtencion="=_params.fechaAtencion"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
@@ -5066,7 +5067,7 @@
       {{setRef ref="afeccionPrincipalReseleccionada.base.esEgreso" value="false"}}
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
-    {{!-- {{update section="comorbilidades" value="=calc.subItemsMap(_items2, 'base.otrosDiagnosticos', '=base.detalle+`#`+base.diagnostico', '=base.nombre')"}} --}}
+    {{update section="comorbilidades" value="=calc.subItemsMap(_items2, 'base.otrosDiagnosticos', '=base.detalle+`#`+base.diagnostico', '=base.nombre')"}}
   {{/transform}}
 
   {{#transform id="copiarDiagnosticoUrgencias"}}
@@ -5563,7 +5564,8 @@
       {{setRef ref="atencionObstetricas.base.esMujerIntersexual" value="=persona.genero=='mujer'||persona.genero=='intersexual'"}}
       {{setRef ref="signosVitales.base.genero" value="=persona.genero"}}
       {{setRef ref="signosVitales.base.edadActual" value="=persona.edadActual"}}
-      {{setRef ref="signosVitales.base._edadActual" value="=persona._edadActual"}}
+      {{setRef ref="signosVitales.base.edadActual" value="=fn('calcularEdadPorFechaAtencion',base.fechaConsulta,persona.fechaNacimiento)"}}
+      {{!-- {{setRef ref="signosVitales.base._edadActual" value="=persona._edadActual"}} --}}
       {{setRef ref="signosVitales.base.fechaHoraRegistro" value="=_params.fechaAtencion"}}
     {{/update}}
     {{update section="antecedentes" value="=detalle.antecedentes"}}
@@ -5573,9 +5575,9 @@
       {{set _antecedentesGineco="=detalle.mujer._antecedentesGineco"}}
       {{set antecedentesEmbarazos="=detalle.mujer.antecedentesEmbarazos"}}
       {{set _antecedentesEmbarazos="=detalle.mujer._antecedentesEmbarazos"}}
-      {{set edadActual="=persona.edadActual"}}
+      {{set edadActual="=fn('calcularEdadPorFechaAtencion',base.fechaConsulta,persona.fechaNacimiento)"}}
       {{set _edadActual="=persona._edadActual"}}
-      {{setRef condition="=persona.esMujer" ref="antecedentesGineco.edadActual" value="=persona.edadActual"}}
+      {{setRef condition="=persona.esMujer" ref="antecedentesGineco.edadActual" value="=fn('calcularEdadPorFechaAtencion',base.fechaConsulta,persona.fechaNacimiento)"}}
     {{/update}}
     {{update section="tipoServicioSis" value="=calc.itemsToCode(calc.tipoServicioSis(calc.in('consultaExterna',user.others.tipoServicioSis)?'consultaExterna':'',user.others.tipoPersonalNom,base.esMujer?'mujer':'',base.tipoServicioSisMenor?'menor':base.tipoServicioSisMayor?'mayor':''))" temp="true"}}
     {{update section="resumen" value="=resumen" temp="true"}}
@@ -10470,7 +10472,8 @@
 
   {{action id="menuNotasHospitalizacion" hide="true" type="menu" menu="menuNotasHospitalizacion" label="Notas Hospitalización" color="deep-orange"}}
   {{#menu id="menuNotasHospitalizacion" color="deep-orange"}}
-    {{item action="notaSeulEgreso" text="Nota Egreso Hospitalario"}}
+    {{item action="notaSeulEgreso" text="Nota Egreso Hospitalario" excludeUserRole="notaSeulEgresoSinValidarFechas"}}
+    {{item action="notaSeulEgresoSinValidarFechas" text="Nota Egreso Hospitalario" userRole="notaSeulEgresoSinValidarFechas"}}
     {{item action="notaSeulLesiones" text="Nota Registro Lesiones"}}
     {{item action="notaIngreso" text="Nota Ingreso"}}
     {{item action="notaEvolucion" text="Nota Evolución"}}
@@ -12713,7 +12716,38 @@
     fromSource4="solicitud"
     fromView4="sugerirProcedimientosRealizados"
     toSection4="procedimientosRealizados"
-    error="=fn('validarEgreso', detalle)||fn('validarDerechohabiencia', contexto, detalle)||fn('errorCluesEgreso',user.establishmentData.cluesTipoUnidad,user.establishmentData.cluesTipoAbreviacion)||fn('errorDatosSeguro', persona, contexto, detalle)||fn('validarFechaEgreso',persona.fechaNacimiento,_ask.fechaIngresoHospitalario,_ask.fechaEgreso,_items3[0],user.establishmentData.cluesTipoAbreviacion,user.establishmentData.cluesSubAbreviacion)"
+    error="=fn('validarEgreso', detalle)||fn('validarDerechohabiencia', contexto, detalle)||fn('errorCluesEgreso',user.establishmentData.cluesTipoUnidad,user.establishmentData.cluesTipoAbreviacion)||fn('errorDatosSeguro', persona, contexto, detalle)||fn('validarFechaEgreso',true,persona.fechaNacimiento,_ask.fechaIngresoHospitalario,_ask.fechaEgreso,_items3[0],user.establishmentData.cluesTipoAbreviacion,user.establishmentData.cluesSubAbreviacion)"
+    errorType="info"
+  }}
+    {{param persona="=_id"}}
+    {{param tipoEpisodio="=fn('tipoEpisodio', contexto)"}}
+    {{param desde="=fn('hospitalizacionDesde', contexto)"}}
+    {{param episodio="=contexto.episodio"}}
+    {{param tipoSolicitud="procedimiento,cirugia,tococirugia"}}
+    {{ask field="fechaIngresoHospitalario" readOnly="true" type="datetime" label="Fecha Ingreso Hospitalario" required="true" value="=calc.getRef(detalle,'notaIngreso.base.fechaAtencion')||moment()"}}
+    {{ask field="fechaEgreso" type="datetime" label="Fecha Egreso" required="true" value="=moment().format()" min="=fn('ultimaAtencion', contexto)||fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Egreso Incorrecta"}}
+  {{/action}}
+  {{#action 
+    id="notaSeulEgresoSinValidarFechas"
+    source="notaSeulEgreso"
+    label="Egreso Hospitalario"
+    transform="copiarSeulEgreso"
+    hide="true" type="add-subdoc"
+    visibleMode="close"
+    color="deep-orange"
+    onlyPost="true"
+    fromSource="solicitud"
+    fromView="solicitudesEgreso"
+    toSection="solicitudesEgreso"
+    fromSource2="notaEvolucion"
+    fromView2="ultimaEvolucion"
+    toSection2="ultimaNotaEvolucion"
+    fromSource3="nota"
+    fromView3="nomFechaUltimaNota"
+    fromSource4="solicitud"
+    fromView4="sugerirProcedimientosRealizados"
+    toSection4="procedimientosRealizados"
+    error="=fn('validarEgreso', detalle)||fn('validarDerechohabiencia', contexto, detalle)||fn('errorCluesEgreso',user.establishmentData.cluesTipoUnidad,user.establishmentData.cluesTipoAbreviacion)||fn('errorDatosSeguro', persona, contexto, detalle)||fn('validarFechaEgreso',false,persona.fechaNacimiento,_ask.fechaIngresoHospitalario,_ask.fechaEgreso,_items3[0],user.establishmentData.cluesTipoAbreviacion,user.establishmentData.cluesSubAbreviacion)"
     errorType="info"
   }}
     {{param persona="=_id"}}
@@ -15498,7 +15532,9 @@
     {{param desde="=(fn('ministracionDesde', _params.join.contexto)||'')"}} --}}
   {{/action}}
     {{!-- condition="=!calc.getRef(contexto, 'hospitalizacion.estaActivo')"}} --}}
-  {{action id="notaLlegaPacienteCama" source="notaLlegaPacienteCama" label="Llega Paciente a Cama" transform="copiarCama" hide="true" type="add-subdoc" visibleMode="close" btnSolid="true" color="primary" onlyPost="true" forceReadOnly="true" condition="=fn('puedeLlegaPacienteCama', _params, contexto)"}}
+  {{#action id="notaLlegaPacienteCama" source="notaLlegaPacienteCama" label="Llega Paciente a Cama" transform="copiarCama" hide="true" type="add-subdoc" visibleMode="close" btnSolid="true" color="primary" onlyPost="true" forceReadOnly="true" condition="=fn('puedeLlegaPacienteCama', _params, contexto)"}}
+    {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().format()" errorMessage="Fecha Atención Incorrecta"}}
+  {{/action}}
 
   {{action id="notaSalePacienteServicio" source="notaSalePacienteServicio" label="=fn('salePacienteServicio', _params.service)" transform="copiarCamaServicio" hide="true" type="add-subdoc" visibleMode="close" color="primary" btnSolid="true" onlyPost="true" condition="=fn('puedeSalir', contexto)"}}
   {{action id="notaSalePacienteHospitalizacion" source="notaSalePacienteHospitalizacion" label="Sale Paciente Hospitalización" transform="copiarCama" hide="true" type="add-subdoc" visibleMode="close" color="primary" btnSolid="true" onlyPost="true" condition="=fn('puedeSalir', contexto)"}}

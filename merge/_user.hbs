@@ -49,10 +49,10 @@
   {{!-- Modificar Bloque - Tarea 5604 --}}
   {{#action id="sugerirCurp" hide="true" type="update" error="=_updated.date?'No se puede modificar CURP':fn('validaSugerirCurp',base.nombres,prestadorServicios.fechaNacimiento,prestadorServicios.generoCurp,prestadorServicios.entidadNacimiento)"}}
     {{#update section="prestadorServicios"}}
-      {{set condition="=prestadorServicios.paisNacimiento=='MX'" clave="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'), 16, true)"}}
+      {{set condition="=prestadorServicios.paisNacimiento=='MX'" clave="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento=='NA'?'NE':prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'), 16, true)"}}
+      {{set condition="=prestadorServicios.paisNacimiento=='MX'" claveCompleta="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento=='NA'?'NE':prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'), 18, true)" claveCompleta2="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento=='NA'?'NE':prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'), 18, false)"}}
       {{set condition="=prestadorServicios.paisNacimiento!='MX'" clave="=fn('CURP_GENERICO')"}}
-      {{set condition="=prestadorServicios.paisNacimiento=='MX'" claveCompleta="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'), 18, true)" claveCompleta2="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, prestadorServicios.entidadNacimiento, moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'), 18, false)"}}
-      {{set condition="=prestadorServicios.paisNacimiento!='MX'" claveCompleta="=fn('CURP_GENERICO')" claveCompleta2="=fn('CURP_GENERICO')"}}
+      {{set condition="=prestadorServicios.paisNacimiento!='MX'" claveCompleta="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, 'NE', moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'), 18, true)" claveCompleta2="=calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, prestadorServicios.generoCurp, 'NE', moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'), 18, false)"}}
     {{/update}}
   {{/action}}
   {{!-- Tarea 5604 --}}
@@ -145,6 +145,9 @@
       {{search field="prestadorServicios.clave" directSearchIfLength="9,10,11,12,13,14,15,16,17,18"}}
     {{/find}}
   {{/view}}
+
+  {{section id="_temp" temp="true"}}
+
   {{#section id="base"}}
     {{!-- {{field id="cluesTieneSsa" type="expr" value="=@cluesInstitucion.search('SSA')>0||@cluesInstitucion.search('IMB')>0"}} --}}
     {{field id="cluesTieneSsa" type="expr" value="=@cluesInstitucion=='SSA'||@cluesInstitucion=='IMB'"}}
@@ -171,6 +174,9 @@
     {{field id="esLocal" type="expr" value="=@metodoAcceso==='local'"}}
     {{#field id="contrasena"}}
       {{#onChange}}
+        {{#update section="_temp"}}
+          {{set validarContrasena="=contrasena"}}
+        {{/update}}        
         {{set hash="=calc.sha1(calc.text(contrasena))"}}
         {{set contrasena="=calc.mask(contrasena)"}}
         {{#update section="_access"}}
@@ -227,6 +233,7 @@
         {{param establecimiento="=establecimiento"}}
       {{/editor}}
     {{/field}} --}}
+    {{validator type="expr" notValidIf="=_temp.validarContrasena&&!calc.passwordOk(_temp.validarContrasena)" message="La Contraseña No Cumple con los Requerimientos de Seguridad"}}
   {{/section}}
   
   {{!-- RACC Tarea #3580  --}}
@@ -263,7 +270,9 @@
     {{validator type="expr" notValidIf="=paisNacimiento==='MX'&&clave===fn('CURP_GENERICO')" message="CURP Inválido para nacido en México"}}
     {{validator type="expr" validIf="=fn('validaCaracter17Curp',clave,fechaNacimiento)||clave===fn('CURP_GENERICO')" message="CURP Inválido (Caracter 17)"}}
     {{validator type="expr" validIf="=fn('validaCaracter18Curp',clave,fechaNacimiento)||clave===fn('CURP_GENERICO')" message="CURP Inválido (Caracter 18)"}}
-    {{validator type="expr" validIf="=(calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, generoCurp, entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'),16,false)===clave.substr(0,16)||calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, generoCurp, entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'),16,true)===clave.substr(0,16)||clave===fn('CURP_GENERICO'))&&clave.length===18" message="CURP Incorrecto"}}
+    {{validator type="expr" condition="=paisNacimiento=='MX'" validIf="=(calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, generoCurp, entidadNacimiento=='NA'?'NE':entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'),16,false)===clave.substr(0,16)||calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, generoCurp, entidadNacimiento=='NA'?'NE':entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'),16,true)===clave.substr(0,16)||clave===fn('CURP_GENERICO'))&&clave.length===18" message="CURP Incorrecto"}}
+    {{validator type="expr" condition="=paisNacimiento!='MX'" validIf="=(calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, generoCurp, 'NE', moment(fechaNacimiento).format('YYYY-MM-DD'),16,false)===clave.substr(0,16)||calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, generoCurp, 'NE', moment(fechaNacimiento).format('YYYY-MM-DD'),16,true)===clave.substr(0,16)||clave===fn('CURP_GENERICO'))&&clave.length===18" message="CURP Incorrecto"}}
+    
     {{#onChange}}
       {{#update}}
         {{set tieneCurp="=clave?true:false"}}

@@ -23,9 +23,9 @@
       {{set condition="=calc.isEmpty(base.apellidoPaterno)" apellidoPaterno="='XX'"}}
       {{set condition="=calc.isEmpty(base.apellidoMaterno)" apellidoMaterno="='XX'"}}
       {{!-- {{set condition="=calc.isEmpty(base.generoSocial)" generoSocial="='noEspecificado'"}} --}}
-      {{set clave="=base.desconoceFechaNacimiento=='no'?calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, base.generoCurp, base.entidadNacimiento, moment(base.fechaNacimiento).format('YYYY-MM-DD'),16,true):'XXXX999999XXXXXX99'"}}
-      {{set claveCompleta="=base.desconoceFechaNacimiento=='no'?calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, base.generoCurp, base.entidadNacimiento, moment(base.fechaNacimiento).format('YYYY-MM-DD'),18,true):'XXXX999999XXXXXX99'"}}
-      {{set claveCompleta2="=base.desconoceFechaNacimiento=='no'?calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, base.generoCurp, base.entidadNacimiento, moment(base.fechaNacimiento).format('YYYY-MM-DD'),18,false):'XXXX999999XXXXXX99'"}}
+      {{set clave="=base.desconoceFechaNacimiento=='no'?calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, base.generoCurp, base.entidadNacimiento=='NA'?'NE':base.entidadNacimiento, moment(base.fechaNacimiento).format('YYYY-MM-DD'),16,true):'XXXX999999XXXXXX99'"}}
+      {{set claveCompleta="=base.desconoceFechaNacimiento=='no'?calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, base.generoCurp, base.entidadNacimiento=='NA'?'NE':base.entidadNacimiento, moment(base.fechaNacimiento).format('YYYY-MM-DD'),18,true):'XXXX999999XXXXXX99'"}}
+      {{set claveCompleta2="=base.desconoceFechaNacimiento=='no'?calc.curp(base.nombres, base.apellidoPaterno, base.apellidoMaterno, base.generoCurp, base.entidadNacimiento=='NA'?'NE':base.entidadNacimiento, moment(base.fechaNacimiento).format('YYYY-MM-DD'),18,false):'XXXX999999XXXXXX99'"}}
     {{/update}}
   {{/action}}
 
@@ -138,7 +138,7 @@
     {{validator type="expr" notValidIf="=esMenor10Anos&&estadoCivil!=='noAplica'" message="Estado Civil Inválido (Paciente menor 10 años)"}}
     {{validator type="expr" notValidIf="=!esMenor10Anos&&estadoCivil==='noAplica'" message="Estado Civil Inválido (Paciente mayor 10 años)"}}
     {{validator type="expr" notValidIf="=esUrgenciasHospitalizacion&&calc.in(grupoEtnico.base.indigena,['noResponde','noSabe'])" message="Se Considera Indígena Inválido (SI/NO)"}}
-    {{validator type="expr" validIf="=(calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'),16,false)===clave.substr(0,16)||calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'),16,true)===clave.substr(0,16)||clave===fn('CURP_GENERICO'))&&clave.length===18" message="CURP Incorrecto"}}
+    {{validator type="expr" validIf="=(calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento=='NA'?'NE':entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'),16,false)===clave.substr(0,16)||calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento=='NA'?'NE':entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'),16,true)===clave.substr(0,16)||clave===fn('CURP_GENERICO'))&&clave.length===18" message="CURP Incorrecto"}}
   {{/section}}
 {{/define}}
 

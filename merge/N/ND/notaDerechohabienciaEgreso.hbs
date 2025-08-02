@@ -2,6 +2,6 @@
   {{#section id="base"}}
     {{field id="tieneOtro" type="expr" value="=calc.in(dependencia,['otra'])&&user.establishmentData.cluesIdEntidad=='09'"}}
     {{field id="lista" type="expr" value="=dependenciaLista"}}
-    {{validator type="expr" validIf="=calc.in(@dependencia, @lista)" message="Dependencia No Configurada en Paciente"}}
+    {{validator type="expr" validIf="=calc.in(@dependencia, @lista)||calc.in(@dependencia,['noEspecificado','ninguna','seIgnora'])" message="Dependencia No Configurada en Paciente"}}
   {{/section}}
 {{/define}}

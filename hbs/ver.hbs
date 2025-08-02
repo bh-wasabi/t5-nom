@@ -85,14 +85,14 @@
 [./if.]
   {{/view}}
   {{#view id="clues"}}
-    {{editor display="nombre"}}
+    {{editor display="pedro"}} Pedro
     {{search index="clues-24" type="_doc" sort="nombre"}}
     {{!-- {{search index="clues" type="_doc" sort="nombre"}}     --}}
   {{/view}}  
   {{#view id="correosMexico"}}
     {{define type="param" id="estado"}}
     {{editor display="nombre"}}
-    {{#search index="cp-23" type="_doc" sort="nombre" filterParamsOnlySearch="true"}}
+    {{#search index="cp-23" type="_doc" limit="50" sort="nombre" filterParamsOnlySearch="true"}}
       {{param c_estado="=estado"}}
     {{/search}}
   {{/view}}
@@ -100,7 +100,7 @@
     {{define type="param" id="estado"}}
     {{define type="param" id="municipio"}}
     {{editor display="nombre"}}
-    {{#search index="localidad-23" type="_doc" sort="nombre" filterParamsOnlySearch="true"}}
+    {{#search index="localidad-23" type="_doc" limit="50" sort="nombre" filterParamsOnlySearch="true"}}
       {{param c_estado="=estado"}}
       {{param c_mnpio="=municipio"}}
     {{/search}}
@@ -108,7 +108,7 @@
   {{#view id="municipioCorreosMexico"}}
     {{define type="param" id="estado"}}
     {{editor display="nombre"}}
-    {{#search index="municipio-24" type="_doc" sort="nombre" filterParamsOnlySearch="true"}}
+    {{#search index="municipio-24" type="_doc" limit="50" sort="nombre" filterParamsOnlySearch="true"}}
       {{param c_estado="=estado"}}
     {{/search}}
   {{/view}}
