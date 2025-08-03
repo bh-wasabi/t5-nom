@@ -2700,7 +2700,7 @@
     {{default return="false"}}
   {{/function}}
 
-  {{#function id="validarAltaPaciente" debug="true"}}
+  {{#function id="validarAltaPaciente"}}
     {{define type="param" id="base"}}
     {{when condition="=calc.contieneMalaPalabra(base.clave)" return="true"}}
     {{when condition="=base.tipoAtencion!='consultaExterna'&&base.genero=='intersexual'" return="true"}}
@@ -2818,7 +2818,7 @@
     {{default return="=calc.getRef(detalle,'notaAltaServicio.contexto.episodio')===calc.getRef(contexto,'episodio')?null:'Falta Nota Alta Servicio'"}}
   {{/function}}
 
-  {{#function id="validarNotaAltaServicio" debug="true"}}
+  {{#function id="validarNotaAltaServicio"}}
     {{define type="param" id="base"}}
     {{define type="param" id="comorbilidades"}}
     {{define type="param" id="procedimientos"}}
