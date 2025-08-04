@@ -115,7 +115,7 @@
       {{/editor}}
     {{/field}}
     {{#field id="tipoAtencion"}}
-      {{#onChange}}
+      {{#onChange clearFields="afromexicano,afromexicanoUrgenciasHospitalizacion"}}
         {{set esConsultaExterna="=tipoAtencion=='consultaExterna'"}}
         {{set esUrgenciasHospitalizacion="=tipoAtencion!='consultaExterna'"}}
       {{/onChange}}
