@@ -2747,6 +2747,18 @@
     {{default return=""}}
   {{/function}}
 
+  {{#function id="validarNotaSaludBucal"}}
+    {{define type="param" id="persona"}}
+    {{when condition="=calc.in(persona.genero, ['noEspecificado', 'seIgnora'])" return="Género Inválido para Salud Bucal"}}
+    {{default return=""}}
+  {{/function}}
+
+  {{#function id="validarNotaSaludMental"}}
+    {{define type="param" id="persona"}}
+    {{when condition="=calc.in(persona.genero, ['noEspecificado', 'seIgnora'])" return="Género Inválido para Salud Mental"}}
+    {{default return=""}}
+  {{/function}}
+
   {{#function id="validarNotaPlanificacionFamiliar"}}
     {{define type="param" id="cluesSis" default="='no'"}}
     {{define type="param" id="genero"}}
