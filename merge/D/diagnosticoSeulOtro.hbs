@@ -36,5 +36,7 @@
     {{validator type="expr" validIf="=_parentDoc._type!='notaEvolucion'||calc.meetsAgeLimit(limiteSuperior, desde, _parentDoc.persona.fechaNacimiento, false, _parentDoc._type=='notaSeulEgreso'?moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaEgreso:_parentDoc.base.fechaAtencion||_parentDoc.base.fechaConsulta||_parentDoc.base.fechaEgreso||_parentDoc.base.fechaIngreso, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')" message="No Corresponde la Edad del Paciente con el Límite Superior"}}
     {{validator type="expr" validIf="=@detalle.length>1" message="Descripción (Mínimo 2 Caracteres)"}}
     {{validator type="expr" notValidIf="=_parentDoc.persona.genero=='intersexual'&&limiteSexo!='NO'" message="Diagnóstico Incorrecto para Intersexual"}}
+    {{validator type="expr" notValidIf="limiteSexo=='HOMBRE'&&_parentDoc.persona.genero=='mujer'" message="No Corresponde el Sexo del Paciente"}}
+    {{validator type="expr" notValidIf="limiteSexo=='MUJER'&&_parentDoc.persona.genero=='hombre'" message="No Corresponde el Sexo del Paciente"}}
   {{/section}}
 {{/define}}

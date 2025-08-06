@@ -101,7 +101,6 @@
     {{#field id="edadAproximada"}}
       {{#onChange clearFields="fechaNacimientoDesconocida,fechaNacimiento"}}
         {{set condition="=desconoceEdadSeul" fechaNacimientoDesconocida="='9999-09-09'"}}
-        {{!-- {{set fechaNacimiento="=moment().subtract(edadAproximada,'years').format('YYYY-MM-DD')"}} --}}
         {{set fechaNacimiento="=(calc.year()-edadAproximada)+'-09-09'"}}
       {{/onChange}}
     {{/field}}

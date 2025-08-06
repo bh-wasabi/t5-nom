@@ -44,5 +44,7 @@
     {{validator type="expr" validIf="=calc.isTrue(calc.lookupInPreset('app.variableGlobal', 'campo=permitePrecioEnCeros').valor)||calc.number(precio)>0" message="Precio Incorrecto"}}
     {{validator type="expr" validIf="=excedeLimiteSexo=='NO'" message="No Corresponde el Sexo del Paciente"}}
     {{validator type="expr" validIf="=excedeLimiteEdad=='NO'" message="No Corresponde la Edad del Paciente con los límites de Edad"}}
+    {{validator type="expr" notValidIf="limiteSexo=='HOMBRE'&&_parentDoc.persona.genero=='mujer'" message="No Corresponde el Sexo del Paciente"}}
+    {{validator type="expr" notValidIf="limiteSexo=='MUJER'&&_parentDoc.persona.genero=='hombre'" message="No Corresponde el Sexo del Paciente"}}
   {{/section}}
 {{/define}}
