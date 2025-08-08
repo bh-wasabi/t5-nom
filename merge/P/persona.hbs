@@ -5244,10 +5244,8 @@
       {{set _somatometriaPediatrica="=detalle._somatometriaPediatrica"}}
       {{set fechaNacimiento="=persona.fechaNacimiento"}}
       {{set fechaIngresoUrgencias="=contexto.urgencias.desde"}}
-      {{set afeccionPrincipal="=_items&&calc.getRef(_items[0], 'base.afeccionPrincipal')"}}
-      {{set _afeccionPrincipal="=_items&&calc.getRef(_items[0], 'base._afeccionPrincipal')"}}
-      {{set otrosDiagnosticos="=_items&&calc.getRef(_items[0], 'base.otrosDiagnosticos')"}}
-      {{set _otrosDiagnosticos="=_items&&calc.getRef(_items[0], 'base._otrosDiagnosticos')"}}
+      {{set afeccionPrincipal="=_items&&calc.recalcLimiteEdadDiagnostico(calc.pluckRef(_.first(_items), 'base.afeccionPrincipal'), persona.fechaNacimiento, @fechaAtencion, nomDatos.desconoceFechaNacimiento=='si')"}}
+      {{set otrosDiagnosticos="=_items&&calc.recalcLimiteEdadDiagnostico(calc.pluckRef(_.first(_items), 'base.otrosDiagnosticos'), persona.fechaNacimiento, @fechaAtencion, nomDatos.desconoceFechaNacimiento=='si')"}}   
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
   {{/transform}}
@@ -12530,7 +12528,20 @@
   {{action id="notaCompatibilidadHemocomponentes" source="notaCompatibilidadHemocomponentes" label="Compatibilidad Hemocomponentes" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaRegistroHemocomponentes" source="notaRegistroHemocomponentes" label="Registro Hemocomponentes" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaRegistroLesiones" source="notaRegistroLesiones" label="Registro Lesiones" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
-  {{#action id="notaSeulLesiones" source="notaSeulLesiones" label="Lesiones" transform="copiarSeulLesiones" fromSource="notaSeulLesiones" fromView="buscarPorEpisodio" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" error="=fn('validarDerechohabiencia', contexto, detalle)||fn('errorDatosSeguro', persona, contexto, detalle)||(_items[0]&&'Nota Lesión Activa: '+_items[0]._name)" errorType="info"}}
+  {{#action
+    id="notaSeulLesiones"
+    source="notaSeulLesiones"
+    label="Lesiones"
+    transform="copiarSeulLesiones"
+    fromSource="notaSeulLesiones"
+    fromView="buscarPorEpisodio"
+    hide="true" type="add-subdoc"
+    visibleMode="close"
+    color="deep-orange"
+    onlyPost="true"
+    error="=fn('validarNotaLesiones', _ask.fechaEvento, persona)||fn('validarDerechohabiencia', contexto, detalle)||fn('errorDatosSeguro', persona, contexto, detalle)||(_items[0]&&'Nota Lesión Activa: '+_items[0]._name)"
+    errorType="info"
+  }}
     {{param persona="=_id"}}
     {{param episodio="=contexto.episodio"}}
     {{ask field="fechaEvento" type="datetime" label="Fecha Evento" required="true" value="=moment().format()" min="=fn('obtenerFechaMaximaDosMeses',persona.fechaNacimiento)" max="=moment().add('minutes',1).format()"}}

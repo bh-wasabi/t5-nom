@@ -2957,6 +2957,14 @@
     {{default return="=!calc.getRef(detalle,'notaIngreso.base.fechaAtencion')&&'Falta Nota de Ingreso'"}}
   {{/function}}
 
+  {{#function id="validarNotaLesiones"}}
+    {{define type="param" id="fechaEvento"}}
+    {{define type="param" id="persona"}}
+    {{!-- Se quita la validación porque el campo a comparar es Fecha Atención --}}
+    {{!-- {{default return="=persona.desconoceFechaNacimiento=='no'&&moment(@fechaEvento).diff(persona.fechaNacimiento,'years')>100?'Edad Inválida (Paciente mayor a 100 años)':''"}} --}}
+    {{default return=""}}
+  {{/function}}
+
   {{#function id="confirmarSaludMental"}}
     {{define type="param" id="base"}}
     {{define type="param" id="diagnosticos"}}
