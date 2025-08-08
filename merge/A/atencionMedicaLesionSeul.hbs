@@ -15,6 +15,7 @@
     {{validator type="expr" validIf="=!calc.in(@consecuenciaLesion,['aborto','embarazo'])||esMujer&&calc.in(@consecuenciaLesion,['aborto','embarazo'])&&(edad>=9&&edad<=49)" message="Error en Consecuencia Lesion"}}
     {{validator type="expr" validIf="=@tipoAtencionLesion.length<6" message="Máximo 5 Tipo Atención"}}
     {{validator type="expr" validIf="=!@descripcionAfeccion||calc.matchIfPattern('^[A-z].{1,249}$', @descripcionAfeccion)" message="Verificar Descripción"}}
+    {{validator type="expr" notValidIf="=calc.getRef(_parentDoc,'nomDatos.desconoceFechaNacimiento')=='no'&&moment(@fechaAtencion).diff(calc.getRef(_parentDoc,'persona.fechaNacimiento'),'years')>100" message="Edad Inválida (Paciente mayor a 100 años al momento de la Atención)"}}
     {{validator type="expr" notValidIf="=calc.in(calc.upperCase(calc.normalize(@especifiqueServicioAtencion)),fn('especifiqueServicioInvalido'))" message="Especificar Servicio Atención Inválido"}}
     {{validator type="expr" notValidIf="=calc.in(calc.upperCase(calc.normalize(@otraAreaAfectada)),fn('especifiqueAreaAnatomicaInvalido'))" message="Otra Área Afectada Inválida"}}
     {{validator type="expr" notValidIf="=calc.in(calc.upperCase(calc.normalize(@especifiqueConsecuencia)),fn('especifiqueConsecuenciaLesionInvalido'))" message="Especifique Consecuencia Inválida"}}
