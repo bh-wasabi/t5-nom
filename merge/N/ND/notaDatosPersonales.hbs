@@ -11,6 +11,8 @@
   {{#action id="sugerirCurp" hide="true" type="update"}}
     {{#update section="base"}}
       {{set condition="=!tieneMovimientos" clave="=calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento=='NA'?'NE':entidadNacimiento, fechaNacimiento, 16, true)"}}
+      {{set claveCompleta="=calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento=='NA'?'NE':entidadNacimiento, fechaNacimiento, 18, true)"}}
+      {{set claveCompleta2="=calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento=='NA'?'NE':entidadNacimiento, fechaNacimiento, 18, false)"}}
     {{/update}}
   {{/action}}
   {{action id="oficio" type="report-markdown" fileName="=_name" value="=oficio.texto" templateSource="plantillaOficio" templateId="=oficio.plantillaOficio" label="Oficio" color="grey" visibleMode="close" forceReadOnly="true" hide="true"}}

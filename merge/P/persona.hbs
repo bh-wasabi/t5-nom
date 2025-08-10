@@ -5544,9 +5544,7 @@
       {{setRef ref="atencionObstetricas.base.esMujerEsCluesCancer" value="=persona.genero=='mujer'&&fn('validaCluesCancer',user.establishmentData)"}}
       {{setRef ref="atencionObstetricas.base.esMujerIntersexual" value="=persona.genero=='mujer'||persona.genero=='intersexual'"}}
       {{setRef ref="signosVitales.base.genero" value="=persona.genero"}}
-      {{!-- {{setRef ref="signosVitales.base.edadActual" value="=persona.edadActual"}} --}}
       {{setRef ref="signosVitales.base.edadActual" value="=_params.edadAtencion"}}
-      {{!-- {{setRef ref="signosVitales.base._edadActual" value="=persona._edadActual"}} --}}
       {{setRef ref="signosVitales.base.fechaHoraRegistro" value="=_params.fechaAtencion"}}
     {{/update}}
     {{update section="antecedentes" value="=detalle.antecedentes"}}
@@ -5681,6 +5679,9 @@
       {{set fechaEvento="=_params.fechaEvento"}}
       {{set horaEvento="=(_params.fechaEvento).substr(11,5)"}}
       {{set desconoceHoraEvento="=_params.desconoceHoraEvento"}}
+      {{set fechaAtencion="=_params.fechaAtencion"}}
+      {{set horaAtencion="=(_params.fechaAtencion).substr(11,5)"}}
+      {{set desconoceHoraAtencion="=_params.desconoceHoraAtencion"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
@@ -5698,8 +5699,9 @@
       {{setRef ref="eventoLesion.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
       {{setRef ref="eventoLesion.base.diaFestivo" value=""}}
       {{setRef ref="eventoLesion.base.direccion.base.esLesion" value="true"}}
+      {{setRef ref="atencionMedicaLesion.base.fechaAtencion" value="=_params.fechaAtencion"}}
+      {{setRef ref="atencionMedicaLesion.base.horaAtencion" value="=_params.desconoceHoraAtencion=='si'?'99:99':(_params.fechaAtencion).substr(11,5)"}}      
       {{setRef ref="atencionMedicaLesion.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
-      {{setRef ref="atencionMedicaLesion.base.edad" value="=calc.fromNowYears(persona.fechaNacimiento)"}}
       {{setRef ref="atencionMedicaLesion.base.esMujer" value="=esMujer"}}
       {{setRef ref="atencionMedicaLesion.base.esHombre" value="=esHombre"}}
       {{setRef ref="accidenteLesion.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
@@ -12574,11 +12576,15 @@
     onlyPost="true"
     error="=fn('validarNotaLesiones', _ask.fechaEvento, persona)||fn('validarDerechohabiencia', contexto, detalle)||fn('errorDatosSeguro', persona, contexto, detalle)||(_items[0]&&'Nota Lesión Activa: '+_items[0]._name)"
     errorType="info"
+    error2="=_ask.fechaAtencion<_ask.fechaEvento?'Fecha Atención debe ser mayor que Fecha Evento':null"
+    debug="true"
   }}
     {{param persona="=_id"}}
     {{param episodio="=contexto.episodio"}}
     {{ask field="fechaEvento" type="datetime" label="Fecha Evento" required="true" value="=moment().format()" min="=fn('obtenerFechaMaximaDosMeses',persona.fechaNacimiento)" max="=moment().add('minutes',1).format()"}}
-    {{ask field="desconoceHoraEvento" type="select" label="Desconoce Hora Evento" keys="no,si" names="No,Sí" required="true"}}    
+    {{ask field="desconoceHoraEvento" type="select" label="Desconoce Hora Evento" keys="no,si" names="No,Sí" required="true"}}
+    {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('obtenerFechaMaximaDosMeses',persona.fechaNacimiento)" max="=moment().add('minutes',1).format()" errorMessage="Fecha Incorrecta"}}
+    {{ask field="desconoceHoraAtencion" type="select" label="Desconoce Hora Atención" keys="no,si" names="No,Sí" required="true"}}
   {{/action}}
   {{action id="notaReaccionesTransfusionales" source="notaReaccionesTransfusionales" label="Reacciones Transfusionales" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaInduccionOtorgada" source="notaInduccionOtorgada" label="Inducción Otorgada" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}

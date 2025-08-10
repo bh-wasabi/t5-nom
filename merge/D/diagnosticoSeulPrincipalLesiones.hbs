@@ -32,5 +32,6 @@
     {{validator type="expr" notValidIf="=afeccionPrincipal=='NO'" message="Diagnóstico Inválido para Lesiones"}}
     {{validator type="expr" notValidIf="limiteSexo=='HOMBRE'&&_parentDoc.persona.genero=='mujer'" message="No Corresponde el Sexo del Paciente"}}
     {{validator type="expr" notValidIf="limiteSexo=='MUJER'&&_parentDoc.persona.genero=='hombre'" message="No Corresponde el Sexo del Paciente"}}
+    {{validator type="expr" notValidIf="=calc.isEmpty(calc.getRef(_parentDoc, 'base.atencionMedicaLesion.base.fechaAtencion'))" message="Es necesario llenar el componente <b>Atención Médica de la Lesión</b> antes de registrar el Diagnóstico." log="=_parentDoc"}}
   {{/section}}
 {{/define}}
