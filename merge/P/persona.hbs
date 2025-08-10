@@ -5197,29 +5197,6 @@
     {{update section="comorbilidades" value="=calc.subItemsMap(ultimaNotaEvolucion, 'base.otrosDiagnosticos', '=base.detalle+`#`+base.diagnostico', '=base.nombre')"}}
   {{/transform}}
 
-  {{#transform id="copiarDetecciones"}}
-    {{update section="contexto" value="=contexto"}}
-    {{update section="persona" transform="copiarPersona"}}
-    {{update section="nomDatos" transform="copiarNomDatos"}}
-    {{#update section="base" newRef="signosVitales"}}
-      {{set fechaAtencion="=_params.fechaAtencion"}}
-      {{set esMujer="=persona.esMujer"}}
-      {{set esHombre="=!esMujer"}}
-      {{set edadActual="=persona.edadActual"}}
-      {{set _edadActual="=persona._edadActual"}}
-      {{set tipoServicioSisMenor="=_params.esMenor"}}
-      {{set tipoServicioSisMayor="=_params.esMayor"}}
-      {{set primeraConsultaAno="=_items.length?'no':'si'"}}
-      {{setRef ref="signosVitales.base.fechaHoraRegistro" value="=_params.fechaAtencion"}}
-    {{/update}}
-    {{#update section="otrosDatos"}}
-      {{set cluesTieneEspirometro="=calc.isNotEmpty(user.establishmentData.cluesTieneEspirometro)"}}
-      {{set genero="=persona.genero"}}
-    {{/update}}
-    {{update section="tipoServicioSis" value="=calc.itemsToCode(calc.tipoServicioSis(calc.in('detecciones',user.others.tipoServicioSis)?'detecciones':'',user.others.tipoPersonalNom,base.esMujer?'mujer':'',base.tipoServicioSisMenor?'menor':base.tipoServicioSisMayor?'mayor':''))" temp="true"}}
-    {{update section="resumen" value="=resumen" temp="true"}}
-  {{/transform}}
-
   {{#transform id="copiarEvolucion"}}
     {{update section="contexto" value="=contexto"}}
     {{update section="persona" transform="copiarPersona"}}
@@ -5568,7 +5545,7 @@
       {{setRef ref="atencionObstetricas.base.esMujerIntersexual" value="=persona.genero=='mujer'||persona.genero=='intersexual'"}}
       {{setRef ref="signosVitales.base.genero" value="=persona.genero"}}
       {{!-- {{setRef ref="signosVitales.base.edadActual" value="=persona.edadActual"}} --}}
-      {{setRef ref="signosVitales.base.edadActual" value="=calc.number(_params.edadAtencion)"}}
+      {{setRef ref="signosVitales.base.edadActual" value="=_params.edadAtencion"}}
       {{!-- {{setRef ref="signosVitales.base._edadActual" value="=persona._edadActual"}} --}}
       {{setRef ref="signosVitales.base.fechaHoraRegistro" value="=_params.fechaAtencion"}}
     {{/update}}
@@ -5579,11 +5556,33 @@
       {{set _antecedentesGineco="=detalle.mujer._antecedentesGineco"}}
       {{set antecedentesEmbarazos="=detalle.mujer.antecedentesEmbarazos"}}
       {{set _antecedentesEmbarazos="=detalle.mujer._antecedentesEmbarazos"}}
-      {{set edadActual="=fn('calcularEdadPorFechaAtencion',base.fechaConsulta,persona.fechaNacimiento)"}}
-      {{set _edadActual="=persona._edadActual"}}
-      {{setRef condition="=persona.esMujer" ref="antecedentesGineco.edadActual" value="=calc.number(_params.edadAtencion)"}}
+      {{set edadActual="=_params.edadAtencion"}}
+      {{setRef condition="=persona.esMujer" ref="antecedentesGineco.edadActual" value="=_params.edadAtencion"}}
     {{/update}}
     {{update section="tipoServicioSis" value="=calc.itemsToCode(calc.tipoServicioSis(calc.in('consultaExterna',user.others.tipoServicioSis)?'consultaExterna':'',user.others.tipoPersonalNom,base.esMujer?'mujer':'',base.tipoServicioSisMenor?'menor':base.tipoServicioSisMayor?'mayor':''))" temp="true"}}
+    {{update section="resumen" value="=resumen" temp="true"}}
+  {{/transform}}
+
+  {{#transform id="copiarDetecciones"}}
+    {{update section="contexto" value="=contexto"}}
+    {{update section="persona" transform="copiarPersona"}}
+    {{update section="nomDatos" transform="copiarNomDatos"}}
+    {{#update section="base" newRef="signosVitales"}}
+      {{set fechaAtencion="=_params.fechaAtencion"}}
+      {{set esMujer="=persona.esMujer"}}
+      {{set esHombre="=!esMujer"}}
+      {{set edadActual="=persona.edadActual"}}
+      {{set _edadActual="=persona._edadActual"}}
+      {{set tipoServicioSisMenor="=_params.esMenor"}}
+      {{set tipoServicioSisMayor="=_params.esMayor"}}
+      {{set primeraConsultaAno="=_items.length?'no':'si'"}}
+      {{setRef ref="signosVitales.base.fechaHoraRegistro" value="=_params.fechaAtencion"}}
+    {{/update}}
+    {{#update section="otrosDatos"}}
+      {{set cluesTieneEspirometro="=calc.isNotEmpty(user.establishmentData.cluesTieneEspirometro)"}}
+      {{set genero="=persona.genero"}}
+    {{/update}}
+    {{update section="tipoServicioSis" value="=calc.itemsToCode(calc.tipoServicioSis(calc.in('detecciones',user.others.tipoServicioSis)?'detecciones':'',user.others.tipoPersonalNom,base.esMujer?'mujer':'',base.tipoServicioSisMenor?'menor':base.tipoServicioSisMayor?'mayor':''))" temp="true"}}
     {{update section="resumen" value="=resumen" temp="true"}}
   {{/transform}}
 
@@ -5595,8 +5594,8 @@
       {{set fechaAtencion="=_params.fechaAtencion"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
-      {{set tipoServicioSisMenor="=fn('calcularEdadPorFechaAtencion',@fechaAtencion,persona.fechaNacimiento)<18"}}
-      {{set tipoServicioSisMayor="=fn('calcularEdadPorFechaAtencion',@fechaAtencion,persona.fechaNacimiento)>=60"}}
+      {{set tipoServicioSisMenor="=_params.esMenor"}}
+      {{set tipoServicioSisMayor="=_params.esMayor"}}
       {{set primeraConsultaAno="=_items.length?'no':'si'"}}
       {{setRef ref="signosVitales.base.fechaHoraRegistro" value="=_params.fechaAtencion"}}
     {{/update}}
@@ -5615,8 +5614,8 @@
       {{set fechaNacimiento="=persona.fechaNacimiento"}}
       {{set edadActual="=persona.edadActual"}}
       {{set _edadActual="=persona._edadActual"}}
-      {{set tipoServicioSisMenor="=fn('calcularEdadPorFechaAtencion',@fechaAtencion,persona.fechaNacimiento)<18"}}
-      {{set tipoServicioSisMayor="=fn('calcularEdadPorFechaAtencion',@fechaAtencion,persona.fechaNacimiento)>=60"}}
+      {{set tipoServicioSisMenor="=_params.esMenor"}}
+      {{set tipoServicioSisMayor="=_params.esMayor"}}
       {{set primeraConsultaAno="=_items.length?'no':'si'"}}
       {{set edad="=calc.fromNowYears(persona.fechaNacimiento)"}}
       {{set noPsicologoEsHombre="=!calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])&&persona.genero=='hombre'"}}
@@ -5637,8 +5636,8 @@
       {{set esHombre="=!esMujer"}}
       {{set edadActual="=persona.edadActual"}}
       {{set _edadActual="=persona._edadActual"}}
-      {{set tipoServicioSisMenor="=calc.fromNowYears(persona.fechaNacimiento)<18"}}
-      {{set tipoServicioSisMayor="=calc.fromNowYears(persona.fechaNacimiento)>=60"}}
+      {{set tipoServicioSisMenor="=_params.esMenor"}}
+      {{set tipoServicioSisMayor="=_params.esMayor"}}
       {{set primeraConsultaAno="=_items.length?'no':'si'"}}
       {{setRef ref="signosVitales.base.fechaHoraRegistro" value="=_params.fechaAtencion"}}
     {{/update}}
@@ -7964,6 +7963,8 @@
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('obtenerFechaMaximaDosMeses',persona.fechaNacimiento)" max="=moment().add('minutes',1).format()" errorMessage="Fecha Incorrecta"}}
+    {{param esMenor="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,persona.fechaNacimiento)<18"}}
+    {{param esMayor="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,persona.fechaNacimiento)>=60"}}
   {{/action}}
   {{#action
     id="notaDetecciones"
@@ -8002,6 +8003,8 @@
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('obtenerFechaMaximaDosMeses',persona.fechaNacimiento)" max="=moment().add('minutes',1).format()" errorMessage="Fecha Incorrecta"}}
+    {{param esMenor="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,persona.fechaNacimiento)<18"}}
+    {{param esMayor="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,persona.fechaNacimiento)>=60"}}
   {{/action}}
   {{#action
     id="notaSaludBucal"
@@ -8020,6 +8023,8 @@
     {{param persona="=_id"}}
     {{param desde="=moment().format('YYYY')"}}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('obtenerFechaMaximaDosMeses',persona.fechaNacimiento)" max="=moment().add('minutes',1).format()" errorMessage="Fecha Incorrecta"}}
+    {{param esMenor="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,persona.fechaNacimiento)<18"}}
+    {{param esMayor="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,persona.fechaNacimiento)>=60"}}
   {{/action}}
   {{!-- CERTIFICACIONES RACC --}}  
 
