@@ -11606,7 +11606,23 @@
   {{action id="notaDatosFinancieros" source="notaDatosFinancieros" label="Datos Financieros" transform="copiarDatos" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaDatosNacionalidad" source="notaDatosNacionalidad" label="Datos Nacionalidad" transform="copiarDatos" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaDatosPersonales" source="notaDatosPersonales" label="Datos Personales" transform="copiarDatosPersonales" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
-  {{#action id="notaModificacionDatosPersonales" source="notaDatosPersonales" subType="modificacion" subTypeName="Modificacion Datos Personales" label="Modificacion Datos Personales" transform="copiarDatosPersonales" fromSource="nota" fromView="nomTieneMovimientos" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
+  {{#action
+    id="notaModificacionDatosPersonales"
+    source="notaDatosPersonales"
+    subType="modificacion"
+    subTypeName="Modificacion Datos Personales"
+    label="Modificacion Datos Personales"
+    transform="copiarDatosPersonales"
+    fromSource="nota"
+    fromView="nomTieneMovimientos"
+    hide="true"
+    type="add-subdoc"
+    visibleMode="close"
+    color="deep-orange"
+    onlyPost="true"
+    error="=persona.desconoceFechaNacimiento=='si'&&'No se pueden modificar datos de un paciente desconocido'"
+    errorType="info"
+  }}
     {{param persona="=_id"}}
   {{/action}}
   {{action id="notaDatosSeguro" source="notaDatosSeguro" label="Datos Seguro" transform="copiarDatosSeguro" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
