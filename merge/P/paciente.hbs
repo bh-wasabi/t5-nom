@@ -92,7 +92,6 @@
     {{field id="esConsultaExterna" type="expr" value="=tipoAtencion=='consultaExterna'"}}
     {{field id="esUrgenciasHospitalizacion" type="expr" value="=tipoAtencion!='consultaExterna'"}}
     {{field id="desconoceEdadSeul" type="expr" value="=tipoAtencion!='consultaExterna'&&desconoceFechaNacimiento=='si'"}}
-    {{!-- {{field id="verFechaNacimiento" type="expr" value="=tipoAtencion=='consultaExterna'||!desconoceEdadSeul"}} --}}
     {{field id="esMigrante" type="expr" value="=migrante=='internacional'||migrante=='retornado'||migrante=='nacional'"}}
     {{field id="bloquearProcedencia" type="expr" value="=migrante=='nacional'||migrante=='retornado'"}}
     {{#field id="tipoAtencion"}}
@@ -140,12 +139,11 @@
     {{validator type="expr" notValidIf="=!calc.in(sabeLeerEscribir,['si','no','seIgnora'])&&calc.fromNowYears(fechaNacimiento)>=3" message="Falta Indicar Sabe Leer y Escribir"}}
     {{validator type="expr" notValidIf="=esMenor3Anos&&sabeLeerEscribir!='no'" message="Sabe Leer y Escribir Incorrecto (Paciente menor 3 años)"}}
     {{validator type="expr" notValidIf="=sabeLeerEscribir=='no'&&!calc.in(escolaridad,['ninguna','noAplica','noEspecificado','preescolarCompleta','preescolarIncompleta','seIgnora'])" message="Sabe Leer y Escribir Incorrecto"}}
-    {{!-- {{validator type="expr" notValidIf="=escolaridad==='ninguna'&&sabeLeerEscribir!=='no'" message="Sabe Leer Escribir debe ser 'No' cuando Escolaridad es 'Ninguna'"}} --}}
     {{validator type="expr" notValidIf="=esMenor5Anos&&afromexicano!=calc.pluckRef(familiarResponsable,'base.afromexicano')[0]" message="Se Considera Afromexicano Inválido"}}
     {{validator type="expr" notValidIf="=migrante=='internacional'&&paisProcedencia=='MX'" message="País Procedencia Inválido"}}
     {{validator type="expr" notValidIf="=clave===user.serviceProvider.clave&&clave!==fn('CURP_GENERICO')" message="No puede tener el mismo CURP que el Usuario"}}
     {{validator type="expr" validIf="=fn('validaCaracter17Curp',clave,fechaNacimiento)||clave===fn('CURP_GENERICO')" message="CURP Inválido (Caracter 17)"}}
-    {{validator type="expr" validIf="=fn('validaCaracter18Curp',clave,fechaNacimiento)||clave===fn('CURP_GENERICO')" message="CURP Inválido (Caracter 18)"}}
+    {{validator type="expr" validIf="=fn('validaCaracter18Curp',clave)||clave===fn('CURP_GENERICO')" message="CURP Inválido (Caracter 18)"}}
     {{validator type="expr" notValidIf="=esMenor10Anos&&estadoCivil!=='noAplica'" message="Estado Civil Inválido (Paciente menor 10 años)"}}
     {{validator type="expr" notValidIf="=!esMenor10Anos&&estadoCivil==='noAplica'" message="Estado Civil Inválido (Paciente mayor 10 años)"}}
     {{validator type="expr" notValidIf="=esUrgenciasHospitalizacion&&calc.in(grupoEtnico.base.indigena,['noResponde','noSabe'])" message="Se Considera Indígena Inválido (SI/NO)"}}

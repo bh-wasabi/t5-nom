@@ -2454,9 +2454,7 @@
 
   {{#function id="validaCaracter18Curp"}}
     {{define type="param" id="curp"}}
-    {{define type="param" id="fechaNacimiento"}}
-    {{when condition="moment(fechaNacimiento).year()<2000" return="calc.in(curp.substr(17,1),[0,1,2,3,4,5,6,7,8,9])"}}
-    {{when condition="moment(fechaNacimiento).year()>=2000" return="calc.in(curp.substr(17,1),[0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F','G','H','I','J'])"}}
+    {{default return="calc.in(curp.substr(17,1),[0,1,2,3,4,5,6,7,8,9])"}}
   {{/function}}
 
   {{#function id="seleccionaGenero"}}

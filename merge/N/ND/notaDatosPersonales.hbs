@@ -1,9 +1,18 @@
 {{#define id="notaDatosPersonales"}}
-  {{!-- {{#action id="sugerirCurp" hide="true" type="update"}}
+  {{action
+    id="afectar"
+    confirm="=fn('validarAltaPaciente', base)"
+    confirmMessage="=fn('mensajeAltaPaciente', base)"
+    confirmTitle="Confirmación"
+    confirmWidth="400"
+    confirmHeight="500"
+  }}
+
+  {{#action id="sugerirCurp" hide="true" type="update"}}
     {{#update section="base"}}
-      {{set clave="=calc.curp(nombres, apellidoPaterno, apellidoMaterno, genero, entidadNacimiento, fechaNacimiento)"}}
+      {{set condition="=!tieneMovimientos" clave="=calc.curp(nombres, apellidoPaterno, apellidoMaterno, genero, entidadNacimiento=='NA'?'NE':entidadNacimiento, fechaNacimiento, 16, true)"}}
     {{/update}}
-  {{/action}} --}}
+  {{/action}}
   {{action id="oficio" type="report-markdown" fileName="=_name" value="=oficio.texto" templateSource="plantillaOficio" templateId="=oficio.plantillaOficio" label="Oficio" color="grey" visibleMode="close" forceReadOnly="true" hide="true"}}
   {{action id="preliminar" subAction="oficio"}}
 
@@ -11,8 +20,63 @@
     {{field id="nombreCompleto" type="expr" label="Nombre" value="=calc.concat(@nombres, @apellidoPaterno, @apellidoMaterno)"}}
     {{field id="esMujer" type="expr" value="=base.genero==='mujer'"}}    
     {{field id="esMenor3Meses" type="expr" value="=moment().diff(moment(fechaNacimiento), 'months')<=3"}}
-    {{field id="esMenor3Dias" type="expr" value="=moment().diff(moment(fechaNacimiento), 'days')<=3"}} 
-    {{validator type="expr" validIf="=calc.curp3Ok(clave)" message="CURP Incorrecto"}}
+    {{field id="esMenor3Dias" type="expr" value="=moment().diff(moment(fechaNacimiento), 'days')<=3"}}
+    {{field id="esMenor3Anos" type="expr" value="=calc.fromNowYears(fechaNacimiento)<3"}}
+    {{field id="esMenor5Anos" type="expr" value="=calc.fromNowYears(fechaNacimiento)<5"}}
+    {{field id="esMenor10Anos" type="expr" value="=calc.fromNowYears(fechaNacimiento)<10"}}
+    {{field id="esMenor59Anos" type="expr" value="=calc.fromNowYears(fechaNacimiento)<59"}}
+    {{field id="esConsultaExterna" type="expr" value="=tipoAtencion=='consultaExterna'"}}
+    {{field id="esUrgenciasHospitalizacion" type="expr" value="=tipoAtencion!='consultaExterna'"}}
+    {{field id="desconoceEdadSeul" type="expr" value="=tipoAtencion!='consultaExterna'&&desconoceFechaNacimiento=='si'"}}
+    {{field id="esMigrante" type="expr" value="=migrante=='internacional'||migrante=='retornado'||migrante=='nacional'"}}
+    {{field id="bloquearProcedencia" type="expr" value="=migrante=='nacional'||migrante=='retornado'"}}
+    {{#field id="tipoAtencion"}}
+      {{#onChange clearFields="desconoceFechaNacimiento,edadAproximada,fechaNacimientoDesconocida,fechaNacimiento,afromexicano,afromexicanoUrgenciasHospitalizacion"}}
+        {{set esConsultaExterna="=tipoAtencion=='consultaExterna'"}}
+        {{set esUrgenciasHospitalizacion="=tipoAtencion!='consultaExterna'"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="desconoceFechaNacimiento"}}
+      {{onChange clearFields="edadAproximada,fechaNacimientoDesconocida,fechaNacimiento"}}
+    {{/field}}
+    {{#field id="edadAproximada"}}
+      {{#onChange clearFields="fechaNacimientoDesconocida,fechaNacimiento"}}
+        {{set condition="=desconoceEdadSeul" fechaNacimientoDesconocida="='9999-09-09'"}}
+        {{set fechaNacimiento="=(calc.year()-edadAproximada)+'-09-09'"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="paisNacimiento"}}
+      {{#onChange condition="=paisNacimiento!='MX'" clearFields="entidadNacimiento"}}
+        {{set entidadNacimiento="='NA'"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="migrante"}}
+      {{#onChange}}
+        {{set paisProcedencia="MX"}}
+      {{/onChange}}
+    {{/field}}
+    {{!-- {{validator type="expr" validIf="=calc.curp3Ok(clave)" message="CURP Incorrecto" log="=clave"}} --}}
+    {{validator type="expr" validIf="=calc.setTimeStr(@fechaNacimiento,@horaNacimiento)<moment().format()" message="Fecha Nacimiento Incorrecta"}}
+    {{validator type="expr" notValidIf="=calc.in(genero,['noEspecificado','seIgnora'])&&tipoAtencion==='consultaExterna'" message="Sexo Biológico Inválido para Consulta Externa"}}
+    {{validator type="expr" notValidIf="=desconoceFechaNacimiento==='si'&&clave!==fn('CURP_GENERICO')" message="Colocar CURP Genérico si Desconoce Fecha Nacimiento"}}
+    {{validator type="expr" condition="=esConsultaExterna" notValidIf="=desconoceFechaNacimiento==='si'&&moment().diff(fechaNacimiento,'years')<1&&fechaNacimiento.substr(8,2)!='15'" message="Fecha Nacimiento Inválida (Desconoce Fecha)<br/>Formato Válido: [año estimado]-[mes estimado]-15"}}
+    {{validator type="expr" condition="=esConsultaExterna" notValidIf="=@desconoceFechaNacimiento==='si'&&moment().diff(fechaNacimiento,'years')>=1&&(fechaNacimiento.substr(5,2)!='06'||fechaNacimiento.substr(8,2)!='30')" message="Fecha Nacimiento Inválida (Desconoce Fecha)</br>Formato Válido: [año estimado]-06-30"}}
+    {{validator type="expr" validIf="=moment().diff(fechaNacimiento,'years')<120" message="Paciente Mayor a 120 años"}}
+    {{validator type="expr" validIf="=fn('entidadNacimientoCorrecta', paisNacimiento, entidadNacimiento)" message="Entidad Nacimiento Incorrecta"}}
+    {{validator type="expr" notValidIf="=esMenor3Anos&&!calc.isEmpty(@ocupacion)&&@ocupacion!='9990'" message="Ocupación Inválida"}}
+    {{validator type="expr" validIf="=fn('escolaridadCorrecta', calc.fromNowYears(fechaNacimiento)||2, escolaridad)" message="Escolaridad Incorrecta"}}
+    {{validator type="expr" notValidIf="=!calc.in(sabeLeerEscribir,['si','no','seIgnora'])&&calc.fromNowYears(fechaNacimiento)>=3" message="Falta Indicar Sabe Leer y Escribir"}}
+    {{validator type="expr" notValidIf="=esMenor3Anos&&sabeLeerEscribir!='no'" message="Sabe Leer y Escribir Incorrecto (Paciente menor 3 años)"}}
+    {{validator type="expr" notValidIf="=sabeLeerEscribir=='no'&&!calc.in(escolaridad,['ninguna','noAplica','noEspecificado','preescolarCompleta','preescolarIncompleta','seIgnora'])" message="Sabe Leer y Escribir Incorrecto"}}
+    {{validator type="expr" notValidIf="=esMenor5Anos&&afromexicano!=calc.pluckRef(familiarResponsable,'base.afromexicano')[0]" message="Se Considera Afromexicano Inválido"}}
+    {{validator type="expr" notValidIf="=migrante=='internacional'&&paisProcedencia=='MX'" message="País Procedencia Inválido"}}
+    {{validator type="expr" notValidIf="=clave===user.serviceProvider.clave&&clave!==fn('CURP_GENERICO')" message="No puede tener el mismo CURP que el Usuario"}}
+    {{validator type="expr" validIf="=fn('validaCaracter17Curp',clave,fechaNacimiento)||clave===fn('CURP_GENERICO')" message="CURP Inválido (Caracter 17)"}}
+    {{validator type="expr" validIf="=fn('validaCaracter18Curp',clave)||clave===fn('CURP_GENERICO')" message="CURP Inválido (Caracter 18)"}}
+    {{validator type="expr" notValidIf="=esMenor10Anos&&estadoCivil!=='noAplica'" message="Estado Civil Inválido (Paciente menor 10 años)"}}
+    {{validator type="expr" notValidIf="=!esMenor10Anos&&estadoCivil==='noAplica'" message="Estado Civil Inválido (Paciente mayor 10 años)"}}
+    {{validator type="expr" notValidIf="=esUrgenciasHospitalizacion&&calc.in(grupoEtnico.base.indigena,['noResponde','noSabe'])" message="Se Considera Indígena Inválido (SI/NO)"}}
+    {{validator type="expr" validIf="=(calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento=='NA'?'NE':entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'),16,false)===clave.substr(0,16)||calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento=='NA'?'NE':entidadNacimiento, moment(fechaNacimiento).format('YYYY-MM-DD'),16,true)===clave.substr(0,16)||clave===fn('CURP_GENERICO'))&&clave.length===18" message="CURP Incorrecto"}}    
   {{/section}}
   {{#section id="oficio"}}
     {{#field id="plantillaOficio"}}
