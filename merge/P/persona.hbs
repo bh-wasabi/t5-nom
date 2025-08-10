@@ -12576,7 +12576,7 @@
     onlyPost="true"
     error="=fn('validarNotaLesiones', _ask.fechaEvento, persona)||fn('validarDerechohabiencia', contexto, detalle)||fn('errorDatosSeguro', persona, contexto, detalle)||(_items[0]&&'Nota Lesión Activa: '+_items[0]._name)"
     errorType="info"
-    error2="=_ask.fechaAtencion<_ask.fechaEvento?'Fecha Atención debe ser mayor que Fecha Evento':null"
+    error2="=!calc.validarFechaEventoAtencion(_ask.fechaEvento,_ask.fechaAtencion,_ask.desconoceHoraEvento=='no'&&_ask.desconoceHoraAtencion=='no')?'Fecha Atención debe ser mayor que Fecha Evento':null"
     debug="true"
   }}
     {{param persona="=_id"}}

@@ -36,7 +36,7 @@
         {{set _diagnostico="=_.pluck(base.diagnostico, '_name').join(', ')"}}
       {{/update}}
     {{/onChange}}
-    {{validator type="expr" notValidIf="=fn('validarFechaAtencionLesion',calc.getRef(eventoLesion,'base.fechaOcurreEvento'),calc.getRef(eventoLesion,'base.horaEvento'),calc.getRef(atencionMedicaLesion,'base.fechaAtencion'),calc.getRef(atencionMedicaLesion,'base.horaAtencion'))" message="Fecha Evento debe ser menor a Fecha Atención"}}
+    {{!-- {{validator type="expr" notValidIf="=fn('validarFechaAtencionLesion',calc.getRef(eventoLesion,'base.fechaOcurreEvento'),calc.getRef(eventoLesion,'base.horaEvento'),calc.getRef(atencionMedicaLesion,'base.fechaAtencion'),calc.getRef(atencionMedicaLesion,'base.horaAtencion'))" message="Fecha Evento debe ser menor a Fecha Atención"}} --}}
     
     {{validator type="expr" notValidIf="=atencionMedicaLesion.base.consecuenciaLesion=='defuncion'&&afectacionesTratadas[0].base.destinoAtencionLesion!='defuncion'" message="Verificar Destino en Afectaciones Tratadas"}}
     {{validator type="expr" notValidIf="=profesionalResponsableSalud.base.responsableAtencionMedica=='medicoTratante'&&(calc.in('tratamientoPsicologo',atencionMedicaLesion.base.tipoAtencionLesion)||calc.in('consergeria',atencionMedicaLesion.base.tipoAtencionLesion))" message="Profesional Responsable Salud Inválido"}}
