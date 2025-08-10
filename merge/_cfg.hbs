@@ -2926,7 +2926,7 @@
     {{default return="=moment.max([moment(@fecha), moment().subtract(2, 'months').startOf('day')]).format()"}}
   {{/function}}
 
-  {{#function id="calcularEdadPorFechaAtencion"}}
+  {{#function id="calcularEdadPorFechaAtencion" debug="true"}}
     {{define type="param" id="fechaAtencion"}}
     {{define type="param" id="fechaNacimiento"}}
     {{default return="=moment(@fechaAtencion).diff(moment(@fechaNacimiento), 'years')"}}
@@ -2974,7 +2974,7 @@
     {{!-- 3) Si en Otros Diagnósticos, alguno excede límite edad -> inválido --}}
     {{when condition="=calc.in('SI',calc.pluckRef(calc.getRef(base,'otrosDiagnosticos'),'base.excedeLimiteEdad'))" return="true"}}
     {{!-- 4) Si Afección Principal excede límite sexo -> inválido --}}
-    {{when condition="=calc.getRef(base,'afeccionPrincipal.base.limiteSexo')!=='NO'&&calc.getRef(base,'afeccionPrincipal.base.limiteSexo')!==calc.upperCase(calc.getRef(persona,'genero'))" return="true"}}
+    {{when condition="=calc.getRef(persona,'genero')!=='intersexual'&&calc.getRef(base,'afeccionPrincipal.base.limiteSexo')!=='NO'&&calc.getRef(base,'afeccionPrincipal.base.limiteSexo')!==calc.upperCase(calc.getRef(persona,'genero'))" return="true"}}
     {{!-- 5) Si persona es 'hombre' y en Otros Diagnósticos, tiene diagnóstico de MUJER -> inválido --}}
     {{when condition="=calc.getRef(persona,'genero')==='hombre'&&calc.in('MUJER',calc.pluckRef(calc.getRef(base,'otrosDiagnosticos'),'base.limiteSexo'))" return="true"}}
     {{!-- 6) Si persona es 'mujer' y en Otros Diagnósticos, tiene diagnóstico de HOMBRE -> inválido --}}

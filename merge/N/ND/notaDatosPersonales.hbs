@@ -10,13 +10,20 @@
 
   {{#action id="sugerirCurp" hide="true" type="update"}}
     {{#update section="base"}}
-      {{set condition="=!tieneMovimientos" clave="=calc.curp(nombres, apellidoPaterno, apellidoMaterno, genero, entidadNacimiento=='NA'?'NE':entidadNacimiento, fechaNacimiento, 16, true)"}}
+      {{set condition="=!tieneMovimientos" clave="=calc.curp(nombres, apellidoPaterno, apellidoMaterno, generoCurp, entidadNacimiento=='NA'?'NE':entidadNacimiento, fechaNacimiento, 16, true)"}}
     {{/update}}
   {{/action}}
   {{action id="oficio" type="report-markdown" fileName="=_name" value="=oficio.texto" templateSource="plantillaOficio" templateId="=oficio.plantillaOficio" label="Oficio" color="grey" visibleMode="close" forceReadOnly="true" hide="true"}}
   {{action id="preliminar" subAction="oficio"}}
 
-  {{#section id="base"}}
+  {{#section 
+    id="base"
+    confirm="=fn('validarAltaPaciente', base)"
+    confirmMessage="=fn('mensajeAltaPaciente', base)"
+    confirmTitle="Confirmación"
+    confirmWidth="400"
+    confirmHeight="500"
+  }}
     {{field id="nombreCompleto" type="expr" label="Nombre" value="=calc.concat(@nombres, @apellidoPaterno, @apellidoMaterno)"}}
     {{field id="esMujer" type="expr" value="=base.genero==='mujer'"}}    
     {{field id="esMenor3Meses" type="expr" value="=moment().diff(moment(fechaNacimiento), 'months')<=3"}}
@@ -55,7 +62,7 @@
         {{set paisProcedencia="MX"}}
       {{/onChange}}
     {{/field}}
-    {{!-- {{validator type="expr" validIf="=calc.curp3Ok(clave)" message="CURP Incorrecto" log="=clave"}} --}}
+    {{validator type="expr" validIf="=calc.curp3Ok(clave)" message="CURP Incorrecto"}}
     {{validator type="expr" validIf="=calc.setTimeStr(@fechaNacimiento,@horaNacimiento)<moment().format()" message="Fecha Nacimiento Incorrecta"}}
     {{validator type="expr" notValidIf="=calc.in(genero,['noEspecificado','seIgnora'])&&tipoAtencion==='consultaExterna'" message="Sexo Biológico Inválido para Consulta Externa"}}
     {{validator type="expr" notValidIf="=desconoceFechaNacimiento==='si'&&clave!==fn('CURP_GENERICO')" message="Colocar CURP Genérico si Desconoce Fecha Nacimiento"}}

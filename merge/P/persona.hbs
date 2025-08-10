@@ -5207,8 +5207,8 @@
       {{set esHombre="=!esMujer"}}
       {{set edadActual="=persona.edadActual"}}
       {{set _edadActual="=persona._edadActual"}}
-      {{set tipoServicioSisMenor="=fn('calcularEdadPorFechaAtencion',@fechaAtencion,persona.fechaNacimiento)<18"}}
-      {{set tipoServicioSisMayor="=fn('calcularEdadPorFechaAtencion',@fetchaAtencion,persona.fechaNacimiento)>=60"}}
+      {{set tipoServicioSisMenor="=fn('calcularEdadPorFechaAtencion',_params.fechaAtencion,persona.fechaNacimiento)<18"}}
+      {{set tipoServicioSisMayor="=fn('calcularEdadPorFechaAtencion',_params.fechaAtencion,persona.fechaNacimiento)>=60"}}
       {{set primeraConsultaAno="=_items.length?'no':'si'"}}
       {{setRef ref="signosVitales.base.fechaHoraRegistro" value="=_params.fechaAtencion"}}
     {{/update}}
@@ -5596,7 +5596,7 @@
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
       {{set tipoServicioSisMenor="=fn('calcularEdadPorFechaAtencion',@fechaAtencion,persona.fechaNacimiento)<18"}}
-      {{set tipoServicioSisMayor="=fn('calcularEdadPorFechaAtencion',@fetchaAtencion,persona.fechaNacimiento)>=60"}}
+      {{set tipoServicioSisMayor="=fn('calcularEdadPorFechaAtencion',@fechaAtencion,persona.fechaNacimiento)>=60"}}
       {{set primeraConsultaAno="=_items.length?'no':'si'"}}
       {{setRef ref="signosVitales.base.fechaHoraRegistro" value="=_params.fechaAtencion"}}
     {{/update}}
@@ -5616,7 +5616,7 @@
       {{set edadActual="=persona.edadActual"}}
       {{set _edadActual="=persona._edadActual"}}
       {{set tipoServicioSisMenor="=fn('calcularEdadPorFechaAtencion',@fechaAtencion,persona.fechaNacimiento)<18"}}
-      {{set tipoServicioSisMayor="=fn('calcularEdadPorFechaAtencion',@fetchaAtencion,persona.fechaNacimiento)>=60"}}
+      {{set tipoServicioSisMayor="=fn('calcularEdadPorFechaAtencion',@fechaAtencion,persona.fechaNacimiento)>=60"}}
       {{set primeraConsultaAno="=_items.length?'no':'si'"}}
       {{set edad="=calc.fromNowYears(persona.fechaNacimiento)"}}
       {{set noPsicologoEsHombre="=!calc.in(user.others.tipoPersonalNom,['pasantePsicologia','psicologa'])&&persona.genero=='hombre'"}}
