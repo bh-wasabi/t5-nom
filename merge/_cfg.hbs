@@ -2926,7 +2926,7 @@
     {{default return="=moment.max([moment(@fecha), moment().subtract(2, 'months').startOf('day')]).format()"}}
   {{/function}}
 
-  {{#function id="calcularEdadPorFechaAtencion" debug="true"}}
+  {{#function id="calcularEdadPorFechaAtencion"}}
     {{define type="param" id="fechaAtencion"}}
     {{define type="param" id="fechaNacimiento"}}
     {{default return="=moment(@fechaAtencion).diff(moment(@fechaNacimiento), 'years')"}}
