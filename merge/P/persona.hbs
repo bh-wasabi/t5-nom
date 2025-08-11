@@ -13228,6 +13228,7 @@
     btnSolid="true"
     error="=fn('validarNotaSolicitudTococirugia', persona)||fn('errorDatosSeguro', persona, contexto, detalle)"
     errorType="info"
+    condition="=persona.genero=='mujer'"
   }}
     {{param tipoSolicitud="='tococirugia'"}}
     {{param persona="=_id"}}
