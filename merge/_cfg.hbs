@@ -2841,9 +2841,11 @@
 
   {{#function id="validarNotaEgresoAlProcesar"}}
     {{define type="param" id="base"}}
+    {{define type="param" id="procedimientosRealizados"}}
     {{when condition="=calc.getRef(base,'gestas')>25" return="='Error: Número de Gestas excede el límite permitido (25)'"}}
     {{when condition="=calc.isEmpty(calc.getRef(base,'afeccionPrincipalReseleccionada.base.tipoAtencion'))" return="='Error: Falta Indicar Tipo de Atención de Afección Principal Reseleccionada'"}}
-    {{default return="=null"}}
+    {{when condition="=calc.arrayLength(base.procedimientoDiagnosticosTerapeuticosQuirurgicos)<calc.arrayLength(procedimientosRealizados)&&calc.arrayLength(base.procedimientoEgresos,base.procedimientoDiagnosticosTerapeuticosQuirurgicos)<8" return="Faltan Procedimientos por Seleccionar"}}
+    {{default return=""}}
   {{/function}}
 
   {{#function id="validarNotaAtencionParto"}}

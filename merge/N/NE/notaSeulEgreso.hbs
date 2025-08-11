@@ -1,7 +1,7 @@
 {{#define id="notaSeulEgreso"}}
   {{#action 
     id="afectar"
-    error="=fn('validarNotaEgresoAlProcesar',base)"
+    error="=fn('validarNotaEgresoAlProcesar',base,procedimientosRealizados)"
     confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'), calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteSexo'), calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteEdad'), calc.pluckRef([base.afeccionPrincipalReseleccionada], 'base.excedeLimiteSexo'), calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad'), calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteSexo'), calc.pluckRef([base.causaExterna], 'base.excedeLimiteEdad'), calc.pluckRef([base.causaExterna], 'base.excedeLimiteSexo'), calc.pluckRef(base.procedimientoEgresos, 'base.excedeLimiteEdad'), calc.pluckRef(base.procedimientoEgresos, 'base.excedeLimiteSexo'), calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos, 'base.excedeLimiteEdad'), calc.pluckRef(base.procedimientoDiagnosticosTerapeuticosQuirurgicos, 'base.excedeLimiteSexo'))) ? 'SI' : 'NO'"
     confirmMessage="Diagnóstico o Procedimiento Excede Límite Edad o Sexo<br>¿Desea continuar?"
   }}
