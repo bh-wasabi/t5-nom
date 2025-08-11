@@ -13,7 +13,7 @@
   {{param folioControl="base.foliosUtilizadosDefuncion"}}
   
   {{#section id="base"}}
-    {{field id="esMujerMayor9" type="expr" value="=esMujer&&moment(@fechaEvento).diff(moment(persona.fechaNacimiento),'years')>=9&&moment(@fechaEvento).diff(moment(persona.fechaNacimiento),'years')<=59"}}
+    {{field id="esMujerMayor9" type="expr" value="=esMujer&&moment(@fechaAtencion).diff(moment(persona.fechaNacimiento),'years')>=9&&moment(@fechaAtencion).diff(moment(persona.fechaNacimiento),'years')<=59"}}
     {{field id="esFertil" type="expr" value="=mujerFertil=='embarazo'||mujerFertil=='puerperio'"}}
     {{field id="tieneClues" type="expr" value="=usuarioReferido=='unidadMedica'"}}
     {{#field id="mujerFertil"}}

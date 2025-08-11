@@ -12,9 +12,9 @@
     {{#field id="equipoUtilizadoAccidenteAuto"}}
       {{onChange clearFields="otroEquipoSeguridad"}}
     {{/field}}
-    {{validator type="expr" notValidIf="=@accidenteVehiculoMotor=='conductor'&&moment(_mainDoc.base.fechaEvento).diff(_mainDoc.persona.fechaNacimiento,'years')<15" message="Accidente Vehículo Motor Inválido (Paciente Menor 15 Años)"}}
+    {{validator type="expr" notValidIf="=@accidenteVehiculoMotor=='conductor'&&moment(_mainDoc.base.fechaAtencion).diff(_mainDoc.persona.fechaNacimiento,'years')<15" message="Accidente Vehículo Motor Inválido (Paciente Menor 15 Años)"}}
     {{validator type="expr" notValidIf="=@equipoUtilizadoAccidenteAuto=='sillaPortaInfante'&&@accidenteVehiculoMotor!='ocupante'" message="Equipo Utilizado Incorrecto"}}
-    {{validator type="expr" notValidIf="=@equipoUtilizadoAccidenteAuto=='sillaPortaInfante'&&moment(_mainDoc.base.fechaEvento).diff(_mainDoc.persona.fechaNacimiento,'years')>5" message="Equipo Utilizado Incorrecto (Paciente Mayor 5 Años)"}}
+    {{validator type="expr" notValidIf="=@equipoUtilizadoAccidenteAuto=='sillaPortaInfante'&&moment(_mainDoc.base.fechaAtencion).diff(_mainDoc.persona.fechaNacimiento,'years')>5" message="Equipo Utilizado Incorrecto (Paciente Mayor 5 Años)"}}
     {{validator type="expr" notValidIf="=calc.in(calc.upperCase(calc.normalize(@otroEquipoSeguridad)),fn('especifiqueEquipoInvalido'))" message="Especifique Otro Equipo Inválido"}}
   {{/section}}
 {{/define}}
