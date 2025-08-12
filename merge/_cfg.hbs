@@ -2604,7 +2604,7 @@
   {{/function}}
 
   {{#function id="procedimientoEsterilizacion"}}
-    {{default return="=['6370','6371','6372','6373','6374','6621','6622','6629','6631','6632','6639','6663']"}}
+    {{default return="=['6370','6371','6372','6373','6374','6621','6622','6629','6631','6632','6639','6663','6651','6652']"}}
   {{/function}}
 
   {{#function id="procedimientoCesarea"}}
@@ -8032,7 +8032,7 @@
 		{{#if procedimientosRealizados}}<br>Procedimiento Realizado: {{_procedimientosRealizados}}{{/if}}
 		{{#if enQuirofanoOFuera}}<br>En quirófano o Fuera: {{_enQuirofanoOFuera}}{{/if}}
 		{{#if tipoAnestesia}}<br>Tipo Anestesia: {{_tipoAnestesia}}{{/if}}
-		{{#if tiempoProcedimientoCie9}}<br>Tiempo: {{date tiempoProcedimientoCie9 "hh:mm"}}{{/if}}
+		{{#if tiempoProcedimientoCie9}}<br>Tiempo: {{tiempoProcedimientoCie9}}{{/if}}
 		{{#if cirujano}}<br>Cirujano: {{_cirujano}}{{/if}}
 		{{#if cedulaCirujano}}<br>Cédula Profesional: {{cedulaCirujano}}{{/if}}
 		{{#if descripcionProcedimiento}}<br>Descripción del Procedimiento: {{descripcionProcedimiento}}{{/if}}
