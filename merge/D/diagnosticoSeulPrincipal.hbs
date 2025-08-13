@@ -1,5 +1,5 @@
 {{#define id="diagnosticoSeulPrincipal"}}
-  {{#section id="base" confirm="=fn('confirmarLimiteEdadSexo',excedeLimiteEdad,excedeLimiteSexo)" confirmTitle="Confirmación" confirmMessage="No Corresponde la Edad o el Sexo del Paciente<br>¿Desea Continuar?"}}
+  {{#section id="base" confirm="=fn('confirmarLimiteEdadSexo',excedeLimiteEdad,excedeLimiteSexo)" confirmTitle="Confirmación" confirmMessage="No Corresponde la Edad del Paciente<br>¿Desea Continuar?"}}
     {{!-- Se dejan de mostrar los campos Causa Externa y Folio Lesión porque se integraron al embed diagnosticoCausaExterna --}}
     {{field id="tieneCausaExterna" type="expr" value="=calc.in('CAUSA',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaEgresos','notaTempEgresos','notaSeulEgreso','notaLesiones','notaTempLesiones','notaSeulLesiones','notaEvolucion'])"}}
     {{field id="tieneFolioLesion" type="expr" value="=calc.in('FOLIO_LESION',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaEgresos','notaSeulEgreso','notaEvolucion'])"}}
@@ -39,7 +39,7 @@
     {{validator type="expr" validIf="=_parentDoc._type!='notaEvolucion'||calc.meetsAgeLimit(limiteSuperior, desde, _parentDoc.persona.fechaNacimiento, false, _parentDoc._type=='notaSeulEgreso'?moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaEgreso:_parentDoc.base.fechaAtencion||_parentDoc.base.fechaConsulta||_parentDoc.base.fechaEgreso||_parentDoc.base.fechaIngreso, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')" message="No Corresponde la Edad del Paciente con el Límite Superior"}}
     {{validator type="expr" validIf="=calc.isEmpty(@detalle)||@detalle.length>1" message="Descripción (Mínimo 2 Caracteres)"}}
     {{validator type="expr" notValidIf="=_parentDoc.persona.genero=='intersexual'&&limiteSexo!='NO'" message="Diagnóstico Incorrecto para Intersexual"}}
-    {{validator type="expr" notValidIf="limiteSexo=='HOMBRE'&&_parentDoc.persona.genero=='mujer'" message="No Corresponde el Sexo del Paciente"}}
-    {{validator type="expr" notValidIf="limiteSexo=='MUJER'&&_parentDoc.persona.genero=='hombre'" message="No Corresponde el Sexo del Paciente"}}
+    {{validator type="expr" notValidIf="limiteSexo=='HOMBRE'&&_parentDoc.persona.genero!='hombre'" message="No Corresponde el Sexo del Paciente"}}
+    {{validator type="expr" notValidIf="limiteSexo=='MUJER'&&_parentDoc.persona.genero!='mujer'" message="No Corresponde el Sexo del Paciente"}}
   {{/section}}
 {{/define}}

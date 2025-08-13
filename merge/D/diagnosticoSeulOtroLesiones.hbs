@@ -1,5 +1,5 @@
 {{#define id="diagnosticoSeulOtroLesiones"}}
-  {{#section id="base" confirm="=fn('confirmarLimiteEdadSexo',excedeLimiteEdad,excedeLimiteSexo)" confirmTitle="Confirmación" confirmMessage="No Corresponde la Edad o el Sexo del Paciente<br>¿Desea Continuar?"}}
+  {{#section id="base" confirm="=fn('confirmarLimiteEdadSexo',excedeLimiteEdad,excedeLimiteSexo)" confirmTitle="Confirmación" confirmMessage="No Corresponde la Edad del Paciente<br>¿Desea Continuar?"}}
     {{field id="tieneCausaExterna" type="expr" value="=calc.in('CAUSA',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaSeulEgreso','notaTempLesiones','notaSeulLesiones'])"}}
     {{field id="tieneMorfologia" type="expr" value="=calc.in('MORFOLOGIA',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaSeulEgreso'])"}}
     {{field id="tieneFolioLesion" type="expr" value="=calc.in('FOLIO_LESION',calc.splitAndTrim(requiereCampos))&&calc.in(docType,['notaTempEgresos','notaSeulEgreso'])"}}
@@ -31,7 +31,7 @@
     {{/field}}
     {{validator type="expr" validIf="=@detalle.length>1" message="Descripción (Mínimo 2 Caracteres)"}}
     {{validator type="expr" notValidIf="=_parentDoc.persona.genero=='intersexual'&&limiteSexo!='NO'" message="Diagnóstico Incorrecto para Intersexual"}}
-    {{validator type="expr" notValidIf="limiteSexo=='HOMBRE'&&_parentDoc.persona.genero=='mujer'" message="No Corresponde el Sexo del Paciente"}}
-    {{validator type="expr" notValidIf="limiteSexo=='MUJER'&&_parentDoc.persona.genero=='hombre'" message="No Corresponde el Sexo del Paciente"}}
+    {{validator type="expr" notValidIf="limiteSexo=='HOMBRE'&&_parentDoc.persona.genero!='hombre'" message="No Corresponde el Sexo del Paciente"}}
+    {{validator type="expr" notValidIf="limiteSexo=='MUJER'&&_parentDoc.persona.genero!='mujer'" message="No Corresponde el Sexo del Paciente"}}
   {{/section}}
 {{/define}}
