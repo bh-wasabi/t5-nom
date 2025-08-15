@@ -1,5 +1,5 @@
 {{#define id="diagnosticoSisOtro"}}
-  {{#section id="base" confirm="=fn('confirmarLimiteEdadSexo',excedeLimiteEdad,excedeLimiteSexo)" confirmTitle="Confirmación" confirmMessage="No Corresponde la Edad o el Sexo del Paciente<br>¿Desea Continuar?"}}
+  {{#section id="base" confirm="=fn('confirmarLimiteEdad',excedeLimiteEdad)" confirmTitle="Confirmación" confirmMessage="No Corresponde la Edad del Paciente<br>¿Desea Continuar?"}}
     {{#field id="primeraVez"}}
       {{onChange clearFields="diagnostico,subDiagnostico,confirmacionDiagnostica,desde"}}
     {{/field}}
@@ -10,6 +10,7 @@
         {{param _type="=_parentDoc._type"}}
         {{param edadActual="=_parentDoc.persona.edadActual"}}
         {{!-- {{param relacionTemporal="=user.others.tipoPersonalCE=='4'?(primeraVez=='si'?'primeraVez':'subsecuente'):null"}} --}}
+        {{param relacionTemporal="=primeraVez=='si'?'primeraVez':'subsecuente'"}}
       {{/editor}}
       {{#onChange clearFields="subDiagnostico,confirmacionDiagnostica,desde"}}
         {{set letra="=LETRA"}}

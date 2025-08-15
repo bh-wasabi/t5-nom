@@ -1,5 +1,5 @@
 {{#define id="diagnosticoSisPrincipal"}}
-  {{#section id="base" confirm="=fn('confirmarLimiteEdadSexo',excedeLimiteEdad,excedeLimiteSexo)" confirmTitle="Confirmación" confirmMessage="No Corresponde la Edad o el Sexo del Paciente<br>¿Desea Continuar?"}}
+  {{#section id="base" confirm="=fn('confirmarLimiteEdad',excedeLimiteEdad)" confirmTitle="Confirmación" confirmMessage="No Corresponde la Edad del Paciente<br>¿Desea Continuar?"}}
     {{#field id="relacionTemporal"}}
       {{onChange clearFields="diagnostico,subDiagnostico,confirmacionDiagnostica,tieneConfirmacionDiagnostica"}}
     {{/field}}

@@ -7936,7 +7936,7 @@
     onlyPost="true"
     fromSource="nota" 
     fromView="ultima"
-    error="=calc.fn('validarConsultaExterna',persona,user)||fn('errorCluesConsultaExterna',user.establishmentData.cluesSis)"
+    error="=calc.fn('validarConsultaExterna',_ask.fechaAtencion,persona,user)||fn('errorCluesConsultaExterna',user.establishmentData.cluesSis)"
     error2="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''"
     errorType="info"
   }}

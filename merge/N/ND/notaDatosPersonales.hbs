@@ -45,6 +45,13 @@
         {{set esUrgenciasHospitalizacion="=tipoAtencion!='consultaExterna'"}}
       {{/onChange}}
     {{/field}}
+    {{#field id="fechaNacimiento"}}
+      {{#onChange}}
+        {{set estadoCivil="=moment().diff(fechaNacimiento,'years')<10?'noAplica':estadoCivil"}}
+        {{set escolaridad="=moment().diff(fechaNacimiento,'years')<3?'ninguna':escolaridad"}}
+        {{set sabeLeerEscribir="=moment().diff(fechaNacimiento,'years')<3?'no':sabeLeerEscribir"}}
+      {{/onChange}}
+    {{/field}}
     {{#field id="paisNacimiento"}}
       {{#onChange condition="=paisNacimiento!='MX'" clearFields="entidadNacimiento"}}
         {{set entidadNacimiento="='NA'"}}

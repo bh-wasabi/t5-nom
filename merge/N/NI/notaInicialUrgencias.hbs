@@ -43,7 +43,7 @@
     {{validator type="expr" notValidIf="=_.last(calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico'))=='P95X'" message="Código P95X no puede ser seleccionado como última Comorbilidad"}}
     {{!-- {{validator type="expr" notValidIf="=moment().diff(@fechaIngreso,'days')>40" message="Fecha Ingreso no debe pasar 40 días"}} --}}
     {{validator type="expr" notValidIf="=@atencionPrehospitalariaDesde=='00:00'" message="Tiempo Traslado Inválido (Mayor que 00:00)"}}
-    {{validator type="expr" validIf="=!@CLUES||cluesEstatus=='EN OPERACION'||(@cluesFechaBaja&&moment(@fechaIngreso).add(-90,'days').format('YYYY-MM-DD')<=@cluesFechaBaja)" message="CLUES Fuera de Operación"}}
+    {{validator type="expr" validIf="=!@CLUES||cluesEstatus=='EN OPERACION'||(@cluesFechaBaja&&moment(@fechaIngreso).add(-90,'days').format('YYYY-MM-DD')<@cluesFechaBaja)" message="CLUES Fuera de Operación"}}
   {{/section}}
   {{#view id="sinbaUrgencias"}}
     {{complexView type="sinbaUrgencias"}}

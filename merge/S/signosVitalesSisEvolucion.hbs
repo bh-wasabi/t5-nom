@@ -14,7 +14,7 @@
       {{onChange clearFields="resultadoObtenido,tirasControl,embarazadaSinDiabetes,prePrandial"}}
     {{/field}}
     {{#field id="resultadoObtenido"}}
-      {{onChange clearFields="tirasControl,embarazadaSinDiabetes,prePrandial"}}
+      {{onChange clearFields="tirasControl,embarazadaSinDiabetes"}}
     {{/field}}
     {{validator type="expr" validIf="=(calc.number(@tensionDiastolica)>=0&&calc.number(@tensionSistolica)>=50)||(@tensionSistolica==0&&@tensionDiastolica==0)" message="Presión Sistólica Fuera de Rango"}}
     {{validator type="expr" validIf="=(calc.number(@tensionSistolica)>=calc.number(@tensionDiastolica))||(@tensionSistolica==0||@tensionDiastolica==0)" message="Presión Sistólica debe ser mayor o igual a Presión Diastólica"}} 

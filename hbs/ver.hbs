@@ -32,7 +32,7 @@
     {{/search}}
   {{/view}}  
   {{#view id="cie10sis"}}
-    {{editor display="nombre"}}
+    {{editor display="NOMBRE"}}
     {{#search index="sis-23" type="_doc" filterParamsOnlySearch="true"}}
       {{!-- {{param DIA_CRONICOS="=edadActual<20?'NO':null"}} --}}
       {{!-- {{param DIA_CAINFANTIL="=edadActual>18?'NO':null"}} --}}
@@ -44,7 +44,7 @@
     {{/search}}
   {{/view}}  
   {{#view id="cie10seul"}}
-    {{editor display="nombre"}}
+    {{editor display="NOMBRE"}}
     {{#search index="cie10-23" type="_doc" filterParamsOnlySearch="true"}}
       {{param NUM_CARACTERES="4"}}
       {{param RUBRICA_TYPE="='NOT B'"}}
