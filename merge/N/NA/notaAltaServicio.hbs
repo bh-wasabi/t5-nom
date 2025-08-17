@@ -80,8 +80,8 @@
     
     {{!-- DEFUNCION --}}
     {{validator type="expr" notValidIf="=calc.arrayInArray(fn('diagnosticoDefuncion'),calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico'), @seleccionarOtrosDiagnosticos&&@seleccionarOtrosDiagnosticos.map((val)=>val.substr(val.indexOf('#')+1,val.length))))&&motivoAltaServicio!='defuncion'" message="Motivo Alta Servicio Inválido (Existen diagnósticos de DEFUNCIÓN)"}}
-    
-    {{validator type="expr" notValidIf="=_.last(calc.mergeArrays(@seleccionarOtrosDiagnosticos.map(d=>d.split('#')[1]),calc.pluckRef(@otrosDiagnosticos,'base.diagnostico')))=='P95X'" message="Código P95X no puede ser seleccionado como última Comorbilidad"}}
+
+    {{validator type="expr" notValidIf="=_.last(calc.pluckRef(@otrosDiagnosticos,'base.diagnostico'))=='P95X'" message="Código P95X no puede ser seleccionado como última Comorbilidad"}}
     {{!-- {{validator type="expr" notValidIf="=calc.arrayLength(otrosDiagnosticos,seleccionarOtrosDiagnosticos)>6" message="Máximo 6 Comorbilidades"}} --}}
     {{validator type="expr" notValidIf="=calc.arrayLength(@otrosDiagnosticos)>6" message="Máximo 6 Comorbilidades"}}
     {{validator type="expr" notValidIf="=calc.arrayLength(@procedimientoEgresos,@procedimientoDiagnosticosTerapeuticosQuirurgicos)>6" message="Máximo 6 Procedimientos"}}

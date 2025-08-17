@@ -3,6 +3,7 @@
     id="afectar"
     confirm="=calc.in('SI', _.union(calc.pluckRef([_doc.analisis.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(_doc.analisis.otrosDiagnosticos, 'base.excedeLimiteEdad'),calc.pluckRef([_doc.analisis.afeccionPrincipal], 'base.excedeLimiteSexo'),calc.pluckRef(_doc.analisis.otrosDiagnosticos, 'base.excedeLimiteSexo')))"
     confirmMessage="Diagnóstico Excede Límite Edad o Sexo<br>¿Desea continuar?"
+    error="=fn('validarConsultaExternaProcesar', exploracion, analisis)"
   }}
     {{#update section="base"}}
       {{set excedeLimiteEdad="=calc.in('SI', _.union(calc.pluckRef([_doc.analisis.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(_doc.analisis.otrosDiagnosticos, 'base.excedeLimiteEdad')))?'SI':'NO'"}}
@@ -39,14 +40,16 @@
     {{/field}}
     {{#field id="teleconsulta"}}
       {{#onChange}}
-        {{set modalidad="=@teleconsulta=='si'?'Tiempo Real':calc.isNotEmpty(estudiosTeleconsulta)?'Diferida':''"}}
-        {{set modalidad="=calc.in(estudiosTeleconsulta,['noAplica'])?'No Aplica':modalidad"}}
+        {{set modalidad="=@teleconsulta=='si'?'Tiempo Real':''"}}
+        {{set modalidad="=@teleconsulta=='no'&&calc.isNotEmpty(estudiosTeleconsulta)?'Diferida':modalidad"}}
+        {{set modalidad="=@teleconsulta=='no'&&calc.in(estudiosTeleconsulta,['noAplica'])?'No Aplica':modalidad"}}
       {{/onChange}}
     {{/field}}
     {{#field id="estudiosTeleconsulta"}}
       {{#onChange}}
-        {{set modalidad="=@teleconsulta=='si'?'Tiempo Real':calc.isNotEmpty(estudiosTeleconsulta)?'Diferida':''"}}
-        {{set modalidad="=calc.in(estudiosTeleconsulta,['noAplica'])?'No Aplica':modalidad"}}
+        {{set modalidad="=@teleconsulta=='si'?'Tiempo Real':''"}}
+        {{set modalidad="=@teleconsulta=='no'&&calc.isNotEmpty(estudiosTeleconsulta)?'Diferida':modalidad"}}
+        {{set modalidad="=@teleconsulta=='no'&&calc.in(estudiosTeleconsulta,['noAplica'])?'No Aplica':modalidad"}}
       {{/onChange}}
     {{/field}}
     {{#field id="contrarreferido"}}

@@ -20,6 +20,7 @@
         {{!-- calc.meetsAgeLimit(valor, desde, fechaNacimiento, checarInferior, hoy, edadDesconocida) --}}
         {{set excedeLimiteEdad="=calc.meetsAgeLimit(LINF, desde, _parentDoc.persona.fechaNacimiento, true, _parentDoc._type=='notaSeulEgreso'?moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaEgreso:_parentDoc.base.fechaAtencion||_parentDoc.base.fechaConsulta||_parentDoc.base.fechaEgreso||_parentDoc.base.fechaIngreso, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(LSUP, desde, _parentDoc.persona.fechaNacimiento, false, _parentDoc._type=='notaSeulEgreso'?moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaEgreso:_parentDoc.base.fechaAtencion||_parentDoc.base.fechaConsulta||_parentDoc.base.fechaEgreso||_parentDoc.base.fechaIngreso, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
         {{set excedeLimiteSexo="=calc.meetsSexLimitSeul(LSEX, _parentDoc.persona.genero)?'NO':'SI'"}}
+        {{set claveCapitulo="=CLAVE_CAPITULO"}}
         {{set validoLesiones="=VALIDO_LESIONES"}}
         {{set validoEgresos="=VALIDO_EGRESOS"}}
         {{set validoSeul="=VALIDO_SEUL"}}
@@ -38,8 +39,9 @@
     {{validator type="expr" validIf="=_parentDoc._type!='notaEvolucion'||calc.meetsAgeLimit(limiteInferior, desde, _parentDoc.persona.fechaNacimiento, true, _parentDoc._type=='notaSeulEgreso'?moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaEgreso:_parentDoc.base.fechaAtencion||_parentDoc.base.fechaConsulta||_parentDoc.base.fechaEgreso||_parentDoc.base.fechaIngreso, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')" message="No Corresponde la Edad del Paciente con el Límite Inferior"}}
     {{validator type="expr" validIf="=_parentDoc._type!='notaEvolucion'||calc.meetsAgeLimit(limiteSuperior, desde, _parentDoc.persona.fechaNacimiento, false, _parentDoc._type=='notaSeulEgreso'?moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaEgreso:_parentDoc.base.fechaAtencion||_parentDoc.base.fechaConsulta||_parentDoc.base.fechaEgreso||_parentDoc.base.fechaIngreso, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')" message="No Corresponde la Edad del Paciente con el Límite Superior"}}
     {{validator type="expr" validIf="=calc.isEmpty(@detalle)||@detalle.length>1" message="Descripción (Mínimo 2 Caracteres)"}}
-    {{validator type="expr" notValidIf="=_parentDoc.persona.genero=='intersexual'&&limiteSexo!='NO'" message="Diagnóstico Incorrecto para Intersexual"}}
-    {{validator type="expr" notValidIf="limiteSexo=='HOMBRE'&&_parentDoc.persona.genero!='hombre'" message="No Corresponde el Sexo del Paciente"}}
-    {{validator type="expr" notValidIf="limiteSexo=='MUJER'&&_parentDoc.persona.genero!='mujer'" message="No Corresponde el Sexo del Paciente"}}
+    {{validator type="expr" notValidIf="=limiteSexo!='NO'&&_parentDoc.persona.genero=='intersexual'" message="Diagnóstico Incorrecto para Intersexual"}}
+    {{validator type="expr" notValidIf="=limiteSexo=='HOMBRE'&&_parentDoc.persona.genero=='mujer'" message="Diagnóstico Incorrecto para Mujer"}}
+    {{validator type="expr" notValidIf="=limiteSexo=='MUJER'&&_parentDoc.persona.genero=='hombre'" message="Diagnóstico Incorrecto para Hombre"}}
+    {{validator type="expr" notValidIf="=claveCapitulo=='XV'&&calc.in(_parentDoc.persona.genero,['noEspecificado','seIgnora'])" message="Diagnóstico Incorrecto para Sexo No Especificado"}}
   {{/section}}
 {{/define}}

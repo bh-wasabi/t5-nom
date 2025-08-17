@@ -5537,11 +5537,11 @@
     {{#update section="analisis"}}
       {{setRef ref="saludNino.base.fechaNacimiento" value="=persona.fechaNacimiento"}}
     {{/update}}
-    {{#update section="exploracion" newRef="signosVitales"}}
+    {{#update section="exploracion" newRef="atencionObstetricas,signosVitales"}}
       {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
       {{setRef ref="atencionObstetricas.base.esCluesCancer" value="=fn('validaCluesCancer',user.establishmentData)"}}
       {{setRef ref="atencionObstetricas.base.esMujer" value="=persona.genero=='mujer'"}}
-      {{setRef ref="atencionObstetricas.base.esMujerEsCluesCancer" value="=persona.genero=='mujer'&&fn('validaCluesCancer',user.establishmentData)"}}
+      {{setRef ref="atencionObstetricas.base.esMujerEsCluesCancer" value="=calc.in(persona.genero,['mujer','intersexual'])&&fn('validaCluesCancer',user.establishmentData)"}}
       {{setRef ref="atencionObstetricas.base.esMujerIntersexual" value="=persona.genero=='mujer'||persona.genero=='intersexual'"}}
       {{setRef ref="signosVitales.base.genero" value="=persona.genero"}}
       {{setRef ref="signosVitales.base.edadActual" value="=_params.edadAtencion"}}
@@ -12593,10 +12593,10 @@
     color="deep-orange"
     onlyPost="true"
     errorType="info"
-    error="=fn('validarNotaLesiones', _ask.fechaEvento, persona)||fn('validarDerechohabiencia', contexto, detalle)||fn('errorDatosSeguro', persona, contexto, detalle)||(_items[0]&&'Nota Lesión Activa: '+_items[0]._name)"
     error2="=!calc.validarFechaEventoAtencion(_ask.fechaEvento,_ask.fechaAtencion,_ask.desconoceHoraEvento=='no'&&_ask.desconoceHoraAtencion=='no')?'Fecha Atención debe ser mayor que Fecha Evento':null"
     error3="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''"
   }}
+    {{!-- error="=fn('validarNotaLesiones', _ask.fechaEvento, persona)||fn('validarDerechohabiencia', contexto, detalle)||fn('errorDatosSeguro', persona, contexto, detalle)||(_items[0]&&'Nota Lesión Activa: '+_items[0]._name)" --}}
     {{param persona="=_id"}}
     {{param episodio="=contexto.episodio"}}
     {{ask field="fechaEvento" type="datetime" label="Fecha Evento" required="true" value="=moment().format()" min="=fn('obtenerFechaMaximaDosMeses',persona.fechaNacimiento)" max="=moment().add('minutes',1).format()"}}

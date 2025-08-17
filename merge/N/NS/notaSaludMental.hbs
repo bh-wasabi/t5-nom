@@ -24,14 +24,16 @@
     {{/field}}
     {{#field id="solicitaTeleconsulta"}}
       {{#onChange}}
-        {{set modalidad="=@solicitaTeleconsulta=='si'?'Tiempo Real':calc.isNotEmpty(estudiosTeleconsulta)?'Diferida':''"}}
-        {{set modalidad="=calc.in(estudiosTeleconsulta,['noAplica'])?'No Aplica':modalidad"}}
+        {{set modalidad="=@solicitaTeleconsulta=='si'?'Tiempo Real':''"}}
+        {{set modalidad="=@solicitaTeleconsulta=='no'&&calc.isNotEmpty(estudiosTeleconsulta)?'Diferida':modalidad"}}
+        {{set modalidad="=@solicitaTeleconsulta=='no'&&calc.in(estudiosTeleconsulta,['noAplica'])?'No Aplica':modalidad"}}
       {{/onChange}}
     {{/field}}
     {{#field id="estudiosTeleconsulta"}}
       {{#onChange}}
-        {{set modalidad="=@solicitaTeleconsulta=='si'?'Tiempo Real':calc.isNotEmpty(estudiosTeleconsulta)?'Diferida':''"}}
-        {{set modalidad="=calc.in(estudiosTeleconsulta,['noAplica'])?'No Aplica':modalidad"}}
+        {{set modalidad="=@solicitaTeleconsulta=='si'?'Tiempo Real':''"}}
+        {{set modalidad="=@solicitaTeleconsulta=='no'&&calc.isNotEmpty(estudiosTeleconsulta)?'Diferida':modalidad"}}
+        {{set modalidad="=@solicitaTeleconsulta=='no'&&calc.in(estudiosTeleconsulta,['noAplica'])?'No Aplica':modalidad"}}
       {{/onChange}}
     {{/field}}
     

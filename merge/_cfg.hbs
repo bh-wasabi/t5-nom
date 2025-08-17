@@ -2603,6 +2603,10 @@
     {{default return="=['O820','O821','O822','O828','O829','O842']"}}
   {{/function}}
 
+  {{#function id="diagnosticoDiabetesEmbarazo"}}
+    {{default return="=['O240','O241','O242','O243','O244','O249']"}}
+  {{/function}}
+
   {{#function id="procedimientoEsterilizacion"}}
     {{default return="=['6370','6371','6372','6373','6374','6621','6622','6629','6631','6632','6639','6663','6651','6652']"}}
   {{/function}}
@@ -2741,6 +2745,13 @@
     {{default return=""}}
   {{/function}}
 
+  {{#function id="validarConsultaExternaProcesar"}}
+    {{define type="param" id="exploracion"}}
+    {{define type="param" id="analisis"}}
+    {{when condition="=calc.in(calc.getRef(exploracion.signosVitales,'base.embarazadaSinDiabetes'),['uno','dos'])&&calc.arrayInArray(calc.mergeArrays(calc.getRef(analisis.afeccionPrincipal,'base.diagnostico'),calc.pluckRef(analisis.otrosDiagnosticos,'base.diagnostico')),fn('diagnosticoDiabetesEmbarazo'))" return="Diagnóstico de Diabetes en Embarazo Inválido"}}
+    {{default return=""}}
+  {{/function}}
+
   {{#function id="validarNotaDetecciones"}}
     {{define type="param" id="persona"}}
     {{when condition="=calc.in(persona.genero, ['noEspecificado', 'seIgnora'])" return="Género Inválido para Detecciones"}}
@@ -2839,9 +2850,9 @@
     {{when condition="=calc.arrayLength(base.procedimientoDiagnosticosTerapeuticosQuirurgicos)<calc.arrayLength(procedimientos)&&calc.arrayLength(base.procedimientoEgresos,base.procedimientoDiagnosticosTerapeuticosQuirurgicos)<6" return="Faltan Procedimientos por Seleccionar"}}
     {{when condition="=calc.arrayLength(base.interconsultas)<calc.arrayLength(interconsultas)&&calc.arrayLength(base.interconsultas)<3" return="Faltan Interconsultas por Seleccionar"}}
     {{default return=""}}
-  {{/function}}
+  {{/function}}	
 
-  {{#function id="validarNotaEgresoAlProcesar"}}
+  {{#function id="validarNotaEgresoProcesar"}}
     {{define type="param" id="base"}}
     {{define type="param" id="procedimientosRealizados"}}
     {{when condition="=moment(base.fechaEgreso).diff(base.fechaIngresoHospitalario,'hours')>24&&calc.getRef(base.servicios, 'base.tipoServicioOtorgado')=='cortaEstancia'" return="Tipo Servicio Otorgado no puede ser Corta Estancia (Diferencia Fechas Mayor a 24 Horas)"}}
