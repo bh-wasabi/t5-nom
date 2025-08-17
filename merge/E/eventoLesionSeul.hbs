@@ -1,7 +1,7 @@
 {{#define id="eventoLesionSeul"}}
   {{#section id="base"}}
-    {{field id="fechaAtencion1" type="expr" value="=@fechaOcurreEvento"}}
-    {{validator type="expr" validIf="=fechaNacimiento<fechaAtencion1" message="Error en la fecha atención"}}
+    {{!-- {{field id="fechaAtencion1" type="expr" value="=@fechaOcurreEvento"}} --}}
+    {{!-- {{validator type="expr" validIf="=fechaNacimiento<fechaAtencion1" message="Error en la fecha atención"}} --}}
     {{#field id="sepomex" type="text" label="SEPOMEX"}}
       {{#onChange}}
         {{set codigoPostal="=codigoPostal"}}
@@ -16,5 +16,6 @@
         {{set nombreAsentamiento="=desconoceAsentamiento=='sinInformacion'?'SIN INFORMACIÓN':desconoceAsentamiento=='noEspecificado'?'NO ESPECIFICADO':''"}}
       {{/onChange}}
     {{/field}}
+    {{validator type="expr" validIf="=!calc.isEmpty(calc.getRef(direccion,'base.pais'))" message="Falta Indicar la Dirección"}}
   {{/section}}
 {{/define}}

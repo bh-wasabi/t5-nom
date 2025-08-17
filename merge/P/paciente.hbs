@@ -95,7 +95,7 @@
     {{field id="esMigrante" type="expr" value="=migrante=='internacional'||migrante=='retornado'||migrante=='nacional'"}}
     {{field id="bloquearProcedencia" type="expr" value="=migrante=='nacional'||migrante=='retornado'"}}
     {{#field id="tipoAtencion"}}
-      {{#onChange clearFields="desconoceFechaNacimiento,edadAproximada,fechaNacimientoDesconocida,fechaNacimiento,afromexicano,afromexicanoUrgenciasHospitalizacion"}}
+      {{#onChange clearFields="desconoceFechaNacimiento,edadAproximada,fechaNacimientoDesconocida,fechaNacimiento,genero,afromexicano,afromexicanoUrgenciasHospitalizacion"}}
         {{set esConsultaExterna="=tipoAtencion=='consultaExterna'"}}
         {{set esUrgenciasHospitalizacion="=tipoAtencion!='consultaExterna'"}}
       {{/onChange}}
@@ -115,6 +115,11 @@
         {{set escolaridad="=moment().diff(fechaNacimiento,'years')<3?'ninguna':escolaridad"}}
         {{set sabeLeerEscribir="=moment().diff(fechaNacimiento,'years')<3?'no':sabeLeerEscribir"}}
       {{/onChange}}
+    {{/field}}
+    {{#field id="genero"}}
+      {{#editor}}
+        {{param partOf="=esConsultaExterna?'sis':'seul'"}}
+      {{/editor}}
     {{/field}}
     {{#field id="paisNacimiento"}}
       {{#onChange condition="=paisNacimiento!='MX'" clearFields="entidadNacimiento"}}
