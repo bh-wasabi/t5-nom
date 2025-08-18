@@ -5064,9 +5064,9 @@
       {{set somatometriaPediatrica="=detalle.somatometriaPediatrica"}}
       {{set _somatometriaPediatrica="=detalle._somatometriaPediatrica"}}
       {{set fechaNacimiento="=persona.fechaNacimiento"}}
-      {{set afeccionPrincipal="=calc.recalcLimiteEdadDiagnostico(calc.pluckRef(_.first(_items2),'base.afeccionPrincipal'), persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngreso:fechaEgreso,nomDatos.desconoceFechaNacimiento=='si')||calc.recalcLimiteEdadDiagnostico(detalle.notaInicialUrgencias.base.afeccionPrincipal, persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1 ? fechaIngreso : fechaEgreso,nomDatos.desconoceFechaNacimiento=='si')"}}
-      {{set afeccionPrincipalReseleccionada="=calc.recalcLimiteEdadDiagnostico(detalle.notaInicialUrgencias.base.afeccionPrincipalReseleccionada, persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngreso:fechaEgreso,nomDatos.desconoceFechaNacimiento=='si')"}}
-      {{set otrosDiagnosticos="=_.union(calc.recalcLimiteEdadDiagnostico(detalle.notaInicialUrgencias.base.otrosDiagnosticos, persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngreso:fechaEgreso,nomDatos.desconoceFechaNacimiento=='si'),_items2&&calc.recalcLimiteEdadDiagnostico(calc.pluckRef(_.first(_items2),'base.otrosDiagnosticos'), persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngreso:fechaEgreso,nomDatos.desconoceFechaNacimiento=='si'))"}}
+      {{set afeccionPrincipal="=calc.recalcLimiteEdadDiagnostico(calc.pluckRef(_.first(_items2),'base.afeccionPrincipal'), persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngreso:moment(fechaEgreso).format('YYYY-MM-DD'),nomDatos.desconoceFechaNacimiento=='si')||calc.recalcLimiteEdadDiagnostico(detalle.notaInicialUrgencias.base.afeccionPrincipal, persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1 ? fechaIngreso : moment(fechaEgreso).format('YYYY-MM-DD'),nomDatos.desconoceFechaNacimiento=='si')"}}
+      {{set afeccionPrincipalReseleccionada="=calc.recalcLimiteEdadDiagnostico(detalle.notaInicialUrgencias.base.afeccionPrincipalReseleccionada, persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngreso:moment(fechaEgreso).format('YYYY-MM-DD'),nomDatos.desconoceFechaNacimiento=='si')"}}
+      {{set otrosDiagnosticos="=_.union(calc.recalcLimiteEdadDiagnostico(detalle.notaInicialUrgencias.base.otrosDiagnosticos, persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngreso:moment(fechaEgreso).format('YYYY-MM-DD'),nomDatos.desconoceFechaNacimiento=='si'),_items2&&calc.recalcLimiteEdadDiagnostico(calc.pluckRef(_.first(_items2),'base.otrosDiagnosticos'), persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngreso:moment(fechaEgreso).format('YYYY-MM-DD'),nomDatos.desconoceFechaNacimiento=='si'))"}}
       {{set mujerFertil="=detalle.notaInicialUrgencias.base.mujerFertil"}}
       {{set _mujerFertil="=detalle.notaInicialUrgencias.base._mujerFertil"}}
       {{set edadGestacional="=detalle.notaInicialUrgencias.base.edadGestacional"}}
@@ -5177,11 +5177,11 @@
       {{set fechaHoraDefuncion="=contexto.defuncion.fechaHoraDefuncion"}}
       {{set diasEstancia="=moment(fechaHoraDefuncion).diff(moment(fechaIngresoHospitalario), 'day')"}}
       {{set evolucion="=contexto.defuncion.comentarios"}}
-      {{set afeccionPrincipal="=calc.recalcLimiteEdadDiagnostico(calc.getRef(_.first(ultimaNotaEvolucion),'base.afeccionPrincipal'), persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngresoHospitalario:fechaEgreso,nomDatos.desconoceFechaNacimiento=='si')"}}
+      {{set afeccionPrincipal="=calc.recalcLimiteEdadDiagnostico(calc.getRef(_.first(ultimaNotaEvolucion),'base.afeccionPrincipal'), persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngresoHospitalario:moment(fechaEgreso).format('YYYY-MM-DD'),nomDatos.desconoceFechaNacimiento=='si')"}}
       {{set _afeccionPrincipal="=calc.getRef(_.first(ultimaNotaEvolucion),'base._afeccionPrincipal')"}}
-      {{set afeccionPrincipalReseleccionada="=calc.recalcLimiteEdadDiagnostico(calc.getRef(_.first(ultimaNotaEvolucion),'base.afeccionPrincipalReseleccionada'), persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngresoHospitalario:fechaEgreso,nomDatos.desconoceFechaNacimiento=='si')"}}
+      {{set afeccionPrincipalReseleccionada="=calc.recalcLimiteEdadDiagnostico(calc.getRef(_.first(ultimaNotaEvolucion),'base.afeccionPrincipalReseleccionada'), persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngresoHospitalario:moment(fechaEgreso).format('YYYY-MM-DD'),nomDatos.desconoceFechaNacimiento=='si')"}}
       {{set _afeccionPrincipalReseleccionada="=calc.getRef(_.first(ultimaNotaEvolucion),'base._afeccionPrincipalReseleccionada')"}}
-      {{set otrosDiagnosticos="=calc.recalcLimiteEdadDiagnostico(calc.getRef(_.first(ultimaNotaEvolucion),'base.otrosDiagnosticos'), persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngresoHospitalario:fechaEgreso,nomDatos.desconoceFechaNacimiento=='si')"}}
+      {{set otrosDiagnosticos="=calc.recalcLimiteEdadDiagnostico(calc.getRef(_.first(ultimaNotaEvolucion),'base.otrosDiagnosticos'), persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngresoHospitalario:moment(fechaEgreso).format('YYYY-MM-DD'),nomDatos.desconoceFechaNacimiento=='si')"}}
       {{set _otrosDiagnosticos="=calc.getRef(_.first(ultimaNotaEvolucion),'base._otrosDiagnosticos')"}}
       {{set datosMujer="=contexto.episodio==detalle.notaAtencionParto.contexto.episodio&&detalle.notaAtencionParto.base.datosMujer"}}
       {{set _datosMujer="=contexto.episodio==detalle.notaAtencionParto.contexto.episodio&&detalle.notaAtencionParto.base._datosMujer"}}
@@ -5227,8 +5227,8 @@
       {{set _somatometriaPediatrica="=detalle._somatometriaPediatrica"}}
       {{set fechaNacimiento="=persona.fechaNacimiento"}}
       {{set fechaIngresoUrgencias="=contexto.urgencias.desde"}}
-      {{set afeccionPrincipal="=_items&&calc.recalcLimiteEdadDiagnostico(calc.pluckRef(_.first(_items), 'base.afeccionPrincipal'), persona.fechaNacimiento, @fechaAtencion, nomDatos.desconoceFechaNacimiento=='si')"}}
-      {{set otrosDiagnosticos="=_items&&calc.recalcLimiteEdadDiagnostico(calc.pluckRef(_.first(_items), 'base.otrosDiagnosticos'), persona.fechaNacimiento, @fechaAtencion, nomDatos.desconoceFechaNacimiento=='si')"}}   
+      {{set afeccionPrincipal="=_items&&calc.recalcLimiteEdadDiagnostico(calc.pluckRef(_.first(_items), 'base.afeccionPrincipal'), persona.fechaNacimiento, moment(@fechaAtencion).format('YYYY-MM-DD'), nomDatos.desconoceFechaNacimiento=='si')"}}
+      {{set otrosDiagnosticos="=_items&&calc.recalcLimiteEdadDiagnostico(calc.pluckRef(_.first(_items), 'base.otrosDiagnosticos'), persona.fechaNacimiento, moment(@fechaAtencion).format('YYYY-MM-DD'), nomDatos.desconoceFechaNacimiento=='si')"}}   
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
   {{/transform}}

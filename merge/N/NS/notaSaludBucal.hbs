@@ -52,14 +52,16 @@
     {{/field}}
     {{#field id="solicitaTeleconsulta"}}
       {{#onChange}}
-        {{set modalidad="=@solicitaTeleconsulta=='si'?'Tiempo Real':calc.isNotEmpty(estudiosTeleconsulta)?'Diferida':''"}}
-        {{set modalidad="=calc.in(estudiosTeleconsulta,['noAplica'])?'No Aplica':modalidad"}}
+        {{set modalidad="=@solicitaTeleconsulta=='si'?'Tiempo Real':''"}}
+        {{set modalidad="=@solicitaTeleconsulta=='no'&&calc.isNotEmpty(estudiosTeleconsulta)?'Diferida':modalidad"}}
+        {{set modalidad="=@solicitaTeleconsulta=='no'&&calc.in(estudiosTeleconsulta,['noAplica'])?'No Aplica':modalidad"}}
       {{/onChange}}
     {{/field}}
     {{#field id="estudiosTeleconsulta"}}
       {{#onChange}}
-        {{set modalidad="=@solicitaTeleconsulta=='si'?'Tiempo Real':calc.isNotEmpty(estudiosTeleconsulta)?'Diferida':''"}}
-        {{set modalidad="=calc.in(estudiosTeleconsulta,['noAplica'])?'No Aplica':modalidad"}}
+        {{set modalidad="=@solicitaTeleconsulta=='si'?'Tiempo Real':''"}}
+        {{set modalidad="=@solicitaTeleconsulta=='no'&&calc.isNotEmpty(estudiosTeleconsulta)?'Diferida':modalidad"}}
+        {{set modalidad="=@solicitaTeleconsulta=='no'&&calc.in(estudiosTeleconsulta,['noAplica'])?'No Aplica':modalidad"}}
       {{/onChange}}
     {{/field}}
     {{#field id="contrarreferido"}}
@@ -68,7 +70,7 @@
     {{validator type="expr" notValidIf="=@contrarreferido=='si'&&@referidoPor=='otras'" message="Contrarreferido Inválido (Referido por 'Otras')"}}
     {{validator type="expr" notValidIf="=calc.in(@referidoPor,['embarazoAltoRiesgo','sospechaCancer','iras','neumonia','cisticercosis','preecalmpsia','hemorragia','otraEmergencia'])" message="'Referido Por' Inválido"}}
     {{validator type="expr" notValidIf="=calc.in('noAplica',@estudiosTeleconsulta)&&@estudiosTeleconsulta.length>1" message="Estudios Teleconsulta 'No Aplica' debe ser único"}}
-    {{validator type="expr" notValidIf="=@solicitaTeleconsulta=='si'&&calc.in('noAplica',@estudiosTeleconsulta)" message="Estudios Teleconsulta 'No Aplica' únicamente sin Teleconsulta"}}
+    {{!-- {{validator type="expr" notValidIf="=@solicitaTeleconsulta=='si'&&calc.in('noAplica',@estudiosTeleconsulta)" message="Estudios Teleconsulta 'No Aplica' únicamente sin Teleconsulta"}} --}}
   {{/section}}
   
   {{!--RACC VISTA  --}}

@@ -7,7 +7,7 @@
         {{set limiteSexo="=LSEX"}}
         {{set limiteInferior="=LINF"}}
         {{set limiteSuperior="=LSUP"}}
-        {{set excedeLimiteEdad="=calc.meetsAgeLimit(LINF, null, _parentDoc.persona.fechaNacimiento, true, _parentDoc._type=='notaSeulEgreso'?moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaEgreso:_parentDoc.base.fechaAtencion, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(LSUP, null, _parentDoc.persona.fechaNacimiento, false, _parentDoc._type=='notaSeulEgreso'?moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?_parentDoc.base.fechaIngresoHospitalario:_parentDoc.base.fechaEgreso:_parentDoc.base.fechaAtencion, _parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
+        {{set excedeLimiteEdad="=calc.meetsAgeLimit(LINF, null, _parentDoc.persona.fechaNacimiento, true, _parentDoc._type=='notaSeulEgreso'?moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?_parentDoc.base.fechaIngresoHospitalario:moment(_parentDoc.base.fechaEgreso).format('YYYY-MM-DD'):moment(_parentDoc.base.fechaAtencion).format('YYYY-MM-DD'), _parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(LSUP, null, _parentDoc.persona.fechaNacimiento, false, _parentDoc._type=='notaSeulEgreso'?moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?_parentDoc.base.fechaIngresoHospitalario:moment(_parentDoc.base.fechaEgreso).format('YYYY-MM-DD'):moment(_parentDoc.base.fechaAtencion).format('YYYY-MM-DD'), _parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
         {{set excedeLimiteSexo="=calc.meetsSexLimitSeul(LSEX, _parentDoc.persona.genero)?'NO':'SI'"}}
       {{/onChange}}
     {{/field}}

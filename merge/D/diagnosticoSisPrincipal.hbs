@@ -18,7 +18,7 @@
         {{set limiteSuperior="=LSUP"}}
         {{!-- En SIS debe validar limite de edad aunque se desconozca la fecha de nacimiento --}}
         {{!-- Al ultimo parametro se manda "false" para que siempre lo valide --}}
-        {{set excedeLimiteEdad="=calc.meetsAgeLimit(LINF, desde, _parentDoc.persona.fechaNacimiento, true, _parentDoc.base.fechaAtencion||_parentDoc.base.fechaConsulta, false)&&calc.meetsAgeLimit(LSUP, desde, _parentDoc.persona.fechaNacimiento, false, _parentDoc.base.fechaAtencion||_parentDoc.base.fechaConsulta, false)?'NO':'SI'"}}
+        {{set excedeLimiteEdad="=calc.meetsAgeLimit(LINF, desde, _parentDoc.persona.fechaNacimiento, true, moment(_parentDoc.base.fechaAtencion||_parentDoc.base.fechaConsulta).format('YYYY-MM-DD'), _parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(LSUP, desde, _parentDoc.persona.fechaNacimiento, false, moment(_parentDoc.base.fechaAtencion||_parentDoc.base.fechaConsulta).format('YYYY-MM-DD'), _parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
         {{set excedeLimiteSexo="=calc.meetsSexLimit(LSEX, _parentDoc.persona.genero)?'NO':'SI'"}}
         {{set cronicos="=DIA_CRONICOS"}}
         {{set cancerInfantil="=DIA_CAINFANTIL"}}
