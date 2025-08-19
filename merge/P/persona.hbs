@@ -4965,6 +4965,7 @@
     {{#update section="base"}}
       {{set fechaAtencion="=_params.fechaAtencion"}}
       {{set dependencia="=nomDatos.datosSeguro.base.dependencia"}}
+      {{set otra="=nomDatos.datosSeguro.base.otra"}}
     {{/update}}
     {{update section="dependenciaLista" value="=_.union([nomDatos.datosSeguro.base.dependencia],calc.pluckRef(nomDatos,'datosSeguro.base.dependencia2'))"}}
     {{update section="resumen" value="=resumen" temp="true"}}
@@ -12593,8 +12594,8 @@
     color="deep-orange"
     onlyPost="true"
     errorType="info"
-    error2="=!calc.validarFechaEventoAtencion(_ask.fechaEvento,_ask.fechaAtencion,_ask.desconoceHoraEvento=='no'&&_ask.desconoceHoraAtencion=='no')?'Fecha Atención debe ser mayor que Fecha Evento':null"
-    error3="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''"
+    error="=!calc.validarFechaEventoAtencion(_ask.fechaEvento,_ask.fechaAtencion,_ask.desconoceHoraEvento=='no'&&_ask.desconoceHoraAtencion=='no')?'Fecha Atención debe ser mayor que Fecha Evento':null"
+    error2="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''"
   }}
     {{!-- error="=fn('validarNotaLesiones', _ask.fechaEvento, persona)||fn('validarDerechohabiencia', contexto, detalle)||fn('errorDatosSeguro', persona, contexto, detalle)||(_items[0]&&'Nota Lesión Activa: '+_items[0]._name)" --}}
     {{param persona="=_id"}}
