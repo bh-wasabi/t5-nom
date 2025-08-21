@@ -26,7 +26,7 @@
   {{/view}} --}}
   
   {{#view id="cie10"}}
-    {{editor display="nombre"}}
+    {{editor display="NOMBRE"}}
     {{#search index="cie10-23" type="_doc" filterParamsOnlySearch="true"}}
       {{param tipo="normal"}}
     {{/search}}
@@ -55,14 +55,14 @@
     {{/search}}
   {{/view}}  
   {{#view id="cie10causa"}}
-    {{editor display="nombre"}}
+    {{editor display="NOMBRE"}}
     {{#search index="cie10-23" type="_doc" filterParamsOnlySearch="true"}}
       {{param NUM_CARACTERES="4"}}
       {{param CLAVE_CAPITULO="='XX'"}}
     {{/search}}
   {{/view}}  
   {{#view id="cie10sub"}}
-    {{editor display="nombre"}}
+    {{editor display="NOMBRE"}}
     {{#search index="cie10-23" type="_doc" filterParamsOnlySearch="true"}}
       {{param tipo="sub"}}
     {{/search}}
