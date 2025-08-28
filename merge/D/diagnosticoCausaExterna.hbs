@@ -11,6 +11,8 @@
         {{set excedeLimiteSexo="=calc.meetsSexLimitSeul(LSEX, _parentDoc.persona.genero)?'NO':'SI'"}}
       {{/onChange}}
     {{/field}}
+    {{validator type="expr" validIf="=@descripcionCausaExterna.length>1" message="Descripción Causa Externa (Mínimo 2 Caracteres)"}}
+    {{validator type="expr" validIf="=calc.matchIfPattern('^[A-ZÑ].*',@descripcionCausaExterna)" message="Descripción Causa Externa debe iniciar con caracter alfabético"}}
     {{validator type="expr" notValidIf="limiteSexo=='HOMBRE'&&_parentDoc.persona.genero!='hombre'" message="No Corresponde el Sexo del Paciente"}}
     {{validator type="expr" notValidIf="limiteSexo=='MUJER'&&_parentDoc.persona.genero!='mujer'" message="No Corresponde el Sexo del Paciente"}}
   {{/section}}

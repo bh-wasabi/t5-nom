@@ -1,7 +1,7 @@
 {{#define id="diagnosticoSisOtro"}}
   {{#section id="base" confirm="=fn('confirmarLimiteEdad',excedeLimiteEdad)" confirmTitle="Confirmación" confirmMessage="No Corresponde la Edad del Paciente<br>¿Desea Continuar?"}}
     {{#field id="primeraVez"}}
-      {{onChange clearFields="diagnostico,subDiagnostico,confirmacionDiagnostica,desde"}}
+      {{onChange clearFields="diagnostico,subDiagnostico,confirmacionDiagnostica"}}
     {{/field}}
     {{#field id="diagnostico"}}
       {{#editor}}
@@ -12,14 +12,14 @@
         {{!-- {{param relacionTemporal="=user.others.tipoPersonalCE=='4'?(primeraVez=='si'?'primeraVez':'subsecuente'):null"}} --}}
         {{param relacionTemporal="=primeraVez=='si'?'primeraVez':'subsecuente'"}}
       {{/editor}}
-      {{#onChange clearFields="subDiagnostico,confirmacionDiagnostica,desde"}}
+      {{#onChange clearFields="subDiagnostico,confirmacionDiagnostica"}}
         {{set letra="=LETRA"}}
         {{set limiteSexo="=LSEX"}}
         {{set limiteInferior="=LINF"}}
         {{set limiteSuperior="=LSUP"}}
         {{!-- En SIS debe validar limite de edad aunque se desconozca la fecha de nacimiento --}}
         {{!-- Al ultimo parametro se manda "false" para que siempre lo valide --}}
-        {{set excedeLimiteEdad="=calc.meetsAgeLimit(LINF, desde, _parentDoc.persona.fechaNacimiento, true, moment(_parentDoc.base.fechaAtencion||_parentDoc.base.fechaConsulta).format('YYYY-MM-DD'), _parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(LSUP, desde, _parentDoc.persona.fechaNacimiento, false, moment(_parentDoc.base.fechaAtencion||_parentDoc.base.fechaConsulta).format('YYYY-MM-DD'), _parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
+        {{set excedeLimiteEdad="=calc.meetsAgeLimit(LINF, null, _parentDoc.persona.fechaNacimiento, true, moment(_parentDoc.base.fechaAtencion||_parentDoc.base.fechaConsulta).format('YYYY-MM-DD'), _parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(LSUP, null, _parentDoc.persona.fechaNacimiento, false, moment(_parentDoc.base.fechaAtencion||_parentDoc.base.fechaConsulta).format('YYYY-MM-DD'), _parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
         {{set excedeLimiteSexo="=calc.meetsSexLimit(LSEX, _parentDoc.persona.genero)?'NO':'SI'"}}
         {{set cronicos="=DIA_CRONICOS"}}
         {{set cancerInfantil="=DIA_CAINFANTIL"}}
@@ -27,8 +27,8 @@
       {{/onChange}}
     {{/field}}
     {{!-- {{validator type="expr" validIf="=_parentDoc._type=='notaSaludMental'||calc.meetsSexLimit(limiteSexo, _parentDoc.persona.genero)" message="No Corresponde el Sexo del Paciente"}} --}}
-    {{!-- {{validator type="expr" validIf="=calc.meetsAgeLimit(limiteInferior, desde, _parentDoc.persona.fechaNacimiento, true)" message="No Corresponde la Edad del Paciente con el Límite Inferior"}} --}}
-    {{!-- {{validator type="expr" validIf="=calc.meetsAgeLimit(limiteSuperior, desde, _parentDoc.persona.fechaNacimiento, false)" message="No Corresponde la Edad del Paciente con el Límite Superior"}} --}}
+    {{!-- {{validator type="expr" validIf="=calc.meetsAgeLimit(limiteInferior, null, _parentDoc.persona.fechaNacimiento, true)" message="No Corresponde la Edad del Paciente con el Límite Inferior"}} --}}
+    {{!-- {{validator type="expr" validIf="=calc.meetsAgeLimit(limiteSuperior, null, _parentDoc.persona.fechaNacimiento, false)" message="No Corresponde la Edad del Paciente con el Límite Superior"}} --}}
     {{validator type="expr" notValidIf="_parentDoc._type!='notaSaludMental'&&limiteSexo=='HOMBRE'&&_parentDoc.persona.genero=='mujer'" message="No Corresponde el Sexo del Paciente"}}
     {{validator type="expr" notValidIf="_parentDoc._type!='notaSaludMental'&&limiteSexo=='MUJER'&&_parentDoc.persona.genero=='hombre'" message="No Corresponde el Sexo del Paciente"}}
   {{/section}}

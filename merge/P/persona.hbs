@@ -12600,7 +12600,7 @@
     {{!-- error="=fn('validarNotaLesiones', _ask.fechaEvento, persona)||fn('validarDerechohabiencia', contexto, detalle)||fn('errorDatosSeguro', persona, contexto, detalle)||(_items[0]&&'Nota Lesión Activa: '+_items[0]._name)" --}}
     {{param persona="=_id"}}
     {{param episodio="=contexto.episodio"}}
-    {{ask field="fechaEvento" type="datetime" label="Fecha Evento" required="true" value="=moment().format()" min="=fn('obtenerFechaMaximaDosMeses',persona.fechaNacimiento)" max="=moment().add('minutes',1).format()"}}
+    {{ask field="fechaEvento" type="datetime" label="Fecha Evento" required="true" value="=moment().format()" min="=moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()"}}
     {{ask field="desconoceHoraEvento" type="select" label="Desconoce Hora Evento" keys="no,si" names="No,Sí" required="true"}}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('obtenerFechaMaximaDosMeses',persona.fechaNacimiento)" max="=moment().add('minutes',1).format()" errorMessage="Fecha Incorrecta"}}
     {{ask field="desconoceHoraAtencion" type="select" label="Desconoce Hora Atención" keys="no,si" names="No,Sí" required="true"}}

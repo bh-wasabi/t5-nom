@@ -16,7 +16,7 @@
         {{set limiteSexo="=LSEX"}}
         {{set limiteInferior="=LINF"}}
         {{set limiteSuperior="=LSUP"}}
-        {{set excedeLimiteEdad="=calc.meetsAgeLimit(LINF, desde, _parentDoc.persona.fechaNacimiento, true, _parentDoc._type=='notaSeulEgreso'?moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?_parentDoc.base.fechaIngresoHospitalario:moment(_parentDoc.base.fechaEgreso).format('YYYY-MM-DD'):moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?_parentDoc.base.fechaIngreso:moment(_parentDoc.base.fechaEgreso).format('YYYY-MM-DD'), _parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(LSUP, desde, _parentDoc.persona.fechaNacimiento, false, _parentDoc._type=='notaSeulEgreso'?moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?_parentDoc.base.fechaIngresoHospitalario:moment(_parentDoc.base.fechaEgreso).format('YYYY-MM-DD'):moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?_parentDoc.base.fechaIngreso:moment(_parentDoc.base.fechaEgreso).format('YYYY-MM-DD'), _parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
+        {{set excedeLimiteEdad="=calc.meetsAgeLimit(LINF, null, _parentDoc.persona.fechaNacimiento, true, _parentDoc._type=='notaSeulEgreso'?moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?_parentDoc.base.fechaIngresoHospitalario:moment(_parentDoc.base.fechaEgreso).format('YYYY-MM-DD'):moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?_parentDoc.base.fechaIngreso:moment(_parentDoc.base.fechaEgreso).format('YYYY-MM-DD'), _parentDoc.nomDatos.desconoceFechaNacimiento=='si')&&calc.meetsAgeLimit(LSUP, null, _parentDoc.persona.fechaNacimiento, false, _parentDoc._type=='notaSeulEgreso'?moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?_parentDoc.base.fechaIngresoHospitalario:moment(_parentDoc.base.fechaEgreso).format('YYYY-MM-DD'):moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?_parentDoc.base.fechaIngreso:moment(_parentDoc.base.fechaEgreso).format('YYYY-MM-DD'), _parentDoc.nomDatos.desconoceFechaNacimiento=='si')?'NO':'SI'"}}
         {{set excedeLimiteSexo="=calc.meetsSexLimitSeul(LSEX, _parentDoc.persona.genero)?'NO':'SI'"}}
         {{set claveCapitulo="=CLAVE_CAPITULO"}}
         {{set validoLesiones="=VALIDO_LESIONES"}}
@@ -37,7 +37,8 @@
     {{#field id="planHidratacion"}}
       {{onChange clearFields="numeroSobres"}}
     {{/field}}
-    {{validator type="expr" validIf="=calc.isEmpty(@detalle)||@detalle.length>1" message="Descripción (Mínimo 2 Caracteres)"}}
+    {{validator type="expr" validIf="=@detalle.length>1" message="Descripción (Mínimo 2 Caracteres)"}}
+    {{validator type="expr" validIf="=calc.matchIfPattern('^[A-ZÑ].*',@detalle)" message="Descripción debe iniciar con caracter alfabético"}}
     {{validator type="expr" notValidIf="=_mainDoc._type=='notaSeulEgreso'&&calc.isEmpty(tipoAtencion)" message="Tipo de Atención no puede estar vacío"}}
     {{validator type="expr" notValidIf="=limiteSexo!='NO'&&_parentDoc.persona.genero=='intersexual'" message="Diagnóstico Incorrecto para Intersexual"}}
     {{validator type="expr" notValidIf="=limiteSexo=='HOMBRE'&&_parentDoc.persona.genero=='mujer'" message="Diagnóstico Incorrecto para Mujer"}}
