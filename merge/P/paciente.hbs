@@ -109,13 +109,6 @@
         {{set fechaNacimiento="=(calc.year()-edadAproximada)+'-09-09'"}}
       {{/onChange}}
     {{/field}}
-    {{#field id="fechaNacimiento"}}
-      {{#onChange}}
-        {{set estadoCivil="=moment().diff(fechaNacimiento,'years')<10?'noAplica':estadoCivil"}}
-        {{set escolaridad="=moment().diff(fechaNacimiento,'years')<3?'ninguna':escolaridad"}}
-        {{set sabeLeerEscribir="=moment().diff(fechaNacimiento,'years')<3?'no':sabeLeerEscribir"}}
-      {{/onChange}}
-    {{/field}}
     {{#field id="genero"}}
       {{#editor}}
         {{param partOf="=esConsultaExterna?'sis':'seul'"}}
