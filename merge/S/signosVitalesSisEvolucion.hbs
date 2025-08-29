@@ -7,9 +7,6 @@
     {{field id="mostrarEmbarazadaSinDiabetes" type="expr" value="=genero=='mujer'&&edadActual>=9&&edadActual<60&&@glicemiaCapilar!=0&&resultadoObtenido=='tiraGlucosaCapilar'"}}
     {{field id="pam" type="calc" label="PMA" value="=fn('pam', base)" format="#.##"}}
     {{field id="glicemiaMayor20" type="expr" value="=@glicemiaCapilar>=20&&@glicemiaCapilar<=999"}}
-    {{#field id="tomaGlicemiaCapilar"}}
-      {{onChange clearFields="glicemiaCapilar,resultadoObtenido,tirasControl,embarazadaSinDiabetes,prePrandial"}}
-    {{/field}}
     {{#field id="glicemiaCapilar"}}
       {{onChange clearFields="resultadoObtenido,tirasControl,embarazadaSinDiabetes,prePrandial"}}
     {{/field}}

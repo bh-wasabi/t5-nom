@@ -5,9 +5,6 @@
     {{field id="estaVivo" type="expr" value="=situacionActual=='vivo'"}}
     {{field id="estaDifunto" type="expr" value="=situacionActual=='difunto'"}}
     {{field id="pam" type="calc" label="PMA" value="=fn('pam', base)" format="#.##"}}
-    {{#field id="tomaGlicemiaCapilar"}}
-      {{onChange clearFields="glicemiaCapilar,resultadoObtenido,prePrandial"}}
-    {{/field}}
     {{#field id="glicemiaCapilar"}}
       {{onChange clearFields="resultadoObtenido,prePrandial"}}
     {{/field}}

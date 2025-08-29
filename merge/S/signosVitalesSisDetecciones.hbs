@@ -6,9 +6,6 @@
     {{field id="esTiraGlucosa" type="expr" value="=resultadoObtenido=='tiraGlucosaCapilar'"}}
     {{field id="glicemiaMayor20" type="expr" value="=@glicemiaCapilar>=20&&@glicemiaCapilar<=999"}}
     {{field id="pam" type="calc" label="PMA" value="=fn('pam', base)" format="#.##"}}
-    {{#field id="tomaGlicemiaCapilar"}}
-      {{onChange clearFields="glicemiaCapilar,resultadoObtenido,tirasControl,prePrandial"}}
-    {{/field}}
     {{#field id="glicemiaCapilar"}}
       {{onChange clearFields="resultadoObtenido,tirasControl,prePrandial"}}
     {{/field}}
