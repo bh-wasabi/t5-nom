@@ -1,6 +1,10 @@
 {{#define id="notaIngreso"}}
   {{#section id="base"}}
     {{field id="esVoluntadPropia" type="expr" value="=motivoEgreso=='voluntadPropia'"}}
+    {{validator type="expr" notValidIf="=!calc.isEmpty(persona.horaNacimiento)&&moment(fechaAtencion).diff(moment(persona.fechaNacimiento).add(moment(persona.horaNacimiento).hours(),'hours'),'hours')<24&&somatometria.peso>8&&somatometria.peso!=999" message="Peso Incorrecto (Máximo 8 kg.)"}}
+    {{validator type="expr" notValidIf="=moment(persona.horaNacimiento)&&moment(fechaAtencion).diff(moment(persona.fechaNacimiento),'days')<30&&somatometria.peso>12&&somatometria.peso!=999" message="Peso Incorrecto (Máximo 12 kg.)"}}
+    {{validator type="expr" notValidIf="=moment(persona.horaNacimiento)&&moment(fechaAtencion).diff(moment(persona.fechaNacimiento),'months')<12&&somatometria.peso>20&&somatometria.peso!=999" message="Peso Incorrecto (Máximo 20 kg.)"}}
+    {{validator type="expr" notValidIf="=moment(persona.horaNacimiento)&&moment(fechaAtencion).diff(moment(persona.fechaNacimiento),'years')>=1&&somatometria.peso<5&&somatometria.peso!=999" message="Peso Incorrecto (Mínimo 5 kg.)"}}
   {{/section}}
   {{#view id="cubo"}}
     {{#find limit="-1"}}
