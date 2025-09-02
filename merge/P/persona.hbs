@@ -12910,9 +12910,10 @@
     visibleMode="close"
     color="deep-orange"
     onlyPost="true"
+    errorType="info"
     error="=fn('validarNotaInformacionEmbarazoPartograma', persona)"
     error2="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''"
-    errorType="info"
+    condition="=persona.genero=='mujer'"
   }}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
   {{/action}}
@@ -13100,6 +13101,7 @@
     errorType="info"
     error="=fn('validarNotaAtencionParto', persona)"
     error2="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''"
+    condition="=persona.genero=='mujer'"
   }}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
   {{/action}}
