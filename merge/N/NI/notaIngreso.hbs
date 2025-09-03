@@ -1,16 +1,16 @@
 {{#define id="notaIngreso"}}
   {{#section id="base"}}
     {{field id="esVoluntadPropia" type="expr" value="=motivoEgreso=='voluntadPropia'"}}
-    {{validator type="expr" notValidIf="=!calc.isEmpty(persona.horaNacimiento)&&moment(fechaAtencion).diff(moment(persona.fechaNacimiento).add(moment(persona.horaNacimiento).hours(),'hours'),'hours')<24&&somatometria.peso>8&&somatometria.peso!=999" message="Peso Incorrecto (Máximo 8 kg.)"}}
-    {{validator type="expr" notValidIf="=moment(persona.horaNacimiento)&&moment(fechaAtencion).diff(moment(persona.fechaNacimiento),'days')<30&&somatometria.peso>12&&somatometria.peso!=999" message="Peso Incorrecto (Máximo 12 kg.)"}}
-    {{validator type="expr" notValidIf="=moment(persona.horaNacimiento)&&moment(fechaAtencion).diff(moment(persona.fechaNacimiento),'months')<12&&somatometria.peso>20&&somatometria.peso!=999" message="Peso Incorrecto (Máximo 20 kg.)"}}
-    {{validator type="expr" notValidIf="=moment(persona.horaNacimiento)&&moment(fechaAtencion).diff(moment(persona.fechaNacimiento),'years')>=1&&somatometria.peso<5&&somatometria.peso!=999" message="Peso Incorrecto (Mínimo 5 kg.)"}}
+    {{validator type="expr" notValidIf="=moment(fechaAtencion).diff(moment(fechaNacimiento).add(moment(persona.horaNacimiento).hours(),'hours'),'hours')<24&&calc.getRef(somatometria,'base.peso')>8&&calc.getRef(somatometria,'base.peso')!=999" message="Peso Incorrecto (Máximo 8 kg.)"}}
+    {{validator type="expr" notValidIf="=moment(fechaAtencion).diff(fechaNacimiento,'days')<30&&calc.getRef(somatometria,'base.peso')>12&&calc.getRef(somatometria,'base.peso')!=999" message="Peso Incorrecto (Máximo 12 kg.)"}}
+    {{validator type="expr" notValidIf="=moment(fechaAtencion).diff(fechaNacimiento,'months')<12&&calc.getRef(somatometria,'base.peso')>20&&calc.getRef(somatometria,'base.peso')!=999" message="Peso Incorrecto (Máximo 20 kg.)"}}
+    {{validator type="expr" notValidIf="=moment(fechaAtencion).diff(fechaNacimiento,'years')>=1&&calc.getRef(somatometria,'base.peso')<5&&calc.getRef(somatometria,'base.peso')!=999" message="Peso Incorrecto (Mínimo 5 kg.)"}}
   {{/section}}
   {{#view id="cubo"}}
     {{#find limit="-1"}}
       {{include field="_created.user"}}
       {{include field="_created.date"}}
-      {{include field="base._procedenciaIngreso"}}      
+      {{include field="base._procedenciaIngreso"}}
       {{include field="persona.nombreCompleto"}}
       {{include field="persona._genero"}}
       {{include field="contexto._central"}}
