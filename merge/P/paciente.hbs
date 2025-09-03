@@ -94,12 +94,12 @@
     {{field id="desconoceEdadSeul" type="expr" value="=tipoAtencion!='consultaExterna'&&desconoceFechaNacimiento=='si'"}}
     {{field id="esMigrante" type="expr" value="=migrante=='internacional'||migrante=='retornado'||migrante=='nacional'"}}
     {{field id="bloquearProcedencia" type="expr" value="=migrante=='nacional'||migrante=='retornado'"}}
-    {{#field id="tipoAtencion"}}
+    {{!-- {{#field id="tipoAtencion"}}
       {{#onChange clearFields="desconoceFechaNacimiento,edadAproximada,fechaNacimientoDesconocida,fechaNacimiento,genero,afromexicano,afromexicanoUrgenciasHospitalizacion"}}
         {{set esConsultaExterna="=tipoAtencion=='consultaExterna'"}}
         {{set esUrgenciasHospitalizacion="=tipoAtencion!='consultaExterna'"}}
       {{/onChange}}
-    {{/field}}
+    {{/field}} --}}
     {{#field id="desconoceFechaNacimiento"}}
       {{onChange clearFields="edadAproximada,fechaNacimientoDesconocida,fechaNacimiento"}}
     {{/field}}
@@ -111,7 +111,9 @@
     {{/field}}
     {{#field id="genero"}}
       {{#editor}}
-        {{param partOf="=esConsultaExterna?'sis':'seul'"}}
+        {{!-- {{param partOf="=esConsultaExterna?'sis':esUrgenciasHospitalizacion?'seul':null"}} --}}
+        {{param condition="=esConsultaExterna" partOf="sis"}}
+        {{param condition="=esUrgenciasHospitalizacion" partOf="seul"}}
       {{/editor}}
     {{/field}}
     {{#field id="paisNacimiento"}}

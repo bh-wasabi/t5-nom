@@ -7842,6 +7842,12 @@
     {{/update}}
   {{/transform}}
 
+  {{#transform id="copiarCertificacionNoExistePaciente"}}
+    {{#update section="base" newRef="paciente"}}
+      {{setRef ref="paciente.base.tipoAtencion" value="=_params.tipoAtencion"}}
+    {{/update}}
+  {{/transform}}
+
   {{!-- Tarea #3712  --}}
   {{action id="notaSeguimientoHepatitisC" source="notaSeguimientoHepatitisC" label="Hepatitis C Seguimiento" transform="copiarHepatitisSeguimiento" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{!-- Tarea #3712  --}}
@@ -14009,7 +14015,21 @@
   {{action id="porTraspasarRopa" label="Traspaso Ropa" transform="copiarTraspasoRopa" source="notaPorTraspasarRopa" hide="true" type="add-subdoc" visibleMode="close" onlyPost="true" color="deep-orange" btnSolid="true"}}
 
   {{!-- {{action id="notaAltaCandidatoRH" source="notaAltaCandidatoRH" label="Alta Candidato" hide="true" type="add-subdoc" visibleMode="close" color="indigo" isBrowserAction="true" onlyPost="true"}}   --}}
-  {{action id="notaCertificacionNoExistePaciente" source="notaCertificacionNoExistePaciente" label="Certificación No Existe Paciente" hide="true" type="add-subdoc" visibleMode="close" color="indigo" isBrowserAction="true" onlyPost="true" beginGroup="true"}}  
+  {{#action
+    id="notaCertificacionNoExistePaciente"
+    source="notaCertificacionNoExistePaciente"
+    label="Certificación No Existe Paciente"
+    transform="copiarCertificacionNoExistePaciente"
+    hide="true"
+    type="add-subdoc"
+    visibleMode="close"
+    color="indigo"
+    isBrowserAction="true"
+    onlyPost="true"
+    beginGroup="true"
+  }}
+    {{ask field="tipoAtencion" type="select" label="Tipo Atención" keys="consultaExterna,urgencias,hospitalizacion" names="Consulta Externa,Urgencias,Hospitalización" required="true"}}
+  {{/action}}
   {{action id="notaAltaCliente" source="notaAltaCliente" label="Alta Cliente" hide="true" type="add-subdoc" visibleMode="close" color="indigo" isBrowserAction="true" onlyPost="true"}}  
   {{action id="notaAltaDesconocido" source="notaAltaDesconocido" transform="copiarDesconocido" label="Alta Desconocido" hide="true" type="add-subdoc" visibleMode="close" color="indigo" isBrowserAction="true" onlyPost="true" userRole="altaDesconocido"}}
   {{action id="notaAltaUrgencias" source="notaAltaUrgencias" transform="copiarAltaUrgencias" label="Alta Urgencias" hide="true" type="add-subdoc" visibleMode="close" color="indigo" isBrowserAction="true" onlyPost="true"}}  
