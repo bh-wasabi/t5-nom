@@ -1,12 +1,14 @@
 {{#define id="notaAtencionParto"}}
+  {{action id="afectar" error="=fn('validarNotaAtencionPartoProcesar',base)"}}
   {{#section id="base"}}
     {{field id="otroAtendioParto" type="expr" value="=atendioParto=='otro'"}}
     {{#onChange}}
-  		{{#update}}
+      {{#update}}
+        {{set gestas="=fn('calcularGestas',antecedentesEmbarazos.base.paras,antecedentesEmbarazos.base.abortos,antecedentesEmbarazos.base.cesareas,1)"}}
         {{set diagnostico="=calc.mergeArrays(@afeccionPrincipal,@otrosDiagnosticos)"}}
         {{set _diagnostico="=_.pluck(base.diagnostico, '_name').join(', ')"}}
-  		{{/update}}
-  	{{/onChange}}
+      {{/update}}
+    {{/onChange}}
   {{/section}}
   {{#view id="totalPartosCesareas"}}
     {{#pipeline}}

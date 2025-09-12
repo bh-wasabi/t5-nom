@@ -5924,6 +5924,7 @@
       {{set _tipoSanguineo="=persona._tipoSanguineo"}}
       {{set antecedentesEmbarazos="=contexto.episodio==detalle.notaInformacionEmbarazoPartograma.contexto.episodio&&detalle.notaInformacionEmbarazoPartograma.base.antecedentesEmbarazos"}}
       {{set _antecedentesEmbarazos="=contexto.episodio==detalle.notaInformacionEmbarazoPartograma.contexto.episodio&&detalle.notaInformacionEmbarazoPartograma.base._antecedentesEmbarazos"}}
+      {{set gestas="=contexto.episodio==detalle.notaInformacionEmbarazoPartograma.contexto.episodio&&detalle.notaInformacionEmbarazoPartograma.base.gestas"}}
       {{set afeccionPrincipal="=contexto.episodio==detalle.notaEvolucion.contexto.episodio&&detalle.notaEvolucion.base.afeccionPrincipal"}}
       {{set _afeccionPrincipal="=contexto.episodio==detalle.notaEvolucion.contexto.episodio&&detalle.notaEvolucion.base._afeccionPrincipal"}}
       {{set otrosDiagnosticos="=contexto.episodio==detalle.notaEvolucion.contexto.episodio&&detalle.notaEvolucion.base.otrosDiagnosticos"}}
@@ -7937,8 +7938,9 @@
     onlyPost="true"
     fromSource="nota" 
     fromView="ultima"
-    error="=calc.fn('validarConsultaExterna',_ask.fechaAtencion,persona,user)||fn('errorCluesConsultaExterna',user.establishmentData.cluesSis)"
-    error2="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''"
+    error="=fn('validarConsultaExterna',_ask.fechaAtencion,persona,user)"
+    error2="=fn('errorCluesConsultaExterna',user.establishmentData.cluesSis)"
+    error3="=fn('validarEdadPrestador',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)"
     errorType="info"
   }}
     {{param persona="=_id"}}
@@ -7962,7 +7964,7 @@
     fromSource="nota"
     fromView="ultima"
     error="=fn('validarNotaPlanificacionFamiliar',calc.getRef(user,'establishmentData.cluesSis'),persona.genero,moment(_ask.fechaAtencion).diff(persona.fechaNacimiento,'years'))"
-    error2="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''"
+    error2="=fn('validarEdadPrestador',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)"
     errorType="info"
   }}
     {{param persona="=_id"}}
@@ -7984,7 +7986,7 @@
     fromSource="nota"
     fromView="ultima"
     error="=fn('validarNotaDetecciones',persona)||fn('errorCluesConsultaExterna',user.establishmentData.cluesSis)"
-    error2="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''"
+    error2="=fn('validarEdadPrestador',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)"
     errorType="info"
   }}
     {{param persona="=_id"}}
@@ -8005,7 +8007,7 @@
     fromSource="nota"
     fromView="ultima"
     error="=fn('validarNotaSaludMental',persona)||fn('errorCluesConsultaExterna',user.establishmentData.cluesSis)"
-    error2="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''"
+    error2="=fn('validarEdadPrestador',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)"
     errorType="info"
   }}
     {{param persona="=_id"}}
@@ -8026,7 +8028,7 @@
     fromSource="nota"
     fromView="ultima"
     error="=fn('validarNotaSaludBucal',persona)||fn('errorCluesConsultaExterna',user.establishmentData.cluesSis)"
-    error2="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''"
+    error2="=fn('validarEdadPrestador',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)"
     errorType="info"
   }}
     {{param persona="=_id"}}
@@ -11608,7 +11610,7 @@
     visibleMode="close"
     color="deep-orange"
     onlyPost="true"
-    error="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''"
+    error="=fn('validarEdadPrestador',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)"
     errorType="info"
   }}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
@@ -11647,7 +11649,19 @@
     {{param persona="=_id"}}
   {{/action}}
   {{action id="notaDatosSeguro" source="notaDatosSeguro" label="Datos Seguro" transform="copiarDatosSeguro" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
-  {{#action id="notaDerechohabienciaEgreso" source="notaDerechohabienciaEgreso" label="Derechohabiencia Egreso" transform="copiarDerechohabienciaEgreso" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" error="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''" errorType="info"}}
+  {{#action
+    id="notaDerechohabienciaEgreso"
+    source="notaDerechohabienciaEgreso"
+    label="Derechohabiencia Egreso"
+    transform="copiarDerechohabienciaEgreso"
+    hide="true"
+    type="add-subdoc"
+    visibleMode="close"
+    color="deep-orange"
+    onlyPost="true"
+    error="=fn('validarEdadPrestador',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)"
+    errorType="info"
+  }}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
   {{/action}}
   {{action id="notaCancelacionCita" source="notaCancelacionCita" label="Cancelación Cita" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
@@ -12505,7 +12519,18 @@
   {{action id="notaNutricionPaso2" source="notaNutricionPaso2" label="Nutrición Paso 2" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaNutricionPaso3" source="notaNutricionPaso3" label="Nutrición Paso 3" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaNutricionPaso4" source="notaNutricionPaso4" label="Nutrición Paso 4" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
-  {{#action id="notaPreAlta" source="notaPreAlta" label="Pre Alta" transform="copiarPreAlta" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" error="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''"}}
+  {{#action
+    id="notaPreAlta"
+    source="notaPreAlta"
+    label="Pre Alta"
+    transform="copiarPreAlta"
+    hide="true"
+    type="add-subdoc"
+    visibleMode="close"
+    color="deep-orange"
+    onlyPost="true"
+    error="=fn('validarEdadPrestador',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)"
+  }}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('ultimaAtencion', contexto)||fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Incorrecta"}}
   {{/action}}
   {{action id="notaSuspenderPreAlta" source="notaSuspenderPreAlta" label="Suspender Pre Alta" transform="copiarCama" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
@@ -12595,9 +12620,9 @@
     onlyPost="true"
     errorType="info"
     error="=!calc.validarFechaEventoAtencion(_ask.fechaEvento,_ask.fechaAtencion,_ask.desconoceHoraEvento=='no'&&_ask.desconoceHoraAtencion=='no')?'Fecha Atención debe ser mayor que Fecha Evento':null"
-    error2="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''"
+    error2="=fn('validarEdadPrestador',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)"
+    error3="=fn('validarNotaLesiones', _ask.fechaEvento, persona)||fn('validarDerechohabiencia', contexto, detalle)||fn('errorDatosSeguro', persona, contexto, detalle)||(_items[0]&&'Nota Lesión Activa: '+_items[0]._name)"
   }}
-    {{!-- error="=fn('validarNotaLesiones', _ask.fechaEvento, persona)||fn('validarDerechohabiencia', contexto, detalle)||fn('errorDatosSeguro', persona, contexto, detalle)||(_items[0]&&'Nota Lesión Activa: '+_items[0]._name)" --}}
     {{param persona="=_id"}}
     {{param episodio="=contexto.episodio"}}
     {{ask field="fechaEvento" type="datetime" label="Fecha Evento" required="true" value="=moment().format()" min="=moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()"}}
@@ -12637,7 +12662,21 @@
   {{action id="notaHistoriaClinicaMaxilo" source="notaHistoriaClinicaMaxilo" label="Historia Clínica Maxilofacial" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
   {{action id="notaResultadoEstudio" source="notaResultadoEstudio" label="Resumen Estudio" transform="copiar" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true"}}  
   {{action id="notaResumenClinico" source="notaResumenClinico" label="Resumen Clínico" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
-  {{#action id="notaEvolucion" source="notaEvolucion" label="Evolución" transform="copiarEvolucion" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaEvolucion" fromView="ultimaEvolucion" error="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''" errorType="info"}}
+  {{#action
+    id="notaEvolucion"
+    source="notaEvolucion"
+    label="Evolución"
+    transform="copiarEvolucion"
+    hide="true"
+    type="add-subdoc"
+    visibleMode="close"
+    color="deep-orange"
+    onlyPost="true"
+    fromSource="notaEvolucion"
+    fromView="ultimaEvolucion"
+    error="=fn('validarEdadPrestador',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)"
+    errorType="info"
+  }}
     {{param persona="_id"}}
     {{param episodio="=contexto.episodio"}}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
@@ -12684,7 +12723,7 @@
     toSection5="interconsultasRealizadas"
     errorType="info"
     error="=fn('validarInicialUrgencias', contexto, detalle)||fn('validarPlanAltaEnfermeria', contexto, detalle)||fn('validarDerechohabiencia', contexto, detalle)||fn('errorDatosSeguro', persona, contexto, detalle)||fn('validarFechaEgresoUrgencias',persona.fechaNacimiento,fn('hospitalizacionDesde', contexto),_ask.fechaEgreso)"
-    error2="=fn('calcularEdadPorFechaAtencion',_ask.fechaEgreso,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaEgreso,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''"
+    error2="=fn('validarEdadPrestador',_ask.fechaEgreso,user.serviceProvider.fechaNacimiento)"
   }}
     {{param persona="=_id"}}
     {{param tipoSolicitud="procedimiento,cirugia"}}
@@ -12731,7 +12770,7 @@
     fromView="medicamentosMinistrados"
     toSection="sugerirMedicamentosMinistrados"
     error="=fn('errorDatosSeguro', persona, contexto, detalle)||fn('validarPlanAltaEnfermeriaExiste', contexto, detalle)||fn('validarFechaEgresoUrgencias',persona.fechaNacimiento,fn('hospitalizacionDesde', contexto),_ask.fechaEgreso)"
-    error2="=fn('calcularEdadPorFechaAtencion',_ask.fechaEgreso,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaEgreso,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''"
+    error2="=fn('validarEdadPrestador',_ask.fechaEgreso,user.serviceProvider.fechaNacimiento)"
     errorType="info"
   }}
     {{!-- {{ask field="fechaIngreso" type="datetime" label="Fecha Ingreso" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()"}} --}}
@@ -12800,7 +12839,19 @@
 
     {{!-- Hospitalización --}}
   {{action id="notaCambioMedicoTratante" source="notaCambioMedicoTratante" label="Cambio Médico Tratante" transform="copiarDiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
-  {{#action id="notaIngreso" source="notaIngreso" label="Ingreso" transform="copiarDiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" error="=fn('errorCluesEgreso',user.establishmentData.cluesTipoUnidad,user.establishmentData.cluesTipoAbreviacion)" error2="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''" errorType="info"}}
+  {{#action
+    id="notaIngreso"
+    source="notaIngreso"
+    label="Ingreso"
+    transform="copiarDiagnostico"
+    hide="true"
+    type="add-subdoc"
+    visibleMode="close"
+    color="deep-orange"
+    onlyPost="true"
+    error="=fn('validarEdadPrestador',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)"
+    errorType="info"
+  }}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
   {{/action}}
   {{action id="notaIngresoAjuste" source="notaIngresoAjuste" label="Ingreso (Ajuste)" transform="copiarDiagnostico" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" superUser="true"}}
@@ -12833,9 +12884,9 @@
     fromSource4="solicitud"
     fromView4="sugerirProcedimientosRealizados"
     toSection4="procedimientosRealizados"
-    errorType="info"
     error="=fn('validarEgreso', detalle)||fn('validarDerechohabiencia', contexto, detalle)||fn('errorCluesEgreso',user.establishmentData.cluesTipoUnidad,user.establishmentData.cluesTipoAbreviacion)||fn('errorDatosSeguro', persona, contexto, detalle)||fn('validarFechaEgreso',true,persona.fechaNacimiento,_ask.fechaIngresoHospitalario,_ask.fechaEgreso,_items3[0],user.establishmentData.cluesTipoAbreviacion,user.establishmentData.cluesSubAbreviacion)"
-    error2="=fn('calcularEdadPorFechaAtencion',_ask.fechaEgreso,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaEgreso,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''"
+    error2="=fn('validarEdadPrestador',_ask.fechaEgreso,user.serviceProvider.fechaNacimiento)"
+    errorType="info"
   }}
     {{param persona="=_id"}}
     {{param tipoEpisodio="=fn('tipoEpisodio', contexto)"}}
@@ -12866,7 +12917,7 @@
     fromView4="sugerirProcedimientosRealizados"
     toSection4="procedimientosRealizados"
     error="=fn('validarEgreso', detalle)||fn('validarDerechohabiencia', contexto, detalle)||fn('errorCluesEgreso',user.establishmentData.cluesTipoUnidad,user.establishmentData.cluesTipoAbreviacion)||fn('errorDatosSeguro', persona, contexto, detalle)||fn('validarFechaEgreso',false,persona.fechaNacimiento,_ask.fechaIngresoHospitalario,_ask.fechaEgreso,_items3[0],user.establishmentData.cluesTipoAbreviacion,user.establishmentData.cluesSubAbreviacion)"
-    error2="=fn('calcularEdadPorFechaAtencion',_ask.fechaEgreso,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaEgreso,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''"
+    error2="=fn('validarEdadPrestador',_ask.fechaEgreso,user.serviceProvider.fechaNacimiento)"
     errorType="info"
   }}
     {{param persona="=_id"}}
@@ -12912,7 +12963,7 @@
     onlyPost="true"
     errorType="info"
     error="=fn('validarNotaInformacionEmbarazoPartograma', persona)"
-    error2="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''"
+    error2="=fn('validarEdadPrestador',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)"
     condition="=persona.genero=='mujer'"
   }}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
@@ -12944,7 +12995,7 @@
     color="deep-orange"
     onlyPost="true"
     error="=fn('errorCluesUrgencias',user.establishmentData.cluesTipoUnidad,user.establishmentData.cluesTipoAbreviacion)"
-    error2="=fn('calcularEdadPorFechaAtencion',fn('hospitalizacionDesde', contexto),user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',fn('hospitalizacionDesde', contexto),user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''"
+    error2="=fn('validarEdadPrestador',fn('hospitalizacionDesde', contexto),user.serviceProvider.fechaNacimiento)"
     errorType="info"
   }}
 
@@ -12953,7 +13004,22 @@
 
   {{action id="notaSolicitudTococirugiaUrgente" source="notaSolicitudTococirugia" subType="urgente" subTypeName="Solicitud Tococirugía Urgente" label="Tococirugía Urgente" transform="copiarTococirugiaUrgente" hide="true" type="add-subdoc" visibleMode="close" color="primary"  onlyPost="true" btnSolid="true" condition="=!fn('estaInternado', contexto)&&persona.esMujer"}}
   {{action id="notaSolicitudCirugiaUrgente" source="notaSolicitudCirugia" subType="urgente" subTypeName="Solicitud Cirugía Urgente" label="Cirugía Urgente" transform="copiarCirugiaUrgente" hide="true" type="add-subdoc" visibleMode="close" color="primary" onlyPost="true" btnSolid="true" condition="=!fn('estaInternado', contexto)"}}
-  {{#action id="notaSolicitudUrgencias" source="notaSolicitudUrgencias" label="Nueva Atención Triage" transform="copiarDatosReferencia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" btnSolid="true" onlyPost="true" condition="=!fn('estaInternado', contexto)" error="=fn('errorCluesUrgencias',user.establishmentData.cluesTipoUnidad,user.establishmentData.cluesTipoAbreviacion)" error2="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''" errorType="info"}}
+  {{#action
+    id="notaSolicitudUrgencias"
+    source="notaSolicitudUrgencias"
+    label="Nueva Atención Triage"
+    transform="copiarDatosReferencia"
+    hide="true"
+    type="add-subdoc"
+    visibleMode="close"
+    color="deep-orange"
+    btnSolid="true"
+    onlyPost="true"
+    condition="=!fn('estaInternado', contexto)"
+    error="=fn('errorCluesUrgencias',user.establishmentData.cluesTipoUnidad,user.establishmentData.cluesTipoAbreviacion)"
+    error2="=fn('validarEdadPrestador',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)"
+    errorType="info"
+  }}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
     {{ask field="desconoceHoraIngreso" type="select" label="Desconoce Hora Atención" keys="no,si" names="No,Sí" required="true"}}
   {{/action}}
@@ -13005,11 +13071,37 @@
   {{action id="notaReporteTamizAuditivoNeonatal" source="notaReporteTamizAuditivoNeonatal" label="Reporte Tamiz Auditivo Neonatal" transform="copiarDatosReferencia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
 
   {{!-- Anestesia --}}
-  {{#action id="notaValoracionPreanestesica" source="notaValoracionPreanestesica" label="Valoración Preanestésica" transform="copiarPlan" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" error="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''" errorType="info"}}
+  {{#action
+    id="notaValoracionPreanestesica"
+    source="notaValoracionPreanestesica"
+    label="Valoración Preanestésica"
+    transform="copiarPlan"
+    hide="true"
+    type="add-subdoc"
+    visibleMode="close"
+    color="deep-orange"
+    onlyPost="true"
+    error="=fn('validarEdadPrestador',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)"
+    errorType="info"
+  }}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
   {{/action}}
   {{action id="notaValoracionPreperfusion" source="notaValoracionPreperfusion" label="Valoración Preperfusión" transform="copiarSolicitudTipoCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}  
-  {{#action id="notaPostanestesica" source="notaPostanestesica" label="Postanestésica" transform="copiarSolicitudTipoCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaEvolucion" fromView="ultimaEvolucion" error="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''"}}
+  {{#action
+    id="notaPostanestesica"
+    source="notaPostanestesica"
+    label="Postanestésica"
+    transform="copiarSolicitudTipoCirugia"
+    hide="true"
+    type="add-subdoc"
+    visibleMode="close"
+    color="deep-orange"
+    onlyPost="true"
+    fromSource="notaEvolucion"
+    fromView="ultimaEvolucion"
+    error="=fn('validarEdadPrestador',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)"
+    errorType="info"
+  }}
     {{param persona="_id"}}
     {{param episodio="=contexto.episodio"}}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
@@ -13019,7 +13111,21 @@
 
   {{!-- Cirugía --}}
   {{action id="cirugiaPreoperatoria" hide="true" type="menu" menu="cirugiaPreoperatoria" label="Preoperatoria" color="deep-orange"}}      
-  {{#action id="notaPreoperatoria" source="notaPreoperatoria" label="Preoperatoria" transform="copiarSolicitudTipoCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaEvolucion" fromView="ultimaEvolucion" error="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''" errorType="info"}}
+  {{#action
+    id="notaPreoperatoria"
+    source="notaPreoperatoria"
+    label="Preoperatoria"
+    transform="copiarSolicitudTipoCirugia"
+    hide="true"
+    type="add-subdoc"
+    visibleMode="close"
+    color="deep-orange"
+    onlyPost="true"
+    fromSource="notaEvolucion"
+    fromView="ultimaEvolucion"
+    error="=fn('validarEdadPrestador',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)"
+    errorType="info"
+  }}
     {{param persona="_id"}}
     {{param episodio="=contexto.episodio"}}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
@@ -13069,7 +13175,23 @@
     {{item action="notaSeguridadPerfusion" text="Seguridad Perfusión"}}
   {{/menu}}
   
-  {{#action id="notaPostoperatoria" source="notaPostoperatoria" label="Postoperatoria" transform="copiarSolicitudTipoCirugia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" fromSource="notaEvolucion" fromView="ultimaEvolucion" fromSource2="solicitud" fromView2="sugerirProcedimientosRealizados" toSection2="procedimientosRealizados" error="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''" errorType="info"}}
+  {{#action
+    id="notaPostoperatoria"
+    source="notaPostoperatoria"
+    label="Postoperatoria"
+    transform="copiarSolicitudTipoCirugia"
+    hide="true"
+    type="add-subdoc"
+    visibleMode="close"
+    color="deep-orange" onlyPost="true"
+    fromSource="notaEvolucion"
+    fromView="ultimaEvolucion"
+    fromSource2="solicitud"
+    fromView2="sugerirProcedimientosRealizados"
+    toSection2="procedimientosRealizados"
+    error="=fn('validarEdadPrestador',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)"
+    errorType="info"
+  }}
     {{param persona="_id"}}
     {{param episodio="=contexto.episodio"}}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
@@ -13098,10 +13220,10 @@
     visibleMode="close"
     color="deep-orange"
     onlyPost="true"
-    errorType="info"
-    error="=fn('validarNotaAtencionParto', persona)"
-    error2="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''"
     condition="=persona.genero=='mujer'"
+    error="=fn('validarNotaAtencionParto', persona)"
+    error2="=fn('validarEdadPrestador',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)"
+    errorType="info"
   }}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
   {{/action}}
@@ -13227,12 +13349,40 @@
   {{action id="notaSolicitudRecepcionTrasplante" source="notaSolicitudRecepcionTrasplante" label="Solicitud Recepción Potencial" transform="copiarTrasplante" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{action id="notaSolicitudImagenologia" source="notaSolicitudImagenologia" label="Solicitud Imagenología" transform="copiarImagenologia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" error="=fn('errorDatosSeguro', persona, contexto, detalle)" errorType="info"}}
   {{action id="notaSolicitudPatologia" source="notaSolicitudPatologia" label="Solicitud Patología" transform="copiarPatologia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" error="=fn('errorDatosSeguro', persona, contexto, detalle)" errorType="info"}}
-  {{#action id="notaSolicitudProcedimiento" source="notaSolicitudProcedimiento" label="Solicitud Procedimiento" transform="copiarProcedimiento" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" btnSolid="true" error="=fn('errorDatosSeguro', persona, contexto, detalle)" error2="=fn('calcularEdadPorFechaAtencion',_ask.fechaProcedimiento,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaProcedimiento,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''" errorType="info"}}
+  {{#action
+    id="notaSolicitudProcedimiento"
+    source="notaSolicitudProcedimiento"
+    label="Solicitud Procedimiento"
+    transform="copiarProcedimiento"
+    hide="true"
+    type="add-subdoc"
+    visibleMode="close"
+    color="deep-orange"
+    onlyPost="true"
+    btnSolid="true"
+    error="=fn('errorDatosSeguro', persona, contexto, detalle)"
+    error2="=fn('validarEdadPrestador',_ask.fechaProcedimiento,user.serviceProvider.fechaNacimiento)"
+    errorType="info"
+  }}
     {{ask field="fechaProcedimiento" type="datetime" label="Fecha Procedimiento" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Procedimiento Incorrecta"}}
   {{/action}}
   {{action id="notaSolicitudInhaloterapia" source="notaSolicitudInhaloterapia" label="Solicitud inhaloterapia" transform="copiarInhaloterapia" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true" error="=fn('errorDatosSeguro', persona, contexto, detalle)" errorType="info"}}
   {{action id="notaSolicitudCateterSondaDrenaje" source="notaSolicitudCateterSondaDrenaje" label="Solicitud Catéteres, Sondas o Drenajes" transform="copiarResumen" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
-  {{#action id="notaSolicitudInterconsulta" source="notaSolicitudInterconsulta" label="Solicitud Interconsulta" transform="copiarInterconsulta" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange"  onlyPost="true" btnSolid="true" error="=fn('errorDatosSeguro', persona, contexto, detalle)" error2="=fn('calcularEdadPorFechaAtencion',_ask.fechaInterconsulta,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaInterconsulta,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''" errorType="info"}}
+  {{#action
+    id="notaSolicitudInterconsulta"
+    source="notaSolicitudInterconsulta"
+    label="Solicitud Interconsulta"
+    transform="copiarInterconsulta"
+    hide="true"
+    type="add-subdoc"
+    visibleMode="close"
+    color="deep-orange"
+    onlyPost="true"
+    btnSolid="true"
+    error="=fn('errorDatosSeguro', persona, contexto, detalle)"
+    error2="=fn('validarEdadPrestador',_ask.fechaInterconsulta,user.serviceProvider.fechaNacimiento)"
+    errorType="info"
+  }}
     {{ask field="fechaInterconsulta" type="datetime" label="Fecha Interconsulta" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Interconsulta Incorrecta"}}
   {{/action}}
   {{action id="notaSolicitudDieta" source="notaSolicitudDieta" label="Solicitud Dieta" transform="copiarDieta" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
@@ -13268,10 +13418,10 @@
     confirmHeight="600"
     confirmWidth="500"
     btnSolid="true"
-    error="=fn('validarNotaSolicitudTococirugia', persona)||fn('errorDatosSeguro', persona, contexto, detalle)"
-    error2="=fn('calcularEdadPorFechaAtencion',_ask.fechaPropuesta,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaPropuesta,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''"
-    errorType="info"
     condition="=persona.genero=='mujer'"
+    error="=fn('validarNotaSolicitudTococirugia', persona)||fn('errorDatosSeguro', persona, contexto, detalle)"
+    error2="=fn('validarEdadPrestador',_ask.fechaPropuesta,user.serviceProvider.fechaNacimiento)"
+    errorType="info"
   }}
     {{param tipoSolicitud="='tococirugia'"}}
     {{param persona="=_id"}}
@@ -15682,7 +15832,22 @@
     {{param desde="=(fn('ministracionDesde', _params.join.contexto)||'')"}} --}}
   {{/action}}
     {{!-- condition="=!calc.getRef(contexto, 'hospitalizacion.estaActivo')"}} --}}
-  {{#action id="notaLlegaPacienteCama" source="notaLlegaPacienteCama" label="Llega Paciente a Cama" transform="copiarCama" hide="true" type="add-subdoc" visibleMode="close" btnSolid="true" color="primary" onlyPost="true" forceReadOnly="true" condition="=fn('puedeLlegaPacienteCama', _params, contexto)" error="=fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)>90?'La Edad del Usuario Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''" errorType="info"}}
+  {{#action
+    id="notaLlegaPacienteCama"
+    source="notaLlegaPacienteCama"
+    label="Llega Paciente a Cama"
+    transform="copiarCama"
+    hide="true"
+    type="add-subdoc"
+    visibleMode="close"
+    btnSolid="true"
+    color="primary"
+    onlyPost="true"
+    forceReadOnly="true"
+    condition="=fn('puedeLlegaPacienteCama', _params, contexto)"
+    error="=fn('validarEdadPrestador',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)"
+    errorType="info"
+  }}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().format()" errorMessage="Fecha Atención Incorrecta"}}
   {{/action}}
 

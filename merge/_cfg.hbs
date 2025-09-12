@@ -2869,6 +2869,12 @@
     {{default return="null"}}
   {{/function}}
 
+  {{#function id="validarNotaAtencionPartoProcesar"}}
+    {{define type="param" id="base"}}
+    {{when condition="=calc.getRef(base,'gestas')>25" return="='Error: Número de Gestas excede el límite permitido (25)'"}}
+    {{default return="null"}}
+  {{/function}}
+
   {{#function id="validarNotaInformacionEmbarazoPartograma"}}
     {{define type="param" id="persona"}}
     {{when condition="=persona.genero!='mujer'" return="='El Género del Paciente debe ser Mujer para Registrar Información de Embarazo y Partograma'"}}
@@ -2947,6 +2953,12 @@
     {{define type="param" id="fechaAtencion"}}
     {{define type="param" id="fechaNacimiento"}}
     {{default return="=moment(@fechaAtencion).diff(moment(@fechaNacimiento), 'years')"}}
+  {{/function}}
+
+  {{#function id="validarEdadPrestador"}}
+    {{define type="param" id="fechaAtencion"}}
+    {{define type="param" id="fechaNacimiento"}}
+    {{default return="=fn('calcularEdadPorFechaAtencion',@fechaAtencion,@fechaNacimiento)<18||fn('calcularEdadPorFechaAtencion',@fechaAtencion,@fechaNacimiento)>90?'La Edad del Prestador Debe Ser Mayor o Igual a 18 Años y Menor o Igual a 90 Años':''"}}
   {{/function}}
 
   {{#function id="validarFechaAtencionLesion"}}
@@ -10397,8 +10409,7 @@
 	{{/template}}
 
 	{{#template id="datosMujerSeulEgresoPostparto"}}
-		<br>Hubo Extracción o Expulsión: {{_huboExtraccionExpulsion}}
-		{{#if siHuboExtraccionExpulsion}}<br>Edad Gestacional: {{edadGestacional}}{{/if}}
+		<br>Edad Gestacional: {{edadGestacional}}
 		{{#if edadGestacionalNo88}}<br>Tipo Atención Obstétrica: {{_tipoAtencionObstetrica}}{{/if}}
 		{{#if siParto}}<br>Producto Único o Múltiple: {{_tipoEmbarazo}}{{/if}}
 		{{#if siParto}}<br>Total Productos: {{totalProductos}}{{/if}}
