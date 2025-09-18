@@ -2779,6 +2779,11 @@
     {{default return="=(genero==='mujer'&&edad>=10&&edad<=59)||(calc.in(genero,['hombre','intersexual'])&&edad>=10&&edad<=70)?'':'Edad Inválida (El Paciente no es candidato a Planificación Familiar)'"}}
   {{/function}}
 
+  {{#function id="validarNotaPlanificacionFamiliarProcesar"}}
+    {{define type="param" id="doc"}}
+    {{default return="=!calc.hasValuesRef(doc,'base.afeccionPrincipal,orientacionConsejeria.orientacionPlanificacionFamiliar,orientacionConsejeria.orientacionIts,orientacionConsejeria.orientacionPrevencionEmbarazo,orientacionConsejeria.orientacionSaludSexual,metodos.revisionColocacionMetodoQuirurgico,metodos.puerperaAceptaFamiliar,metodos.numeroPerservativosEntregados,metodos.numeroPerservativosEntregadosFemeninos,metodos.numeroOtrosMetodosEntregados,metodos.seEntregoAnticoncepcionEmergencia',['noAplica','0','-1'])?'Debe indicar al menos un diagnóstico o una orientación o un método de planificación familiar':null"}}
+  {{/function}}
+
   {{#function id="validarFechaEgreso"}}
     {{define type="param" id="validarFechaNota"}}
     {{define type="param" id="fechaNacimiento"}}

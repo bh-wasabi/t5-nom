@@ -1,6 +1,7 @@
 {{#define id="notaPlanificacionFamiliar"}}
   {{#action 
     id="afectar"
+    error="=fn('validarNotaPlanificacionFamiliarProcesar',_doc)"
     confirm="=calc.in('SI', _.union(calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteEdad'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteEdad'),calc.pluckRef([base.afeccionPrincipal], 'base.excedeLimiteSexo'),calc.pluckRef(base.otrosDiagnosticos, 'base.excedeLimiteSexo')))"
     confirmMessage="Diagnóstico Excede Límite Edad<br>¿Desea continuar?"
   }}
