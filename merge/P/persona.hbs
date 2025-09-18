@@ -15850,7 +15850,16 @@
   }}
     {{param persona="=_id"}}
     {{param episodio="=contexto.episodio"}}
-    {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=(detalle.notaPasaPacienteHospitalizacion&&calc.getRef(detalle,'notaPasaPacienteHospitalizacion.contexto.episodio')==contexto.episodio&&calc.getRef(detalle,'notaPasaPacienteHospitalizacion.base.fechaEgreso'))||fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().format()" errorMessage="Fecha Atención Incorrecta"}}
+    {{ask
+      field="fechaAtencion"
+      type="datetime"
+      label="Fecha Atención"
+      required="true"
+      value="=moment().format()"
+      min="=fn('fechaMinimaLlegaPacienteCama', detalle, contexto, persona)"
+      max="=moment().format()"
+      errorMessage="Fecha Atención Incorrecta"
+    }}
   {{/action}}
 
   {{action id="notaSalePacienteServicio" source="notaSalePacienteServicio" label="=fn('salePacienteServicio', _params.service)" transform="copiarCamaServicio" hide="true" type="add-subdoc" visibleMode="close" color="primary" btnSolid="true" onlyPost="true" condition="=fn('puedeSalir', contexto)"}}
