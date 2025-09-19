@@ -7843,6 +7843,30 @@
     {{/update}}
   {{/transform}}
 
+  {{#transform id="copiarPasaPacienteProcedimientoQx"}}
+    {{update section="persona" transform="copiarPersona"}}
+    {{update section="contexto" value="=contexto"}}
+    {{#update section="base"}}
+      {{set solicitud="_params"}}
+      {{set esMujer="=persona.esMujer"}}
+      {{set esHombre="=!esMujer"}}
+      {{set esMenor="=calc.fromNowYears(persona.fechaNacimiento)<17"}}
+      {{set esNeonatal="=calc.fromNowDays(persona.fechaNacimiento)<29"}}
+      {{set tipoSanguineo="=persona.tipoSanguineo"}}
+      {{set _tipoSanguineo="=persona._tipoSanguineo"}}
+      {{set cama="=_params.info.base.cama"}}
+      {{set _cama="=_params.info.base._cama"}}
+      {{set anestesiologo="=_params.info.base.anestesiologo"}}
+      {{set _anestesiologo="=_params.info.base._anestesiologo"}}
+      {{set candidato="=_params.info.base.candidato"}}
+      {{set _candidato="=_params.info.base._candidato"}}
+      {{set folioReferencia="=_params.info.base.folioReferencia"}}
+      {{set categoria="=_params._categoria"}}
+      {{set fechaIngreso="=fn('hospitalizacionDesde', contexto)"}}
+      {{set fechaEgreso="=_items[0]&&moment(`${_items[0].base.fechaEgreso} ${_items[0].base.horaEgreso}`, 'YYYY-MM-DD HH:mm').format()"}}
+    {{/update}}
+  {{/transform}}
+
   {{!-- Tarea #3712  --}}
   {{action id="notaSeguimientoHepatitisC" source="notaSeguimientoHepatitisC" label="Hepatitis C Seguimiento" transform="copiarHepatitisSeguimiento" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}
   {{!-- Tarea #3712  --}}
@@ -10546,6 +10570,8 @@
     {{item action="notaSolicitudInterconsulta" text="Solicitud Interconsulta" beginGroup="true"}}
     {{item action="notaSolicitudMedicamento" text="Solicitud Medicamento"}}
     {{item action="notaSolicitudProcedimiento" text="Solicitud Procedimiento"}}
+    {{item action="notaSolicitudCirugia" text="Solicitud Programación Cirugía"}}
+    {{item action="notaSolicitudTococirugia" text="Solicitud Tococirugía"}}
     {{item action="notaSolicitudIngresoHospitalario" text="Solicitud Ingreso Hospitalario" beginGroup="true"}}
   {{/menu}}
 
@@ -12721,8 +12747,9 @@
     fromSource5="solicitud"
     fromView5="sugerirInterconsultas"
     toSection5="interconsultasRealizadas"
+    condition="=calc.in('notaInicialUrgencias', _params.join.contexto.urgencias.flags)&&calc.in('notaPlanAltaEnfermeria', _params.join.contexto.urgencias.flags)&&!calc.in('notaAltaServicio', _params.join.contexto.urgencias.flags)"
     errorType="info"
-    error="=fn('validarInicialUrgencias', contexto, detalle)||fn('validarPlanAltaEnfermeria', contexto, detalle)||fn('validarDerechohabiencia', contexto, detalle)||fn('errorDatosSeguro', persona, contexto, detalle)||fn('validarFechaEgresoUrgencias',persona.fechaNacimiento,fn('hospitalizacionDesde', contexto),_ask.fechaEgreso)"
+    error="=fn('validarDerechohabiencia', contexto, detalle)||fn('errorDatosSeguro', persona, contexto, detalle)||fn('validarFechaEgresoUrgencias',persona.fechaNacimiento,fn('hospitalizacionDesde', contexto),_ask.fechaEgreso)"
     error2="=fn('validarEdadPrestador',_ask.fechaEgreso,user.serviceProvider.fechaNacimiento)"
   }}
     {{param persona="=_id"}}
@@ -12769,7 +12796,8 @@
     fromSource="solicitud"
     fromView="medicamentosMinistrados"
     toSection="sugerirMedicamentosMinistrados"
-    error="=fn('errorDatosSeguro', persona, contexto, detalle)||fn('validarPlanAltaEnfermeriaExiste', contexto, detalle)||fn('validarFechaEgresoUrgencias',persona.fechaNacimiento,fn('hospitalizacionDesde', contexto),_ask.fechaEgreso)"
+    condition="=!calc.in('notaPlanAltaEnfermeria', _params.join.contexto.urgencias.flags)"
+    error="=fn('errorDatosSeguro', persona, contexto, detalle)||fn('validarFechaEgresoUrgencias',persona.fechaNacimiento,fn('hospitalizacionDesde', contexto),_ask.fechaEgreso)"
     error2="=fn('validarEdadPrestador',_ask.fechaEgreso,user.serviceProvider.fechaNacimiento)"
     errorType="info"
   }}
@@ -12994,6 +13022,7 @@
     visibleMode="close"
     color="deep-orange"
     onlyPost="true"
+    condition="=!calc.in('notaInicialUrgencias', _params.join.contexto.urgencias.flags)"
     error="=fn('errorCluesUrgencias',user.establishmentData.cluesTipoUnidad,user.establishmentData.cluesTipoAbreviacion)"
     error2="=fn('validarEdadPrestador',fn('hospitalizacionDesde', contexto),user.serviceProvider.fechaNacimiento)"
     errorType="info"
@@ -15803,7 +15832,24 @@
     {{param central="=_params.central"}}
     {{param desde="=fn('hospitalizacionDesde', contexto)||fn('ambulatorioDesde', contexto)"}}
   {{/action}}
-  {{action id="notaPasaPacienteProcedimientoQx" source="notaPasaPacienteProcedimientoQx" label="Pasa Paciente a Procedimiento Qx" transform="copiarSolicitudContexto" hide="true" type="add-subdoc" visibleMode="close" color="primary" btnSolid="true" onlyPost="true" condition="=calc.in('procedimientoQx', _params.join.contexto.urgencias.flags)"}}
+  {{#action
+    id="notaPasaPacienteProcedimientoQx"
+    source="notaPasaPacienteProcedimientoQx"
+    label="Pasa Paciente a Procedimiento Qx"
+    transform="copiarPasaPacienteProcedimientoQx"
+    hide="true"
+    type="add-subdoc"
+    visibleMode="close"
+    color="primary"
+    btnSolid="true"
+    onlyPost="true"
+    fromSource="notaAltaServicio"
+    fromView="ultimaAltaServicio"
+    condition="=calc.in('notaAltaServicio', _params.join.contexto.urgencias.flags)&&calc.in('procedimientoQx', _params.join.contexto.urgencias.flags)"
+  }}
+    {{param persona="=_id"}}
+    {{param episodio="=contexto.episodio"}}
+  {{/action}}
   {{#action 
     id="notaPasaPacienteHospitalizacion"
     source="notaPasaPacienteHospitalizacion"
@@ -15818,8 +15864,7 @@
     condition="=fn('tieneCamaReservada', contexto)"
     fromSource="notaAltaServicio"
     fromView="ultimaAltaServicio"
-    error="fn('validarNotaAltaServicioExiste', contexto, detalle)"
-    errorType="info"
+    condition="=calc.in('notaAltaServicio', _params.join.contexto.urgencias.flags)&&calc.in('ingresoHospitalario', _params.join.contexto.urgencias.flags)"
   }}
     {{param persona="=_id"}}
     {{param episodio="=contexto.episodio"}}

@@ -2820,31 +2820,31 @@
     {{default return="=@detalle.notaDerechohabienciaEgreso.contexto.episodio==@contexto.episodio?null:'Falta Indicar Derechohabiencia'"}}
   {{/function}}
 
-  {{#function id="validarInicialUrgencias"}}
+  {{!-- {{#function id="validarInicialUrgencias"}}
     {{define type="param" id="contexto"}}
     {{define type="param" id="detalle" default="={}"}}
     {{when condition="=calc.isEmpty(detalle.notaInicialUrgencias)" return="Falta Nota Inicial Urgencias"}}
     {{default return="=@detalle.notaInicialUrgencias.contexto.episodio==@contexto.episodio?null:'Falta Nota Inicial Urgencias'"}}
-  {{/function}}
+  {{/function}} --}}
 
-  {{#function id="validarPlanAltaEnfermeria"}}
+  {{!-- {{#function id="validarPlanAltaEnfermeria"}}
     {{define type="param" id="contexto"}}
     {{define type="param" id="detalle" default="={}"}}
     {{when condition="=calc.isEmpty(detalle.notaPlanAltaEnfermeria)" return="Falta Nota Plan Alta Enfermería"}}
     {{default return="=@detalle.notaPlanAltaEnfermeria.contexto.episodio==@contexto.episodio?null:'Falta Nota Plan Alta Enfermería'"}}
-  {{/function}}
+  {{/function}} --}}
 
-  {{#function id="validarPlanAltaEnfermeriaExiste"}}
+  {{!-- {{#function id="validarPlanAltaEnfermeriaExiste"}}
     {{define type="param" id="contexto"}}
     {{define type="param" id="detalle" default="={}"}}
     {{default return="=@detalle.notaPlanAltaEnfermeria.contexto.episodio==@contexto.episodio?'Ya Existe Nota Plan Alta Enfermería':null"}}
-  {{/function}}
+  {{/function}} --}}
 
-  {{#function id="validarNotaAltaServicioExiste"}}
+  {{!-- {{#function id="validarNotaAltaServicioExiste"}}
     {{define type="param" id="contexto"}}
     {{define type="param" id="detalle" default="={}"}}
     {{default return="=calc.getRef(detalle,'notaAltaServicio.contexto.episodio')===calc.getRef(contexto,'episodio')?null:'Falta Nota Alta Servicio'"}}
-  {{/function}}
+  {{/function}} --}}
 
   {{#function id="validarNotaAltaServicio"}}
     {{define type="param" id="base"}}
@@ -3034,6 +3034,7 @@
     {{define type="param" id="detalle"}}
     {{define type="param" id="contexto"}}
     {{define type="param" id="persona"}}
+    {{when condition="=calc.getRef(detalle,'notaPasaPacienteProcedimientoQx')&&calc.getRef(detalle,'notaPasaPacienteProcedimientoQx.contexto.episodio')==contexto.episodio" return="=calc.getRef(detalle,'notaPasaPacienteProcedimientoQx.base.fechaEgreso')"}}
     {{when condition="=calc.getRef(detalle,'notaPasaPacienteHospitalizacion')&&calc.getRef(detalle,'notaPasaPacienteHospitalizacion.contexto.episodio')==contexto.episodio" return="=calc.getRef(detalle,'notaPasaPacienteHospitalizacion.base.fechaEgreso')"}}
     {{when condition="=fn('hospitalizacionDesde', contexto)" return="=fn('hospitalizacionDesde', contexto)"}}
     {{default return="=moment(persona.fechaNacimiento).format()"}}
