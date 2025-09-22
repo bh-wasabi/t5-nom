@@ -7,11 +7,11 @@
       {{onChange clearFields="planSeguridad,planSeguridad1"}}
     {{/field}}
     {{validator type="expr" validIf="=(@numeroConsultasRecibidas<31)" message="Las consultas no deben ser entre 0 y 30."}}
-    {{validator type="expr" notValidIf="=medicamentosDuranteEsteEmbarazo=='noAplica'" message="Prescripción Ácido Fólico / Otras Acciones Inválido"}}
-    {{validator type="expr" notValidIf="=planSeguridad1=='noAplica'" message="Plan Seguridad Inválido"}}
-    {{validator type="expr" notValidIf="=planSeguridad=='noAplica'" message="Plan Seguridad Inválido"}}
-    {{validator type="expr" notValidIf="=complicacionTraslado=='noAplica'" message="Traslado Embarazada Inválido"}}
-    {{validator type="expr" notValidIf="=accionesTraslado=='noAplica'" message="Otras Acciones Traslado AME Inválido"}}
-    {{validator type="expr" notValidIf="=primeraVezAltoRiesgo=='noAplica'" message="Primera Vez Alto Riesgo Inválido"}}
+    {{!-- {{validator type="expr" notValidIf="=medicamentosDuranteEsteEmbarazo=='noAplica'" message="Prescripción Ácido Fólico / Otras Acciones Inválido"}} --}}
+    {{!-- {{validator type="expr" notValidIf="=planSeguridad1=='noAplica'" message="Plan Seguridad Inválido"}} --}}
+    {{!-- {{validator type="expr" notValidIf="=planSeguridad=='noAplica'" message="Plan Seguridad Inválido"}} --}}
+    {{!-- {{validator type="expr" notValidIf="=complicacionTraslado=='noAplica'" message="Traslado Embarazada Inválido"}} --}}
+    {{!-- {{validator type="expr" notValidIf="=accionesTraslado=='noAplica'" message="Otras Acciones Traslado AME Inválido"}} --}}
+    {{!-- {{validator type="expr" notValidIf="=primeraVezAltoRiesgo=='noAplica'" message="Primera Vez Alto Riesgo Inválido"}} --}}
   {{/section}}
 {{/define}}
