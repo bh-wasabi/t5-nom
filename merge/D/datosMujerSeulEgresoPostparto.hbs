@@ -20,6 +20,6 @@
     {{validator type="expr" validIf="=@edadGestacional=='88'||@siAborto||(@tipoEmbarazo=='unico'&&@totalProductos==1)||(@tipoEmbarazo=='gemelar'&&@totalProductos==2)||(@tipoEmbarazo=='tresMas'&&(@totalProductos>=3&&@totalProductos<=6))" message="Error en Número de Productos"}}
     {{validator type="expr" notValidIf="=siParto&&edadGestacional>=1&&edadGestacional<=21" message="No Coincide Edad Gestacional con Tipo Atención Obstétrica (22-45)"}}
     {{validator type="expr" notValidIf="=siAborto&&edadGestacional>=22&&edadGestacional<=45" message="No Coincide Edad Gestacional con Tipo Atención Obstétrica (1-21)"}}
-    {{validator type="expr" notValidIf="=(totalProductos!=(calc.isEmpty(datosInformacionProducto)?0:datosInformacionProducto.length))&&(totalProductos!=(calc.isEmpty(datosInformacionProductoAborto)?0:datosInformacionProductoAborto.length))" message="<strong>Total Productos</strong> no Coincide con Registros en <strong>Información Producto</strong>"}}
+    {{validator type="expr" notValidIf="=siParto&&totalProductos!=datosInformacionProducto.length" message="<strong>Total Productos</strong> no Coincide con Registros en <strong>Información Producto</strong>"}}
   {{/section}}
 {{/define}}
