@@ -2870,7 +2870,9 @@
 
   {{#function id="validarNotaAtencionParto"}}
     {{define type="param" id="persona"}}
+    {{define type="param" id="fechaAtencion"}}
     {{when condition="=persona.genero!='mujer'" return="='El Género del Paciente debe ser Mujer para Registrar Atención Postparto'"}}
+    {{when condition="=fn('calcularEdadPorFechaAtencion',@fechaAtencion,persona.fechaNacimiento)<10||fn('calcularEdadPorFechaAtencion',@fechaAtencion,persona.fechaNacimiento)>54" return="='La Edad del Paciente debe ser entre 10 y 54 años para Registrar Atención Postparto'"}}
     {{default return="null"}}
   {{/function}}
 

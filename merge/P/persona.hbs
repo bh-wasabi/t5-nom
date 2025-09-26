@@ -13250,7 +13250,7 @@
     color="deep-orange"
     onlyPost="true"
     condition="=persona.genero=='mujer'"
-    error="=fn('validarNotaAtencionParto', persona)"
+    error="=fn('validarNotaAtencionParto', persona, _ask.fechaAtencion)"
     error2="=fn('validarEdadPrestador',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)"
     errorType="info"
   }}
