@@ -1,0 +1,8 @@
+{{#define id="notaRegistroSignosVitalesSomatometria"}}
+  {{#section id="base"}}
+    {{validator type="expr" notValidIf="=moment(fechaAtencion).diff(moment(fechaNacimiento).add(moment(persona.horaNacimiento).hours(),'hours'),'hours')<24&&calc.getRef(somatometria,'base.peso')>8&&calc.getRef(somatometria,'base.peso')!=999" message="Peso Incorrecto (Máximo 8 kg.)"}}
+    {{validator type="expr" notValidIf="=moment(fechaAtencion).diff(fechaNacimiento,'days')<30&&calc.getRef(somatometria,'base.peso')>12&&calc.getRef(somatometria,'base.peso')!=999" message="Peso Incorrecto (Máximo 12 kg.)"}}
+    {{validator type="expr" notValidIf="=moment(fechaAtencion).diff(fechaNacimiento,'months')<12&&calc.getRef(somatometria,'base.peso')>20&&calc.getRef(somatometria,'base.peso')!=999" message="Peso Incorrecto (Máximo 20 kg.)"}}
+    {{validator type="expr" notValidIf="=moment(fechaAtencion).diff(fechaNacimiento,'years')>=1&&calc.getRef(somatometria,'base.peso')<5&&calc.getRef(somatometria,'base.peso')!=999" message="Peso Incorrecto (Mínimo 5 kg.)"}}
+  {{/section}}  
+{{/markup}}

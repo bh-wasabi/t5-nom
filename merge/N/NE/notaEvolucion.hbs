@@ -11,6 +11,10 @@
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.validoSeul, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.validoSeul, calc.pluckRef(@otrosDiagnosticos, 'base.validoSeul')), null, 'ABORTO')" message="Tiene Diagnósticos de tipo ABORTO Duplicados"}}
     {{validator type="expr" notValidIf="=_.intersection(calc.mergeArrays(fn('diagnosticoParto'),fn('diagnosticoAborto')),calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico'))).length>1" message="Tiene Diagnósticos de PARTO y ABORTO"}}
     {{validator type="expr" notValidIf="=_.last(calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico'))=='P95X'" message="Código P95X no puede ser seleccionado como última Comorbilidad"}}
+    {{validator type="expr" notValidIf="=moment(fechaAtencion).diff(moment(fechaNacimiento).add(moment(persona.horaNacimiento).hours(),'hours'),'hours')<24&&calc.getRef(somatometria,'base.peso')>8&&calc.getRef(somatometria,'base.peso')!=999" message="Peso Incorrecto (Máximo 8 kg.)"}}
+    {{validator type="expr" notValidIf="=moment(fechaAtencion).diff(fechaNacimiento,'days')<30&&calc.getRef(somatometria,'base.peso')>12&&calc.getRef(somatometria,'base.peso')!=999" message="Peso Incorrecto (Máximo 12 kg.)"}}
+    {{validator type="expr" notValidIf="=moment(fechaAtencion).diff(fechaNacimiento,'months')<12&&calc.getRef(somatometria,'base.peso')>20&&calc.getRef(somatometria,'base.peso')!=999" message="Peso Incorrecto (Máximo 20 kg.)"}}
+    {{validator type="expr" notValidIf="=moment(fechaAtencion).diff(fechaNacimiento,'years')>=1&&calc.getRef(somatometria,'base.peso')<5&&calc.getRef(somatometria,'base.peso')!=999" message="Peso Incorrecto (Mínimo 5 kg.)"}}
   {{/section}}
 
   {{#view id="comorbilidades"}}

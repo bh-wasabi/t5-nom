@@ -7790,6 +7790,7 @@
       {{set _signosVitales="=detalle._signosVitales"}}
       {{set somatometria="=detalle.somatometria"}}
       {{set _somatometria="=detalle._somatometria"}}
+      {{set fechaNacimiento="=persona.fechaNacimiento"}}
       {{setRef ref="signosVitales.base.fechaHoraRegistro" value="=_params.fechaAtencion"}}
     {{/update}}
   {{/transform}}
@@ -12647,7 +12648,7 @@
     errorType="info"
     error="=!calc.validarFechaEventoAtencion(_ask.fechaEvento,_ask.fechaAtencion,_ask.desconoceHoraEvento=='no'&&_ask.desconoceHoraAtencion=='no')?'Fecha Atención debe ser mayor que Fecha Evento':null"
     error2="=fn('validarEdadPrestador',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)"
-    error3="=fn('validarNotaLesiones', _ask.fechaEvento, persona)||fn('validarDerechohabiencia', contexto, detalle)||fn('errorDatosSeguro', persona, contexto, detalle)||(_items[0]&&'Nota Lesión Activa: '+_items[0]._name)"
+    error3="=fn('validarNotaLesiones', _ask.fechaEvento, persona)||fn('validarDerechohabiencia', contexto, detalle)||fn('errorDatosSeguro', persona, contexto, detalle)||(contexto.episodio&&(_items[0]&&'Nota Lesión Activa: '+_items[0]._name))"
   }}
     {{param persona="=_id"}}
     {{param episodio="=contexto.episodio"}}
@@ -12796,7 +12797,7 @@
     fromSource="solicitud"
     fromView="medicamentosMinistrados"
     toSection="sugerirMedicamentosMinistrados"
-    condition="=!calc.in('notaPlanAltaEnfermeria', _params.join.contexto.urgencias.flags)"
+    condition="=!calc.in('notaPlanAltaEnfermeria', _params.join.contexto.urgencias.flags)&&calc.in('notaInicialUrgencias', _params.join.contexto.urgencias.flags)"
     error="=fn('errorDatosSeguro', persona, contexto, detalle)||fn('validarFechaEgresoUrgencias',persona.fechaNacimiento,fn('hospitalizacionDesde', contexto),_ask.fechaEgreso)"
     error2="=fn('validarEdadPrestador',_ask.fechaEgreso,user.serviceProvider.fechaNacimiento)"
     errorType="info"
