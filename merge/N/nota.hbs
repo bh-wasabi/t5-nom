@@ -846,6 +846,7 @@
       {{sort field="_created.date" direction="desc"}}
       {{filter field="_isAffected" eq="true"}}
       {{filter field="_created.establishment" eq="=user.establishment"}}
+      {{filter field="_created.service" eq="=servicio"}}
       {{filter field="persona.id" eq="=persona"}}
     {{/find}}
   {{/view}}

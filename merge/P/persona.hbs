@@ -12706,6 +12706,7 @@
   }}
     {{param persona="_id"}}
     {{param episodio="=contexto.episodio"}}
+    {{param servicio="=_params.service"}}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Atención Incorrecta"}}
   {{/action}}
   

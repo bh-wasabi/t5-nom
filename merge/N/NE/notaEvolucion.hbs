@@ -40,8 +40,8 @@
       {{include field="contexto.episodio"}}
       {{filter field="base.estatus" eq="afectado"}}
       {{filter field="persona.id" eq="=persona"}}
-      {{filter field="contexto.episodio" eq="=episodio" isNumber="true"}}
       {{filter field="_created.service" eq="=servicio"}}
+      {{filter condition="=episodio" field="contexto.episodio" eq="=episodio" isNumber="true"}}
       {{sort field="base.fechaAtencion" direction="desc"}}
     {{/find}}
   {{/view}}
