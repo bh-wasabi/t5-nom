@@ -12922,6 +12922,7 @@
     {{param desde="=fn('hospitalizacionDesde', contexto)"}}
     {{param episodio="=contexto.episodio"}}
     {{param tipoSolicitud="procedimiento,cirugia,tococirugia"}}
+    {{param servicio="=_params.service"}}
     {{ask field="fechaIngresoHospitalario" readOnly="true" type="datetime" label="Fecha Ingreso Hospitalario" required="true" value="=calc.getRef(detalle,'notaIngreso.base.fechaAtencion')||moment()"}}
     {{ask field="fechaEgreso" type="datetime" label="Fecha Egreso" required="true" value="=moment().format()" min="=fn('ultimaAtencion', contexto)||fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Egreso Incorrecta"}}
   {{/action}}
@@ -12954,6 +12955,7 @@
     {{param desde="=fn('hospitalizacionDesde', contexto)"}}
     {{param episodio="=contexto.episodio"}}
     {{param tipoSolicitud="procedimiento,cirugia,tococirugia"}}
+    {{param servicio="=_params.service"}}
     {{ask field="fechaIngresoHospitalario" readOnly="true" type="datetime" label="Fecha Ingreso Hospitalario" required="true" value="=calc.getRef(detalle,'notaIngreso.base.fechaAtencion')||moment()"}}
     {{ask field="fechaEgreso" type="datetime" label="Fecha Egreso" required="true" value="=moment().format()" min="=fn('ultimaAtencion', contexto)||fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Egreso Incorrecta"}}
   {{/action}}

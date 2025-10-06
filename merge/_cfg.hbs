@@ -2740,7 +2740,7 @@
     {{define type="param" id="persona"}}
     {{define type="param" id="usuario"}}
     {{when condition="=calc.in(persona.genero, ['noEspecificado', 'seIgnora'])" return="Género Inválido para Consulta Externa"}}
-    {{when condition="=moment(fechaAtencion).diff(moment(persona.fechaNacimiento), 'years')<59&&calc.in(calc.getRef(usuario, 'others.tipoPersonalNom'),['licenciadoGerontologia','pasanteGerontologia'])" return="='No Corresponde la Edad del Paciente con el Tipo de Personal (' + calc.getRef(usuario, 'others._tipoPersonalNom') + ')'"}}
+    {{when condition="=moment(fechaAtencion).diff(moment(persona.fechaNacimiento), 'years')<60&&calc.in(calc.getRef(usuario, 'others.tipoPersonalNom'),['licenciadoGerontologia','pasanteGerontologia'])" return="='No Corresponde la Edad del Paciente con el Tipo de Personal (' + calc.getRef(usuario, 'others._tipoPersonalNom') + ')'"}}
     {{when condition="=moment(fechaAtencion).diff(moment(persona.fechaNacimiento), 'years')>=6&&calc.in(calc.getRef(usuario, 'others.tipoPersonalNom'),['pasantePsicologia','psicologa'])" return="='No Corresponde la Edad del Paciente con el Tipo de Personal (' + calc.getRef(usuario, 'others._tipoPersonalNom') + ')'"}}
     {{default return=""}}
   {{/function}}
