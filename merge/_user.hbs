@@ -275,9 +275,13 @@
     {{validator type="expr" notValidIf="=paisNacimiento==='MX'&&clave===fn('CURP_GENERICO')" message="CURP Inválido para nacido en México"}}
     {{validator type="expr" validIf="=fn('validaCaracter17Curp',clave,fechaNacimiento)||clave===fn('CURP_GENERICO')" message="CURP Inválido (Caracter 17)"}}
     {{validator type="expr" validIf="=fn('validaCaracter18Curp',clave)||clave===fn('CURP_GENERICO')" message="CURP Inválido (Caracter 18)"}}
+    
+    {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.pluckRef(datosEspecialidad, 'base.especialidad'), 'otra')" message="Tiene Especialidades Duplicadas"}}
     {{#onChange}}
       {{#update}}
         {{set tieneCurp="=clave?true:false"}}
+        {{set especialidad="=calc.pluckRef(datosEspecialidad,'base.especialidad')"}}
+        {{set _especialidad="=calc.pluckRef(datosEspecialidad,'base._especialidad').join(', ')"}}
       {{/update}}
     {{/onChange}}
   {{/section}}

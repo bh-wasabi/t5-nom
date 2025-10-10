@@ -6820,6 +6820,7 @@
   {{/template}}
   {{#template id="datosEspecialidad"}}
     {{#if especialidad}}{{_especialidad}}{{/if}}
+    {{#if siOtraEspecialidad}}{{#if especifiqueEspecialidad}}, {{especifiqueEspecialidad}}{{/if}}{{/if}}
     {{#if cedulaEspecialidad}}, Cédula Especialidad: {{cedulaEspecialidad}}{{/if}}
     {{#if institucionExpide}}, Expedido por: {{institucionExpide}}{{/if}}
     {{#if anoFinalizado}}, Año Finalización: {{anoFinalizado}}{{/if}}
