@@ -18,7 +18,7 @@
       {{/onChange}}
     {{/field}}
     {{#field id="dependencia"}}
-      {{onChange clearFields="dependencia2,gratuidad"}}
+      {{onChange clearFields="dependencia2,otra"}}
     {{/field}}
     {{!-- Agregar Bloque - Tarea 3966 --}}
     {{validator type="expr" notValidIf="=calc.in(@dependencia,@dependencia2)||@dependencia2.length>1&&(calc.in('noEspecificado',@dependencia2)||calc.in('ninguna',@dependencia2)||calc.in('seIgnora',@dependencia2))" message="Otra Dependencia Incorrecta"}}
