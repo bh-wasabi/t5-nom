@@ -23,7 +23,7 @@
         {{set excedeLimiteSexo="=calc.meetsSexLimit(LSEX, _parentDoc.persona.genero)?'NO':'SI'"}}
         {{set cronicos="=DIA_CRONICOS"}}
         {{set cancerInfantil="=DIA_CAINFANTIL"}}
-        {{set tieneConfirmacionDiagnostica="=(_doc.base.primeraVez=='si'&&DIA_CRONICOS=='SI'&&moment(_parentDoc.base.fechaAtencion||_parentDoc.base.fechaConsulta).diff(_parentDoc.persona.fechaNacimiento,'years')>=20)||(DIA_CAINFANTIL=='SI'&&moment(_parentDoc.base.fechaAtencion||_parentDoc.base.fechaConsulta).diff(_parentDoc.persona.fechaNacimiento,'years')<18)?'SI':'NO'"}}
+        {{set tieneConfirmacionDiagnostica="=_parentDoc._type!='notaSaludMental'&&(_doc.base.primeraVez=='si'&&DIA_CRONICOS=='SI'&&moment(_parentDoc.base.fechaAtencion||_parentDoc.base.fechaConsulta).diff(_parentDoc.persona.fechaNacimiento,'years')>=20)||(DIA_CAINFANTIL=='SI'&&moment(_parentDoc.base.fechaAtencion||_parentDoc.base.fechaConsulta).diff(_parentDoc.persona.fechaNacimiento,'years')<18)?'SI':'NO'"}}
       {{/onChange}}
     {{/field}}
     {{!-- {{validator type="expr" validIf="=_parentDoc._type=='notaSaludMental'||calc.meetsSexLimit(limiteSexo, _parentDoc.persona.genero)" message="No Corresponde el Sexo del Paciente"}} --}}

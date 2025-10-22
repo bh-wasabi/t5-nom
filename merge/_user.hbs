@@ -262,8 +262,8 @@
       {{/onChange}}
     {{/field}}
     {{validator type="expr" notValidIf="=calc.in(@entidadNacimiento,['99','00'])" message="Entidad Nacimiento Inválida"}}
-    {{validator type="expr" notValidIf="=paisNacimiento=='MX'&&entidadNacimiento=='NA'" message="Entidad Nacimiento Inválida (Nacido en México)"}}
-    {{validator type="expr" notValidIf="=paisNacimiento!='MX'&&entidadNacimiento!='NA'" message="Entidad Nacimiento Inválida (Nacido en el Extranjero)"}}
+    {{!-- {{validator type="expr" notValidIf="=paisNacimiento=='MX'&&entidadNacimiento=='NA'" message="Entidad Nacimiento Inválida (Nacido en México)"}} --}}
+    {{!-- {{validator type="expr" notValidIf="=paisNacimiento!='MX'&&entidadNacimiento!='NA'" message="Entidad Nacimiento Inválida (Nacido en el Extranjero)"}} --}}
     
     {{validator type="expr" condition="=paisNacimiento=='MX'" validIf="=prestadorServicios.clave.length==18&&(calc.curp(base.nombres,base.apellidoPaterno,base.apellidoMaterno,prestadorServicios.generoCurp,prestadorServicios.entidadNacimiento,moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'),16,false)==prestadorServicios.clave.substr(0,16)||calc.curp(base.nombres,base.apellidoPaterno,base.apellidoMaterno,prestadorServicios.generoCurp,prestadorServicios.entidadNacimiento,moment(prestadorServicios.fechaNacimiento).format('YYYY-MM-DD'),16,true)==prestadorServicios.clave.substr(0,16))" message="CURP Incorrecto"}}
 
