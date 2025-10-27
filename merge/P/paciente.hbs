@@ -126,7 +126,7 @@
     {{/field}}
     {{#field id="migrante"}}
       {{#onChange}}
-        {{set paisProcedencia="MX"}}
+        {{set paisProcedencia="migrante!='internacional'?'MX':null"}}
       {{/onChange}}
     {{/field}}
     [.#if esHIS.]
