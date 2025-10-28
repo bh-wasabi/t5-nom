@@ -20,6 +20,8 @@
 				{{set cedulaCirujano="=_.first(prestadorServicios.datosEspecialidad).base.cedulaEspecialidad"}}
 			{{/onChange}}
 		{{/field}}
+    {{validator type="expr" validIf="=@descripcionProcedimiento.length>1" message="Descripción (Mínimo 2 Caracteres)"}}
+    {{validator type="expr" validIf="=calc.matchIfPattern('^[A-ZÑ].*',@descripcionProcedimiento)" message="Descripción debe iniciar con caracter alfabético"}}
     {{validator type="expr" notValidIf="limiteSexo=='HOMBRE'&&calc.in(_parentDoc.persona.genero,['mujer','intersexual'])" message="No Corresponde el Sexo del Paciente"}}
     {{validator type="expr" notValidIf="limiteSexo=='MUJER'&&calc.in(_parentDoc.persona.genero,['hombre','intersexual'])" message="No Corresponde el Sexo del Paciente"}}
   {{/section}}

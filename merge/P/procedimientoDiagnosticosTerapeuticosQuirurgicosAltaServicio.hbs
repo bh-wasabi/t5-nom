@@ -36,5 +36,7 @@
 				{{set cedulaCirujano="=_.first(prestadorServicios.datosEspecialidad).base.cedulaEspecialidad"}}
 			{{/onChange}}
 		{{/field}} --}}
+    {{validator type="expr" validIf="=@descripcionProcedimiento.length>1" message="Descripción (Mínimo 2 Caracteres)"}}
+    {{validator type="expr" validIf="=calc.matchIfPattern('^[A-ZÑ].*',@descripcionProcedimiento)" message="Descripción debe iniciar con caracter alfabético"}}
   {{/section}}
 {{/define}}
