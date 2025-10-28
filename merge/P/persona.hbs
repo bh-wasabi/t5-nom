@@ -5176,7 +5176,7 @@
       {{set _somatometriaIngreso="=contexto.episodio==detalle.notaIngreso.contexto.episodio&&detalle.notaIngreso.base._somatometria"}}
       {{set motivoEgreso="=(contexto.estaDifunto)?'defuncion':null"}}
       {{set fechaHoraDefuncion="=contexto.defuncion.fechaHoraDefuncion"}}
-      {{set diasEstancia="=moment(fechaHoraDefuncion).diff(moment(fechaIngresoHospitalario), 'day')"}}
+      {{set diasEstancia="=moment(fechaHoraDefuncion||fechaEgreso).diff(moment(fechaIngresoHospitalario), 'day')"}}
       {{set evolucion="=contexto.defuncion.comentarios"}}
       {{set afeccionPrincipal="=calc.recalcLimiteEdadDiagnostico(calc.getRef(_.first(ultimaNotaEvolucion),'base.afeccionPrincipal'), persona.fechaNacimiento, moment(fechaEgreso).diff(persona.fechaNacimiento,'years')<1?fechaIngresoHospitalario:moment(fechaEgreso).format('YYYY-MM-DD'),nomDatos.desconoceFechaNacimiento=='si')"}}
       {{set _afeccionPrincipal="=calc.getRef(_.first(ultimaNotaEvolucion),'base._afeccionPrincipal')"}}
