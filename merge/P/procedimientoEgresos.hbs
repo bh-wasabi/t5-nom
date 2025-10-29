@@ -13,11 +13,11 @@
       {{/onChange}}
     {{/field}}
     {{#field id="enQuirofanoOFuera"}}
-      {{onChange clearFields="cirujano,cedulaCirujano"}}
+      {{onChange clearFields="cirujano,cedulaCirujanoProcedimiento"}}
     {{/field}}
 		{{#field id="cirujano"}}
 			{{#onChange}}
-				{{set cedulaCirujano="=_.first(prestadorServicios.datosEspecialidad).base.cedulaEspecialidad"}}
+				{{set cedulaCirujanoProcedimiento="=_.first(prestadorServicios.datosEspecialidad).base.cedulaEspecialidad"}}
 			{{/onChange}}
 		{{/field}}
     {{validator type="expr" validIf="=@descripcionProcedimiento.length>1" message="Descripción (Mínimo 2 Caracteres)"}}
