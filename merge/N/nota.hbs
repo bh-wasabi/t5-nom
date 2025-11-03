@@ -953,23 +953,26 @@
         <div class="list-action-left"><i class="icon ion-{{flujo.icono}} text-{{flujo.color}}"></i></div>
         <div class="list-content">
           {{#if persona.nombreCompleto}}
-          <span class="title">{{persona.nombreCompleto}}</span>
-          {{!--Tarea #3764 Fecha:24/Mayo RACC--}}
-          {{#if persona.fechaNacimiento}}
-            </br><span style="font-size:12px;">Nacimiento: {{date persona.fechaNacimiento "DD/MMM/YYYY"}}</span>
-          {{/if}}
-          {{!--Tarea #3764 Fecha:24/Mayo RACC--}}          
-          {{#if flujo.saldo}}
-          <span style="font-size:12px;">{{_name}}</span>
-          <span style="font-size:12px;float:right;"><strong>Saldo: {{number flujo.saldo "currency"}}</strong></span>
-          <br><span style="font-size:12px;" class="color-gris-obscuro2">{{flujo.grupo}}</span>
+            <span class="title">{{persona.nombreCompleto}}</span>
+            {{#if persona.clave}}
+              <span style="font-size:12px;">{{persona.clave}}</span>
+            {{/if}}
+            {{!--Tarea #3764 Fecha:24/Mayo RACC--}}
+            {{#if persona.fechaNacimiento}}
+              <br><span style="font-size:12px;">Nacimiento: {{date persona.fechaNacimiento "DD/MMM/YYYY"}}</span>
+            {{/if}}
+            {{!--Tarea #3764 Fecha:24/Mayo RACC--}}          
+            {{#if flujo.saldo}}
+              <span style="font-size:12px;">{{_name}}</span>
+              <span style="font-size:12px;float:right;"><strong>Saldo: {{number flujo.saldo "currency"}}</strong></span>
+              <br><span style="font-size:12px;" class="color-gris-obscuro2">{{flujo.grupo}}</span>
+            {{else}}
+              <br><span style="font-size:12px;">{{flujo.nombre}}</span>
+              <br><span style="font-size:12px;">{{_name}}</span>
+            {{/if}}
           {{else}}
-          <span style="font-size:12px;">{{flujo.nombre}}</span>
-          <br><span style="font-size:12px;">{{_name}}</span>
-          {{/if}}
-          {{else}}
-          <span class="title">{{_name}}</span>
-          <br>
+            <span class="title">{{_name}}</span>
+            <br>
           {{/if}}
           <span style="font-size:12px;float:right;">{{date _created.date "DD/MMM/YYYY hh:mma"}}</span>
         </div>          
