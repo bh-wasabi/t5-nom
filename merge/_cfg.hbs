@@ -2548,6 +2548,10 @@
     {{when condition="=certificado.length!=9" return="true"}}
     {{when condition="=isNaN(certificado)" return="true"}}
     {{when condition="=certificado.slice(2,3)!=='1'" return="true"}}
+    {{!-- No puede ser de mas de 4 años atrás --}}
+    {{when condition="=moment().format('YY')-certificado.slice(0,2)>4" return="true"}}
+    {{!-- No puede ser de 2 años hacia adelante --}}
+    {{when condition="=certificado.slice(0,2)-moment().format('YY')>1" return="true"}}
     {{default return="false"}}
   {{/function}}
 
@@ -2577,6 +2581,14 @@
 
   {{#function id="diagnosticoEmbarazo"}}
     {{default return="=['O00','O000','O001','O002','O008','O10','O100','O101','O102','O103','O104','O109','O11X','O12','O120','O121','O122','O13X','O14','O140','O141','O142','O149','O15','O150','O151','O152','O159','O16X','O20','O200','O208','O209','O21','O210','O211','O212','O218','O219','O22','O220','O221','O222','O223','O224','O225','O228','O229','O23','O230','O231','O232','O233','O234','O235','O239','O24','O240','O241','O242','O243','O244','O249','O25X','O26','O260','O261','O262','O263','O264','O265','O266','O267','O268','O269','O29','O290','O291','O292','O293','O294','O295','O296','O298','O299','O30','O300','O301','O302','O308','O309','O31','O310','O311','O312','O318','O32','O320','O321','O322','O323','O324','O325','O326','O328','O329','O33','O330','O331','O332','O333','O334','O335','O336','O337','O338','O339','O34','O340','O341','O342','O343','O344','O345','O346','O347','O348','O349','O35','O350','O351','O352','O353','O354','O355','O356','O357','O358','O359','O36','O360','O361','O362','O363','O364','O365','O366','O367','O368','O369','O40X','O41','O410','O411','O418','O419','O42','O420','O421','O422','O429','O43','O430','O431','O432','O438','O439','O44','O440','O441','O45','O450','O458','O459','O46','O460','O468','O469','O47','O470','O471','O479','O48X','O60','O600','O601','O602','O603','O60X','O61','O610','O611','O618','O619','O62','O620','O621','O622','O623','O624','O628','O629','O63','O630','O631','O632','O639','O64','O640','O641','O642','O643','O644','O645','O648','O649','O65','O650','O651','O652','O653','O654','O655','O658','O659','O66','O660','O661','O662','O663','O664','O665','O668','O669','O67','O670','O678','O679','O68','O680','O681','O682','O683','O688','O689','O69','O690','O691','O692','O693','O694','O695','O698','O699','O70','O700','O701','O702','O703','O709','O71','O710','O711','O712','O713','O714','O715','O716','O717','O718','O719','O72','O720','O721','O722','O723','O73','O730','O731','O74','O740','O741','O742','O743','O744','O745','O746','O747','O748','O749','O75','O750','O751','O752','O753','O754','O755','O756','O757','O758','O759','O80','O800','O801','O808','O809','O81','O810','O811','O812','O813','O814','O815','O82','O820','O821','O822','O828','O829','O83','O830','O831','O832','O833','O834','O838','O839','O84','O840','O841','O842','O848','O849','O85X','O86','O860','O861','O862','O863','O864','O868','O87','O870','O871','O872','O873','O878','O879','O88','O880','O881','O882','O883','O888','O89','O890','O891','O892','O893','O894','O895','O896','O898','O899','O90','O900','O901','O902','O903','O904','O905','O908','O909','O91','O910','O911','O912','O92','O920','O921','O922','O923','O924','O925','O926','O927','O98','O980','O981','O982','O983','O984','O985','O986','O987','O988','O989','O99','O990','O991','O992','O993','O994','O995','O996','O997','O998']"}}
+  {{/function}}
+
+  {{#function id="diagnosticoEmbarazoSinExtraccion"}}
+    {{default return="['O10','O100','O101','O102','O103','O104','O109','O11X','O12','O120','O121','O122','O13X','O14','O140','O141','O142','O149','O15','O150','O151','O152','O159','O16X','O20','O200','O208','O209','O21','O210','O211','O212','O218','O219','O22','O220','O221','O222','O223','O224','O225','O228','O229','O23','O230','O231','O232','O233','O234','O235','O239','O24','O240','O241','O242','O243','O244','O249','O25X','O26','O260','O261','O262','O263','O264','O265','O266','O267','O268','O269','O29','O290','O291','O292','O293','O294','O295','O296','O298','O299','O30','O300','O301','O302','O308','O309','O31','O310','O311','O312','O318','O32','O320','O321','O322','O323','O324','O325','O326','O328','O329','O33','O330','O331','O332','O333','O334','O335','O336','O337','O338','O339','O34','O340','O341','O342','O343','O344','O345','O346','O347','O348','O349','O35','O350','O351','O352','O353','O354','O355','O356','O357','O358','O359','O36','O360','O361','O362','O363','O364','O365','O366','O367','O368','O369','O40X','O41','O410','O411','O418','O419','O42','O420','O421','O422','O429','O43','O430','O431','O432','O438','O439','O44','O440','O441','O45','O450','O458','O459','O46','O460','O468','O469','O47','O470','O471','O479','O48X','O60','O600','O601','O602','O603','O60X','O61','O610','O611','O618','O619','O62','O620','O621','O622','O623','O624','O628','O629','O63','O630','O631','O632','O639','O64','O640','O641','O642','O643','O644','O645','O648','O649','O65','O650','O651','O652','O653','O654','O655','O658','O659','O66','O660','O661','O662','O663','O664','O665','O668','O669','O67','O670','O678','O679','O68','O680','O681','O682','O683','O688','O689','O69','O690','O691','O692','O693','O694','O695','O698','O699','O70','O700','O701','O702','O703','O709','O71','O710','O711','O712','O713','O714','O715','O716','O717','O718','O719','O72','O720','O721','O722','O723','O73','O730','O731','O74','O740','O741','O742','O743','O744','O745','O746','O747','O748','O749','O75','O750','O751','O752','O753','O754','O755','O756','O757','O758','O759','O85X','O86','O860','O861','O862','O863','O864','O868','O87','O870','O871','O872','O873','O878','O879','O88','O880','O881','O882','O883','O888','O89','O890','O891','O892','O893','O894','O895','O896','O898','O899','O90','O900','O901','O902','O903','O904','O905','O908','O909','O91','O910','O911','O912','O92','O920','O921','O922','O923','O924','O925','O926','O927','O98','O980','O981','O982','O983','O984','O985','O986','O987','O988','O989','O99','O990','O991','O992','O993','O994','O995','O996','O997','O998']"}}
+  {{/function}}
+
+  {{#function id="diagnosticoEmbarazoSinExtraccion2"}}
+    {{default return="=calc.mergeArrays(fn('diagnosticoAborto'),fn('diagnosticoAtencionEmbarazo'),['O80','O800','O801','O808','O809','O81','O810','O811','O812','O813','O814','O815','O82','O820','O821','O822','O828','O829','O83','O830','O831','O832','O833','O834','O838','O839','O84','O840','O841','O842','O848','O849'])"}}
   {{/function}}
 
   {{#function id="diagnosticoParto"}}
@@ -2846,6 +2858,16 @@
     {{default return="=calc.getRef(detalle,'notaAltaServicio.contexto.episodio')===calc.getRef(contexto,'episodio')?null:'Falta Nota Alta Servicio'"}}
   {{/function}} --}}
 
+  {{#function id="validarNotaPlanAltaEnfermeriaProcesar"}}
+    {{define type="param" id="base"}}
+    {{define type="param" id="sugerirMedicamentosMinistrados"}}
+    {{when condition="=(calc.arrayLength(sugerirMedicamentosMinistrados)<=6?calc.arrayLength(base.medicamentosMinistrados)!=calc.arrayLength(sugerirMedicamentosMinistrados):calc.arrayLength(base.medicamentosMinistrados)!=6)" return="='Error: Faltan Medicamentos por reportar'"}}
+    {{when condition="=calc.arrayLength(sugerirMedicamentosMinistrados)&&base.administroMedicamentos=='no'" return="='Error: Faltan Medicamentos por reportar'"}}
+    {{default return="null"}}
+  {{/function}}
+
+    {{!-- error="=(calc.arrayLength(sugerirMedicamentosMinistrados)<=6?calc.arrayLength(base.medicamentosMinistrados)!=calc.arrayLength(sugerirMedicamentosMinistrados):calc.arrayLength(base.medicamentosMinistrados)!=6)?'Error: Faltan Medicamentos por reportar':null" --}}  
+
   {{#function id="validarNotaAltaServicio"}}
     {{define type="param" id="base"}}
     {{define type="param" id="comorbilidades"}}
@@ -2884,7 +2906,9 @@
 
   {{#function id="validarNotaInformacionEmbarazoPartograma"}}
     {{define type="param" id="persona"}}
+    {{define type="param" id="fechaAtencion"}}
     {{when condition="=persona.genero!='mujer'" return="='El Género del Paciente debe ser Mujer para Registrar Información de Embarazo y Partograma'"}}
+    {{when condition="=fn('calcularEdadPorFechaAtencion',fechaAtencion,persona.fechaNacimiento)<10||fn('calcularEdadPorFechaAtencion',fechaAtencion,persona.fechaNacimiento)>54" return="='La Edad del Paciente debe ser entre 10 y 54 años para Registrar Información de Embarazo y Partograma'"}}
     {{default return="null"}}
   {{/function}}
 

@@ -12994,7 +12994,7 @@
     color="deep-orange"
     onlyPost="true"
     errorType="info"
-    error="=fn('validarNotaInformacionEmbarazoPartograma', persona)"
+    error="=fn('validarNotaInformacionEmbarazoPartograma', persona, _ask.fechaAtencion)"
     error2="=fn('validarEdadPrestador',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)"
     condition="=persona.genero=='mujer'"
   }}

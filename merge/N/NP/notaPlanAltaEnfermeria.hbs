@@ -1,7 +1,7 @@
 {{#define id="notaPlanAltaEnfermeria"}}
   {{action
     id="afectar"
-    error="=(calc.arrayLength(sugerirMedicamentosMinistrados)<=6?calc.arrayLength(base.medicamentosMinistrados)!=calc.arrayLength(sugerirMedicamentosMinistrados):calc.arrayLength(base.medicamentosMinistrados)!=6)?'Error: Faltan Medicamentos por reportar':null"
+    error="=fn('validarNotaPlanAltaEnfermeriaProcesar',base,sugerirMedicamentosMinistrados)"
   }}
   {{#section id="base"}}
     {{#field id="medicamentosMinistrados"}}
