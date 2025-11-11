@@ -93,6 +93,7 @@
     {{field id="esUrgenciasHospitalizacion" type="expr" value="=tipoAtencion!='consultaExterna'"}}
     {{field id="desconoceEdadSeul" type="expr" value="=tipoAtencion!='consultaExterna'&&desconoceFechaNacimiento=='si'"}}
     {{field id="esMigrante" type="expr" value="=migrante=='internacional'"}}
+
     {{#field id="tipoAtencion"}}
       {{#onChange clearFields="desconoceFechaNacimiento,edadAproximada,fechaNacimientoDesconocida,fechaNacimiento,genero,afromexicano,afromexicanoUrgenciasHospitalizacion"}}
         {{set esConsultaExterna="=tipoAtencion=='consultaExterna'"}}
@@ -126,6 +127,11 @@
     {{#field id="migrante"}}
       {{onChange clearFields="paisProcedencia"}}
     {{/field}}
+    {{#onChange}}
+      {{#update}}
+        {{set paisProcedencia="calc.in(migrante,['nacional','retornado'])?'MX':paisProcedencia"}}
+      {{/update}}
+    {{/onChange}}
     [.#if esHIS.]
     {{validator type="expr" validIf="=calc.curp3Ok(clave)" message="CURP Incorrecto"}}
     {{validator type="expr" validIf="=calc.setTimeStr(@fechaNacimiento,@horaNacimiento)<moment().format()" message="Fecha Nacimiento Incorrecta"}}
