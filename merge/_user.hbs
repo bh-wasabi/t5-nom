@@ -86,6 +86,7 @@
       {{filter condition="=area" field="base.area" in="=area"}}
       {{filter condition="=citasExtraordinarias" field="prestadorServicios.citasExtraordinarias" eq="=citasExtraordinarias"}}
       {{filter condition="=especialidad" field="prestadorServicios.especialidad" in="=especialidad"}}
+      {{filter condition="=usuario" field="_id" neq="=usuario" isObjectId="true"}}
     {{/find}}
   {{/view}}
   {{#view id="notify"}}
@@ -152,6 +153,7 @@
     {{!-- {{field id="cluesTieneSsa" type="expr" value="=@cluesInstitucion.search('SSA')>0||@cluesInstitucion.search('IMB')>0"}} --}}
     {{field id="cluesTieneSsa" type="expr" value="=@cluesInstitucion=='SSA'||@cluesInstitucion=='IMB'"}}
     {{#field id="establecimiento"}}
+      {{editor view="lista" limit="-1"}}
       {{#onChange clearFields="cluesInstitucion,programaSMyMG"}}
         {{set cluesInstitucion="=base.cluesInstitucion"}}
       {{/onChange}}

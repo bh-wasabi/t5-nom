@@ -92,8 +92,7 @@
     {{field id="esConsultaExterna" type="expr" value="=tipoAtencion=='consultaExterna'"}}
     {{field id="esUrgenciasHospitalizacion" type="expr" value="=tipoAtencion!='consultaExterna'"}}
     {{field id="desconoceEdadSeul" type="expr" value="=tipoAtencion!='consultaExterna'&&desconoceFechaNacimiento=='si'"}}
-    {{field id="esMigrante" type="expr" value="=migrante=='internacional'||migrante=='retornado'||migrante=='nacional'"}}
-    {{field id="bloquearProcedencia" type="expr" value="=migrante=='nacional'||migrante=='retornado'"}}
+    {{field id="esMigrante" type="expr" value="=migrante=='internacional'"}}
     {{#field id="tipoAtencion"}}
       {{#onChange clearFields="desconoceFechaNacimiento,edadAproximada,fechaNacimientoDesconocida,fechaNacimiento,genero,afromexicano,afromexicanoUrgenciasHospitalizacion"}}
         {{set esConsultaExterna="=tipoAtencion=='consultaExterna'"}}
@@ -125,9 +124,7 @@
       {{/editor}}
     {{/field}}
     {{#field id="migrante"}}
-      {{#onChange}}
-        {{set paisProcedencia="=migrante!='internacional'?'MX':null"}}
-      {{/onChange}}
+      {{onChange clearFields="paisProcedencia"}}
     {{/field}}
     [.#if esHIS.]
     {{validator type="expr" validIf="=calc.curp3Ok(clave)" message="CURP Incorrecto"}}

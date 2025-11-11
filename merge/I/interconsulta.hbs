@@ -29,6 +29,7 @@
     {{#field id="medicoInterconsultado"}}
       {{#editor}}
         {{param especialidad="=servicioInterconsultado"}}
+        {{param usuario="=user.id"}}
         {{#onChange}}
           {{set especialidadMedicoInterconsultado="=prestadorServicios._especialidad"}}
           {{set datosEspecialidadMedicoInterconsultado="=prestadorServicios.datosEspecialidad"}}

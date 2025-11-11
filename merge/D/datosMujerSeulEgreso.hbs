@@ -2,14 +2,14 @@
   {{#section id="base"}}
     {{field id="siParto" type="expr" value="=tipoAtencionObstetrica=='parto'"}}
     {{field id="siAborto" type="expr" value="=tipoAtencionObstetrica=='aborto'"}}
-    {{field id="edadGestacionalNo88" type="expr" value="=edadGestacional!=='88'"}}
+    {{field id="edadGestacionalNo88" type="expr" value="=edadGestacional!=='88'&&edadGestacional!=='0'"}}
     {{#field id="edadGestacional"}}
       {{onChange clearFields="tipoAtencionObstetrica,tipoEmbarazo,nacioElPacienteEnEstaAtencion,totalProductos,tipoNacimiento,tipoProcedimientoAborto,datosInformacionProducto,datosInformacionProductoAborto"}}
     {{/field}}
     {{#field id="tipoAtencionObstetrica"}}
       {{onChange clearFields="tipoEmbarazo,nacioElPacienteEnEstaAtencion,totalProductos,tipoNacimiento,tipoProcedimientoAborto,datosInformacionProducto,datosInformacionProductoAborto"}}
     {{/field}}
-    {{validator type="expr" validIf="=(@edadGestacional>0&&edadGestacional<=45)||@edadGestacional==88||@edadGestacional==99" message="Edad Gestacional Inválida"}}
+    {{validator type="expr" validIf="=(@edadGestacional>=0&&edadGestacional<=45)||@edadGestacional==88||@edadGestacional==99" message="Edad Gestacional Inválida"}}
     {{validator type="expr" validIf="=@edadGestacional=='88'||@siAborto||(@tipoEmbarazo=='unico'&&@totalProductos==1)||(@tipoEmbarazo=='gemelar'&&@totalProductos==2)||(@tipoEmbarazo=='tresMas'&&(@totalProductos>=3&&@totalProductos<=6))" message="Error en Número de Productos"}}
     {{validator type="expr" notValidIf="=siParto&&edadGestacional>=1&&edadGestacional<=21" message="No Coincide Edad Gestacional con Tipo Atención Obstétrica (22-45)"}}
     {{validator type="expr" notValidIf="=siAborto&&edadGestacional>=22&&edadGestacional<=45" message="No Coincide Edad Gestacional con Tipo Atención Obstétrica (1-21)"}}
