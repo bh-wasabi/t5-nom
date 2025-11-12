@@ -153,7 +153,6 @@
     {{!-- {{field id="cluesTieneSsa" type="expr" value="=@cluesInstitucion.search('SSA')>0||@cluesInstitucion.search('IMB')>0"}} --}}
     {{field id="cluesTieneSsa" type="expr" value="=@cluesInstitucion=='SSA'||@cluesInstitucion=='IMB'"}}
     {{#field id="establecimiento"}}
-      {{editor view="lista" limit="-1"}}
       {{#onChange clearFields="cluesInstitucion,programaSMyMG"}}
         {{set cluesInstitucion="=base.cluesInstitucion"}}
       {{/onChange}}

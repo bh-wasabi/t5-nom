@@ -1,13 +1,13 @@
 {{#define id="datosInformacionProductoAborto"}}
- 	{{#section id="base"}}
+  {{#section id="base"}}
     {{#field id="folioCertificadoMuerteFetal"}}
       {{onChange clearFields="folioCertificadoUtilizado"}}
     {{/field}}
     {{#onChange}}
-  		{{#update}}
+      {{#update}}
         {{set folioCertificadoUtilizado="=@folioCertificadoMuerteFetal"}}
-  		{{/update}}
-  	{{/onChange}}
+      {{/update}}
+    {{/onChange}}
     {{validator type="expr" notValidIf="=@folioCertificadoMuerteFetal&&fn('validaCertificadoMuerteFetal',@folioCertificadoMuerteFetal)" message="Certificado Muerte Fetal Inválido"}}
   {{/section}}
 {{/define}}

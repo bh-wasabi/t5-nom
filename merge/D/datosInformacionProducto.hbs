@@ -22,10 +22,10 @@
       {{/onChange}}
     {{/field}}
     {{#onChange}}
-  		{{#update}}
+      {{#update}}
         {{set folioCertificadoUtilizado="=@folioCertificadoDefuncion||@folioCertificadoNacimiento||@folioCertificadoMuerteFetal"}}
-  		{{/update}}
-  	{{/onChange}}
+      {{/update}}
+    {{/onChange}}
     {{validator type="expr" notValidIf="=@folioCertificadoNacimiento&&fn('validaCertificadoNacimiento',@folioCertificadoNacimiento)" message="Certificado Nacimiento Inválido"}}
     {{validator type="expr" notValidIf="=@folioCertificadoDefuncion&&fn('validaCertificadoDefuncion',@folioCertificadoDefuncion)" message="Certificado Defunción Inválido"}}
     {{validator type="expr" notValidIf="=@folioCertificadoMuerteFetal&&fn('validaCertificadoMuerteFetal',@folioCertificadoMuerteFetal)" message="Certificado Muerte Fetal Inválido"}}
