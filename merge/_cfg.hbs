@@ -2512,16 +2512,11 @@
 
   {{#function id="validaCertificadoDefuncion"}}
     {{define type="param" id="certificado"}}
-    {{!-- Debe tener 9 caracteres --}}
+    {{define type="param" id="fechaAtencion"}}
+
+    {{!-- Casos especiales y formato básico --}}
     {{when condition="=certificado.length!=9" return="true"}}
-    {{!-- Debe ser numérico --}}
     {{when condition="=isNaN(certificado)" return="true"}}
-    {{!-- No puede ser de mas de 4 años atrás --}}
-    {{when condition="=moment().year().toString().slice(2,4)-certificado.slice(0,2)>4" return="true"}}
-    {{!-- Puede ser del próximo año cuando se reporta en diciembre --}}
-    {{when condition="=certificado.slice(0,2)-moment().year().toString().slice(2,4)>0&&moment().month()<11" return="true"}}
-    {{!-- No puede ser de 2 años hacia adelante --}}
-    {{when condition="=certificado.slice(0,2)-moment().year().toString().slice(2,4)>1" return="true"}}
     {{!-- Para 2025 debe ser menor de 251000000 --}}
     {{when condition="=certificado.slice(0,2)=='25'&&calc.forceNumber(certificado)>250999999" return="true"}}
     {{!-- Para 2024 debe ser menor de 241000000 --}}
@@ -2532,6 +2527,18 @@
     {{when condition="=certificado.slice(0,2)=='22'&&calc.forceNumber(certificado)>221650000" return="true"}}
     {{!-- Para 2021 debe ser menor o igual 212838000 --}}
     {{when condition="=certificado.slice(0,2)=='21'&&calc.forceNumber(certificado)>212838000" return="true"}}
+
+    {{!-- Año de certificado y año de atención (2 dígitos) --}}
+    {{!-- No puede ser de más de 4 años atrás --}}
+    {{when condition="=moment(fechaAtencion).format('YY')-certificado.slice(0,2)>4" return="true"}}
+
+    {{!-- No puede ser de más de 1 año hacia adelante (da igual el mes) --}}
+    {{when condition="=certificado.slice(0,2)-moment(fechaAtencion).format('YY')>1" return="true"}}
+
+    {{!-- Si es exactamente 1 año adelante, solo se permite en diciembre (month() === 11) --}}
+    {{when condition="=certificado.slice(0,2)-moment(fechaAtencion).format('YY')===1&&moment(fechaAtencion).month()<11" return="true"}}
+
+    {{!-- Si llegó hasta aquí, es válido --}}
     {{default return="false"}}
   {{/function}}
 
@@ -2544,14 +2551,25 @@
 
   {{#function id="validaCertificadoMuerteFetal"}}
     {{define type="param" id="certificado"}}
+    {{define type="param" id="fechaAtencion"}}
+
+    {{!-- Casos especiales y formato básico --}}
     {{when condition="=certificado==='999999999'" return="false"}}
     {{when condition="=certificado.length!=9" return="true"}}
     {{when condition="=isNaN(certificado)" return="true"}}
     {{when condition="=certificado.slice(2,3)!=='1'" return="true"}}
-    {{!-- No puede ser de mas de 4 años atrás --}}
-    {{when condition="=moment().format('YY')-certificado.slice(0,2)>4" return="true"}}
-    {{!-- No puede ser de 2 años hacia adelante --}}
-    {{when condition="=certificado.slice(0,2)-moment().format('YY')>1" return="true"}}
+
+    {{!-- Año de certificado y año de atención (2 dígitos) --}}
+    {{!-- No puede ser de más de 4 años atrás --}}
+    {{when condition="=moment(fechaAtencion).format('YY')-certificado.slice(0,2)>4" return="true"}}
+
+    {{!-- No puede ser de más de 1 año hacia adelante (da igual el mes) --}}
+    {{when condition="=certificado.slice(0,2)-moment(fechaAtencion).format('YY')>1" return="true"}}
+
+    {{!-- Si es exactamente 1 año adelante, solo se permite en diciembre (month() === 11) --}}
+    {{when condition="=certificado.slice(0,2)-moment(fechaAtencion).format('YY')===1&&moment(fechaAtencion).month()<11" return="true"}}
+
+    {{!-- Si llegó hasta aquí, es válido --}}
     {{default return="false"}}
   {{/function}}
 
@@ -2588,7 +2606,7 @@
   {{/function}}
 
   {{#function id="diagnosticoEmbarazoSinExtraccion2"}}
-    {{default return="=calc.mergeArrays(fn('diagnosticoAborto'),fn('diagnosticoAtencionEmbarazo'),['O80','O800','O801','O808','O809','O81','O810','O811','O812','O813','O814','O815','O82','O820','O821','O822','O828','O829','O83','O830','O831','O832','O833','O834','O838','O839','O84','O840','O841','O842','O848','O849'])"}}
+    {{default return="=calc.mergeArrays(fn('diagnosticoAborto'),fn('diagnosticoEmbarazoSinExtraccion'),['O80','O800','O801','O808','O809','O81','O810','O811','O812','O813','O814','O815','O82','O820','O821','O822','O828','O829','O83','O830','O831','O832','O833','O834','O838','O839','O84','O840','O841','O842','O848','O849'])"}}
   {{/function}}
 
   {{#function id="diagnosticoParto"}}

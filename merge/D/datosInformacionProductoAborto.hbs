@@ -8,6 +8,6 @@
         {{set folioCertificadoUtilizado="=@folioCertificadoMuerteFetal"}}
       {{/update}}
     {{/onChange}}
-    {{validator type="expr" notValidIf="=@folioCertificadoMuerteFetal&&fn('validaCertificadoMuerteFetal',@folioCertificadoMuerteFetal)" message="Certificado Muerte Fetal Inválido"}}
+    {{validator type="expr" notValidIf="=@folioCertificadoMuerteFetal&&fn('validaCertificadoMuerteFetal',@folioCertificadoMuerteFetal,_mainDoc._type=='notaSeulEgreso'?calc.getRef(_mainDoc, 'base.fechaEgreso'):calc.getRef(_mainDoc, 'base.fechaAtencion'))" message="Certificado Muerte Fetal Inválido"}}
   {{/section}}
 {{/define}}
