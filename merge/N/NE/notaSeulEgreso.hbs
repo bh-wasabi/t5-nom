@@ -29,6 +29,9 @@
         {{set cluesFechaBaja="=FECHA_EFECTIVA_BAJA"}}
       {{/onChange}}
     {{/field}}
+    {{#field id="metodoAnticonceptivo"}}
+      {{onChange clearFields="otroMetodo"}}
+    {{/field}}
     {{#onChange}}
       {{#update}}
         {{set gestas="=fn('calcularGestas',antecedentesEmbarazos.base.paras,antecedentesEmbarazos.base.abortos,antecedentesEmbarazos.base.cesareas,esEmbarazo?1:0)"}}
