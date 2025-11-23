@@ -37,8 +37,8 @@
     {{field id="esConsultaExterna" type="expr" value="=tipoAtencion=='consultaExterna'"}}
     {{field id="esUrgenciasHospitalizacion" type="expr" value="=tipoAtencion!='consultaExterna'"}}
     {{field id="desconoceEdadSeul" type="expr" value="=tipoAtencion!='consultaExterna'&&desconoceFechaNacimiento=='si'"}}
-    {{field id="esMigrante" type="expr" value="=migrante=='internacional'||migrante=='retornado'||migrante=='nacional'"}}
-    {{field id="bloquearProcedencia" type="expr" value="=migrante=='nacional'||migrante=='retornado'"}}
+    {{field id="esMigrante" type="expr" value="=migrante=='internacional'"}}
+    {{!-- {{field id="bloquearProcedencia" type="expr" value="=migrante=='nacional'||migrante=='retornado'"}} --}}
     {{#field id="tipoAtencion"}}
       {{#onChange clearFields="afromexicano,afromexicanoUrgenciasHospitalizacion"}}
         {{set esConsultaExterna="=tipoAtencion=='consultaExterna'"}}
@@ -51,10 +51,13 @@
       {{/onChange}}
     {{/field}}
     {{#field id="migrante"}}
-      {{#onChange}}
-        {{set paisProcedencia="MX"}}
-      {{/onChange}}
+      {{onChange clearFields="paisProcedencia"}}
     {{/field}}
+    {{#onChange}}
+      {{#update}}
+        {{set paisProcedencia="=calc.in(migrante,['nacional','retornado'])?'MX':migrante=='internacional'?paisProcedencia:''"}}
+      {{/update}}
+    {{/onChange}}    
     {{validator type="expr" validIf="=calc.curp3Ok(clave)" message="CURP Incorrecto"}}
     {{validator type="expr" validIf="=calc.setTimeStr(@fechaNacimiento,@horaNacimiento)<moment().format()" message="Fecha Nacimiento Incorrecta"}}
     {{validator type="expr" notValidIf="=calc.in(genero,['noEspecificado','seIgnora'])&&tipoAtencion==='consultaExterna'" message="Sexo Biológico Inválido para Consulta Externa"}}

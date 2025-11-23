@@ -129,7 +129,7 @@
     {{/field}}
     {{#onChange}}
       {{#update}}
-        {{set paisProcedencia="calc.in(migrante,['nacional','retornado'])?'MX':paisProcedencia"}}
+        {{set paisProcedencia="=calc.in(migrante,['nacional','retornado'])?'MX':paisProcedencia"}}
       {{/update}}
     {{/onChange}}
     [.#if esHIS.]

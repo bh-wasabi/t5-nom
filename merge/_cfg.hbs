@@ -10439,22 +10439,22 @@
   
   {{#template id="datosMujerSeulEgreso"}}
     {{#if edadGestacional}}<br>Edad Gestacional: {{edadGestacional}}{{/if}}
-    {{#if tipoEmbarazo}}<br>Producto único o múltiple: {{_tipoEmbarazo}}{{/if}}
     {{#if tipoAtencionObstetrica}}<br>Tipo de Atención Obstétrica: {{_tipoAtencionObstetrica}}{{/if}}
-    {{#if esMenor4Meses}}{{#if nacioElPacienteEnEstaAtencion}}<br>Nació el(la) paciente en esta atención: {{_nacioElPacienteEnEstaAtencion}}{{/if}}{{/if}}
-    {{#if nacioEnEstaAtencion}}{{#if condicionNacimiento}}<br>Condición al Nacimiento: {{_condicionNacimiento}}{{/if}}{{/if}}
-    {{#if nacioEnEstaAtencion}}{{#if tipoNacimiento}}<br>Tipo de Nacimiento: {{_tipoNacimiento}}{{/if}}{{/if}}
-    {{#if tipoProcedimientoAborto}}<br>Tipo Procedimiento Aborto: {{_tipoProcedimientoAborto}}{{/if}}
+    {{#if tipoEmbarazo}}<br>Producto único o múltiple: {{_tipoEmbarazo}}{{/if}}
+    {{!-- {{#if esMenor4Meses}}{{#if nacioElPacienteEnEstaAtencion}}<br>Nació el(la) paciente en esta atención: {{_nacioElPacienteEnEstaAtencion}}{{/if}}{{/if}} --}}
+    {{!-- {{#if condicionNacimiento}}<br>Condición al Nacimiento: {{_condicionNacimiento}}{{/if}} --}}
     {{#if totalProductos}}<br>Total de Productos: {{totalProductos}}{{/if}}
-    {{#if condicionNacimiento}}<br>Condición de Nacimiento: {{_condicionNacimiento}}{{/if}}
-    {{#if condicionNacidoVivo}}<br>Condición Nacido Vivo: {{_condicionNacidoVivo}}{{/if}}
-    {{#if folioCertificadoNacimiento}}<br>Folio Certificado: {{folioCertificadoNacimiento}}{{/if}}
-    {{#if apgar}}<br>Apgar 5 Minutos: {{apgar}}{{/if}}
-    {{#if reanimacionNeonatal}}<br>Reanimación Neonatal: {{reanimacionNeonatal}}{{/if}}
-    {{#if alojamientoConjunto}}<br>Alojamiento Conjunto: {{_alojamientoConjunto}}{{/if}}
-    {{#if lactanciaExclusiva}}<br>Lactancia Exclusiva: {{_lactanciaExclusiva}}{{/if}}
-    {{#if antecedentesEmbarazos}}<br>Antecedentes Embarazos: {{_antecedentesEmbarazos}}{{/if}}
-    {{#if estaEmbarazada}}{{#if datosEmbarazoActual}}<br>Embarazo Actual: {{_datosEmbarazoActual}}{{/if}}{{/if}}
+    {{#if tipoNacimiento}}<br>Tipo de Nacimiento: {{_tipoNacimiento}}{{/if}}
+    {{#if tipoProcedimientoAborto}}<br>Tipo Procedimiento Aborto: {{_tipoProcedimientoAborto}}{{/if}}
+    {{!-- {{#if condicionNacimiento}}<br>Condición de Nacimiento: {{_condicionNacimiento}}{{/if}} --}}
+    {{!-- {{#if condicionNacidoVivo}}<br>Condición Nacido Vivo: {{_condicionNacidoVivo}}{{/if}} --}}
+    {{!-- {{#if folioCertificadoNacimiento}}<br>Folio Certificado: {{folioCertificadoNacimiento}}{{/if}} --}}
+    {{!-- {{#if apgar}}<br>Apgar 5 Minutos: {{apgar}}{{/if}} --}}
+    {{!-- {{#if reanimacionNeonatal}}<br>Reanimación Neonatal: {{reanimacionNeonatal}}{{/if}} --}}
+    {{!-- {{#if alojamientoConjunto}}<br>Alojamiento Conjunto: {{_alojamientoConjunto}}{{/if}} --}}
+    {{!-- {{#if lactanciaExclusiva}}<br>Lactancia Exclusiva: {{_lactanciaExclusiva}}{{/if}} --}}
+    {{!-- {{#if antecedentesEmbarazos}}<br>Antecedentes Embarazos: {{_antecedentesEmbarazos}}{{/if}} --}}
+    {{!-- {{#if estaEmbarazada}}{{#if datosEmbarazoActual}}<br>Embarazo Actual: {{_datosEmbarazoActual}}{{/if}}{{/if}} --}}
 		{{#if siParto}}{{#if datosInformacionProducto}}<br>Información Producto: <br>{{_datosInformacionProducto}}{{/if}}{{/if}}
 		{{#if siAborto}}{{#if datosInformacionProductoAborto}}<br>Información Producto: <br>{{_datosInformacionProductoAborto}}{{/if}}{{/if}}    
   {{/template}}
