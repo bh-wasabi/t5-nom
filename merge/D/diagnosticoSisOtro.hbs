@@ -10,7 +10,7 @@
         {{param _type="=_parentDoc._type"}}
         {{param edadActual="=_parentDoc.persona.edadActual"}}
         {{!-- {{param relacionTemporal="=user.others.tipoPersonalCE=='4'?(primeraVez=='si'?'primeraVez':'subsecuente'):null"}} --}}
-        {{param relacionTemporal="=primeraVez=='si'?'primeraVez':'subsecuente'"}}
+        {{param relacionTemporal="=_parentDoc._type!='notaSisConsultaExterna'?(primeraVez=='si'?'primeraVez':'subsecuente'):null"}}
       {{/editor}}
       {{#onChange clearFields="subDiagnostico,confirmacionDiagnostica"}}
         {{set letra="=LETRA"}}

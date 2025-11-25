@@ -4,5 +4,19 @@
     {{validator type="expr" notValidIf="=moment(fechaAtencion).diff(fechaNacimiento,'days')<30&&calc.getRef(somatometria,'base.peso')>12&&calc.getRef(somatometria,'base.peso')!=999" message="Peso Incorrecto (Máximo 12 kg.)"}}
     {{validator type="expr" notValidIf="=moment(fechaAtencion).diff(fechaNacimiento,'months')<12&&calc.getRef(somatometria,'base.peso')>20&&calc.getRef(somatometria,'base.peso')!=999" message="Peso Incorrecto (Máximo 20 kg.)"}}
     {{validator type="expr" notValidIf="=moment(fechaAtencion).diff(fechaNacimiento,'years')>=1&&calc.getRef(somatometria,'base.peso')<5&&calc.getRef(somatometria,'base.peso')!=999" message="Peso Incorrecto (Mínimo 5 kg.)"}}
-  {{/section}}  
-{{/markup}}
+  {{/section}}
+
+  {{#view id="ultimaSignosVitalesSomatometria"}}
+    {{#find limit="1"}}
+      {{include field="base.fechaAtencion"}}
+      {{include field="base.somatometria"}}
+      {{include field="base._somatometria"}}
+      {{include field="contexto.episodio"}}
+      {{filter field="base.estatus" eq="afectado"}}
+      {{filter field="persona.id" eq="=persona"}}
+      {{filter field="_created.service" neq="='consultaExterna'"}}
+      {{filter condition="=episodio" field="contexto.episodio" eq="=episodio" isNumber="true"}}
+      {{sort field="base.fechaAtencion" direction="desc"}}
+    {{/find}}
+  {{/view}}
+{{/define}}

@@ -5170,8 +5170,8 @@
       {{set _especialidad="=contexto._especialidad||contexto.ingreso._especialidad"}}
       {{set antecedenteFamiliar="=detalle.antecedentes.antecedenteFamiliar"}}
       {{set _antecedenteFamiliar="=detalle.antecedentes._antecedenteFamiliar"}}
-      {{set somatometria="=calc.getRef(_.first(ultimaNotaEvolucion),'base.somatometria')"}}
-      {{set _somatometria="=calc.getRef(_.first(ultimaNotaEvolucion),'base._somatometria')"}}
+      {{set somatometria="=calc.isEmpty(ultimaSignosVitalesSomatometria)?calc.getRef(_.first(ultimaNotaEvolucion),'base.somatometria'):moment(calc.getRef(_.first(ultimaNotaEvolucion), 'base.fechaAtencion')).isAfter(moment(calc.getRef(_.first(ultimaSignosVitalesSomatometria), 'base.fechaAtencion')))?calc.getRef(_.first(ultimaNotaEvolucion),'base.somatometria'):calc.getRef(_.first(ultimaSignosVitalesSomatometria),'base.somatometria')"}}
+      {{set _somatometria="=calc.isEmpty(ultimaSignosVitalesSomatometria)?calc.getRef(_.first(ultimaNotaEvolucion),'base._somatometria'):moment(calc.getRef(_.first(ultimaNotaEvolucion), 'base.fechaAtencion')).isAfter(moment(calc.getRef(_.first(ultimaSignosVitalesSomatometria), 'base.fechaAtencion')))?calc.getRef(_.first(ultimaNotaEvolucion),'base._somatometria'):calc.getRef(_.first(ultimaSignosVitalesSomatometria),'base._somatometria')"}}
       {{set somatometriaIngreso="=contexto.episodio==detalle.notaIngreso.contexto.episodio&&detalle.notaIngreso.base.somatometria"}}
       {{set _somatometriaIngreso="=contexto.episodio==detalle.notaIngreso.contexto.episodio&&detalle.notaIngreso.base._somatometria"}}
       {{set motivoEgreso="=(contexto.estaDifunto)?'defuncion':null"}}
@@ -12915,6 +12915,9 @@
     fromSource4="solicitud"
     fromView4="sugerirProcedimientosRealizados"
     toSection4="procedimientosRealizados"
+    fromSource5="notaRegistroSignosVitalesSomatometria"
+    fromView5="ultimaSignosVitalesSomatometria"
+    toSection5="ultimaSignosVitalesSomatometria"
     error="=fn('validarEgreso', detalle)||fn('validarDerechohabiencia', contexto, detalle)||fn('errorCluesEgreso',user.establishmentData.cluesTipoUnidad,user.establishmentData.cluesTipoAbreviacion)||fn('errorDatosSeguro', persona, contexto, detalle)||fn('validarFechaEgreso',true,persona.fechaNacimiento,_ask.fechaIngresoHospitalario,_ask.fechaEgreso,_items3[0],user.establishmentData.cluesTipoAbreviacion,user.establishmentData.cluesSubAbreviacion)"
     error2="=fn('validarEdadPrestador',_ask.fechaEgreso,user.serviceProvider.fechaNacimiento)"
     errorType="info"
@@ -12948,6 +12951,9 @@
     fromSource4="solicitud"
     fromView4="sugerirProcedimientosRealizados"
     toSection4="procedimientosRealizados"
+    fromSource5="notaRegistroSignosVitalesSomatometria"
+    fromView5="ultimaSignosVitalesSomatometria"
+    toSection5="ultimaSignosVitalesSomatometria"
     error="=fn('validarEgreso', detalle)||fn('validarDerechohabiencia', contexto, detalle)||fn('errorCluesEgreso',user.establishmentData.cluesTipoUnidad,user.establishmentData.cluesTipoAbreviacion)||fn('errorDatosSeguro', persona, contexto, detalle)||fn('validarFechaEgreso',false,persona.fechaNacimiento,_ask.fechaIngresoHospitalario,_ask.fechaEgreso,_items3[0],user.establishmentData.cluesTipoAbreviacion,user.establishmentData.cluesSubAbreviacion)"
     error2="=fn('validarEdadPrestador',_ask.fechaEgreso,user.serviceProvider.fechaNacimiento)"
     errorType="info"
