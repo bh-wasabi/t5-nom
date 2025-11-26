@@ -7801,6 +7801,7 @@
     {{update section="persona" transform="copiarPersona"}}
     {{update section="nomDatos" transform="copiarNomDatos"}}
     {{#update section="base"}}
+      {{set fechaIngresoHospitalario="=_params.fechaIngresoHospitalario"}}
       {{set fechaAtencion="=_params.fechaAtencion"}}
       {{set esMujer="=persona.esMujer"}}
       {{set esHombre="=!esMujer"}}
@@ -12558,7 +12559,9 @@
     color="deep-orange"
     onlyPost="true"
     error="=fn('validarEdadPrestador',_ask.fechaAtencion,user.serviceProvider.fechaNacimiento)"
+    error2="=fn('validarFechaPreAlta',_ask.fechaIngresoHospitalario,_ask.fechaAtencion,user.establishmentData.cluesTipoAbreviacion,user.establishmentData.cluesSubAbreviacion)"
   }}
+    {{ask field="fechaIngresoHospitalario" readOnly="true" type="datetime" label="Fecha Ingreso Hospitalario" required="true" value="=calc.getRef(detalle,'notaIngreso.base.fechaAtencion')||moment()"}}
     {{ask field="fechaAtencion" type="datetime" label="Fecha Atención" required="true" value="=moment().format()" min="=fn('ultimaAtencion', contexto)||fn('hospitalizacionDesde', contexto)||moment(persona.fechaNacimiento).format()" max="=moment().add('minutes',1).format()" errorMessage="Fecha Incorrecta"}}
   {{/action}}
   {{action id="notaSuspenderPreAlta" source="notaSuspenderPreAlta" label="Suspender Pre Alta" transform="copiarCama" hide="true" type="add-subdoc" visibleMode="close" color="deep-orange" onlyPost="true"}}

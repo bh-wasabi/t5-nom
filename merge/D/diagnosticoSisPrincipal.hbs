@@ -8,7 +8,8 @@
         {{param esSis="=true"}}
         {{param esPrincipal="=true"}}
         {{param _type="=_parentDoc._type"}}
-        {{param edadActual="=_parentDoc.persona.edadActual"}}
+        {{!-- {{param edadActual="=_parentDoc.persona.edadActual"}} --}}
+        {{param edadActual="=fn('calcularEdadPorFechaAtencion',_parentDoc.base.fechaAtencion||_parentDoc.base.fechaConsulta,_parentDoc.persona.fechaNacimiento)"}}
         {{param relacionTemporal="=relacionTemporal"}}
       {{/editor}}
       {{#onChange clearFields="subDiagnostico,confirmacionDiagnostica"}}
