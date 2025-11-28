@@ -14,6 +14,7 @@
   
   {{#section id="base"}}
     {{field id="esMujerMayor9" type="expr" value="=esMujer&&moment(@fechaAtencion).diff(moment(persona.fechaNacimiento),'years')>=9&&moment(@fechaAtencion).diff(moment(persona.fechaNacimiento),'years')<=59"}}
+    {{field id="esMenor3Anos" type="expr" value="=fn('calcularEdadPorFechaAtencion', fechaAtencion, persona.fechaNacimiento)<3"}}
     {{field id="esFertil" type="expr" value="=mujerFertil=='embarazo'||mujerFertil=='puerperio'"}}
     {{field id="tieneClues" type="expr" value="=usuarioReferido=='unidadMedica'"}}
     {{#field id="mujerFertil"}}
@@ -39,15 +40,17 @@
     {{!-- {{validator type="expr" notValidIf="=fn('validarFechaAtencionLesion',calc.getRef(eventoLesion,'base.fechaOcurreEvento'),calc.getRef(eventoLesion,'base.horaEvento'),calc.getRef(atencionMedicaLesion,'base.fechaAtencion'),calc.getRef(atencionMedicaLesion,'base.horaAtencion'))" message="Fecha Evento debe ser menor a Fecha Atención"}} --}}
     {{validator type="expr" notValidIf="=calc.in(escolaridad,['tecnicoTerminalConPreparatoriaIncompleta','tecnicoTerminalConPreparatoriaCompleta','tecnicoTerminalConSecundariaCompleta','tecnicoTerminalConSecundariaIncompleta'])" message="Escolaridad Inválida"}}
     {{validator type="expr" validIf="=nomDatos.desconoceFechaNacimiento=='si'||fn('escolaridadCorrecta', calc.fn('calcularEdadPorFechaAtencion', fechaAtencion, persona.fechaNacimiento)||2, escolaridad)" message="Escolaridad Incorrecta"}}
+    {{validator type="expr" notValidIf="=esMenor3Anos&&sabeLeerEscribir!='no'" message="Sabe Leer y Escribir Incorrecto (Paciente menor 3 años)"}}
+    {{validator type="expr" notValidIf="=sabeLeerEscribir=='no'&&!calc.in(escolaridad,['ninguna','noAplica','noEspecificado','preescolarCompleta','preescolarIncompleta','seIgnora'])" message="Sabe Leer y Escribir Incorrecto"}}
+    {{validator type="expr" notValidIf="=sabeLeerEscribir!='si'&&calc.in(escolaridad,['primariaIncompleta','primariaCompleta','secundariaIncompleta','secundariaCompleta','bachilleratoOpreparatoriaCompleta','bachilleratoOpreparatoriaIncompleta','licenciaturaOprofesionalCompleto','licenciaturaOprofesionalIncompleto','posgradoCompleto','posgradoIncompleto'])" message="Sabe Leer y Escribir Incorrecto"}}
+
+    {{validator type="expr" notValidIf="=atencionMedicaLesion.base.consecuenciaLesion=='defuncion'&&destinoDespuesLesion.base.destinoAtencionLesion!='defuncion'" message="Destino Atención debe ser Defunción si Consecuencia Lesión es Defunción"}}
+    {{validator type="expr" notValidIf="=atencionMedicaLesion.base.consecuenciaLesion!='defuncion'&&destinoDespuesLesion.base.destinoAtencionLesion=='defuncion'" message="Consecuencia Lesión debe ser Defunción si Destino Atención es Defunción"}}
     
-    {{validator type="expr" notValidIf="=atencionMedicaLesion.base.consecuenciaLesion=='defuncion'&&afectacionesTratadas[0].base.destinoAtencionLesion!='defuncion'" message="Verificar Destino en Afectaciones Tratadas"}}
-    {{validator type="expr" notValidIf="=profesionalResponsableSalud.base.responsableAtencionMedica=='medicoTratante'&&(calc.in('tratamientoPsicologo',atencionMedicaLesion.base.tipoAtencionLesion)||calc.in('consergeria',atencionMedicaLesion.base.tipoAtencionLesion))" message="Profesional Responsable Salud Inválido"}}
-    {{!-- Se quita primer parte de la validación, que obliga a que unicamente tenga un Tipo de Atención para Psicologos --}}
-    {{!-- {{validator type="expr" notValidIf="=(profesionalResponsableSalud.base.responsableAtencionMedica=='psicologoTratante'&&atencionMedicaLesion.base.tipoAtencionLesion.length>1)||(profesionalResponsableSalud.base.responsableAtencionMedica=='psicologoTratante'&&!calc.in('tratamientoPsicologo',atencionMedicaLesion.base.tipoAtencionLesion))" message="Profesional Responsable Salud Inválido"}} --}}
-    {{validator type="expr" notValidIf="=(profesionalResponsableSalud.base.responsableAtencionMedica=='psicologoTratante'&&!calc.in('tratamientoPsicologo',atencionMedicaLesion.base.tipoAtencionLesion))" message="Profesional Responsable Salud Inválido"}}
-    {{!-- Se quita primer parte de la validación, que obliga a que unicamente tenga un Tipo de Atención para Trabajador Social --}}
-    {{!-- {{validator type="expr" notValidIf="=(profesionalResponsableSalud.base.responsableAtencionMedica=='trabajadoraSocial'&&atencionMedicaLesion.base.tipoAtencionLesion.length>1)||(profesionalResponsableSalud.base.responsableAtencionMedica=='trabajadoraSocial'&&!calc.in('consergeria',atencionMedicaLesion.base.tipoAtencionLesion))" message="Profesional Responsable Salud Inválido"}} --}}
-    {{validator type="expr" notValidIf="=(profesionalResponsableSalud.base.responsableAtencionMedica=='trabajadoraSocial'&&!calc.in('consergeria',atencionMedicaLesion.base.tipoAtencionLesion))" message="Profesional Responsable Salud Inválido"}}
+    {{validator type="expr" notValidIf="=profesionalResponsableSalud.base.responsableAtencionMedica=='medicoTratante'&&!calc.arrayInArray(['tratamientoMedico','tratamientoQuirurgico','tratamientoPsiquiatrico','otro','pildoraanticonseptivaemergencia','profilaxisVih','profilaxisOtrasIts'],atencionMedicaLesion.base.tipoAtencionLesion)" message="Falta Tipo Atención para Médico Tratante"}}
+    {{validator type="expr" notValidIf="=profesionalResponsableSalud.base.responsableAtencionMedica=='psicologoTratante'&&!calc.in('tratamientoPsicologo',atencionMedicaLesion.base.tipoAtencionLesion)" message="Falta Tipo Atención para Psicólogo Tratante"}}
+    {{validator type="expr" notValidIf="=profesionalResponsableSalud.base.responsableAtencionMedica=='trabajadoraSocial'&&!calc.in('consergeria',atencionMedicaLesion.base.tipoAtencionLesion)" message="Falta Tipo Atención para Trabajadora Social"}}
+
     {{validator type="expr" validIf="=calc.isEmpty(@edadGestacional)||(calc.number(@edadGestacional)>=1&&calc.number(@edadGestacional)<=45)||(calc.number(@edadGestacional)==99)" message="Error en la Edad Gestacional"}}
     {{validator type="expr" validIf="=calc.isEmpty(otrosDiagnosticos)||otrosDiagnosticos.length<7" message="Máximo 6 Afecciones Tratadas"}}
     {{validator type="expr" notValidIf="=calc.hasDuplicates(calc.mergeArrays(afeccionPrincipal.base.diagnostico, @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico, calc.pluckRef(@otrosDiagnosticos, 'base.diagnostico')), @afeccionPrincipalReseleccionada&&afeccionPrincipalReseleccionada.base.diagnostico)" message="Tiene Diagnósticos Duplicados"}}
@@ -96,13 +99,13 @@
     {{#field id="agresorEfectoTipoDroga"}}
       {{onChange clearFields="tipoDroga"}}
     {{/field}}
-    {{validator type="expr" notValidIf="=tipoParentesco=='conyugue'&&edadAgresor==0" message="Error en la edad del agresor"}}
+  
     {{validator type="expr" validIf="=!@tipoDroga||@tipoDroga.length<4" message="Máximo 3 Drogas"}}
     {{validator type="expr" notValidIf="=@tipoParentesco=='conyugue'&&@edadAgresor==''" message="Edad del Agresor Requerida"}}
     {{validator type="expr" notValidIf="=@tipoDroga.length>1&&(calc.in('ninguna',@tipoDroga)||calc.in('seIgnora',@tipoDroga))" message="Drogas Incorrectas"}}
     {{validator type="expr" notValidIf="=@tipoIntencionalidad=='violenciaFamiliar'&&calc.in(@tipoParentesco,['sinParentesco','desconocido'])" message="Parentesco Agresor Inválido"}}
     {{validator type="expr" notValidIf="=@tipoIntencionalidad=='violenciaNoFamiliar'&&@numeroAgresores=='unico'&&!calc.in(@tipoParentesco,['sinParentesco','desconocido'])" message="Parentesco Agresor Inválido"}}
-    {{validator type="expr" validIf="=!@edadAgresor||(@edadAgresor>=3&&@edadAgresor<=99)||(@edadAgresor=='999'&&@tipoParentesco!='conyugue')" message="Edad Agresor Inválida"}}
+    {{validator type="expr" validIf="=!@edadAgresor||(@edadAgresor>=3&&@edadAgresor<=99)||(calc.in(@edadAgresor,['999','0'])&&@tipoParentesco!='conyugue')" message="Edad Agresor Inválida"}}
     {{validator type="expr" notValidIf="=calc.in(calc.upperCase(calc.normalize(@otroAgente)),fn('especifiqueAgenteLesionInvalido'))" message="Otro Agente Inválido"}}
     {{validator type="expr" notValidIf="=mostrarAgenteLesion&&agenteLesion==='noAplica'" message="Agente Lesión Inválido"}}
   {{/section}}

@@ -5696,6 +5696,7 @@
       {{set servicio="=contexto.servicio"}}
       {{set _servicio="=contexto._servicio"}}
       {{set escolaridad="=persona.escolaridad"}}
+      {{set sabeLeerEscribir="=persona.sabeLeerEscribir"}}
       {{setRef ref="eventoLesion.base.fechaOcurreEvento" value="=_params.fechaEvento"}}
       {{setRef ref="eventoLesion.base.horaEvento" value="=_params.desconoceHoraEvento=='si'?'99:99':(_params.fechaEvento).substr(11,5)"}}
       {{setRef ref="eventoLesion.base.fechaNacimiento" value="=persona.fechaNacimiento"}}

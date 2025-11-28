@@ -64,7 +64,7 @@
       {{#editor}}
         {{param estado="=@codigoEstado||entidadFederativa"}}
         {{param municipio="=@codigoDelegacion"}}
-        {{#onChange refresh="true"}}
+        {{#onChange refresh="true" clearFields="otraLocalidad"}}
           {{set codigoLocalidad="=c_localidad"}}
           {{set codigoEstado="=c_estado"}}
         {{/onChange}}
