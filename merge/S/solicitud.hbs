@@ -3513,11 +3513,12 @@
       {{include field="base"}}
       {{include field="info"}}
       {{include field="control"}}
+      {{filter field="persona.id" eq="=persona"}}
       {{filter field="base.estatus" in="=fn('listaEstatus','activos')"}}
       {{filter field="_updated.moment" eq="ministrado"}}
       {{filter field="base.tipoSolicitud" eq="medicamento"}}
       {{filter field="_created.establishment" in="=user.establishment"}}
-      {{filter field="persona.id" eq="=persona"}}
+      {{filter condition="=episodio" field="contexto.episodio" eq="=episodio" isNumber="true"}}
     {{/find}}
   {{/view}}
 

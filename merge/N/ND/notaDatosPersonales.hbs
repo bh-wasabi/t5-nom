@@ -45,6 +45,11 @@
         {{set esUrgenciasHospitalizacion="=tipoAtencion!='consultaExterna'"}}
       {{/onChange}}
     {{/field}}
+    {{#field id="genero"}}
+      {{#editor}}
+        {{param partOf="=tipoAtencion=='consultaExterna'?'sis':'seul'" }}
+      {{/editor}}
+    {{/field}}
     {{#field id="paisNacimiento"}}
       {{#onChange condition="=paisNacimiento!='MX'" clearFields="entidadNacimiento"}}
         {{set entidadNacimiento="='NA'"}}

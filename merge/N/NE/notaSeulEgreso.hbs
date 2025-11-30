@@ -18,15 +18,15 @@
       {{onChange clearFields="tipoUnidadPsiquiatrica,tipoServicioPsiquiatrico,hospitalParcial"}}
     {{/field}}
     {{#field id="motivoEgreso"}}
-      {{onChange clearFields="notificoMP,folioCertificadoDefuncion,signosVitales,fechaHoraDefuncion,cluesTraslado,cluesEstatus,cluesFechaBaja"}}
+      {{onChange clearFields="notificoMP,folioCertificadoDefuncion,signosVitales,fechaHoraDefuncion,cluesTraslado,cluesTrasladoEstatus,cluesTrasladoFechaBaja"}}
     {{/field}}
     {{#field id="mujerFertil"}}
       {{onChange clearFields="metodoAnticonceptivo,otroMetodo"}}
     {{/field}}
     {{#field id="cluesTraslado"}}
-      {{#onChange clearFields="cluesEstatus,cluesFechaBaja"}}
-        {{set cluesEstatus="=ESTATUS_OPERACION"}}
-        {{set cluesFechaBaja="=FECHA_EFECTIVA_BAJA"}}
+      {{#onChange clearFields="cluesTrasladoEstatus,cluesTrasladoFechaBaja"}}
+        {{set cluesTrasladoEstatus="=ESTATUS_OPERACION"}}
+        {{set cluesTrasladoFechaBaja="=FECHA_EFECTIVA_BAJA"}}
       {{/onChange}}
     {{/field}}
     {{#field id="metodoAnticonceptivo"}}
@@ -40,6 +40,8 @@
         {{set foliosUtilizadosMuerteFetal="=_.compact([].concat([@folioCertificadoMuerteFetal],calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProducto'),'base.folioCertificadoMuerteFetal'),calc.pluckRef(calc.pluckRef(@datosMujer,'base.datosInformacionProductoAborto'),'base.folioCertificadoMuerteFetal')))"}}
         {{set diagnostico="=calc.mergeArrays(@afeccionPrincipal,@afeccionPrincipalReseleccionada,@otrosDiagnosticos)"}}
         {{set _diagnostico="=_.pluck(base.diagnostico, '_name').join(', ')"}}
+        {{set cluesTrasladoEstatus="=motivoEgreso=='trasladoOtraUnidad'?cluesTrasladoEstatus:''"}}
+        {{set cluesTrasladoFechaBaja="=motivoEgreso=='trasladoOtraUnidad'?cluesTrasladoFechaBaja:''"}}
       {{/update}}
     {{/onChange}}
   {{/section}}

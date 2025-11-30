@@ -15,17 +15,19 @@
       {{onChange clearFields="terapiaIntensiva,terapiaIntermedia"}}
     {{/field}}
     {{#field id="procedenciaIngreso"}}
-      {{onChange clearFields="especifiqueProcedencia,cluesProcedencia,cluesEstatus,cluesFechaBaja"}}
+      {{onChange clearFields="especifiqueProcedencia,cluesProcedencia,cluesProcedenciaEstatus,cluesProcedenciaFechaBaja"}}
     {{/field}}
     {{#field id="cluesProcedencia"}}
-      {{#onChange clearFields="cluesEstatus,cluesFechaBaja"}}
-        {{set cluesEstatus="=ESTATUS_OPERACION"}}
-        {{set cluesFechaBaja="=FECHA_EFECTIVA_BAJA"}}
+      {{#onChange clearFields="cluesProcedenciaEstatus,cluesProcedenciaFechaBaja"}}
+        {{set cluesProcedenciaEstatus="=ESTATUS_OPERACION"}}
+        {{set cluesProcedenciaFechaBaja="=FECHA_EFECTIVA_BAJA"}}
       {{/onChange}}
     {{/field}}
     {{#onChange}}
       {{#update}}
         {{set numeroServicio="=claveServicioAdicional.length"}}
+        {{set cluesProcedenciaEstatus="=procedenciaIngreso=='referido'?cluesProcedenciaEstatus:''"}}
+        {{set cluesProcedenciaFechaBaja="=procedenciaIngreso=='referido'?cluesProcedenciaFechaBaja:''"}}
       {{/update}}
     {{/onChange}}
     {{validator type="expr" notValidIf="=procedenciaIngreso=='cuneroPatologico'&&(moment().diff(moment(_parentDoc.persona.fechaNacimiento),'years')<1?moment(_parentDoc.base.fechaIngresoHospitalario).diff(moment(_parentDoc.persona.fechaNacimiento), 'months')>1:moment(_parentDoc.base.fechaEgreso).diff(moment(_parentDoc.persona.fechaNacimiento), 'months')>1)" message="Procedencia Ingreso Inválida (Paciente Mayor a 1 Mes)"}}
@@ -46,7 +48,7 @@
     {{validator type="expr" notValidIf="=_parentDoc.persona.genero!=='mujer'&&calc.in(@claveServicioEgreso,['ginecologia','urologiaGinecologica'])" message="Clave Servicio Egreso Inválido (Paciente No Mujer)"}}
     {{validator type="expr" notValidIf="=_parentDoc.persona.genero!=='mujer'&&calc.arrayInArray(['ginecologia','urologiaGinecologica'],@claveServicioAdicional)" message="Clave Servicio Adicional Inválido (Paciente No Mujer)"}}
 
-    {{validator type="expr" notValidIf="=cluesEstatus=='FUERA DE OPERACION'&&@cluesFechaBaja&&moment(calc.getRef(_parentDoc,'base.fechaIngresoHospitalario')).diff(@cluesFechaBaja, 'days')>90" message="CLUES Procedencia Fuera de Operación"}}
+    {{validator type="expr" notValidIf="=(cluesProcedenciaEstatus=='FUERA DE OPERACION'&&calc.isEmpty(@cluesProcedenciaFechaBaja))||(cluesProcedenciaEstatus=='FUERA DE OPERACION'&&@cluesProcedenciaFechaBaja&&moment(calc.getRef(_parentDoc,'base.fechaIngresoHospitalario')).diff(@cluesProcedenciaFechaBaja, 'days')>90)" message="CLUES Procedencia Fuera de Operación"}}
     {{validator type="expr" notValidIf="=cluesProcedencia==user.establishmentData.clues" message="CLUES Procedencia Inválido"}}
   {{/section}}
 {{/define}}
