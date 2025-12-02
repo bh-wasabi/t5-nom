@@ -2517,6 +2517,8 @@
     {{!-- Casos especiales y formato básico --}}
     {{when condition="=certificado.length!=9" return="true"}}
     {{when condition="=isNaN(certificado)" return="true"}}
+    {{!-- Para 2026 debe ser menor de 261000000 --}}
+    {{when condition="=certificado.slice(0,2)=='26'&&calc.forceNumber(certificado)>260999999" return="true"}}
     {{!-- Para 2025 debe ser menor de 251000000 --}}
     {{when condition="=certificado.slice(0,2)=='25'&&calc.forceNumber(certificado)>250999999" return="true"}}
     {{!-- Para 2024 debe ser menor de 241000000 --}}
@@ -2545,7 +2547,9 @@
   {{#function id="validaCertificadoNacimiento"}}
     {{define type="param" id="certificado"}}
     {{when condition="=certificado.length!=9&&certificado.length!=14" return="true"}}
+    {{when condition="=certificado.length==9&&isNaN(certificado)" return="true"}}
     {{when condition="=certificado.length==14&&calc.upperCase(certificado.slice(5,6))!='E'" return="true"}}
+    {{when condition="=certificado.length==14&&isNaN(certificado.slice(6))" return="true"}}
     {{default return="false"}}
   {{/function}}
 
@@ -2942,7 +2946,9 @@
 
   {{#function id="validarNotaSolicitudTococirugia"}}
     {{define type="param" id="persona"}}
+    {{define type="param" id="fechaAtencion"}}
     {{when condition="=persona.genero!='mujer'" return="='El Género del Paciente debe ser Mujer para Solicitar Tococirugía'"}}
+    {{when condition="=fn('calcularEdadPorFechaAtencion',@fechaAtencion,persona.fechaNacimiento)<10||fn('calcularEdadPorFechaAtencion',@fechaAtencion,persona.fechaNacimiento)>54" return="='La Edad del Paciente debe ser entre 10 y 54 años para Registrar Solicitud de Tococirugía'"}}
     {{default return="null"}}
   {{/function}}
 

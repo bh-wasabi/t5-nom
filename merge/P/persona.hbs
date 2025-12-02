@@ -13465,8 +13465,9 @@
     confirmWidth="500"
     btnSolid="true"
     condition="=persona.genero=='mujer'"
-    error="=fn('validarNotaSolicitudTococirugia', persona)||fn('errorDatosSeguro', persona, contexto, detalle)"
-    error2="=fn('validarEdadPrestador',_ask.fechaPropuesta,user.serviceProvider.fechaNacimiento)"
+    error="=fn('validarNotaSolicitudTococirugia', persona, _ask.fechaPropuesta)"
+    error2="=fn('errorDatosSeguro', persona, contexto, detalle)"
+    error3="=fn('validarEdadPrestador',_ask.fechaPropuesta,user.serviceProvider.fechaNacimiento)"
     errorType="info"
   }}
     {{param tipoSolicitud="='tococirugia'"}}
