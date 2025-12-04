@@ -36,12 +36,18 @@
     {{#search index="sis-23" type="_doc" filterParamsOnlySearch="true"}}
       {{!-- Se comentó porque es necesario mostrar todos los diagnosticos. Se validará la edad en el componente --}}
       {{!-- {{param DIA_CRONICOS="=edadActual<20?'NO':null"}} --}}
-      {{!-- {{param DIA_CAINFANTIL="=edadActual>18?'NO':null"}} --}}
+      {{!-- Para DIA_CAINFANTIL solo mostrar en CE para Médico Especialista --}}
+      {{param DIA_CAINFANTIL="=calc.in(_type, ['notaConsultaExterna','notaTempConsultaExterna','notaSisConsultaExterna'])?user.others.tipoPersonalCE=='4'?'SI,NO':'NO':null"}}
       {{param VALIDO_SM="=@esPrincipal&&calc.in(_type, ['notaSaludMental','notaTempSaludMental'])?'SI':null"}}
       {{param VALIDO_SB="=@esPrincipal&&calc.in(_type, ['notaSaludBucal','notaTempSaludBucal'])?user.others.tipoPersonalCE:null"}}
       {{param VALIDO_PF="=@esPrincipal&&calc.in(_type, ['notaPlanificacionFamiliar','notaTempPlanificacionFamiliar'])?'SI':null"}}
-      {{param TIPO_PERSONAL_1VEZ_CE="=calc.in(_type, ['notaConsultaExterna','notaTempConsultaExterna','notaSisConsultaExterna'])&&@relacionTemporal=='primeraVez'?user.others.tipoPersonalCE+(@esOtro?',NO':''):null"}}
-      {{param TIPO_PERSONAL_SUBSEC_CE="=calc.in(_type, ['notaConsultaExterna','notaTempConsultaExterna','notaSisConsultaExterna'])&&@relacionTemporal=='subsecuente'?user.others.tipoPersonalCE+(@esOtro?',NO':''):null"}}
+      {{!-- Para Tipo de Personal 4 mostrar TODO, excepto MT  --}}
+      {{!-- Para Tipo de Personal 10 mostrar TODO, excepto CP  --}}
+      {{!-- Para Otro Tipo de Personal mostrar TODO, excepto CP y MT --}}
+      {{!-- {{param TIPO_PERSONAL_1VEZ_CE="=calc.in(_type, ['notaConsultaExterna','notaTempConsultaExterna','notaSisConsultaExterna'])&&@relacionTemporal=='primeraVez'?user.others.tipoPersonalCE+(@esOtro?',NO':''):null"}} --}}
+      {{!-- {{param TIPO_PERSONAL_SUBSEC_CE="=calc.in(_type, ['notaConsultaExterna','notaTempConsultaExterna','notaSisConsultaExterna'])&&@relacionTemporal=='subsecuente'?user.others.tipoPersonalCE+(@esOtro?',NO':''):null"}} --}}
+      {{param TIPO_PERSONAL_1VEZ_CE="=calc.in(_type, ['notaConsultaExterna','notaTempConsultaExterna','notaSisConsultaExterna'])&&@relacionTemporal=='primeraVez'&&fn('filtroDxConsultaExterna', @esPrincipal?'si':'no', user.others.tipoPersonalCE)"}}
+      {{param TIPO_PERSONAL_SUBSEC_CE="=calc.in(_type, ['notaConsultaExterna','notaTempConsultaExterna','notaSisConsultaExterna'])&&@relacionTemporal=='subsecuente'&&fn('filtroDxConsultaExterna', @esPrincipal?'si':'no', user.others.tipoPersonalCE)"}}
     {{/search}}
   {{/view}}  
   {{#view id="cie10seul"}}

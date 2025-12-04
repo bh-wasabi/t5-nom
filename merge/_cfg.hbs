@@ -2642,6 +2642,10 @@
   {{/function}}
 
   {{#function id="procedimientoEsterilizacion"}}
+    {{default return="=['6370','6371','6372','6373','6374','6621','6622','6629','6631','6632','6639','6663']"}}
+  {{/function}}
+
+  {{#function id="procedimientoEsterilizacion2"}}
     {{default return="=['6370','6371','6372','6373','6374','6621','6622','6629','6631','6632','6639','6663','6651','6652']"}}
   {{/function}}
 
@@ -2782,7 +2786,7 @@
   {{#function id="validarConsultaExternaProcesar"}}
     {{define type="param" id="exploracion"}}
     {{define type="param" id="analisis"}}
-    {{when condition="=calc.in(calc.getRef(exploracion.signosVitales,'base.embarazadaSinDiabetes'),['uno','dos'])&&calc.arrayInArray(calc.mergeArrays(calc.getRef(analisis.afeccionPrincipal,'base.diagnostico'),calc.pluckRef(analisis.otrosDiagnosticos,'base.diagnostico')),fn('diagnosticoDiabetesEmbarazo'))" return="Diagnóstico de Diabetes en Embarazo Inválido"}}
+    {{when condition="=calc.in(calc.getRef(exploracion.signosVitales,'base.embarazadaSinDiabetes'),['uno','dos'])&&calc.arrayInArray(calc.mergeArrays(calc.getRef(analisis.afeccionPrincipal,'base.diagnostico'),calc.pluckRef(analisis.otrosDiagnosticos,'base.diagnostico')),fn('diagnosticoDiabetesEmbarazo'))" return="Diagnóstico de Diabetes en Embarazo Inválido. Cambiar Diagnóstico o Número Tiras Detección (Embarazada Sin Diabetes)"}}
     {{default return=""}}
   {{/function}}
 
@@ -2832,7 +2836,7 @@
     {{when condition="=moment(fechaEgreso).isBefore(fechaIngreso)" return="'Fecha Egreso no debe ser menor a la Fecha Ingreso'"}}
     {{when condition="=moment(fechaIngreso).isAfter()" return="'Fecha Ingreso no puede ser mayor a la fecha actual'"}}
     {{when condition="=moment(fechaIngreso).isBefore(fechaNacimiento)" return="'Fecha Ingreso no puede ser menor a la Fecha de Nacimiento'"}}
-    {{when condition="=moment(fechaEgreso).diff(fechaIngreso,'years')>=5&&!fn('esUnidadPsiquiatrica',tipologia,subtipologia)" return="'Fecha Ingreso no debe exceder de cinco años con respecto a la Fecha Egreso'"}}
+    {{when condition="=moment(fechaEgreso).startOf('day').diff(moment(fechaIngreso).startOf('day'),'years', true)>5&&!fn('esUnidadPsiquiatrica',tipologia,subtipologia)" return="'Fecha Ingreso no debe exceder de cinco años con respecto a la Fecha Egreso'"}}
     {{default return=""}}
   {{/function}}
 
@@ -2841,7 +2845,7 @@
     {{define type="param" id="fechaEgreso"}}
     {{define type="param" id="tipologia"}}
     {{define type="param" id="subtipologia"}}
-    {{when condition="=moment(fechaEgreso).diff(fechaIngreso,'years')>=5&&!fn('esUnidadPsiquiatrica',tipologia,subtipologia)" return="'Fecha Ingreso no debe exceder de cinco años con respecto a la Fecha Egreso'"}}
+    {{when condition="=moment(fechaEgreso).startOf('day').diff(moment(fechaIngreso).startOf('day'),'years', true)>5&&!fn('esUnidadPsiquiatrica',tipologia,subtipologia)" return="'Fecha Ingreso no debe exceder de cinco años con respecto a la Fecha Egreso'"}}
     {{default return=""}}
   {{/function}}
 
@@ -3098,6 +3102,21 @@
     {{when condition="=calc.getRef(detalle,'notaPasaPacienteHospitalizacion')&&calc.getRef(detalle,'notaPasaPacienteHospitalizacion.contexto.episodio')==contexto.episodio" return="=calc.getRef(detalle,'notaPasaPacienteHospitalizacion.base.fechaEgreso')"}}
     {{when condition="=fn('hospitalizacionDesde', contexto)" return="=fn('hospitalizacionDesde', contexto)"}}
     {{default return="=moment(persona.fechaNacimiento).format()"}}
+  {{/function}}
+
+  {{#function id="filtroDxConsultaExterna"}}
+    {{define type="param" id="esPrincipal" default="no"}}
+    {{define type="param" id="tipoPersonal"}}
+    
+    {{!-- Afección Principal -> Filtrar por Tipo Personal --}}
+    {{when esPrincipal="si" return="=tipoPersonal"}}
+
+    {{!-- Otro Diagnostico, Médico Especialista -> Devolver todo excepto MT (Se filtra porque dx MT tiene valor 10) --}}
+    {{when esPrincipal="no" tipoPersonal="4" return="='4,NO'"}}
+    {{!-- Otro Diagnostico, Médico Tradicional -> Devolver todo excepto CP (CP se filtra con param DIA_CAINFANTIL) --}}
+    {{when esPrincipal="no" tipoPersonal="10" return="null"}}
+    {{!-- Otro Diagnostico, Otro Tipo Personal -> Devolver todo excepto CP y MT (CP se filtra con param DIA_CAINFANTIL) --}}
+    {{when esPrincipal="no" return="='NOT 10'"}}
   {{/function}}
 {{/define}}
 
