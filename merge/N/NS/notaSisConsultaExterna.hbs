@@ -19,15 +19,12 @@
 
   {{#section id="mujer"}}
     {{#field id="condicion"}}
-      {{onChange clearFields="datosEmbarazoActual,datosEmbarazoActualAvanzados"}}
+      {{onChange clearFields="atencionPregestacional,registroPregestacional,puerperaAtencion,infeccionPuerperio,datosEmbarazoActual,datosEmbarazoActualAvanzados"}}
     {{/field}}
     {{#field id="fechaUltimaMenstruacion"}}
       {{#onChange}}
         {{set fechaProbableParto="=fn('fechaProbableParto', fechaUltimaMenstruacion)"}}
       {{/onChange}}
-    {{/field}}
-    {{#field id="condicion"}}
-      {{onChange clearFields="atencionPregestacional,registroPregestacional,puerperaAtencion,infeccionPuerperio"}}
     {{/field}}
   {{/section}}
 
