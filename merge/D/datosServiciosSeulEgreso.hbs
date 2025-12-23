@@ -1,6 +1,6 @@
 {{#define id="datosServiciosSeulEgreso"}}
   {{#section id="base"}}
-    {{field id="siServicioNormal" type="expr" value="tipoServicioOtorgado=='normal'"}}
+    {{field id="siServicioNormal" type="expr" value="=tipoServicioOtorgado=='normal'"}}
     {{field id="siOtraProcedencia" type="expr" value="=procedenciaIngreso=='otro'"}}
     {{field id="siReferido" type="expr" value="=procedenciaIngreso=='referido'"}}
     {{field id="tieneTerapiaIntensiva" type="expr" value="=fn('validarTerapiaIntensiva', @servicioIngreso, @claveServicioAdicional)"}}
