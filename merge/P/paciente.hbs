@@ -144,6 +144,7 @@
     {{validator type="expr" validIf="=fn('entidadNacimientoCorrecta', paisNacimiento, entidadNacimiento)" message="Entidad Nacimiento Incorrecta"}}
     {{validator type="expr" notValidIf="=esMenor3Anos&&!calc.isEmpty(@ocupacion)&&@ocupacion!='9990'" message="Ocupación Inválida"}}
     {{validator type="expr" validIf="=desconoceFechaNacimiento=='si'||fn('escolaridadCorrecta', calc.fromNowYears(fechaNacimiento)||2, escolaridad)" message="Escolaridad Incorrecta"}}
+    {{validator type="expr" notValidIf="=sabeLeerEscribir=='seIgnora'&&!calc.in(escolaridad,['seIgnora','ninguna','noEspecificado'])" message="Escolaridad Incorrecta (Sabe Leer y Escribir Ignorado)"}}
     {{validator type="expr" notValidIf="=!calc.in(sabeLeerEscribir,['si','no','seIgnora'])&&calc.fromNowYears(fechaNacimiento)>=3" message="Falta Indicar Sabe Leer y Escribir"}}
     {{validator type="expr" notValidIf="=esMenor3Anos&&sabeLeerEscribir!='no'" message="Sabe Leer y Escribir Incorrecto (Paciente menor 3 años)"}}
     {{validator type="expr" notValidIf="=sabeLeerEscribir=='no'&&!calc.in(escolaridad,['ninguna','noAplica','noEspecificado','preescolarCompleta','preescolarIncompleta','seIgnora'])" message="Sabe Leer y Escribir Incorrecto"}}

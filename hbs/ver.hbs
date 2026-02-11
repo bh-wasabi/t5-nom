@@ -119,6 +119,15 @@
       {{param c_estado="=estado"}}
     {{/search}}
   {{/view}}
+  {{#view id="codigoPostalCorreosMexico"}}
+    {{define type="param" id="estado"}}
+    {{define type="param" id="municipio"}}
+    {{editor display="nombre"}}
+    {{#search index="cp-23" type="_doc" limit="50" sort="nombre" filterParamsOnlySearch="true"}}
+      {{param c_estado="=estado"}}
+      {{param c_mnpio="=municipio"}}
+    {{/search}}
+  {{/view}}
   {{#view id="cucop"}}
     {{editor display="nombre"}}
     {{search index="cucop" type="_doc" sort="nombre"}}

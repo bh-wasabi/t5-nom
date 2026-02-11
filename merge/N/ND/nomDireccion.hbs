@@ -76,7 +76,8 @@
       {{/onChange}}
     {{/field}}
     {{validator type="expr" notValidIf="=!noEsMexico&&entidadNoAplica" message="Entidad Federativa Inválida para MÉXICO"}}
-    {{validator type="expr" notValidIf="=_mainDoc._type=='notaSeulLesiones'&&calc.isEmpty(@numeroExterior)" message="Falta Indicar Número Exterior"}}
-    {{validator type="expr" notValidIf="=_mainDoc._type=='notaSeulLesiones'&&noEsMexico" message="País Inválido para Lesiones"}}
+    {{!-- {{validator type="expr" notValidIf="=_mainDoc._type=='notaSeulLesiones'&&calc.isEmpty(@numeroExterior)" message="Falta Indicar Número Exterior"}} --}}
+    {{!-- {{validator type="expr" notValidIf="=_mainDoc._type=='notaSeulLesiones'&&noEsMexico" message="País Inválido para Lesiones"}} --}}
+    {{validator type="expr" notValidIf="=_mainDoc._type=='_user'&&calc.in(@desconoceDireccion,['seIgnora','noEspecificado'])" message="Prestador Servicios no puede tener dirección desconocida"}}
   {{/section}}
 {{/define}}

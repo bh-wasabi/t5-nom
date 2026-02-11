@@ -1,0 +1,63 @@
+{{#define id="nomDireccionLesion"}}
+  {{#section id="base"}}
+    {{field id="siDesconoceCalle" type="expr" value="=desconoceCalle=='si'"}}
+    {{field id="entidadValida" type="expr" value="=!calc.in(entidadFederativa,['00','88','99'])"}}
+    {{field id="siNoDesconoceDelegacion" type="expr" value="=desconoceDelegacion=='no'"}}
+    {{field id="siNoDesconoceCodigoPostal" type="expr" value="=desconoceCodigoPostal=='no'"}}
+    {{field id="direccionNoEspecificado" type="expr" value="=entidadFederativa=='00'||codigoLocalidad=='9999'"}}
+    {{#field id="entidadFederativa"}}
+      {{#onChange clearFields="codigoEstado,desconoceDelegacion,delegacion,localidad,otraLocalidad,codigoLocalidad,desconoceCodigoPostal,codigoPostal,codigoEstado"}}
+        {{set delegacion="=calc.in(entidadFederativa,['00','88'])?'NO ESPECIFICADO':entidadFederativa=='99'?'SE IGNORA':null"}}
+        {{set codigoPostal="=calc.in(entidadFederativa,['00','88'])?'00000':entidadFederativa=='99'?'99999':null"}}
+        {{set codigoDelegacion="=calc.in(entidadFederativa,['00','88'])?'999':entidadFederativa=='99'?'998':null"}}
+        {{set codigoLocalidad="=calc.in(entidadFederativa,['00','88'])?'9999':entidadFederativa=='99'?'9998':null"}}
+        {{set codigoEstado="=entidadFederativa"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="desconoceDelegacion"}}
+      {{#onChange clearFields="delegacion,codigoDelegacion,localidad,otraLocalidad,codigoLocalidad,desconoceCodigoPostal,codigoPostal"}}
+        {{set delegacion="=desconoceDelegacion=='noEspecificado'?'NO ESPECIFICADO':desconoceDelegacion=='seIgnora'?'SE IGNORA':null"}}
+        {{set codigoPostal="=desconoceDelegacion=='noEspecificado'?'00000':desconoceDelegacion=='seIgnora'?'99999':null"}}
+        {{set codigoDelegacion="=desconoceDelegacion=='noEspecificado'?'999':desconoceDelegacion=='seIgnora'?'998':null"}}
+        {{set codigoLocalidad="=desconoceDelegacion=='noEspecificado'?'9999':desconoceDelegacion=='seIgnora'?'9998':null"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="delegacion"}}
+      {{#editor}}
+        {{param estado="=@codigoEstado||entidadFederativa"}}
+        {{#onChange refresh="true" clearFields="codigoDelegacion,localidad,otraLocalidad,codigoLocalidad"}}
+          {{set codigoDelegacion="=c_municipio"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="localidad"}}
+      {{#editor}}
+        {{param estado="=@codigoEstado||entidadFederativa"}}
+        {{param municipio="=@codigoDelegacion"}}
+        {{#onChange refresh="true" clearFields="otraLocalidad,codigoLocalidad"}}
+          {{set codigoLocalidad="=c_localidad"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="desconoceCodigoPostal"}}
+      {{#onChange clearFields="seleccionarCodigoPostal,codigoPostal"}}
+        {{set codigoPostal="=desconoceCodigoPostal=='noEspecificado'?'00000':desconoceCodigoPostal=='seIgnora'?'99999':null"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="seleccionarCodigoPostal"}}
+      {{#editor}}
+        {{param estado="=entidadFederativa"}}
+        {{param codigoPostal="=codigoPostal"}}
+        {{#onChange clearFields="codigoPostal"}}
+          {{set codigoPostal="=d_codigo"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="desconoceCalle"}}
+      {{#onChange condition="=desconoceCalle=='si'" clearFields="calle,numeroExterior,numeroInterior"}}
+        {{set calle="SIN INFORMACIÓN"}}
+      {{/onChange}}
+    {{/field}}
+    {{validator type="expr" notValidIf="=entidadFederativa=='88'" message="Entidad Federativa Inválida"}}
+  {{/section}}
+{{/define}}
