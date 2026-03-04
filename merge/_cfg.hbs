@@ -1695,7 +1695,7 @@
 
   {{#function id="pam"}}
     {{define type="param" id="base"}}
-    {{default return="=calc.round(((base.tensionDiastolica*2)+base.tensionSistolica)/3,2)"}}
+    {{default return="=calc.round(((calc.forceNumber(base.tensionDiastolica)*2)+calc.forceNumber(base.tensionSistolica))/3,2)"}}
   {{/function}}
 
   {{#function id="notaHistoriaClinicaSiguiente"}}

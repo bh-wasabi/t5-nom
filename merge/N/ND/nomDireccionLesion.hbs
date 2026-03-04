@@ -25,7 +25,7 @@
     {{#field id="delegacion"}}
       {{#editor}}
         {{param estado="=@codigoEstado||entidadFederativa"}}
-        {{#onChange refresh="true" clearFields="codigoDelegacion,localidad,otraLocalidad,codigoLocalidad"}}
+        {{#onChange refresh="true" clearFields="codigoDelegacion,localidad,otraLocalidad,codigoLocalidad,desconoceCodigoPostal,seleccionarCodigoPostal,codigoPostal"}}
           {{set codigoDelegacion="=c_municipio"}}
         {{/onChange}}
       {{/editor}}
@@ -47,6 +47,7 @@
     {{#field id="seleccionarCodigoPostal"}}
       {{#editor}}
         {{param estado="=entidadFederativa"}}
+        {{param municipio="=codigoDelegacion"}}
         {{param codigoPostal="=codigoPostal"}}
         {{#onChange clearFields="codigoPostal"}}
           {{set codigoPostal="=d_codigo"}}
