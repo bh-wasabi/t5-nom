@@ -2,17 +2,15 @@
   {{#section id="base"}}
     {{field id="noEsMexico" type="expr" value="=pais!='MX'"}}
     {{field id="entidadNoAplica" type="expr" value="=entidadFederativa=='88'"}}
+    {{field id="entidadValida" type="expr" value="=calc.isNotEmpty(entidadFederativa)&&!calc.in(entidadFederativa,['00','88','99'])"}}
     {{field id="siDesconoceCalle" type="expr" value="=desconoceCalle=='si'"}}
-    {{field id="entidadValida" type="expr" value="=!calc.in(entidadFederativa,['00','88','99'])"}}
-    {{field id="siDesconoceDireccion" type="expr" value="=desconoceDireccion!='no'"}}
-    {{field id="siNoDesconoceDireccion" type="expr" value="=desconoceDireccion=='no'"}}
-    {{field id="direccionNoEspecificado" type="expr" value="=desconoceDireccion=='noEspecificado'||entidadFederativa=='00'||codigoLocalidad=='9999'"}}
-    {{#field id="pais" clearFields="entidadFederativa,desconoceDireccion,correosMexico,localidad,desconoceLocalidad,otraLocalidad,codigoPostal,colonia,delegacion,seleccionarDelegacion,ciudad,estado,codigoOficina,codigoDelegacion,codigoCiudad,codigoEstado,zona,tipoAsentamiento"}}
+    {{field id="siNoDesconoceDelegacion" type="expr" value="=desconoceDelegacion=='no'"}}
+    {{field id="tieneDelegacion" type="expr" value="=calc.isNotEmpty(delegacion)"}}
+    {{field id="siNoDesconoceCodigoPostal" type="expr" value="=desconoceCodigoPostal=='no'"}}
+    {{field id="direccionNoEspecificado" type="expr" value="=entidadFederativa=='00'||codigoLocalidad=='9999'"}}
+    {{#field id="pais" clearFields="entidadFederativa,localidad,otraLocalidad,codigoPostal,colonia,delegacion,seleccionarDelegacion,ciudad,codigoDelegacion,codigoEstado"}}
       {{#onChange}}
         {{set entidadFederativa="=pais!='MX'?'88':null"}}
-        {{set delegacion="=pais!='MX'?'NO APLICA':null"}}
-        {{set desconoceLocalidad="=pais!='MX'?'NO APLICA':null"}}
-        {{set estado="=pais!='MX'?'NO APLICA':null"}}
         {{set codigoPostal="=pais!='MX'?'00000':null"}}
         {{set codigoDelegacion="=pais!='MX'?'997':null"}}
         {{set codigoEstado="=pais!='MX'?'88':null"}}
@@ -20,43 +18,25 @@
       {{/onChange}}
     {{/field}}
     {{#field id="entidadFederativa"}}
-      {{#onChange clearFields="desconoceDireccion,correosMexico,localidad,desconoceLocalidad,codigoPostal,colonia,delegacion,seleccionarDelegacion,ciudad,estado,codigoOficina,codigoDelegacion,codigoCiudad,codigoEstado,zona,tipoAsentamiento"}}
-        {{set delegacion="=calc.in(entidadFederativa,['00','88'])?'NO ESPECIFICADO':entidadFederativa=='99'?'SE IGNORA':null"}}
-        {{set desconoceLocalidad="=calc.in(entidadFederativa,['00','88'])?'NO ESPECIFICADO':entidadFederativa=='99'?'SE IGNORA':null"}}
-        {{set estado="=calc.in(entidadFederativa,['00','88'])?'NO ESPECIFICADO':entidadFederativa=='99'?'SE IGNORA':null"}}
+      {{#onChange clearFields="codigoEstado,desconoceDelegacion,delegacion,localidad,otraLocalidad,codigoLocalidad,desconoceCodigoPostal,codigoPostal,codigoEstado"}}
         {{set codigoPostal="=calc.in(entidadFederativa,['00','88'])?'00000':entidadFederativa=='99'?'99999':null"}}
         {{set codigoDelegacion="=calc.in(entidadFederativa,['00','88'])?'999':entidadFederativa=='99'?'998':null"}}
-        {{set codigoEstado="=calc.in(entidadFederativa,['00','88'])?'00':entidadFederativa=='99'?'99':null"}}
         {{set codigoLocalidad="=calc.in(entidadFederativa,['00','88'])?'9999':entidadFederativa=='99'?'9998':null"}}
+        {{set codigoEstado="=entidadFederativa"}}
       {{/onChange}}
     {{/field}}
-    {{#field id="desconoceDireccion"}}
-      {{#onChange clearFields="correosMexico,localidad,desconoceLocalidad,otraLocalidad,codigoPostal,colonia,delegacion,seleccionarDelegacion,ciudad,estado,codigoOficina,codigoDelegacion,codigoCiudad,codigoEstado,zona,tipoAsentamiento"}}
-        {{set delegacion="=desconoceDireccion=='noEspecificado'?'NO ESPECIFICADO':desconoceDireccion=='seIgnora'?'SE IGNORA':null"}}
-        {{set estado="=desconoceDireccion=='noEspecificado'?'NO ESPECIFICADO':desconoceDireccion=='seIgnora'?'SE IGNORA':null"}}
-        {{set codigoPostal="=desconoceDireccion=='noEspecificado'?'00000':desconoceDireccion=='seIgnora'?'99999':null"}}
-        {{set codigoDelegacion="=desconoceDireccion=='noEspecificado'?'999':desconoceDireccion=='seIgnora'?'998':null"}}
-        {{set codigoEstado="=desconoceDireccion=='noEspecificado'?'00':desconoceDireccion=='seIgnora'?'99':null"}}
-        {{set codigoLocalidad="=desconoceDireccion=='noEspecificado'?'9999':desconoceDireccion=='seIgnora'?'9998':null"}}
-        {{set desconoceLocalidad="=desconoceDireccion=='noEspecificado'?'NO ESPECIFICADO':desconoceDireccion=='seIgnora'?'SE IGNORA':null"}}
+    {{#field id="desconoceDelegacion"}}
+      {{#onChange clearFields="delegacion,codigoDelegacion,localidad,otraLocalidad,codigoLocalidad,desconoceCodigoPostal,codigoPostal"}}
+        {{set codigoPostal="=desconoceDelegacion=='noEspecificado'?'00000':desconoceDelegacion=='seIgnora'?'99999':null"}}
+        {{set codigoDelegacion="=desconoceDelegacion=='noEspecificado'?'999':desconoceDelegacion=='seIgnora'?'998':null"}}
+        {{set codigoLocalidad="=desconoceDelegacion=='noEspecificado'?'9999':desconoceDelegacion=='seIgnora'?'9998':null"}}
       {{/onChange}}
     {{/field}}
-    {{#field id="correosMexico"}}
+    {{#field id="delegacion"}}
       {{#editor}}
-        {{param estado="=entidadFederativa"}}
-        {{param codigoPostal="=codigoPostal"}}
-        {{#onChange clearFields="localidad,desconoceLocalidad,otraLocalidad"}}
-          {{set codigoPostal="=d_codigo"}}
-          {{set colonia="=d_asenta"}}
-          {{set delegacion="=D_mnpio"}}
-          {{set ciudad="=d_ciudad"}}
-          {{set estado="=d_estado"}}
-          {{set codigoOficina="=c_oficina"}}
-          {{set codigoDelegacion="=c_mnpio"}}
-          {{set codigoCiudad="=c_cve_ciudad"}}
-          {{set codigoEstado="=c_estado"}}
-          {{set zona="=d_zona"}}
-          {{set tipoAsentamiento="=d_tipo_asenta"}}
+        {{param estado="=@codigoEstado||entidadFederativa"}}
+        {{#onChange refresh="true" clearFields="codigoDelegacion,localidad,otraLocalidad,codigoLocalidad,desconoceCodigoPostal,seleccionarCodigoPostal,codigoPostal"}}
+          {{set codigoDelegacion="=c_municipio"}}
         {{/onChange}}
       {{/editor}}
     {{/field}}
@@ -64,9 +44,23 @@
       {{#editor}}
         {{param estado="=@codigoEstado||entidadFederativa"}}
         {{param municipio="=@codigoDelegacion"}}
-        {{#onChange refresh="true" clearFields="otraLocalidad"}}
+        {{#onChange refresh="true" clearFields="otraLocalidad,codigoLocalidad"}}
           {{set codigoLocalidad="=c_localidad"}}
-          {{set codigoEstado="=c_estado"}}
+        {{/onChange}}
+      {{/editor}}
+    {{/field}}
+    {{#field id="desconoceCodigoPostal"}}
+      {{#onChange clearFields="seleccionarCodigoPostal,codigoPostal"}}
+        {{set codigoPostal="=desconoceCodigoPostal=='noEspecificado'?'00000':desconoceCodigoPostal=='seIgnora'?'99999':null"}}
+      {{/onChange}}
+    {{/field}}
+    {{#field id="seleccionarCodigoPostal"}}
+      {{#editor}}
+        {{param estado="=entidadFederativa"}}
+        {{param municipio="=codigoDelegacion"}}
+        {{param codigoPostal="=codigoPostal"}}
+        {{#onChange clearFields="codigoPostal"}}
+          {{set codigoPostal="=d_codigo"}}
         {{/onChange}}
       {{/editor}}
     {{/field}}
@@ -76,8 +70,6 @@
       {{/onChange}}
     {{/field}}
     {{validator type="expr" notValidIf="=!noEsMexico&&entidadNoAplica" message="Entidad Federativa Inválida para MÉXICO"}}
-    {{!-- {{validator type="expr" notValidIf="=_mainDoc._type=='notaSeulLesiones'&&calc.isEmpty(@numeroExterior)" message="Falta Indicar Número Exterior"}} --}}
-    {{!-- {{validator type="expr" notValidIf="=_mainDoc._type=='notaSeulLesiones'&&noEsMexico" message="País Inválido para Lesiones"}} --}}
-    {{validator type="expr" notValidIf="=_mainDoc._type=='_user'&&calc.in(@desconoceDireccion,['seIgnora','noEspecificado'])" message="Prestador Servicios no puede tener dirección desconocida"}}
+    {{validator type="expr" notValidIf="=_mainDoc._type=='_user'&&calc.in(@desconoceDelegacion,['seIgnora','noEspecificado'])" message="Prestador Servicios no puede tener dirección desconocida"}}
   {{/section}}
 {{/define}}

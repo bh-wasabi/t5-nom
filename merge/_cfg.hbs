@@ -3551,11 +3551,11 @@
   {{#template id="nomDireccion"}}
     {{#if noEsMexico}}
       {{calle}} {{numeroExterior}} {{numeroInterior}}
-      <br>{{codigoPostal}} {{#if ciudad}}, {{ciudad}}{{/if}}{{#if estado}}, {{estado}}{{/if}}{{#if pais}}, {{_pais}}{{/if}}
+      <br>{{codigoPostal}}{{#if pais}}, {{_pais}}{{/if}}
     {{else}}
-      {{calle}} {{numeroExterior}} {{numeroInterior}}
-      {{#if delegacion}}<br>{{delegacion}}{{/if}}
-      <br>{{codigoPostal}} {{#if ciudad}}, {{ciudad}}{{/if}}{{#if estado}}, {{estado}}{{/if}}{{#if pais}}, {{_pais}}{{/if}}
+      {{calle}} {{numeroExterior}} 
+      <br>{{#if _delegacion}}{{_delegacion}}, {{/if}}{{_entidadFederativa}}
+      <br>{{codigoPostal}}
     {{/if}}
   {{/template}}
 
