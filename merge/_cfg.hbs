@@ -3123,6 +3123,22 @@
     {{!-- Otro Diagnostico, Otro Tipo Personal -> Devolver todo excepto CP y MT (CP se filtra con param DIA_CAINFANTIL) --}}
     {{when esPrincipal="no" return="='NOT 10'"}}
   {{/function}}
+
+  {{#function id="evaluarConfirmacionDiagnosticaPrincipal"}}
+    {{define type="param" id="parentDoc"}}
+    {{define type="param" id="doc"}}
+    {{define type="param" id="DIA_CRONICOS"}}
+    {{define type="param" id="DIA_CAINFANTIL"}}
+    {{default return="=parentDoc._type=='notaSisConsultaExterna'&&(calc.in(req.user.profile.others.tipoPersonalCE,[1, 2, 3, 4, 19, 24]))&&(doc.base.relacionTemporal=='primeraVez'&&DIA_CRONICOS=='SI'&&moment(parentDoc.base.fechaConsulta).diff(parentDoc.persona.fechaNacimiento,'years')>=20)||(DIA_CAINFANTIL=='SI'&&moment(parentDoc.base.fechaConsulta).diff(parentDoc.persona.fechaNacimiento,'years')<18)?'SI':'NO'"}}
+  {{/function}}
+
+  {{#function id="evaluarConfirmacionDiagnosticaOtro"}}
+    {{define type="param" id="parentDoc"}}
+    {{define type="param" id="doc"}}
+    {{define type="param" id="DIA_CRONICOS"}}
+    {{define type="param" id="DIA_CAINFANTIL"}}
+    {{default return="=parentDoc._type=='notaSisConsultaExterna'&&(calc.in(req.user.profile.others.tipoPersonalCE,[1, 2, 3, 4, 19, 24]))&&((doc.base.primeraVez=='si'&&DIA_CRONICOS=='SI'&&moment(parentDoc.base.fechaConsulta).diff(parentDoc.persona.fechaNacimiento,'years')>=20)||(DIA_CAINFANTIL=='SI'&&moment(parentDoc.base.fechaConsulta).diff(parentDoc.persona.fechaNacimiento,'years')<18))?'SI':'NO'"}}
+  {{/function}}
 {{/define}}
 
 {{#markup}}
