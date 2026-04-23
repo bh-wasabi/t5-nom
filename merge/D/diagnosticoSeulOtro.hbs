@@ -10,7 +10,7 @@
         {{param _type="=_parentDoc._type"}}
         {{param edadActual="=moment(_parentDoc.base.fechaAtencion).diff(_parentDoc.persona.fechaNacimiento,'years')"}}
       {{/editor}}
-      {{#onChange clearFields="subDiagnostico,detalle,causaExterna,morfoligia,folioLesion"}}
+      {{#onChange clearFields="subDiagnostico,detalle,causaExterna,morfologia,folioLesion"}}
         {{set letra="=LETRA"}}
         {{set limiteSexo="=LSEX"}}
         {{set limiteInferior="=LINF"}}
