@@ -19,8 +19,8 @@
     {{/field}}
     {{#field id="cluesProcedencia"}}
       {{#onChange clearFields="cluesProcedenciaEstatus,cluesProcedenciaFechaBaja"}}
-        {{set cluesProcedenciaEstatus="=ESTATUS_OPERACION"}}
-        {{set cluesProcedenciaFechaBaja="=FECHA_EFECTIVA_BAJA"}}
+        {{setRef ref="cluesProcedenciaEstatus" value="=ESTATUS_OPERACION"}}
+        {{setRef ref="cluesProcedenciaFechaBaja" value="=FECHA_EFECTIVA_BAJA"}}
       {{/onChange}}
     {{/field}}
     {{#onChange}}
