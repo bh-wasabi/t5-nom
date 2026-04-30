@@ -5071,7 +5071,8 @@
       {{set mujerFertil="=detalle.notaInicialUrgencias.base.mujerFertil"}}
       {{set _mujerFertil="=detalle.notaInicialUrgencias.base._mujerFertil"}}
       {{set edadGestacional="=detalle.notaInicialUrgencias.base.edadGestacional"}}
-      {{setRef ref="afeccionPrincipalReseleccionada.base.esEgreso" value="false"}}
+      {{!-- No es necesiaria esta referencia en Urgencias --}}
+      {{!-- {{setRef ref="afeccionPrincipalReseleccionada.base.esEgreso" value="false"}} --}}
     {{/update}}
     {{update section="resumen" value="=resumen" temp="true"}}
     {{update section="comorbilidades" value="=calc.subItemsMap(_items2, 'base.otrosDiagnosticos', '=base.detalle+`#`+base.diagnostico', '=base.nombre')"}}
