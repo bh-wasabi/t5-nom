@@ -18,8 +18,8 @@
     {{/field}}
     {{#field id="CLUES"}}
       {{#onChange clearFields="cluesEstatus,cluesFechaBaja"}}
-        {{set cluesEstatus="=ESTATUS_OPERACION"}}
-        {{set cluesFechaBaja="=FECHA_EFECTIVA_BAJA"}}
+        {{setRef ref="cluesEstatus" value="=ESTATUS_OPERACION"}}
+        {{setRef ref="cluesFechaBaja" value="=FECHA_EFECTIVA_BAJA"}}
       {{/onChange}}
     {{/field}}
 
