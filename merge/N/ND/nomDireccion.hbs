@@ -70,6 +70,9 @@
       {{/onChange}}
     {{/field}}
     {{validator type="expr" notValidIf="=!noEsMexico&&entidadNoAplica" message="Entidad Federativa Inválida para MÉXICO"}}
-    {{validator type="expr" notValidIf="=_mainDoc._type=='_user'&&calc.in(@desconoceDelegacion,['seIgnora','noEspecificado'])" message="Prestador Servicios no puede tener dirección desconocida"}}
+    {{validator type="expr" notValidIf="=_mainDoc._type=='_user'&&calc.in(@entidadFederativa,['00','99'])" message="Prestador Servicios no puede tener Entidad Federativa desconocida"}}
+    {{validator type="expr" notValidIf="=_mainDoc._type=='_user'&&calc.in(@desconoceDelegacion,['seIgnora','noEspecificado'])" message="Prestador Servicios no puede tener Municipio desconocido"}}
+    {{validator type="expr" notValidIf="=_mainDoc._type=='_user'&&calc.matchIfPattern('SE IGNORA|NO ESPECIFICADO', @_localidad)" message="Prestador Servicios no puede tener Localidad desconocida"}}
+    {{validator type="expr" notValidIf="=_mainDoc._type=='_user'&&calc.in(@desconoceCodigoPostal,['seIgnora', 'noEspecificado'])" message="Prestador Servicios no puede tener Código Postal desconocido"}}
   {{/section}}
 {{/define}}
